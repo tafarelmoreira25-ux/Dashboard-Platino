@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platino Assessoria | Central Operacional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Ocultar scrollbar mas manter funcionalidade */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .chat-bubble-user { border-bottom-right-radius: 0; }
+        .chat-bubble-ai { border-bottom-left-radius: 0; }
+        
+        /* Animação suave para accordions */
+        .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; max-height: 0; overflow: hidden; }
+        .accordion-content.open { max-height: 600px; padding-bottom: 1rem; }
+        
+        /* Animações extras */
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen overflow-hidden relative">
+
+    <!-- TELA DE LOGIN (NOVO DESIGN TECNOLÓGICO) -->
+    <div id="login-screen" class="absolute inset-0 z-[200] flex bg-white">
+        
+        <!-- Lado Esquerdo: Branding Minimalista Tecnológico -->
+        <div class="hidden lg:flex w-1/2 bg-[#00249c] flex-col justify-between px-14 py-12 relative overflow-hidden">
+            <!-- Fundo tecnológico mais limpo e sutil -->
+            <div class="absolute inset-0 opacity-25">
+                <div class="absolute w-[420px] h-[420px] bg-blue-400 rounded-full blur-[120px] -top-24 -left-20"></div>
+                <div class="absolute w-[320px] h-[320px] bg-indigo-400 rounded-full blur-[120px] bottom-0 right-0"></div>
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+            </div>
+
+            <!-- Linhas decorativas discretas -->
+            <div class="absolute inset-0 opacity-[0.08]">
+                <div class="absolute top-0 left-1/3 h-full w-px bg-white"></div>
+                <div class="absolute top-1/3 left-0 w-full h-px bg-white"></div>
+                <div class="absolute bottom-1/4 left-0 w-full h-px bg-white"></div>
+            </div>
+
+            <!-- Topo: Logo e identidade -->
+            <div class="relative z-10">
+                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-24 object-contain rounded-2xl shadow-xl bg-white/5 backdrop-blur-sm border border-white/10 p-3">
+
+                <div class="mt-6">
+                    <p class="text-white text-2xl font-bold tracking-[0.18em] uppercase">Platino Hub</p>
+                    <p class="text-blue-100/80 text-sm mt-1">Central Operacional Interna</p>
+                </div>
+            </div>
+
+            <!-- Centro: Mensagem principal -->
+            <div class="relative z-10 max-w-md">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-blue-100 text-[11px] font-semibold uppercase tracking-wider mb-6">
+                    <i class="ph ph-sparkle text-blue-200 text-sm"></i>
+                    Ambiente Interno
+                </div>
+
+                <h1 class="text-5xl font-bold text-white leading-[1.1] tracking-tight max-w-lg">
+                    Operação mais simples.<br>
+                    Equipe mais alinhada.
+                </h1>
+
+                <p class="text-blue-100/85 text-lg leading-relaxed mt-6 max-w-md">
+                    Procedimentos, avisos e treinamentos em uma central rápida e organizada.
+                </p>
+            </div>
+
+            <!-- Rodapé: Segurança discreta -->
+            <div class="relative z-10 flex items-center gap-3 text-blue-100/80 text-sm font-medium">
+                <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
+                    <i class="ph ph-shield-check text-lg text-blue-200"></i>
+                </div>
+                <span>Acesso interno • Equipe Platino</span>
+            </div>
+        </div>
+
+        <!-- Lado Direito: Formulário Clean -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white relative overflow-y-auto">
+            <!-- Logo Mobile -->
+            <div class="absolute top-8 left-8 lg:hidden">
+                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-12 object-contain rounded-lg shadow-md bg-[#00249c] p-2">
+            </div>
+            
+            <div class="w-full max-w-md animate-fade-in mt-16 lg:mt-0">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Bem-vindo à Platino Hub</h2>
+                    <p class="text-slate-500 mt-2 font-medium">Insira suas credenciais para acessar o painel.</p>
+                </div>
+                
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                    <div class="space-y-1.5">
+                        <label class="block text-sm font-bold text-slate-700">E-mail corporativo</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="ph ph-envelope text-slate-400 group-focus-within:text-[#00249c] transition-colors text-lg"></i>
+                            </div>
+                            <input type="email" id="login-email" required class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00249c]/20 focus:border-[#00249c] transition-all font-medium text-slate-700" placeholder="nome@platino.com.br">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-sm font-bold text-slate-700">Senha</label>
+                            <a href="#" class="text-xs font-bold text-blue-600 hover:text-[#00249c] hover:underline transition-colors">Esqueceu a senha?</a>
+                        </div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="ph ph-lock text-slate-400 group-focus-within:text-[#00249c] transition-colors text-lg"></i>
+                            </div>
+                            <input type="password" id="login-password" required class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00249c]/20 focus:border-[#00249c] transition-all font-medium text-slate-700" placeholder="••••••••">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-[#00249c] hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition-all shadow-lg shadow-[#00249c]/25 flex items-center justify-center gap-2 hover:-translate-y-0.5 mt-4">
+                        Acessar Plataforma <i class="ph ph-arrow-right text-lg"></i>
+                    </button>
+                    
+                    <div id="login-error" class="hidden flex items-start gap-3 text-sm text-red-600 bg-red-50 p-4 rounded-xl border border-red-100 animate-fade-in mt-4">
+                        <i class="ph ph-warning-circle text-xl mt-0.5"></i> 
+                        <div>
+                            <p class="font-bold">Acesso negado</p>
+                            <p class="opacity-90 mt-0.5">E-mail ou senha incorretos. Tente novamente.</p>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Área de Testes Clicável -->
+                <div class="mt-10 p-5 bg-slate-50 rounded-xl border border-slate-200/60">
+                    <p class="font-bold text-slate-700 mb-4 text-[10px] uppercase tracking-wider flex items-center gap-2">
+                        <i class="ph ph-magic-wand text-blue-500 text-lg"></i> Atalho de Testes (Clique para preencher)
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-100 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group" onclick="document.getElementById('login-email').value='gestor@platino.com'; document.getElementById('login-password').value='123';">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide group-hover:text-blue-500 transition-colors">Acesso Gestor</span>
+                                <span class="text-sm font-semibold text-slate-700 mt-0.5">gestor@platino.com</span>
+                            </div>
+                            <span class="text-xs font-mono bg-slate-50 text-slate-600 px-3 py-1.5 rounded-md font-bold group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">123</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-100 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group" onclick="document.getElementById('login-email').value='equipe@platino.com'; document.getElementById('login-password').value='123';">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide group-hover:text-blue-500 transition-colors">Acesso Equipe</span>
+                                <span class="text-sm font-semibold text-slate-700 mt-0.5">equipe@platino.com</span>
+                            </div>
+                            <span class="text-xs font-mono bg-slate-50 text-slate-600 px-3 py-1.5 rounded-md font-bold group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">123</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center text-xs text-slate-400 leading-relaxed">
+                    <p class="uppercase tracking-[0.2em] font-semibold">Desenvolvido por</p>
+                    <p class="text-slate-600 font-bold text-sm mt-1">Tafarel Moreira</p>
+                    <p class="text-slate-300 my-1">|</p>
+                    <p class="text-slate-500 font-semibold">Platino Assessoria</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTAINER PRINCIPAL DO APP (Oculto até o login) -->
+    <div id="app-container" class="hidden h-full w-full flex overflow-hidden">
+
+    <!-- Base de Conhecimento para a IA (Invisível) -->
+    <script>
+        const conhecimentoEmpresa = `
+        A Platino Assessoria é uma consultoria especializada em revisão de juros abusivos.
+        
+        FLUXO COMERCIAL (O PRIMEIRO SETOR):
+        Objetivo: Primeiro contato, não prometer resultado garantido, identificar a dor, quebrar objeções e converter interesse em contratação consciente.
+        Passos do Atendimento: 1. Abertura (apresentação), 2. Entendimento da dor (perguntar banco, bem, parcelas), 3. Explicação (verificar abusos), 4. Geração de confiança, 5. Fechamento.
+        Objeções Comuns: 
+        - "A parcela cabe no bolso": Não significa que o contrato está correto, a revisão busca o valor justo.
+        - "Não tenho dinheiro": O financiamento consome a renda com abusos, a revisão estanca o prejuízo.
+        - "É golpe?": Trabalhamos com contrato formal e acompanhamento especializado (Administrativo e Jurídico).
+        Pós-Venda Comercial: Solicitar RG, Comprovante de endereço, Contrato, Última parcela, Doc veículo. Preencher contrato sem erros. Nomear arquivo 'NOME DO CLIENTE - CONTRATO ASSINADO' e enviar no grupo 'Contratos Assinados'.
+        
+        FLUXO ADMINISTRATIVO:
+        1. ANALISE CONTRATUAL E DISTRIBUIÇÃO NO CRM: Receber contrato do comercial, conferir dados, anexar no CRM, elaborar documentos iniciais, anexar no drive.
+        2. GOV.BR (RECLAMAÇÃO): Acessar Consumidor.gov, abrir reclamação, elaborar Termo de Ciência, anexar protocolo.
+        3. LAUDO (PARECER TÉCNICO): Acessar CRM, preencher dados, solicitar para contabilidade se for imóvel.
+        4. HOMOLOGAÇÃO (NEGOCIAÇÃO): Contato semanal com banco, negociar desconto, elaborar relatório.
+        5. ELABORAR DOCUMENTOS: Notificação extra, procurações, declarações, distratos.
+        
+        FLUXO JURÍDICO:
+        1. CRM E GESTÃO DE PASTA: Supervisão distribui pasta, consultor abre grupo.
+        2. ABERTURA DE GRUPO: Abrir em 2h, integrantes (Cliente, Consultora, ADM, Supervisão).
+        3. PROCEDIMENTOS: Laudo pericial, citação, certidão, homologação, audiência de conciliação.
+        4. ENCAMINHAR AO PROCESSUAL: Solicitar docs judiciais, pedir no grupo.
+        `;
+    </script>
+
+    <!-- Sidebar / Menu Lateral -->
+    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
+        <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950/50">
+            <div class="flex items-center gap-2 text-white font-bold text-xl tracking-wide">
+                <i class="ph ph-shield-check text-blue-500 text-2xl"></i>
+                PLATINO
+            </div>
+            <button onclick="toggleSidebar()" class="md:hidden ml-auto text-slate-400 hover:text-white">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-4 uppercase text-xs font-semibold text-slate-500 tracking-wider mt-4">Menu de Navegação</div>
+        <nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
+            <button id="nav-inicio" onclick="navigateTo('inicio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors bg-blue-600/10 text-blue-400 border-l-4 border-blue-500">
+                <i class="ph ph-house text-lg"></i> Início
+            </button>
+            <button id="nav-avisos" onclick="navigateTo('avisos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-megaphone text-lg text-amber-400"></i> Central de Avisos
+            </button>
+            
+            <div class="pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Departamentos</div>
+            
+            <button id="nav-comercial" onclick="navigateTo('comercial')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-target text-lg text-green-400"></i> Comercial
+            </button>
+            <button id="nav-adm" onclick="navigateTo('adm')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-folders text-lg text-blue-400"></i> Administrativo
+            </button>
+            <button id="nav-juridico" onclick="navigateTo('juridico')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-scales text-lg text-indigo-400"></i> Jurídico
+            </button>
+            
+            <div class="pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Recursos & Comunicação</div>
+            
+            <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-books text-lg"></i> Treinamentos
+            </button>
+            <!-- NOVO BOTÃO: CAIXA DE IDEIAS -->
+            <button id="nav-ideias" onclick="navigateTo('ideias')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-lightbulb text-lg text-yellow-400"></i> Caixa de Ideias
+            </button>
+        </nav>
+        
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center gap-3">
+                <div id="user-avatar" class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                    TM
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel Moreira</p>
+                    <p id="user-role" class="text-[10px] text-blue-300 font-semibold uppercase tracking-wider mt-0.5">Administrador</p>
+                </div>
+                <button onclick="handleLogout()" class="text-slate-500 hover:text-red-400 transition-colors" title="Sair do Sistema">
+                    <i class="ph ph-sign-out text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Área Principal -->
+    <main class="flex-1 flex flex-col h-full relative">
+        <!-- Header Principal -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800">
+                    <i class="ph ph-list text-2xl"></i>
+                </button>
+                <h1 id="page-title" class="text-lg font-semibold text-slate-800">Training Space</h1>
+            </div>
+            
+            <!-- Barra de Busca IA -->
+            <div class="relative w-full max-w-md hidden sm:block">
+                <div class="relative flex items-center">
+                    <i class="ph ph-sparkle absolute left-3 text-blue-500"></i>
+                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" onkeypress="handleSearch(event)">
+                </div>
+            </div>
+        </header>
+
+        <!-- Conteúdo Rolável -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+            
+            <!-- SEÇÃO: INÍCIO -->
+            <section id="section-inicio" class="content-section animate-fade-in">
+                <div class="max-w-5xl mx-auto">
+                    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
+                            <i class="ph ph-shield-check text-[200px]"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo à Platino Hub</h2>
+                        <p class="text-blue-100 max-w-2xl relative z-10">Sua central de apoio, treinamento e informação. Encontre procedimentos, avisos e orientações em um só lugar, tire dúvidas com nosso assistente inteligente e siga sua rotina com mais segurança, clareza e confiança.</p>
+                    </div>
+
+                    <h3 class="text-lg font-semibold text-slate-700 mb-4">Acesso Rápido</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <div onclick="navigateTo('avisos')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-amber-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-megaphone text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Mural de Avisos</h3>
+                            <p class="text-xs text-slate-500">Notícias, comunicados e ranking comercial.</p>
+                        </div>
+
+                        <div onclick="navigateTo('comercial')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-target text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Setor Comercial</h3>
+                            <p class="text-xs text-slate-500">Técnicas de vendas, objeções e formalização.</p>
+                        </div>
+
+                        <div onclick="navigateTo('adm')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-folders text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Administrativo</h3>
+                            <p class="text-xs text-slate-500">Análise, Consumidor.gov e laudos técnicos.</p>
+                        </div>
+
+                        <div onclick="navigateTo('juridico')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-scales text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Jurídico</h3>
+                            <p class="text-xs text-slate-500">Gestão de pastas e procedimentos judiciais.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: CENTRAL DE AVISOS -->
+            <section id="section-avisos" class="content-section hidden animate-fade-in">
+                <div class="max-w-5xl mx-auto">
+                    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Central de Avisos e Destaques</h2>
+                            <p class="text-slate-500 mt-1">Fique por dentro das novidades, premiações e resultados da equipe.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-plus-circle text-lg"></i> Novo Aviso
+                            </button>
+                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
+                                <i class="ph ph-clock"></i> Atualizado hoje
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Coluna 1: Mural de Avisos -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-xl shadow-sm">
+                                <div class="flex gap-3">
+                                    <i class="ph ph-warning-circle text-blue-600 text-2xl"></i>
+                                    <div>
+                                        <h3 class="font-bold text-blue-900">Atualização no Fluxo do GOV.BR</h3>
+                                        <p class="text-sm text-blue-800 mt-1">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.</p>
+                                        <p class="text-xs text-blue-600 mt-2 font-medium">Postado pela Supervisão há 2 horas</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-xl shadow-md text-white relative overflow-hidden">
+                                <i class="ph ph-star text-[120px] text-yellow-500/20 absolute -bottom-4 -right-4"></i>
+                                <div class="relative z-10">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <i class="ph ph-trophy text-yellow-400 text-2xl"></i>
+                                        <h3 class="font-bold text-lg text-yellow-400">Destaque do Mês de Maio - Comercial</h3>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-800 font-bold text-xl border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+                                            FR
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-xl">Fernanda Ramos</p>
+                                            <p class="text-slate-300 text-sm">Maior taxa de conversão em Maio!</p>
+                                            <p class="text-slate-300 text-sm">Alcançando o resultado de <span class="text-lg font-bold text-green-400">R$29.355,50</span></p>
+                                            <span class="inline-block mt-2 bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded border border-yellow-500/50">Lider Do Mês</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+                                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="ph ph-trend-up text-green-500"></i> Resultados da Semana</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
+                                        <p class="text-2xl font-bold text-blue-600">9</p>
+                                        <p class="text-xs text-slate-500">Contratos Novos</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
+                                        <p class="text-2xl font-bold text-indigo-600">7</p>
+                                        <p class="text-xs text-slate-500">Laudos Fechados</p>
+                                    </div>
+                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
+                                        <p class="text-2xl font-bold text-red-600">2</p>
+                                        <p class="text-xs text-slate-500"> Distratos </p>
+                                    </div>
+                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
+                                        <p class="text-2xl font-bold text-purple-600">36.505,73</p>
+                                        <p class="text-xs text-slate-500">Faturamento Total</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 2: Rankings -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col h-full">
+                            <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="ph ph-medal text-orange-500 text-xl"></i> Ranking de Destaques</h3>
+                            <p class="text-xs text-slate-500 mb-4">Atualizado em tempo real</p>
+                            
+                            <div class="flex-1 overflow-y-auto pr-1 space-y-6 no-scrollbar" style="max-height: 500px;">
+                                <!-- RANKING COMERCIAL -->
+                                <div>
+                                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1 border-b border-slate-100 pb-1">
+                                        <i class="ph ph-target text-green-500 text-sm"></i> Setor Comercial
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3 p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-yellow-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-yellow-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-800 text-sm">Geovana Xavier</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$ 5.865,22</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-800 text-sm">Mayara Cardoso</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$ 3.081,24</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-800 text-sm">Gabriel Paes</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$ 2.260,00</p>
+                                            </div>
+                                        </div>
+
+                                <!-- RANKING JURÍDICO -->
+                                <div>
+                                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1 border-b border-slate-100 pb-1 mt-4">
+                                        <i class="ph ph-scales text-indigo-500 text-sm"></i> Setor Jurídico
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-3 p-2.5 bg-indigo-50 border border-indigo-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-indigo-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-indigo-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-800 text-sm">Tabata.</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$14.197,19</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
+                                            <div class="flex-1">
+                                                <p class="font-bold text-slate-800 text-sm">Nicole.</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$8.769,35</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
+                                            <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
+                                            <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
+                                            <div class="flex-1">
+                                                <p class="font-medium text-slate-700 text-sm">Elaine</p>
+                                                <p class="text-[11px] text-green-600 font-semibold">R$2.000,00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: COMERCIAL -->
+            <section id="section-comercial" class="content-section hidden animate-fade-in">
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-target text-green-500"></i> Setor Comercial</h2>
+                            <p class="text-slate-500 mt-1">Manual de conversão, abordagens e fechamento de contratos.</p>
+                        </div>
+                        <button class="hidden sm:flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                            <i class="ph ph-file-pdf text-red-500"></i> Baixar Script Completo
+                        </button>
+                    </div>
+                    <div class="space-y-4" id="com-accordions"></div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: ADMINISTRATIVO -->
+            <section id="section-adm" class="content-section hidden animate-fade-in">
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-folders text-blue-500"></i> Setor Administrativo</h2>
+                        <p class="text-slate-500 mt-1">Clique nas etapas abaixo para expandir e visualizar as tarefas.</p>
+                    </div>
+                    <div class="space-y-4" id="adm-accordions"></div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: JURÍDICO -->
+            <section id="section-juridico" class="content-section hidden animate-fade-in">
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-scales text-indigo-500"></i> Setor Jurídico</h2>
+                        <p class="text-slate-500 mt-1">Procedimentos e gestão de pastas do setor jurídico.</p>
+                    </div>
+                    <div class="space-y-4" id="jur-accordions"></div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: TREINAMENTOS -->
+            <section id="section-treinamentos" class="content-section hidden animate-fade-in">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="ph ph-books text-3xl text-slate-600"></i>
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-800">Biblioteca de Manuais</h2>
+                                <p class="text-slate-500 mt-1">Materiais oficiais de apoio para consulta e padronização.</p>
+                            </div>
+                        </div>
+                        <button class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                            <i class="ph ph-upload-simple text-lg"></i> Subir Novo PDF
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-lg">Script Comercial</h3>
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-6">Técnicas de vendas, script de quebra de objeções e guia de contrato.</p>
+                            </div>
+                            <a href="esteira-comercial.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                                <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
+                            </a>
+                        </div>
+
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-lg">Esteira Administrativa</h3>
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-6">Fluxo completo: GOV, documentos, laudo, CRM e acompanhamento.</p>
+                            </div>
+                            <a href="esteira-adm.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                                <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
+                            </a>
+                        </div>
+                        
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="font-semibold text-lg">Esteira Jurídica</h3>
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-6">Fluxo completo: abertura de grupo, processual, citação e homologação.</p>
+                            </div>
+                            <a href="esteira-juridico.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                                <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- NOVA SEÇÃO: CAIXA DE IDEIAS E OUVIDORIA -->
+            <section id="section-ideias" class="content-section hidden animate-fade-in">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-8 flex items-center gap-4">
+                        <div class="w-14 h-14 bg-yellow-100 text-yellow-600 rounded-xl flex items-center justify-center shadow-sm border border-yellow-200">
+                            <i class="ph ph-lightbulb text-3xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Caixa de Ideias e Ouvidoria</h2>
+                            <p class="text-slate-500 mt-1">Sua voz faz a Platino crescer. Relate problemas, sugira melhorias ou envie novas ideias.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 md:p-8">
+                        <form onsubmit="submitFeedback(event)" class="space-y-6">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Qual o tipo de mensagem?</label>
+                                    <select required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                        <option value="" disabled selected>Selecione uma opção...</option>
+                                        <option value="ideia">💡 Ideia de Inovação</option>
+                                        <option value="melhoria">📈 Sugestão de Melhoria</option>
+                                        <option value="problema">⚠️ Relatar um Problema</option>
+                                        <option value="outro">💬 Outros</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Setor Relacionado</label>
+                                    <select required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                        <option value="geral">Geral / Empresa como um todo</option>
+                                        <option value="comercial">Setor Comercial</option>
+                                        <option value="adm">Setor Administrativo</option>
+                                        <option value="juridico">Setor Jurídico</option>
+                                        <option value="sistemas">Sistemas / Plataforma</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Assunto Principal</label>
+                                <input type="text" required placeholder="Ex: Nova ideia para abordagem de clientes no WhatsApp" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Sua Mensagem Detalhada</label>
+                                <textarea required rows="5" placeholder="Descreva sua ideia ou relate o problema com o máximo de detalhes possível..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"></textarea>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-6 border-t border-slate-100 gap-4">
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <div class="relative flex items-center">
+                                        <input type="checkbox" class="w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer transition-all">
+                                    </div>
+                                    <span class="text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">Enviar anonimamente (Ocultar meu nome)</span>
+                                </label>
+                                
+                                <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    <i class="ph ph-paper-plane-right text-lg"></i> Enviar Feedback
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Mensagem de Sucesso (Oculta por padrão) -->
+                        <div id="feedback-success" class="hidden mt-6 bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-lg flex items-start sm:items-center gap-3 shadow-sm animate-fade-in">
+                            <i class="ph ph-check-circle text-2xl mt-0.5 sm:mt-0"></i>
+                            <div>
+                                <p class="text-sm font-bold">Mensagem enviada com sucesso!</p>
+                                <p class="text-xs mt-1 opacity-90">A diretoria agradece sua colaboração para o crescimento da Platino.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </main>
+
+    <!-- Modal de Resultado da Busca IA -->
+    <div id="search-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col transform scale-95 transition-transform" id="search-modal-content">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <div class="flex items-center gap-2 text-blue-600 font-medium">
+                    <i class="ph ph-sparkle text-xl"></i> Análise de IA Platino
+                </div>
+                <button onclick="closeSearch()" class="text-slate-400 hover:text-slate-700 bg-white rounded-full p-1 shadow-sm">
+                    <i class="ph ph-x text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto" id="search-result-body">
+                <div class="flex justify-center items-center py-8 flex-col gap-3">
+                    <i class="ph ph-circle-notch text-3xl text-blue-500 animate-spin"></i>
+                    <p class="text-sm text-slate-500">Consultando manuais da empresa...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget de Chat IA -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
+            <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white/10 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-sm relative">
+                        <i class="ph ph-robot text-2xl text-blue-200"></i>
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">IA Supervisora</h4>
+                        <p class="text-[10px] text-blue-200 opacity-90">Suporte Operacional Platino</p>
+                    </div>
+                </div>
+                <button onclick="toggleChat()" class="text-white/70 hover:text-white">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50/50 flex flex-col gap-3 text-sm">
+                <div class="flex items-start gap-2 max-w-[85%]">
+                    <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
+                        <i class="ph ph-robot text-xs"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed">
+                        Olá equipe! Estou aqui para ajudar com qualquer dúvida sobre Vendas, Administrativo ou Jurídico. O que você precisa consultar agora?
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+                <input type="text" id="chat-input" placeholder="Pergunte sobre um processo..." class="flex-1 bg-slate-100 border-transparent rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onkeypress="handleChatSubmit(event)">
+                <button onclick="sendChatMessage()" class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-colors shadow-md flex-shrink-0">
+                    <i class="ph ph-paper-plane-right text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-all group">
+            <i class="ph ph-sparkle text-2xl group-hover:animate-pulse"></i>
+        </button>
+    </div>
+
+    <script>
+        // CONFIGURAÇÕES DA API GEMINI
+        const apiKey = "AQ.Ab8RN6Ie3AMUbcLURIEwaZRLizXcGDxHYgFReh-chxuxAMLpeQ"; // A chave é injetada automaticamente pelo sistema em visualização
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // DADOS PARA OS ACCORDIONS
+        const fluxosComercial = [
+            { id: "c1", icon: "🎯", title: "1. Objetivo e Introdução", tasks: ["Conduzir o lead com segurança, identificando a dor e quebrando objeções.", "O que é: Análise técnica do contrato para achar cobranças indevidas e abusivas.", "Função da assessoria: Acompanhar, organizar e negociar com o banco, para o cliente não estar sozinho.", "<span class='text-red-500 font-semibold'>Atenção:</span> Nunca prometa resultado garantido. Vendemos uma análise especializada e tratativa técnica."] },
+            { id: "c2", icon: "📞", title: "2. O Primeiro Contato (Abordagem)", tasks: ["Abertura: Se apresente, confirme o nome do cliente e explique o motivo da ligação.", "Entendimento da dor: Pergunte o banco, valor da parcela, quantas faltam e o que incomoda (Ouça ativamente).", "Explicação: Mostre que o valor 'caber no bolso' não significa que é justo. A assessoria busca reduzir ou recuperar.", "Geração de confiança: Explique que temos contrato formal, acompanhamento administrativo e suporte Jurídico."] },
+            { id: "c3", icon: "🛡️", title: "3. Gestão de Objeções", tasks: ["<span class='font-medium text-slate-700'>'Já consigo pagar':</span> A questão não é pagar, é pagar o valor justo. A revisão traz clareza.", "<span class='font-medium text-slate-700'>'Não tenho dinheiro':</span> Exatamente por isso precisa revisar. O juro abusivo consome a renda mês a mês.", "<span class='font-medium text-slate-700'>'É golpe?':</span> Temos contrato formal, equipe setorizada e você acompanha o processo.", "<span class='font-medium text-slate-700'>'Vou no meu advogado':</span> O advogado foca no judicial. Nós fazemos negociação prática e administrativa.", "<span class='font-medium text-slate-700'>'Vi no Reclame Aqui':</span> Problemas acontecem, nosso diferencial é não abandonar o cliente e resolver."] },
+            { id: "c4", icon: "📝", title: "4. Fechamento e Contrato", tasks: ["PARABÉNS! Você está no caminho certo.", "Elabore o Contrato de Prestação de Serviços: Revise CPF, valores e forma de pagamento (Zero erros).", "Envie para assinatura do cliente.", "Após assinado, baixe e nomeie o arquivo como: <span class='bg-slate-200 px-1 rounded font-mono text-xs'>NOME DO CLIENTE - CONTRATO ASSINADO</span>.", "Encaminhe no grupo 'Contratos Assinados' para o Administrativo assumir."] },
+            { id: "c5", icon: "🧠", title: "5. Postura e Mentalidade", tasks: ["Fale com educação, chame pelo nome, ouça sem interromper e não use tom robótico.", "Erro comum: Falar demais e confundir o cliente. Seja objetivo.", "Mentalidade: Vender revisão é vender segurança, clareza e possibilidade de economia.", "Lembre-se: O cliente chega curioso/com medo. O papel do analista é transformar isso em decisão e confiança."] }
+        ];
+
+        const fluxosAdmin = [
+            { id: "a1", icon: "📑", title: "1. Análise Contratual e Distribuição", tasks: ["Receber contrato no grupo 'CONTRATOS ASSINADOS'", "Conferir dados pessoais, financeiros e assinatura", "Anexar contrato no CRM e subir pasta", "Elaborar documentos iniciais (Modelos no drive)", "Notificação extra / Reclamação (GOV) / Termos de Ciência", "Anexar todos documentos no Drive"] },
+            { id: "a2", icon: "📨", title: "2. GOV.BR (Reclamação)", tasks: ["Acessar Consumidor.gov", "Abrir reclamação e enviar protocolo ao cliente", "Elaborar Termo de Ciência e Coletar assinatura", "Anexar protocolo no CRM e no drive", "Analisar o protocolo até o banco retornar", "Atualizar planilha geral a cada tarefa concluída"] },
+            { id: "a3", icon: "🌐", title: "3. Laudo (Parecer Técnico)", tasks: ["Acessar CRM e elaborar Laudo", "Preencher os campos com os dados do contrato", "Se for imóvel, solicitar para Contabilidade", "Encaminhar PDF no grupo e anexar no drive"] },
+            { id: "a4", icon: "⚖️", title: "4. Homologação (Negociação)", tasks: ["Entrar em contato Semanalmente com banco", "Em ligação com o banco, solicitar 3 informações", "Negociar margem de desconto", "Elaborar relatório com as informações e alimentar planilhas", "Manter cliente atualizado sobre a negociação e assinar o relatório"] },
+            { id: "a5", icon: "🛡️", title: "5. Elaborar Documentos", tasks: ["Notificação Extrajudicial", "Termo de ciência de prestação de serviços", "Procuração Judicial e Declaração de Hipossuficiência", "Declaração de isenção de Imposto de renda / CTPS", "Procuração de audiência Extrajudicial", "Citação Judicial e Extrajudicial", "Solicitação de Postergação das parcelas", "Distratos e Documentos Administrativos"] },
+            { id: "a6", icon: "🛡️", title: "6. Gestão de Contestação", tasks: ["Procon", "Contestação de charge", "Reclame aqui", "Contrárias"] }
+        ];
+
+        const fluxosJuridico = [
+            { id: "j1", icon: "📂", title: "1. CRM e Gestão de Pasta", tasks: ["Supervisão distribui a pasta para o consultor no CRM", "A pasta vai para o consultor - Pasta Pendente", "O consultor abre o grupo e inicia as tratativas"] },
+            { id: "j2", icon: "👥", title: "2. Abertura de Grupo", tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + ADM + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"] },
+            { id: "j3", icon: "📬", title: "3. CRM Operacional - Consultores", tasks: ["Consultor Jurídico anexa os 5 doc. salva e envia para o ADM", "Após a reclamação do gov, a pasta vai voltar para 'LAUDO'", "Em laudo, alterar status e encaminhar para 'Laudo fechado'"] },
+            { id: "j4", icon: "🎥", title: "4. Documentos para Solicitar", tasks: ["Notificação extrajudicial", "GOV", "Laudo", "Procurações", "Citação", "Documentos Judiciais"] },
+            { id: "j5", icon: "🤝", title: "5. Procedimentos", tasks: ["Laudo Pericial", "Citação - Judicial ou Extrajudicial", "Certidão", "Homologação", "Audiência de conciliação", "Jurisprudência"] },
+            { id: "j6", icon: "🚀", title: "6. Encaminhar ao Processual", tasks: ["Solicitar documentos esfera judicial para o cliente", "Solicitar procurações para o ADM", "Solicitar no grupo: Nome do cliente - encaminhar processual"] }
+        ];
+
+        // FUNÇÃO DE NAVEGAÇÃO INTELIGENTE (SPA)
+        const titles = {
+            'inicio': 'Início',
+            'avisos': 'Central de Avisos',
+            'comercial': 'Setor Comercial',
+            'adm': 'Setor Administrativo',
+            'juridico': 'Setor Jurídico',
+            'treinamentos': 'Manuais e Treinamentos',
+            'ideias': 'Caixa de Ideias e Ouvidoria' // ADICIONADO AQUI
+        };
+
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600/10', 'text-blue-400', 'border-blue-500', 'bg-slate-800', 'text-white');
+                btn.classList.add('border-transparent');
+            });
+
+            const section = document.getElementById(`section-${sectionId}`);
+            if(section) {
+                section.classList.remove('hidden');
+                section.classList.remove('animate-fade-in');
+                void section.offsetWidth; // trigger reflow
+                section.classList.add('animate-fade-in');
+            }
+            
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.classList.add('bg-blue-600/10', 'text-blue-400', 'border-blue-500');
+            }
+
+            document.getElementById('page-title').innerText = titles[sectionId];
+
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebar();
+                }
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // GERAR INTERFACE DOS FLUXOS (ACCORDIONS)
+        function renderAccordions(containerId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = data.map(item => `
+                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-slate-300 transition-colors">
+                    <button onclick="toggleAccordion('${item.id}')" class="w-full flex items-center justify-between p-5 text-left hover:bg-slate-50 transition-colors focus:outline-none">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xl">${item.icon}</span>
+                            <h3 class="font-semibold text-slate-800 text-lg">${item.title}</h3>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span onclick="event.stopPropagation(); alert('Ação disponível apenas para perfil Gestor (Em breve será conectada ao banco de dados).')" class="gestor-only hidden text-blue-500 hover:text-blue-700 text-sm font-medium items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-blue-50">
+                                <i class="ph ph-pencil-simple"></i> Editar
+                            </span>
+                            <i id="icon-${item.id}" class="ph ph-caret-down text-slate-400 transition-transform"></i>
+                        </div>
+                    </button>
+                    <div id="content-${item.id}" class="accordion-content bg-slate-50 px-5">
+                        <ul class="space-y-3 pb-4 pt-2 border-t border-slate-100">
+                            ${item.tasks.map(task => `
+                                <li class="flex items-start gap-3 text-sm text-slate-700">
+                                    <i class="ph ph-check-circle text-green-500 mt-0.5 text-lg flex-shrink-0"></i>
+                                    <span class="leading-relaxed">${task}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                document.querySelectorAll('.accordion-content').forEach(el => el.classList.remove('open'));
+                document.querySelectorAll('.ph-caret-down').forEach(el => el.style.transform = 'rotate(0deg)');
+                
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // FUNÇÃO DE ENVIO DA CAIXA DE IDEIAS
+        function submitFeedback(event) {
+            event.preventDefault(); // Impede a página de recarregar
+            
+            // Aqui futuramente entra a conexão com Banco de Dados.
+            // Por enquanto, mostramos a mensagem de sucesso visualmente.
+            const form = event.target;
+            const successMsg = document.getElementById('feedback-success');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            // Efeito visual de loading no botão
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-lg"></i> Enviando...';
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            setTimeout(() => {
+                form.reset(); // Limpa os campos
+                submitBtn.innerHTML = originalBtnHtml; // Volta o botão ao normal
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                
+                // Mostra mensagem de sucesso
+                successMsg.classList.remove('hidden');
+                
+                // Esconde a mensagem depois de 5 segundos
+                setTimeout(() => {
+                    successMsg.classList.add('hidden');
+                }, 5000);
+            }, 1500); // Simula 1.5s de envio
+        }
+
+        // LÓGICA DE CHAMADA DA API GEMINI
+        async function fetchGeminiAPI(prompt, isSearch = false) {
+            const instruction = isSearch 
+                ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${conhecimentoEmpresa}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2' para ficar bonito. Sem tags html ou body, apenas o conteúdo interno.`
+                : `Você é a "IA Supervisora", o assistente interno da Platino Assessoria. Ajude a equipe baseando-se nas regras: ${conhecimentoEmpresa}. Seja extremamente cordial, profissional e conciso (máximo 3-4 linhas). Resolva objeções comerciais se perguntarem. Use marcação markdown simples como **negrito**.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: instruction }] },
+                generationConfig: { temperature: 0.3 }
+            };
+
+            const delays = [1000, 2000, 4000];
+            for (let i = 0; i < delays.length + 1; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) throw new Error("Erro na API");
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+                } catch (error) {
+                    if (i === delays.length) {
+                        return "Desculpe, nossos servidores de IA estão ocupados no momento. Tente novamente em instantes.";
+                    }
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        // LÓGICA DA BUSCA E MODAL
+        async function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (!query) return;
+
+                const modal = document.getElementById('search-modal');
+                const content = document.getElementById('search-modal-content');
+                const resultBody = document.getElementById('search-result-body');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+
+                resultBody.innerHTML = `
+                    <div class="flex justify-center items-center py-10 flex-col gap-4">
+                        <i class="ph ph-sparkle text-4xl text-blue-500 animate-pulse"></i>
+                        <p class="text-sm font-medium text-slate-500">Lendo os manuais e elaborando resposta para '${query}'...</p>
+                    </div>`;
+
+                let resposta = await fetchGeminiAPI(query, true);
+                resposta = resposta.replace(/```html/g, '').replace(/```/g, '');
+
+                resultBody.innerHTML = `<div class="text-slate-700 leading-relaxed text-sm space-y-3">${resposta}</div>`;
+                event.target.value = '';
+            }
+        }
+
+        function closeSearch() {
+            const modal = document.getElementById('search-modal');
+            const content = document.getElementById('search-modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // LÓGICA DO CHAT
+        let chatOpen = false;
+        function toggleChat() {
+            const chat = document.getElementById('chat-window');
+            const btn = document.getElementById('chat-toggle-btn');
+            
+            if (chatOpen) {
+                chat.classList.remove('scale-100', 'opacity-100');
+                chat.classList.add('scale-0', 'opacity-0');
+            } else {
+                chat.classList.remove('scale-0', 'opacity-0');
+                chat.classList.add('scale-100', 'opacity-100');
+                document.getElementById('chat-input').focus();
+            }
+            chatOpen = !chatOpen;
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            
+            if (sender === 'user') {
+                div.className = "flex items-end justify-end gap-2 max-w-[85%] self-end";
+                div.innerHTML = `
+                    <div class="bg-blue-600 text-white p-3 rounded-2xl chat-bubble-user shadow-sm text-sm">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                div.className = "flex items-start gap-2 max-w-[90%]";
+                div.innerHTML = `
+                    <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
+                        <i class="ph ph-robot text-xs"></i>
+                    </div>
+                    <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed text-sm">
+                        ${text}
+                    </div>
+                `;
+            }
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage(text, 'user');
+            input.value = '';
+
+            const container = document.getElementById('chat-messages');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'chat-loading';
+            loadingDiv.className = "flex items-start gap-2 max-w-[85%]";
+            loadingDiv.innerHTML = `
+                <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
+                    <i class="ph ph-robot text-xs"></i>
+                </div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex gap-1 items-center h-[46px]">
+                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+            `;
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            let resposta = await fetchGeminiAPI(text, false);
+            
+            document.getElementById('chat-loading').remove();
+            resposta = resposta.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            appendMessage(resposta, 'ai');
+        }
+
+        function handleChatSubmit(event) {
+            if (event.key === 'Enter') sendChatMessage();
+        }
+
+        window.onload = () => {
+            renderAccordions('com-accordions', fluxosComercial);
+            renderAccordions('adm-accordions', fluxosAdmin);
+            renderAccordions('jur-accordions', fluxosJuridico);
+            
+            // Verifica se o usuário já estava logado (simulação via sessionStorage)
+            const savedRole = sessionStorage.getItem('platinoRole');
+            const savedName = sessionStorage.getItem('platinoName');
+            if (savedRole && savedName) {
+                applyLoginState(savedRole, savedName);
+            }
+        };
+
+        // --- SISTEMA DE LOGIN E CONTROLE DE ACESSO ---
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const pass = document.getElementById('login-password').value.trim();
+            const errorMsg = document.getElementById('login-error');
+            
+            errorMsg.classList.add('hidden'); // Reset error
+
+            // VERIFICAÇÃO SIMULADA DE CREDENCIAIS
+            if (email === 'gestor@platino.com' && pass === '123') {
+                applyLoginState('gestor', 'Gestor(a) Platino');
+            } else if (email === 'equipe@platino.com' && pass === '123') {
+                applyLoginState('equipe', 'Colaborador(a)');
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function applyLoginState(role, name) {
+            // Salvar sessão para não perder ao recarregar a página
+            sessionStorage.setItem('platinoRole', role);
+            sessionStorage.setItem('platinoName', name);
+
+            // 1. Atualizar UI do Usuário na Sidebar
+            document.getElementById('user-name').innerText = name;
+            document.getElementById('user-avatar').innerText = name.substring(0, 2).toUpperCase();
+            
+            if(role === 'gestor') {
+                document.getElementById('user-role').innerText = 'Supervisão Operacional';
+                document.getElementById('user-avatar').classList.replace('bg-blue-500', 'bg-[#00249c]'); // Cor mais forte para gestor
+            } else {
+                document.getElementById('user-role').innerText = 'Consultor(a) de Operações';
+                document.getElementById('user-avatar').classList.replace('bg-[#00249c]', 'bg-blue-500');
+            }
+
+            // 2. Aplicar Restrições de Nível de Acesso (Gestor-Only)
+            const gestorElements = document.querySelectorAll('.gestor-only');
+            if (role === 'gestor') {
+                // Gestor vê os botões de editar e adicionar
+                gestorElements.forEach(el => {
+                    el.classList.remove('hidden');
+                    el.classList.add('flex');
+                });
+            } else {
+                // Equipe não vê nada restrito
+                gestorElements.forEach(el => {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                });
+            }
+
+            // 3. Transição das Telas
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            
+            // Navega para o Início
+            navigateTo('inicio');
+        }
+
+        function handleLogout() {
+            // Limpa a sessão
+            sessionStorage.removeItem('platinoRole');
+            sessionStorage.removeItem('platinoName');
+            
+            // Reseta form de login e troca visibilidade para bloquear o sistema
+            document.getElementById('login-form').reset();
+            document.getElementById('app-container').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+    </script>
+    </div> <!-- FIM DO APP CONTAINER -->
+</body>
+</html>
