@@ -32,27 +32,17 @@
     <div id="login-screen" class="absolute inset-0 z-[200] flex bg-white">
         
         <!-- Lado Esquerdo: Branding Minimalista Tecnológico -->
-        <div class="hidden lg:flex w-1/2 bg-[#00249c] flex-col justify-between px-14 py-12 relative overflow-hidden">
+        <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-[#001B70] via-[#00249c] to-[#163AC8] flex-col justify-between px-14 py-12 relative overflow-hidden">
             <!-- Fundo tecnológico mais limpo e sutil -->
-            <div class="absolute inset-0 opacity-25">
-                <div class="absolute w-[420px] h-[420px] bg-blue-400 rounded-full blur-[120px] -top-24 -left-20"></div>
-                <div class="absolute w-[320px] h-[320px] bg-indigo-400 rounded-full blur-[120px] bottom-0 right-0"></div>
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
-            </div>
-
-            <!-- Linhas decorativas discretas -->
-            <div class="absolute inset-0 opacity-[0.08]">
-                <div class="absolute top-0 left-1/3 h-full w-px bg-white"></div>
-                <div class="absolute top-1/3 left-0 w-full h-px bg-white"></div>
-                <div class="absolute bottom-1/4 left-0 w-full h-px bg-white"></div>
-            </div>
+            <div class="absolute top-0 left-0 w-full h-full">
+            <div class="absolute top-24 right-24 w-72 h-72 bg-cyan-400/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-24 left-12 w-80 h-80 bg-blue-300/10 rounded-full blur-[150px]"></div>
+</div>
 
             <!-- Topo: Logo e identidade -->
             <div class="relative z-10">
-                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-24 object-contain rounded-2xl shadow-xl bg-white/5 backdrop-blur-sm border border-white/10 p-3">
-
                 <div class="mt-6">
-                    <p class="text-white text-2xl font-bold tracking-[0.18em] uppercase">Platino Hub</p>
+                    <p class="text-white text-2xl font-bold tracking-[0.20em] uppercase">Platino Hub</p>
                     <p class="text-blue-100/80 text-sm mt-1">Central Operacional Interna</p>
                 </div>
             </div>
@@ -64,13 +54,14 @@
                     Ambiente Interno
                 </div>
 
-                <h1 class="text-5xl font-bold text-white leading-[1.1] tracking-tight max-w-lg">
-                    Operação mais simples.<br>
-                    Equipe mais alinhada.
+                <h1 class="text-5xl font-bold text-white leading-[1.05] tracking-tight max-w-lg">
+                    Controle. <br>
+                    Processos.<br>
+                    Performance.
                 </h1>
 
                 <p class="text-blue-100/85 text-lg leading-relaxed mt-6 max-w-md">
-                    Procedimentos, avisos e treinamentos em uma central rápida e organizada.
+                Centralize processos, treinamentos, indicadores e comunicação da equipe em uma única plataforma.
                 </p>
             </div>
 
@@ -85,6 +76,15 @@
 
         <!-- Lado Direito: Formulário Clean -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white relative overflow-y-auto">
+<!-- Rodapé Premium Login -->
+<footer class="absolute bottom-6 right-8">
+    <p class="text-xs text-slate-400">
+        Platino Hub System • Desenvolvido por
+        <span class="font-semibold text-[#00249c]">
+            Tafarel Moreira
+        </span>
+    </p>
+</footer>
             <!-- Logo Mobile -->
             <div class="absolute top-8 left-8 lg:hidden">
                 <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-12 object-contain rounded-lg shadow-md bg-[#00249c] p-2">
@@ -133,35 +133,6 @@
                     </div>
                 </form>
 
-                <!-- Área de Testes Clicável -->
-                <div class="mt-10 p-5 bg-slate-50 rounded-xl border border-slate-200/60">
-                    <p class="font-bold text-slate-700 mb-4 text-[10px] uppercase tracking-wider flex items-center gap-2">
-                        <i class="ph ph-magic-wand text-blue-500 text-lg"></i> Atalho de Testes (Clique para preencher)
-                    </p>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-100 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group" onclick="document.getElementById('login-email').value='gestor@platino.com'; document.getElementById('login-password').value='123';">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide group-hover:text-blue-500 transition-colors">Acesso Gestor</span>
-                                <span class="text-sm font-semibold text-slate-700 mt-0.5">gestor@platino.com</span>
-                            </div>
-                            <span class="text-xs font-mono bg-slate-50 text-slate-600 px-3 py-1.5 rounded-md font-bold group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">123</span>
-                        </div>
-                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-100 shadow-sm cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group" onclick="document.getElementById('login-email').value='equipe@platino.com'; document.getElementById('login-password').value='123';">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide group-hover:text-blue-500 transition-colors">Acesso Equipe</span>
-                                <span class="text-sm font-semibold text-slate-700 mt-0.5">equipe@platino.com</span>
-                            </div>
-                            <span class="text-xs font-mono bg-slate-50 text-slate-600 px-3 py-1.5 rounded-md font-bold group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">123</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 text-center text-xs text-slate-400 leading-relaxed">
-                    <p class="uppercase tracking-[0.2em] font-semibold">Desenvolvido por</p>
-                    <p class="text-slate-600 font-bold text-sm mt-1">Tafarel Moreira</p>
-                    <p class="text-slate-300 my-1">|</p>
-                    <p class="text-slate-500 font-semibold">Platino Assessoria</p>
-                </div>
             </div>
         </div>
     </div>
@@ -236,10 +207,11 @@
             <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-books text-lg"></i> Treinamentos
             </button>
-            <!-- NOVO BOTÃO: CAIXA DE IDEIAS -->
+            <!-- NOVO BOTÃO: Hub de Sugestões -->
             <button id="nav-ideias" onclick="navigateTo('ideias')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
-                <i class="ph ph-lightbulb text-lg text-yellow-400"></i> Caixa de Ideias
+                <i class="ph ph-lightbulb text-lg text-yellow-400"></i> Hub de Sugestões
             </button>
+            
         </nav>
         
         <div class="p-4 border-t border-slate-800">
@@ -255,8 +227,8 @@
                     <i class="ph ph-sign-out text-xl"></i>
                 </button>
             </div>
-        </div>
-    </aside>
+        </div>~
+        </aside>
 
     <!-- Área Principal -->
     <main class="flex-1 flex flex-col h-full relative">
@@ -267,6 +239,15 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="text-lg font-semibold text-slate-800">Training Space</h1>
+            <!-- Rodapé Premium -->
+<footer class="absolute bottom-4 right-6">
+    <p class="text-xs text-slate-400">
+        Platino system • Desenvolvido por
+        <span class="font-semibold text-slate-500">
+            Tafarel Moreira
+        </span>
+    </p>
+</footer>
             </div>
             
             <!-- Barra de Busca IA -->
@@ -578,7 +559,7 @@
                 </div>
             </section>
             
-            <!-- NOVA SEÇÃO: CAIXA DE IDEIAS E OUVIDORIA -->
+            <!-- NOVA SEÇÃO: Feedback e Ouvidoria -->
             <section id="section-ideias" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-8 flex items-center gap-4">
@@ -586,7 +567,7 @@
                             <i class="ph ph-lightbulb text-3xl"></i>
                         </div>
                         <div>
-                            <h2 class="text-2xl font-bold text-slate-800">Caixa de Ideias e Ouvidoria</h2>
+                            <h2 class="text-2xl font-bold text-slate-800">Feedback e Ouvidoria</h2>
                             <p class="text-slate-500 mt-1">Sua voz faz a Platino crescer. Relate problemas, sugira melhorias ou envie novas ideias.</p>
                         </div>
                     </div>
@@ -612,6 +593,9 @@
                                         <option value="comercial">Setor Comercial</option>
                                         <option value="adm">Setor Administrativo</option>
                                         <option value="juridico">Setor Jurídico</option>
+                                        <option value="adm">Gestão</option>
+                                        <option value="adm">Departamento pessoal - RH</option>
+                                        <option value="adm">Auxiliar de limpeza</option>
                                         <option value="sistemas">Sistemas / Plataforma</option>
                                     </select>
                                 </div>
@@ -652,7 +636,12 @@
                     </div>
                 </div>
             </section>
-            
+            <div class="flex justify-center gap-6 text-xs text-slate-500 mt-5">
+    <span>🔒 Ambiente Seguro</span>
+    <span>✓ Acesso Restrito</span>
+    <span>🛡️ Dados Protegidos</span>
+
+</div>
         </div>
     </main>
 
@@ -759,7 +748,7 @@
             'adm': 'Setor Administrativo',
             'juridico': 'Setor Jurídico',
             'treinamentos': 'Manuais e Treinamentos',
-            'ideias': 'Caixa de Ideias e Ouvidoria' // ADICIONADO AQUI
+            'ideias': 'Feedback e Ouvidoria' // ADICIONADO AQUI
         };
 
         function navigateTo(sectionId) {
@@ -847,7 +836,7 @@
             }
         }
 
-        // FUNÇÃO DE ENVIO DA CAIXA DE IDEIAS
+        // FUNÇÃO DE ENVIO DA Hub de Sugestões
         function submitFeedback(event) {
             event.preventDefault(); // Impede a página de recarregar
             
