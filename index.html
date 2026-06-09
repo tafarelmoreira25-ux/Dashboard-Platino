@@ -24,6 +24,67 @@
         /* Animações extras */
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Estilos para o Carousel de Slides */
+        .slide-carousel {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            transform: scale(0.98) translateY(10px);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0,27,112,0.95) 0%, rgba(0,36,156,0.85) 100%);
+        }
+
+        .slide-item.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        .slide-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            width: 1.5rem;
+            border-radius: 0.25rem;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen overflow-hidden relative">
@@ -79,7 +140,7 @@
 <!-- Rodapé Premium Login -->
 <footer class="absolute bottom-6 right-8">
     <p class="text-xs text-slate-400">
-        Platino Hub System • Desenvolvido por
+        Platino Hub • Desenvolvido por
         <span class="font-semibold text-[#00249c]">
             Tafarel Moreira
         </span>
@@ -140,36 +201,10 @@
     <!-- CONTAINER PRINCIPAL DO APP (Oculto até o login) -->
     <div id="app-container" class="hidden h-full w-full flex overflow-hidden">
 
-    <!-- Base de Conhecimento para a IA (Invisível) -->
-    <script>
-        const conhecimentoEmpresa = `
-        A Platino Assessoria é uma consultoria especializada em revisão de juros abusivos.
-        
-        FLUXO COMERCIAL (O PRIMEIRO SETOR):
-        Objetivo: Primeiro contato, não prometer resultado garantido, identificar a dor, quebrar objeções e converter interesse em contratação consciente.
-        Passos do Atendimento: 1. Abertura (apresentação), 2. Entendimento da dor (perguntar banco, bem, parcelas), 3. Explicação (verificar abusos), 4. Geração de confiança, 5. Fechamento.
-        Objeções Comuns: 
-        - "A parcela cabe no bolso": Não significa que o contrato está correto, a revisão busca o valor justo.
-        - "Não tenho dinheiro": O financiamento consome a renda com abusos, a revisão estanca o prejuízo.
-        - "É golpe?": Trabalhamos com contrato formal e acompanhamento especializado (Administrativo e Jurídico).
-        Pós-Venda Comercial: Solicitar RG, Comprovante de endereço, Contrato, Última parcela, Doc veículo. Preencher contrato sem erros. Nomear arquivo 'NOME DO CLIENTE - CONTRATO ASSINADO' e enviar no grupo 'Contratos Assinados'.
-        
-        FLUXO ADMINISTRATIVO:
-        1. ANALISE CONTRATUAL E DISTRIBUIÇÃO NO CRM: Receber contrato do comercial, conferir dados, anexar no CRM, elaborar documentos iniciais, anexar no drive.
-        2. GOV.BR (RECLAMAÇÃO): Acessar Consumidor.gov, abrir reclamação, elaborar Termo de Ciência, anexar protocolo.
-        3. LAUDO (PARECER TÉCNICO): Acessar CRM, preencher dados, solicitar para contabilidade se for imóvel.
-        4. HOMOLOGAÇÃO (NEGOCIAÇÃO): Contato semanal com banco, negociar desconto, elaborar relatório.
-        5. ELABORAR DOCUMENTOS: Notificação extra, procurações, declarações, distratos.
-        
-        FLUXO JURÍDICO:
-        1. CRM E GESTÃO DE PASTA: Supervisão distribui pasta, consultor abre grupo.
-        2. ABERTURA DE GRUPO: Abrir em 2h, integrantes (Cliente, Consultora, ADM, Supervisão).
-        3. PROCEDIMENTOS: Laudo pericial, citação, certidão, homologação, audiência de conciliação.
-        4. ENCAMINHAR AO PROCESSUAL: Solicitar docs judiciais, pedir no grupo.
-        `;
-    </script>
-
-    <!-- Sidebar / Menu Lateral -->
+  <!-- Base de Conhecimento para a IA (Invisível) -->
+<script src="cerebro-platino-organizado.js"></script>
+   
+<!-- Sidebar / Menu Lateral -->
     <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
         <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950/50">
             <div class="flex items-center gap-2 text-white font-bold text-xl tracking-wide">
@@ -227,7 +262,7 @@
                     <i class="ph ph-sign-out text-xl"></i>
                 </button>
             </div>
-        </div>~
+        </div>
         </aside>
 
     <!-- Área Principal -->
@@ -239,15 +274,7 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="text-lg font-semibold text-slate-800">Training Space</h1>
-            <!-- Rodapé Premium -->
-<footer class="absolute bottom-4 right-6">
-    <p class="text-xs text-slate-400">
-        Platino system • Desenvolvido por
-        <span class="font-semibold text-slate-500">
-            Tafarel Moreira
-        </span>
-    </p>
-</footer>
+        
             </div>
             
             <!-- Barra de Busca IA -->
@@ -270,7 +297,94 @@
                             <i class="ph ph-shield-check text-[200px]"></i>
                         </div>
                         <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo à Platino Hub</h2>
-                        <p class="text-blue-100 max-w-2xl relative z-10">Sua central de apoio, treinamento e informação. Encontre procedimentos, avisos e orientações em um só lugar, tire dúvidas com nosso assistente inteligente e siga sua rotina com mais segurança, clareza e confiança.</p>
+                        <p class="text-blue-100 max-w-2xl relative z-8">Apoio, treinamentos e suporte em um único portal para guiar sua rotina com clareza.</p>
+                    </div>
+
+                    <!-- CAROUSEL DE SLIDES -->
+                    <div class="mb-8">
+                        <div class="slide-carousel relative">
+                            <!-- Slide 1: Capa -->
+                            <div class="slide-item active" id="carousel-slide-0">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-shield-check text-6xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Treinamento Institucional Integrado</h2>
+                                    <p class="text-lg text-blue-100 max-w-xl">Sua central unificada de apoio, treinamentos e inteligência. Padronizando a excelência.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="slide-item" id="carousel-slide-1">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-buildings text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">O que a Platino faz?</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Assessoria em revisão de contratos de financiamento, buscando cobranças abusivas.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+                            <div class="slide-item" id="carousel-slide-2">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-handshake text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">A Jornada do Cliente</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Integração perfeita entre Comercial, Administrativo e Jurídico.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 4 -->
+                            <div class="slide-item" id="carousel-slide-3">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-brain text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">4 Pilares do Atendimento</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Ouvir, Analisar, Compreender, Responder com excelência.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 5 -->
+                            <div class="slide-item" id="carousel-slide-4">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-target text-5xl text-green-400"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Comercial</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Quebrando objeções e gerando confiança nos primeiros contatos.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 6 -->
+                            <div class="slide-item" id="carousel-slide-5">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-folders text-5xl text-blue-300"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Administrativo</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">O motor da Platino - organização, documentos e tratativas.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slide 7 -->
+                            <div class="slide-item" id="carousel-slide-6">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i class="ph ph-scales text-5xl text-indigo-300"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Jurídico</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Proteção, formalização e execução até a homologação final.</p>
+                                </div>
+                            </div>
+
+                            <!-- Dots / Indicadores -->
+                            <div class="slide-dots">
+                                <div class="dot active" onclick="goToSlide(0)"></div>
+                                <div class="dot" onclick="goToSlide(1)"></div>
+                                <div class="dot" onclick="goToSlide(2)"></div>
+                                <div class="dot" onclick="goToSlide(3)"></div>
+                                <div class="dot" onclick="goToSlide(4)"></div>
+                                <div class="dot" onclick="goToSlide(5)"></div>
+                                <div class="dot" onclick="goToSlide(6)"></div>
+                            </div>
+
+                            <!-- Botões de Navegação -->
+                            <button onclick="prevCarouselSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm">
+                                <i class="ph ph-caret-left text-lg"></i>
+                            </button>
+                            <button onclick="nextCarouselSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm">
+                                <i class="ph ph-caret-right text-lg"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <h3 class="text-lg font-semibold text-slate-700 mb-4">Acesso Rápido</h3>
@@ -281,7 +395,7 @@
                                 <i class="ph ph-megaphone text-xl"></i>
                             </div>
                             <h3 class="font-semibold text-slate-800 mb-1">Mural de Avisos</h3>
-                            <p class="text-xs text-slate-500">Notícias, comunicados e ranking comercial.</p>
+                            <p class="text-xs text-slate-500">Notícias, comunicados e ranking.</p>
                         </div>
 
                         <div onclick="navigateTo('comercial')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-300 transition-all cursor-pointer group">
@@ -289,7 +403,7 @@
                                 <i class="ph ph-target text-xl"></i>
                             </div>
                             <h3 class="font-semibold text-slate-800 mb-1">Setor Comercial</h3>
-                            <p class="text-xs text-slate-500">Técnicas de vendas, objeções e formalização.</p>
+                            <p class="text-xs text-slate-500">Técnicas de conversão de Leads e objeções.</p>
                         </div>
 
                         <div onclick="navigateTo('adm')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group">
@@ -297,7 +411,7 @@
                                 <i class="ph ph-folders text-xl"></i>
                             </div>
                             <h3 class="font-semibold text-slate-800 mb-1">Administrativo</h3>
-                            <p class="text-xs text-slate-500">Análise, Consumidor.gov e laudos técnicos.</p>
+                            <p class="text-xs text-slate-500">Análise, organização e documentos jurídicos.</p>
                         </div>
 
                         <div onclick="navigateTo('juridico')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer group">
@@ -305,7 +419,7 @@
                                 <i class="ph ph-scales text-xl"></i>
                             </div>
                             <h3 class="font-semibold text-slate-800 mb-1">Jurídico</h3>
-                            <p class="text-xs text-slate-500">Gestão de pastas e procedimentos judiciais.</p>
+                            <p class="text-xs text-slate-500">Gestão de pastas, produtos e objeções judiciais.</p>
                         </div>
                     </div>
                 </div>
@@ -423,6 +537,8 @@
                                                 <p class="text-[11px] text-green-600 font-semibold">R$ 2.260,00</p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
 
                                 <!-- RANKING JURÍDICO -->
                                 <div>
@@ -636,6 +752,8 @@
                     </div>
                 </div>
             </section>
+           
+</footer>
             <div class="flex justify-center gap-6 text-xs text-slate-500 mt-5">
     <span>🔒 Ambiente Seguro</span>
     <span>✓ Acesso Restrito</span>
@@ -666,7 +784,7 @@
     </div>
 
     <!-- Widget de Chat IA -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
         <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
@@ -675,7 +793,7 @@
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
                     </div>
                     <div>
-                        <h4 class="font-bold text-sm">IA Supervisora</h4>
+                        <h4 class="font-bold text-sm">Chat Inteligente</h4>
                         <p class="text-[10px] text-blue-200 opacity-90">Suporte Operacional Platino</p>
                     </div>
                 </div>
@@ -710,9 +828,12 @@
 
     <script>
         // CONFIGURAÇÕES DA API GEMINI
-        const apiKey = "AQ.Ab8RN6Ie3AMUbcLURIEwaZRLizXcGDxHYgFReh-chxuxAMLpeQ"; // A chave é injetada automaticamente pelo sistema em visualização
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+const apiKey = "AQ.Ab8RN6Ie3AMUbcLURIEwaZRLizXcGDxHYgFReh-chxuxAMLpeQ";
 
+const modeloGemini = "gemini-2.5-flash";
+
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modeloGemini}:generateContent?key=${apiKey}`;
+      
         // DADOS PARA OS ACCORDIONS
         const fluxosComercial = [
             { id: "c1", icon: "🎯", title: "1. Objetivo e Introdução", tasks: ["Conduzir o lead com segurança, identificando a dor e quebrando objeções.", "O que é: Análise técnica do contrato para achar cobranças indevidas e abusivas.", "Função da assessoria: Acompanhar, organizar e negociar com o banco, para o cliente não estar sozinho.", "<span class='text-red-500 font-semibold'>Atenção:</span> Nunca prometa resultado garantido. Vendemos uma análise especializada e tratativa técnica."] },
@@ -869,37 +990,73 @@
         }
 
         // LÓGICA DE CHAMADA DA API GEMINI
-        async function fetchGeminiAPI(prompt, isSearch = false) {
-            const instruction = isSearch 
-                ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${conhecimentoEmpresa}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2' para ficar bonito. Sem tags html ou body, apenas o conteúdo interno.`
-                : `Você é a "IA Supervisora", o assistente interno da Platino Assessoria. Ajude a equipe baseando-se nas regras: ${conhecimentoEmpresa}. Seja extremamente cordial, profissional e conciso (máximo 3-4 linhas). Resolva objeções comerciais se perguntarem. Use marcação markdown simples como **negrito**.`;
+      async function fetchGeminiAPI(prompt, isSearch = false) {
+    const instruction = isSearch 
+        ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${conhecimentoEmpresa}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2'. Não use html, head ou body, apenas o conteúdo interno.`
+        : `Você é a IA Supervisora da Platino Assessoria. Ajude a equipe baseando-se nas regras internas da empresa: ${conhecimentoEmpresa}. Seja cordial, profissional, direto e didático. Responda como uma supervisão treinando funcionário novo. Use no máximo 4 a 6 linhas quando a pergunta for simples.`;
 
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: instruction }] },
-                generationConfig: { temperature: 0.3 }
-            };
-
-            const delays = [1000, 2000, 4000];
-            for (let i = 0; i < delays.length + 1; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) throw new Error("Erro na API");
-                    const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
-                } catch (error) {
-                    if (i === delays.length) {
-                        return "Desculpe, nossos servidores de IA estão ocupados no momento. Tente novamente em instantes.";
-                    }
-                    await new Promise(res => setTimeout(res, delays[i]));
-                }
+    const payload = {
+        contents: [
+            {
+                role: "user",
+                parts: [
+                    { text: prompt }
+                ]
             }
+        ],
+        systemInstruction: {
+            parts: [
+                { text: instruction }
+            ]
+        },
+        generationConfig: {
+            temperature: 0.3
         }
+    };
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const erroTexto = await response.text();
+            console.error("Erro Gemini:", response.status, erroTexto);
+
+            if (response.status === 400) {
+                return "Erro na configuração da IA: verifique se a chave API está correta e se o modelo Gemini está disponível.";
+            }
+
+            if (response.status === 403) {
+                return "Erro de permissão da IA: sua chave API pode estar inválida, bloqueada ou sem permissão.";
+            }
+
+            if (response.status === 404) {
+                return "Erro de modelo da IA: o modelo Gemini configurado não foi encontrado. Verifique se está usando gemini-2.5-flash.";
+            }
+
+            return "A IA não conseguiu responder agora. Verifique o console para detalhes do erro.";
+        }
+
+        const data = await response.json();
+        const resposta = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!resposta) {
+            console.error("Resposta inesperada da API:", data);
+            return "A IA respondeu em um formato inesperado. Verifique o console.";
+        }
+
+        return resposta;
+
+    } catch (error) {
+        console.error("Erro geral na chamada Gemini:", error);
+        return "Não foi possível conectar com a IA agora. Verifique sua internet, chave API e configuração do modelo.";
+    }
+}
 
         // LÓGICA DA BUSCA E MODAL
         async function handleSearch(event) {
@@ -942,8 +1099,61 @@
             }, 300);
         }
 
-        // LÓGICA DO CHAT
-        let chatOpen = false;
+        // LÓGICA DO CAROUSEL DE SLIDES
+        let currentCarouselSlide = 0;
+        const totalCarouselSlides = 7;
+
+        function updateCarouselUI() {
+            // Atualizar slides
+            document.querySelectorAll('.slide-item').forEach((slide, index) => {
+                if (index === currentCarouselSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Atualizar dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                if (index === currentCarouselSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextCarouselSlide() {
+            if (currentCarouselSlide < totalCarouselSlides - 1) {
+                currentCarouselSlide++;
+            } else {
+                currentCarouselSlide = 0;
+            }
+            updateCarouselUI();
+        }
+
+        function prevCarouselSlide() {
+            if (currentCarouselSlide > 0) {
+                currentCarouselSlide--;
+            } else {
+                currentCarouselSlide = totalCarouselSlides - 1;
+            }
+            updateCarouselUI();
+        }
+
+        function goToSlide(index) {
+            currentCarouselSlide = index;
+            updateCarouselUI();
+        }
+
+        // Auto-advance carousel a cada 8 segundos
+        setInterval(() => {
+            if (document.querySelector('#section-inicio:not(.hidden)')) {
+                nextCarouselSlide();
+            }
+        }, 8000);
+
+        // LÓGICA DO CAROUSEL DE SLIDES - FIM
         function toggleChat() {
             const chat = document.getElementById('chat-window');
             const btn = document.getElementById('chat-toggle-btn');
@@ -1026,6 +1236,9 @@
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
             
+            // Inicializar Carousel
+            updateCarouselUI();
+            
             // Verifica se o usuário já estava logado (simulação via sessionStorage)
             const savedRole = sessionStorage.getItem('platinoRole');
             const savedName = sessionStorage.getItem('platinoName');
@@ -1066,7 +1279,7 @@
                 document.getElementById('user-role').innerText = 'Supervisão Operacional';
                 document.getElementById('user-avatar').classList.replace('bg-blue-500', 'bg-[#00249c]'); // Cor mais forte para gestor
             } else {
-                document.getElementById('user-role').innerText = 'Consultor(a) de Operações';
+                document.getElementById('user-role').innerText = 'Equipe';
                 document.getElementById('user-avatar').classList.replace('bg-[#00249c]', 'bg-blue-500');
             }
 
@@ -1107,4 +1320,5 @@
     </script>
     </div> <!-- FIM DO APP CONTAINER -->
 </body>
+
 </html>
