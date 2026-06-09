@@ -101,28 +101,22 @@
 </div>
 
             <!-- Topo: Logo e identidade -->
-            <div class="relative z-10">
-                <div class="mt-6">
-                    <p class="text-white text-2xl font-bold tracking-[0.20em] uppercase">Platino Hub</p>
-                    <p class="text-blue-100/80 text-sm mt-1">Central Operacional Interna</p>
+                <div class="relative z-10">
+                    <div class="mt-6">
+                        <p class="text-white text-2xl font-bold tracking-[0.20em] uppercase">Platino Solulçoes Financeiras</p>
+                    </div>
                 </div>
-            </div>
 
             <!-- Centro: Mensagem principal -->
             <div class="relative z-10 max-w-md">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-blue-100 text-[11px] font-semibold uppercase tracking-wider mb-6">
-                    <i class="ph ph-sparkle text-blue-200 text-sm"></i>
-                    Ambiente Interno
-                </div>
-
                 <h1 class="text-5xl font-bold text-white leading-[1.05] tracking-tight max-w-lg">
                     Controle. <br>
                     Processos.<br>
                     Performance.
                 </h1>
 
-                <p class="text-blue-100/85 text-lg leading-relaxed mt-6 max-w-md">
-                Centralize processos, treinamentos, indicadores e comunicação da equipe em uma única plataforma.
+                <p class="text-blue-100/85 text-sm leading-relaxed mt-4 max-w-md">
+                    Centralize processos, treinamentos, cultura e comunicação da equipe em uma única plataforma.
                 </p>
             </div>
 
@@ -990,7 +984,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
 
         const fluxosJuridico = [
             { id: "j1", icon: "📂", title: "1. CRM e Gestão de Pasta", tasks: ["Supervisão distribui a pasta para o consultor no CRM", "A pasta vai para o consultor - Pasta Pendente", "O consultor abre o grupo e inicia as tratativas"] },
-            { id: "j2", icon: "👥", title: "2. Abertura de Grupo", tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + ADM + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"] },
+            { id: "j2", icon: "👥", title: "2. Abertura de Grupo", tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + Adm + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"] },
             { id: "j3", icon: "📬", title: "3. CRM Operacional - Consultores", tasks: ["Consultor Jurídico anexa os 5 doc. salva e envia para o ADM", "Após a reclamação do gov, a pasta vai voltar para 'LAUDO'", "Em laudo, alterar status e encaminhar para 'Laudo fechado'"] },
             { id: "j4", icon: "🎥", title: "4. Documentos para Solicitar", tasks: ["Notificação extrajudicial", "GOV", "Laudo", "Procurações", "Citação", "Documentos Judiciais"] },
             { id: "j5", icon: "🤝", title: "5. Procedimentos", tasks: ["Laudo Pericial", "Citação - Judicial ou Extrajudicial", "Certidão", "Homologação", "Audiência de conciliação", "Jurisprudência"] },
@@ -1155,8 +1149,8 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
         // LÓGICA DE CHAMADA DA API GEMINI
       async function fetchGeminiAPI(prompt, isSearch = false) {
     const instruction = isSearch 
-        ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${conhecimentoEmpresa}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2'. Não use html, head ou body, apenas o conteúdo interno.`
-        : `Você é a IA Supervisora da Platino Assessoria. Ajude a equipe baseando-se nas regras internas da empresa: ${conhecimentoEmpresa}. Seja cordial, profissional, direto e didático. Responda como uma supervisão treinando funcionário novo. Use no máximo 4 a 6 linhas quando a pergunta for simples.`;
+        ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${cerebro-platino-organizado.js}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2'. Não use html, head ou body, apenas o conteúdo interno.`
+        : `Você é a IA Supervisora da Platino Assessoria. Ajude a equipe baseando-se nas regras internas da empresa: ${cerebro-platino-organizado.js}. Seja cordial, profissional, direto e didático. Responda como uma supervisão treinando funcionário novo. Use no máximo 4 a 6 linhas quando a pergunta for simples.`;
 
     const payload = {
         contents: [
@@ -1235,14 +1229,14 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
         }
 
         function localKnowledgeAnswer(query) {
-            if (!window.conhecimentoEmpresa) return null;
+            if (!window.cerebro-platino-organizado.js) return null;
             const cleanedQuery = query.toLowerCase();
             const tokens = cleanedQuery.split(/\W+/).filter(token => token.length > 2);
             const qaPairs = [];
             const regex = /Pergunta:\s*(.+?)\nResposta:\s*([\s\S]*?)(?=(?:\nPergunta:)|$)/gi;
             let match;
 
-            while ((match = regex.exec(conhecimentoEmpresa)) !== null) {
+            while ((match = regex.exec(window.cerebro-platino-organizado.js)) !== null) {
                 qaPairs.push({
                     question: match[1].trim().toLowerCase(),
                     answer: match[2].trim().replace(/\n/g, ' ')
@@ -1269,7 +1263,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                 }
             }
 
-            const lines = conhecimentoEmpresa.split('\n').map(line => line.trim()).filter(Boolean);
+            const lines = window.cerebro-platino-organizado.js.split('\n').map(line => line.trim()).filter(Boolean);
             const matchedLines = lines.filter(line => tokens.some(token => line.toLowerCase().includes(token)));
             if (matchedLines.length) {
                 return matchedLines.slice(0, 6).join(' ');
@@ -1291,7 +1285,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
         }
 
         function extractTopicSection(topic) {
-            if (!window.conhecimentoEmpresa) return null;
+            if (!window.cerebro-platino-organizado.js) return null;
             const map = {
                 comercial: '2. COMERCIAL — OBJEÇÕES',
                 adm: '4. ADMINISTRATIVO — CRM E CONTRATOS',
@@ -1299,7 +1293,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             };
             const heading = map[topic];
             const regex = new RegExp(`={10,}\\s*${heading.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\s*={10,}([\\s\\S]*?)(?=(?:\\n={10,})|$)`, 'i');
-            const match = regex.exec(conhecimentoEmpresa);
+            const match = regex.exec(window.cerebro-platino-organizado.js);
             if (!match) return null;
             return match[1].trim();
         }
@@ -1800,12 +1794,12 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
 
             // VERIFICAÇÃO SIMULADA DE CREDENCIAIS
             if ((email === 'gestor@platino.com' || email === 'gestao@platino.com') && pass === '123') {
-                applyLoginState('gestor', 'Gestor(a) Platino');
+                applyLoginState('gestor', 'Gestão Platino');
             } else if (email === 'equipe@platino.com' && pass === '123') {
-                applyLoginState('equipe', 'Colaborador(a)');
+                applyLoginState('supervisão');
             } else {
                 errorMsg.classList.remove('hidden');
-            }
+            } 
         }
 
         function applyLoginState(role, name) {
