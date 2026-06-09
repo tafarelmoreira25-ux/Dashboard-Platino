@@ -388,16 +388,7 @@
                     </div>
 
                     <h3 class="text-lg font-semibold text-slate-700 mb-4">Acesso Rápido</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        
-                        <div onclick="navigateTo('avisos')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-amber-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-megaphone text-xl"></i>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Mural de Avisos</h3>
-                            <p class="text-xs text-slate-500">Notícias, comunicados e ranking.</p>
-                        </div>
-
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div onclick="navigateTo('comercial')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-300 transition-all cursor-pointer group">
                             <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                                 <i class="ph ph-target text-xl"></i>
@@ -434,10 +425,10 @@
                             <p class="text-slate-500 mt-1">Fique por dentro das novidades, premiações e resultados da equipe.</p>
                         </div>
                         <div class="flex items-center gap-3">
-                            <button class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
-                                <i class="ph ph-plus-circle text-lg"></i> Novo Aviso
+                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-pencil-simple text-lg"></i> Editar Avisos
                             </button>
-                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
+                            <span id="avisos-updated-tag" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
                                 <i class="ph ph-clock"></i> Atualizado hoje
                             </span>
                         </div>
@@ -450,9 +441,9 @@
                                 <div class="flex gap-3">
                                     <i class="ph ph-warning-circle text-blue-600 text-2xl"></i>
                                     <div>
-                                        <h3 class="font-bold text-blue-900">Atualização no Fluxo do GOV.BR</h3>
-                                        <p class="text-sm text-blue-800 mt-1">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.</p>
-                                        <p class="text-xs text-blue-600 mt-2 font-medium">Postado pela Supervisão há 2 horas</p>
+                                        <h3 id="avisos-main-title" class="font-bold text-blue-900">Atualização no Fluxo do GOV.BR</h3>
+                                        <p id="avisos-main-text" class="text-sm text-blue-800 mt-1">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.</p>
+                                        <p id="avisos-main-meta" class="text-xs text-blue-600 mt-2 font-medium">Postado pela Supervisão há 2 horas</p>
                                     </div>
                                 </div>
                             </div>
@@ -462,17 +453,17 @@
                                 <div class="relative z-10">
                                     <div class="flex items-center gap-2 mb-4">
                                         <i class="ph ph-trophy text-yellow-400 text-2xl"></i>
-                                        <h3 class="font-bold text-lg text-yellow-400">Destaque do Mês de Maio - Comercial</h3>
+                                        <h3 id="avisos-highlight-title" class="font-bold text-lg text-yellow-400">Destaque do Mês de Maio - Comercial</h3>
                                     </div>
                                     <div class="flex items-center gap-4">
-                                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-800 font-bold text-xl border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+                                        <div id="avisos-highlight-initials" class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-800 font-bold text-xl border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]">
                                             FR
                                         </div>
                                         <div>
-                                            <p class="font-bold text-xl">Fernanda Ramos</p>
-                                            <p class="text-slate-300 text-sm">Maior taxa de conversão em Maio!</p>
-                                            <p class="text-slate-300 text-sm">Alcançando o resultado de <span class="text-lg font-bold text-green-400">R$29.355,50</span></p>
-                                            <span class="inline-block mt-2 bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded border border-yellow-500/50">Lider Do Mês</span>
+                                            <p id="avisos-highlight-name" class="font-bold text-xl">Fernanda Ramos</p>
+                                            <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm">Maior taxa de conversão em Maio!</p>
+                                            <p id="avisos-highlight-value" class="text-slate-300 text-sm">Alcançando o resultado de <span class="text-lg font-bold text-green-400">R$29.355,50</span></p>
+                                            <span id="avisos-highlight-badge" class="inline-block mt-2 bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded border border-yellow-500/50">Lider Do Mês</span>
                                         </div>
                                     </div>
                                 </div>
@@ -482,19 +473,19 @@
                                 <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="ph ph-trend-up text-green-500"></i> Resultados da Semana</h3>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p class="text-2xl font-bold text-blue-600">9</p>
+                                        <p id="avisos-week-contracts" class="text-2xl font-bold text-blue-600">9</p>
                                         <p class="text-xs text-slate-500">Contratos Novos</p>
                                     </div>
                                     <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p class="text-2xl font-bold text-indigo-600">7</p>
+                                        <p id="avisos-week-laudos" class="text-2xl font-bold text-indigo-600">7</p>
                                         <p class="text-xs text-slate-500">Laudos Fechados</p>
                                     </div>
                                     <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p class="text-2xl font-bold text-red-600">2</p>
+                                        <p id="avisos-week-distratos" class="text-2xl font-bold text-red-600">2</p>
                                         <p class="text-xs text-slate-500"> Distratos </p>
                                     </div>
                                     <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p class="text-2xl font-bold text-purple-600">36.505,73</p>
+                                        <p id="avisos-week-revenue" class="text-2xl font-bold text-purple-600">36.505,73</p>
                                         <p class="text-xs text-slate-500">Faturamento Total</p>
                                     </div>
                                 </div>
@@ -503,9 +494,15 @@
 
                         <!-- Coluna 2: Rankings -->
                         <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col h-full">
-                            <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="ph ph-medal text-orange-500 text-xl"></i> Ranking de Destaques</h3>
-                            <p class="text-xs text-slate-500 mb-4">Atualizado em tempo real</p>
-                            
+                            <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="ph ph-medal text-orange-500 text-xl"></i> Ranking de Destaques</h3>
+                                <p class="text-xs text-slate-500 mb-4">Atualizado em tempo real</p>
+                            </div>
+                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
+                            </button>
+                        </div>
                             <div class="flex-1 overflow-y-auto pr-1 space-y-6 no-scrollbar" style="max-height: 500px;">
                                 <!-- RANKING COMERCIAL -->
                                 <div>
@@ -517,24 +514,24 @@
                                             <div class="absolute right-0 top-0 h-full w-1 bg-yellow-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-yellow-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
                                             <div class="flex-1">
-                                                <p class="font-bold text-slate-800 text-sm">Geovana Xavier</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$ 5.865,22</p>
+                                                <p id="rank-comercial-1-name" class="font-bold text-slate-800 text-sm">Geovana Xavier</p>
+                                                <p id="rank-comercial-1-value" class="text-[11px] text-green-600 font-semibold">R$ 5.865,22</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
                                             <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
                                             <div class="flex-1">
-                                                <p class="font-bold text-slate-800 text-sm">Mayara Cardoso</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$ 3.081,24</p>
+                                                <p id="rank-comercial-2-name" class="font-bold text-slate-800 text-sm">Mayara Cardoso</p>
+                                                <p id="rank-comercial-2-value" class="text-[11px] text-green-600 font-semibold">R$ 3.081,24</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
                                             <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
                                             <div class="flex-1">
-                                                <p class="font-bold text-slate-800 text-sm">Gabriel Paes</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$ 2.260,00</p>
+                                                <p id="rank-comercial-3-name" class="font-bold text-slate-800 text-sm">Gabriel Paes</p>
+                                                <p id="rank-comercial-3-value" class="text-[11px] text-green-600 font-semibold">R$ 2.260,00</p>
                                             </div>
                                         </div>
                                     </div>
@@ -550,24 +547,24 @@
                                             <div class="absolute right-0 top-0 h-full w-1 bg-indigo-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-indigo-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
                                             <div class="flex-1">
-                                                <p class="font-bold text-slate-800 text-sm">Tabata.</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$14.197,19</p>
+                                                <p id="rank-juridico-1-name" class="font-bold text-slate-800 text-sm">Tabata.</p>
+                                                <p id="rank-juridico-1-value" class="text-[11px] text-green-600 font-semibold">R$14.197,19</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
                                             <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
                                             <div class="flex-1">
-                                                <p class="font-bold text-slate-800 text-sm">Nicole.</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$8.769,35</p>
+                                                <p id="rank-juridico-2-name" class="font-bold text-slate-800 text-sm">Nicole.</p>
+                                                <p id="rank-juridico-2-value" class="text-[11px] text-green-600 font-semibold">R$8.769,35</p>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
                                             <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
                                             <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
                                             <div class="flex-1">
-                                                <p class="font-medium text-slate-700 text-sm">Elaine</p>
-                                                <p class="text-[11px] text-green-600 font-semibold">R$2.000,00</p>
+                                                <p id="rank-juridico-3-name" class="font-medium text-slate-700 text-sm">Elaine</p>
+                                                <p id="rank-juridico-3-value" class="text-[11px] text-green-600 font-semibold">R$2.000,00</p>
                                             </div>
                                         </div>
                                     </div>
@@ -686,15 +683,25 @@
                             <h2 class="text-2xl font-bold text-slate-800">Feedback e Ouvidoria</h2>
                             <p class="text-slate-500 mt-1">Sua voz faz a Platino crescer. Relate problemas, sugira melhorias ou envie novas ideias.</p>
                         </div>
+                        <div class="ml-auto">
+                            <button onclick="openFeedbackModal()" class="gestor-only hidden items-center gap-2 bg-slate-900 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm" title="Ver feedbacks recebidos">
+                                <i class="ph ph-list text-lg"></i> Ver Feedbacks
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 md:p-8">
-                        <form onsubmit="submitFeedback(event)" class="space-y-6">
-                            
+                    <div class="bg-gradient-to-br from-slate-950/5 via-slate-100 to-slate-50 border border-slate-200/80 rounded-3xl shadow-[0_20px_60px_rgba(15,23,42,0.08)] p-6 md:p-8 backdrop-blur-sm">
+                        <form id="feedback-form" onsubmit="submitFeedback(event)" class="space-y-6">
+                            <div class="flex flex-wrap gap-2 mb-1">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Feedback</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Sugestões</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 text-amber-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Reclamações</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Elogios</span>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Qual o tipo de mensagem?</label>
-                                    <select required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                    <select id="feedback-type" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         <option value="" disabled selected>Selecione uma opção...</option>
                                         <option value="ideia">💡 Ideia de Inovação</option>
                                         <option value="melhoria">📈 Sugestão de Melhoria</option>
@@ -704,7 +711,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Setor Relacionado</label>
-                                    <select required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                    <select id="feedback-sector" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         <option value="geral">Geral / Empresa como um todo</option>
                                         <option value="comercial">Setor Comercial</option>
                                         <option value="adm">Setor Administrativo</option>
@@ -719,23 +726,23 @@
                             
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Assunto Principal</label>
-                                <input type="text" required placeholder="Ex: Nova ideia para abordagem de clientes no WhatsApp" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                <input id="feedback-subject" type="text" required placeholder="Ex: Nova ideia para abordagem de clientes no WhatsApp" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Sua Mensagem Detalhada</label>
-                                <textarea required rows="5" placeholder="Descreva sua ideia ou relate o problema com o máximo de detalhes possível..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"></textarea>
+                                <textarea id="feedback-message" required rows="5" placeholder="Descreva sua ideia ou relate o problema com o máximo de detalhes possível..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"></textarea>
                             </div>
 
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-6 border-t border-slate-100 gap-4">
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <div class="relative flex items-center">
-                                        <input type="checkbox" class="w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer transition-all">
+                                        <input id="feedback-anonymous" type="checkbox" class="w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer transition-all">
                                     </div>
                                     <span class="text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">Enviar anonimamente (Ocultar meu nome)</span>
                                 </label>
                                 
-                                <button type="submit" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white font-semibold px-8 py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200/70 hover:shadow-slate-300/40 transform hover:-translate-y-0.5">
                                     <i class="ph ph-paper-plane-right text-lg"></i> Enviar Feedback
                                 </button>
                             </div>
@@ -780,6 +787,135 @@
                     <p class="text-sm text-slate-500">Consultando manuais da empresa...</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Ranking -->
+    <div id="ranking-modal" class="fixed inset-0 z-[110] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="ranking-modal-content">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Editar Ranking de Destaques</h3>
+                    <p class="text-sm text-slate-500">Atualize nomes e valores de cada posição. Salve para manter no navegador.</p>
+                </div>
+                <button onclick="closeRankingEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6" id="ranking-editor-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 1º lugar</h4>
+                        <input id="editor-rank-comercial-1-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-comercial-1-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 2º lugar</h4>
+                        <input id="editor-rank-comercial-2-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-comercial-2-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 3º lugar</h4>
+                        <input id="editor-rank-comercial-3-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-comercial-3-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 1º lugar</h4>
+                        <input id="editor-rank-juridico-1-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-juridico-1-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 2º lugar</h4>
+                        <input id="editor-rank-juridico-2-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-juridico-2-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 3º lugar</h4>
+                        <input id="editor-rank-juridico-3-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
+                        <input id="editor-rank-juridico-3-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                    </div>
+                </div>
+            </div>
+            <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
+                <div class="text-sm text-slate-500">As alterações ficam salvas localmente no seu navegador.</div>
+                <button onclick="saveRankingEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Avisos -->
+    <div id="avisos-modal" class="fixed inset-0 z-[110] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="avisos-modal-content">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Editar Central de Avisos</h3>
+                    <p class="text-sm text-slate-500">Atualize aviso, destaque do mês e resultados semanais.</p>
+                </div>
+                <button onclick="closeAvisosEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6">
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Aviso Principal</h4>
+                        <input id="editor-avisos-main-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do aviso" />
+                        <textarea id="editor-avisos-main-text" rows="4" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Texto do aviso"></textarea>
+                        <input id="editor-avisos-main-meta" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Meta do aviso (ex: Postado pela Supervisão há 2 horas)" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-3">Destaque do Mês</h4>
+                        <input id="editor-avisos-highlight-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do destaque" />
+                        <input id="editor-avisos-highlight-name" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome do destaque" />
+                        <input id="editor-avisos-highlight-subtitle" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Subtítulo do destaque" />
+                        <input id="editor-avisos-highlight-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor do destaque" />
+                    </div>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-2">Contratos Novos</h4>
+                        <input id="editor-avisos-week-contracts" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="9" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-2">Laudos Fechados</h4>
+                        <input id="editor-avisos-week-laudos" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="7" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-2">Distratos</h4>
+                        <input id="editor-avisos-week-distratos" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="2" />
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-2">Faturamento Total</h4>
+                        <input id="editor-avisos-week-revenue" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="36.505,73" />
+                    </div>
+                </div>
+            </div>
+            <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
+                <div class="text-sm text-slate-500">As alterações ficam salvas localmente no seu navegador.</div>
+                <button onclick="saveAvisosEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Visualizador de Feedbacks (Gestor) -->
+    <div id="feedback-modal" class="fixed inset-0 z-[115] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="feedback-modal-content">
+            <div class="flex items-center justify-between p-4 border-b border-slate-200">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">Feedbacks Recebidos</h3>
+                    <p class="text-sm text-slate-500">Liste, marque como tratado ou exporte para encaminhar à gerência.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="exportFeedbackCSV()" class="text-sm bg-slate-100 px-3 py-2 rounded-lg hover:bg-slate-200">Exportar CSV</button>
+                    <button onclick="closeFeedbackModal()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
+                        <i class="ph ph-x text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 overflow-y-auto" style="max-height:70vh">
+                <div id="feedback-list" class="space-y-3"></div>
+            </div>
+            <div class="p-4 border-t border-slate-100 text-sm text-slate-500">Total: <span id="feedback-count">0</span></div>
         </div>
     </div>
 
@@ -957,36 +1093,63 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             }
         }
 
-        // FUNÇÃO DE ENVIO DA Hub de Sugestões
+        // FUNÇÃO DE ENVIO DA Hub de Sugestões (com persistência local)
         function submitFeedback(event) {
-            event.preventDefault(); // Impede a página de recarregar
-            
-            // Aqui futuramente entra a conexão com Banco de Dados.
-            // Por enquanto, mostramos a mensagem de sucesso visualmente.
-            const form = event.target;
+            event.preventDefault();
+            const form = document.getElementById('feedback-form');
+            const type = document.getElementById('feedback-type').value;
+            const sector = document.getElementById('feedback-sector').value;
+            const subject = document.getElementById('feedback-subject').value.trim();
+            const message = document.getElementById('feedback-message').value.trim();
+            const anonymous = document.getElementById('feedback-anonymous').checked;
             const successMsg = document.getElementById('feedback-success');
             const submitBtn = form.querySelector('button[type="submit"]');
-            
-            // Efeito visual de loading no botão
+
+            if (!type || !sector || !subject || !message) return;
+
+            // build feedback object
+            const feedback = {
+                id: 'fb_' + Date.now(),
+                type,
+                sector,
+                subject,
+                message,
+                anonymous: !!anonymous,
+                submittedBy: anonymous ? 'Anônimo' : (sessionStorage.getItem('platinoName') || 'Usuário'),
+                createdAt: new Date().toISOString(),
+                handled: false
+            };
+
+            // Save to localStorage array
+            try {
+                const existing = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+                existing.unshift(feedback);
+                localStorage.setItem('platinoFeedbacks', JSON.stringify(existing));
+            } catch (e) {
+                console.error('Erro salvando feedback:', e);
+            }
+
+            // micro-loading effect
             const originalBtnHtml = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-lg"></i> Enviando...';
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
 
             setTimeout(() => {
-                form.reset(); // Limpa os campos
-                submitBtn.innerHTML = originalBtnHtml; // Volta o botão ao normal
+                form.reset();
+                submitBtn.innerHTML = originalBtnHtml;
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
-                
-                // Mostra mensagem de sucesso
                 successMsg.classList.remove('hidden');
-                
-                // Esconde a mensagem depois de 5 segundos
-                setTimeout(() => {
-                    successMsg.classList.add('hidden');
-                }, 5000);
-            }, 1500); // Simula 1.5s de envio
+
+                // hide after 5s
+                setTimeout(() => successMsg.classList.add('hidden'), 5000);
+
+                // if gestor viewing modal, refresh list
+                if (document.getElementById('feedback-modal') && !document.getElementById('feedback-modal').classList.contains('hidden')) {
+                    renderFeedbackList();
+                }
+            }, 900);
         }
 
         // LÓGICA DE CHAMADA DA API GEMINI
@@ -1027,19 +1190,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             const erroTexto = await response.text();
             console.error("Erro Gemini:", response.status, erroTexto);
 
-            if (response.status === 400) {
-                return "Erro na configuração da IA: verifique se a chave API está correta e se o modelo Gemini está disponível.";
-            }
-
-            if (response.status === 403) {
-                return "Erro de permissão da IA: sua chave API pode estar inválida, bloqueada ou sem permissão.";
-            }
-
-            if (response.status === 404) {
-                return "Erro de modelo da IA: o modelo Gemini configurado não foi encontrado. Verifique se está usando gemini-2.5-flash.";
-            }
-
-            return "A IA não conseguiu responder agora. Verifique o console para detalhes do erro.";
+            return fallbackLocalAnswer(prompt, isSearch, response.status);
         }
 
         const data = await response.json();
@@ -1047,16 +1198,117 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
 
         if (!resposta) {
             console.error("Resposta inesperada da API:", data);
-            return "A IA respondeu em um formato inesperado. Verifique o console.";
+            return fallbackLocalAnswer(prompt, isSearch, 'resposta inesperada');
         }
 
         return resposta;
 
     } catch (error) {
         console.error("Erro geral na chamada Gemini:", error);
-        return "Não foi possível conectar com a IA agora. Verifique sua internet, chave API e configuração do modelo.";
+        return fallbackLocalAnswer(prompt, isSearch, error);
     }
 }
+
+        function fallbackLocalAnswer(prompt, isSearch, reason) {
+            const localAnswer = localKnowledgeAnswer(prompt);
+            if (localAnswer) {
+                if (isSearch) {
+                    return `<div class="text-slate-700 leading-relaxed text-sm space-y-3"><p class="font-semibold text-blue-600">Resposta local:</p><p>${localAnswer}</p></div>`;
+                }
+                return localAnswer;
+            }
+
+            const theme = detectTheme(prompt);
+            if (theme) {
+                const sectionText = extractTopicSection(theme);
+                if (sectionText) {
+                    const summary = summarizeTopicSection(sectionText);
+                    const title = theme === 'adm' ? 'ADM' : theme === 'juridico' ? 'Jurídico' : 'Comercial';
+                    if (isSearch) {
+                        return `<div class="text-slate-700 leading-relaxed text-sm space-y-3"><p class="font-semibold text-blue-600">Resposta local (${title}):</p><p>${summary}</p></div>`;
+                    }
+                    return summary;
+                }
+            }
+
+            return "Opa, não tenho certeza. Peço que procure a supervisão e veja os PDF's também";
+        }
+
+        function localKnowledgeAnswer(query) {
+            if (!window.conhecimentoEmpresa) return null;
+            const cleanedQuery = query.toLowerCase();
+            const tokens = cleanedQuery.split(/\W+/).filter(token => token.length > 2);
+            const qaPairs = [];
+            const regex = /Pergunta:\s*(.+?)\nResposta:\s*([\s\S]*?)(?=(?:\nPergunta:)|$)/gi;
+            let match;
+
+            while ((match = regex.exec(conhecimentoEmpresa)) !== null) {
+                qaPairs.push({
+                    question: match[1].trim().toLowerCase(),
+                    answer: match[2].trim().replace(/\n/g, ' ')
+                });
+            }
+
+            let best = { score: 0, answer: null };
+            qaPairs.forEach(item => {
+                let score = 0;
+                tokens.forEach(token => {
+                    if (item.question.includes(token)) score += 3;
+                    if (item.answer.toLowerCase().includes(token)) score += 1;
+                });
+                if (score > best.score) best = { score, answer: item.answer };
+            });
+
+            if (best.score >= 5) return best.answer;
+
+            const theme = detectTheme(query);
+            if (theme) {
+                const sectionText = extractTopicSection(theme);
+                if (sectionText) {
+                    return summarizeTopicSection(sectionText);
+                }
+            }
+
+            const lines = conhecimentoEmpresa.split('\n').map(line => line.trim()).filter(Boolean);
+            const matchedLines = lines.filter(line => tokens.some(token => line.toLowerCase().includes(token)));
+            if (matchedLines.length) {
+                return matchedLines.slice(0, 6).join(' ');
+            }
+
+            return null;
+        }
+
+        function detectTheme(query) {
+            const text = query.toLowerCase();
+            const comercialWords = ['comercial', 'venda', 'lead', 'objeção', 'objeção', 'cliente', 'conversão', 'fechamento', 'script', 'prospecção', 'negociação'];
+            const admWords = ['adm', 'administrativo', 'contrato', 'crm', 'gov', 'protocolo', 'laudo', 'documento', 'pasta', 'fluxo', 'reclamação', 'processo', 'assinatura'];
+            const juridicoWords = ['jurídico', 'juridico', 'judicial', 'audiência', 'citação', 'processual', 'advogado', 'homologação', 'comarca', 'justiça', 'petição'];
+
+            if (comercialWords.some(word => text.includes(word))) return 'comercial';
+            if (admWords.some(word => text.includes(word))) return 'adm';
+            if (juridicoWords.some(word => text.includes(word))) return 'juridico';
+            return null;
+        }
+
+        function extractTopicSection(topic) {
+            if (!window.conhecimentoEmpresa) return null;
+            const map = {
+                comercial: '2. COMERCIAL — OBJEÇÕES',
+                adm: '4. ADMINISTRATIVO — CRM E CONTRATOS',
+                juridico: '5. ADMINISTRATIVO — GOV E PROTOCOLOS'
+            };
+            const heading = map[topic];
+            const regex = new RegExp(`={10,}\\s*${heading.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\s*={10,}([\\s\\S]*?)(?=(?:\\n={10,})|$)`, 'i');
+            const match = regex.exec(conhecimentoEmpresa);
+            if (!match) return null;
+            return match[1].trim();
+        }
+
+        function summarizeTopicSection(sectionText) {
+            const lines = sectionText.split('\n').map(line => line.trim()).filter(Boolean);
+            const useful = lines.filter(line => !/^OBJETIVO|^REGRA|^PASSO|^CUIDADO|^•|^O QUE|^QUANDO|^RESPONDA|^PERGUNTA/i.test(line));
+            return useful.slice(0, 6).join(' ');
+        }
 
         // LÓGICA DA BUSCA E MODAL
         async function handleSearch(event) {
@@ -1231,12 +1483,302 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             if (event.key === 'Enter') sendChatMessage();
         }
 
+        const defaultRankingData = {
+            comercial: [
+                { name: 'Geovana Xavier', value: 'R$ 5.865,22' },
+                { name: 'Mayara Cardoso', value: 'R$ 3.081,24' },
+                { name: 'Gabriel Paes', value: 'R$ 2.260,00' }
+            ],
+            juridico: [
+                { name: 'Tabata.', value: 'R$14.197,19' },
+                { name: 'Nicole.', value: 'R$8.769,35' },
+                { name: 'Elaine', value: 'R$2.000,00' }
+            ]
+        };
+
+        let rankingData = { ...defaultRankingData };
+        let chatOpen = false;
+
+        function loadRankingData() {
+            const saved = localStorage.getItem('platinoRanking');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.comercial && parsed.juridico) {
+                        rankingData = parsed;
+                    }
+                } catch (e) {
+                    console.warn('Erro ao carregar ranking salvo:', e);
+                }
+            }
+            renderRanking();
+        }
+
+        function renderRanking() {
+            rankingData.comercial.forEach((item, index) => {
+                const nameEl = document.getElementById(`rank-comercial-${index + 1}-name`);
+                const valueEl = document.getElementById(`rank-comercial-${index + 1}-value`);
+                if (nameEl) nameEl.innerText = item.name;
+                if (valueEl) valueEl.innerText = item.value;
+            });
+            rankingData.juridico.forEach((item, index) => {
+                const nameEl = document.getElementById(`rank-juridico-${index + 1}-name`);
+                const valueEl = document.getElementById(`rank-juridico-${index + 1}-value`);
+                if (nameEl) nameEl.innerText = item.name;
+                if (valueEl) valueEl.innerText = item.value;
+            });
+        }
+
+        function openRankingEditor() {
+            document.getElementById('editor-rank-comercial-1-name').value = rankingData.comercial[0].name;
+            document.getElementById('editor-rank-comercial-1-value').value = rankingData.comercial[0].value;
+            document.getElementById('editor-rank-comercial-2-name').value = rankingData.comercial[1].name;
+            document.getElementById('editor-rank-comercial-2-value').value = rankingData.comercial[1].value;
+            document.getElementById('editor-rank-comercial-3-name').value = rankingData.comercial[2].name;
+            document.getElementById('editor-rank-comercial-3-value').value = rankingData.comercial[2].value;
+            document.getElementById('editor-rank-juridico-1-name').value = rankingData.juridico[0].name;
+            document.getElementById('editor-rank-juridico-1-value').value = rankingData.juridico[0].value;
+            document.getElementById('editor-rank-juridico-2-name').value = rankingData.juridico[1].name;
+            document.getElementById('editor-rank-juridico-2-value').value = rankingData.juridico[1].value;
+            document.getElementById('editor-rank-juridico-3-name').value = rankingData.juridico[2].name;
+            document.getElementById('editor-rank-juridico-3-value').value = rankingData.juridico[2].value;
+
+            const modal = document.getElementById('ranking-modal');
+            modal.classList.remove('hidden', 'opacity-0');
+            document.getElementById('ranking-modal-content').classList.remove('scale-95');
+        }
+
+        function closeRankingEditor() {
+            const modal = document.getElementById('ranking-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('ranking-modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function saveRankingEditor() {
+            rankingData = {
+                comercial: [
+                    { name: document.getElementById('editor-rank-comercial-1-name').value.trim() || 'Geovana Xavier', value: document.getElementById('editor-rank-comercial-1-value').value.trim() || 'R$ 5.865,22' },
+                    { name: document.getElementById('editor-rank-comercial-2-name').value.trim() || 'Mayara Cardoso', value: document.getElementById('editor-rank-comercial-2-value').value.trim() || 'R$ 3.081,24' },
+                    { name: document.getElementById('editor-rank-comercial-3-name').value.trim() || 'Gabriel Paes', value: document.getElementById('editor-rank-comercial-3-value').value.trim() || 'R$ 2.260,00' }
+                ],
+                juridico: [
+                    { name: document.getElementById('editor-rank-juridico-1-name').value.trim() || 'Tabata.', value: document.getElementById('editor-rank-juridico-1-value').value.trim() || 'R$14.197,19' },
+                    { name: document.getElementById('editor-rank-juridico-2-name').value.trim() || 'Nicole.', value: document.getElementById('editor-rank-juridico-2-value').value.trim() || 'R$8.769,35' },
+                    { name: document.getElementById('editor-rank-juridico-3-name').value.trim() || 'Elaine', value: document.getElementById('editor-rank-juridico-3-value').value.trim() || 'R$2.000,00' }
+                ]
+            };
+            localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
+            renderRanking();
+            closeRankingEditor();
+        }
+
+        const defaultAvisosData = {
+            main: {
+                title: 'Atualização no Fluxo do GOV.BR',
+                text: 'Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.',
+                meta: 'Postado pela Supervisão há 2 horas'
+            },
+            highlight: {
+                title: 'Destaque do Mês de Maio - Comercial',
+                initials: 'FR',
+                name: 'Fernanda Ramos',
+                subtitle: 'Maior taxa de conversão em Maio!',
+                value: 'R$29.355,50'
+            },
+            week: {
+                contracts: '9',
+                laudos: '7',
+                distratos: '2',
+                revenue: '36.505,73'
+            }
+        };
+
+        let avisosData = { ...defaultAvisosData };
+
+        function loadAvisosData() {
+            const saved = localStorage.getItem('platinoAvisos');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.main && parsed.highlight && parsed.week) {
+                        avisosData = parsed;
+                    }
+                } catch (e) {
+                    console.warn('Erro ao carregar avisos salvos:', e);
+                }
+            }
+            renderAvisos();
+        }
+
+        function renderAvisos() {
+            document.getElementById('avisos-main-title').innerText = avisosData.main.title;
+            document.getElementById('avisos-main-text').innerText = avisosData.main.text;
+            document.getElementById('avisos-main-meta').innerText = avisosData.main.meta;
+            document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
+            document.getElementById('avisos-highlight-initials').innerText = avisosData.highlight.initials;
+            document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
+            document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
+            document.getElementById('avisos-highlight-value').innerHTML = `Alcançando o resultado de <span class="text-lg font-bold text-green-400">${avisosData.highlight.value}</span>`;
+            document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
+            document.getElementById('avisos-week-laudos').innerText = avisosData.week.laudos;
+            document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
+            document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
+        }
+
+        function openAvisosEditor() {
+            document.getElementById('editor-avisos-main-title').value = avisosData.main.title;
+            document.getElementById('editor-avisos-main-text').value = avisosData.main.text;
+            document.getElementById('editor-avisos-main-meta').value = avisosData.main.meta;
+            document.getElementById('editor-avisos-highlight-title').value = avisosData.highlight.title;
+            document.getElementById('editor-avisos-highlight-name').value = avisosData.highlight.name;
+            document.getElementById('editor-avisos-highlight-subtitle').value = avisosData.highlight.subtitle;
+            document.getElementById('editor-avisos-highlight-value').value = avisosData.highlight.value;
+            document.getElementById('editor-avisos-week-contracts').value = avisosData.week.contracts;
+            document.getElementById('editor-avisos-week-laudos').value = avisosData.week.laudos;
+            document.getElementById('editor-avisos-week-distratos').value = avisosData.week.distratos;
+            document.getElementById('editor-avisos-week-revenue').value = avisosData.week.revenue;
+            const modal = document.getElementById('avisos-modal');
+            modal.classList.remove('hidden', 'opacity-0');
+            document.getElementById('avisos-modal-content').classList.remove('scale-95');
+        }
+
+        function closeAvisosEditor() {
+            const modal = document.getElementById('avisos-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('avisos-modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Feedback viewer (Gestor)
+        function openFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('feedback-modal-content').classList.remove('scale-95');
+            }, 10);
+            renderFeedbackList();
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('feedback-modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function renderFeedbackList() {
+            const listEl = document.getElementById('feedback-list');
+            const countEl = document.getElementById('feedback-count');
+            const data = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+            listEl.innerHTML = '';
+            countEl.innerText = data.length;
+
+            if (!data.length) {
+                listEl.innerHTML = '<div class="text-sm text-slate-500">Nenhum feedback encontrado.</div>';
+                return;
+            }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-3 border border-slate-100 rounded-lg bg-white flex flex-col gap-2';
+                div.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <div class="text-xs text-slate-400">${new Date(item.createdAt).toLocaleString()}</div>
+                            <div class="font-semibold text-slate-800 mt-1">${escapeHtml(item.subject)}</div>
+                            <div class="text-xs text-slate-500">${escapeHtml(item.type)} • ${escapeHtml(item.sector)} • ${item.anonymous ? 'Anônimo' : escapeHtml(item.submittedBy)}</div>
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            <button onclick="toggleHandled('${item.id}')" class="text-sm px-3 py-1 rounded-lg ${item.handled ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${item.handled ? 'Tratado' : 'Marcar como tratado'}</button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-slate-700 mt-2">${escapeHtml(item.message)}</div>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function toggleHandled(id) {
+            try {
+                const arr = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+                const idx = arr.findIndex(f => f.id === id);
+                if (idx === -1) return;
+                arr[idx].handled = !arr[idx].handled;
+                localStorage.setItem('platinoFeedbacks', JSON.stringify(arr));
+                renderFeedbackList();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function exportFeedbackCSV() {
+            try {
+                const arr = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+                if (!arr.length) return alert('Nenhum feedback para exportar.');
+                const headers = ['id','createdAt','type','sector','subject','message','submittedBy','anonymous','handled'];
+                const rows = arr.map(r => headers.map(h => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(','));
+                const csv = [headers.join(','), ...rows].join('\n');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `platino_feedbacks_${Date.now()}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                console.error('Erro ao exportar CSV', e);
+                alert('Não foi possível exportar o arquivo. Veja o console.');
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function saveAvisosEditor() {
+            avisosData = {
+                main: {
+                    title: document.getElementById('editor-avisos-main-title').value.trim() || defaultAvisosData.main.title,
+                    text: document.getElementById('editor-avisos-main-text').value.trim() || defaultAvisosData.main.text,
+                    meta: document.getElementById('editor-avisos-main-meta').value.trim() || defaultAvisosData.main.meta
+                },
+                highlight: {
+                    title: document.getElementById('editor-avisos-highlight-title').value.trim() || defaultAvisosData.highlight.title,
+                    initials: document.getElementById('editor-avisos-highlight-name').value.trim().slice(0,2).toUpperCase() || defaultAvisosData.highlight.initials,
+                    name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
+                    subtitle: document.getElementById('editor-avisos-highlight-subtitle').value.trim() || defaultAvisosData.highlight.subtitle,
+                    value: document.getElementById('editor-avisos-highlight-value').value.trim() || defaultAvisosData.highlight.value
+                },
+                week: {
+                    contracts: document.getElementById('editor-avisos-week-contracts').value.trim() || defaultAvisosData.week.contracts,
+                    laudos: document.getElementById('editor-avisos-week-laudos').value.trim() || defaultAvisosData.week.laudos,
+                    distratos: document.getElementById('editor-avisos-week-distratos').value.trim() || defaultAvisosData.week.distratos,
+                    revenue: document.getElementById('editor-avisos-week-revenue').value.trim() || defaultAvisosData.week.revenue
+                }
+            };
+            localStorage.setItem('platinoAvisos', JSON.stringify(avisosData));
+            renderAvisos();
+            closeAvisosEditor();
+        }
+
         window.onload = () => {
             renderAccordions('com-accordions', fluxosComercial);
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
             
-            // Inicializar Carousel
+            // Carregar ranking e avisos salvos localmente e inicializar o carousel
+            loadRankingData();
+            loadAvisosData();
             updateCarouselUI();
             
             // Verifica se o usuário já estava logado (simulação via sessionStorage)
@@ -1257,7 +1799,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             errorMsg.classList.add('hidden'); // Reset error
 
             // VERIFICAÇÃO SIMULADA DE CREDENCIAIS
-            if (email === 'gestor@platino.com' && pass === '123') {
+            if ((email === 'gestor@platino.com' || email === 'gestao@platino.com') && pass === '123') {
                 applyLoginState('gestor', 'Gestor(a) Platino');
             } else if (email === 'equipe@platino.com' && pass === '123') {
                 applyLoginState('equipe', 'Colaborador(a)');
@@ -1319,6 +1861,9 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
         }
     </script>
     </div> <!-- FIM DO APP CONTAINER -->
+    <div class="fixed bottom-4 right-4 z-50 text-[11px] text-slate-400/90 tracking-[0.12em] uppercase pointer-events-none">
+        Desenvolvido por Tafarel Moreira
+    </div>
 </body>
 
 </html>

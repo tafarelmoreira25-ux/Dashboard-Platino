@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platino Assessoria | Treinamento Institucional Integrado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background-color: #0f172a; 
+        }
+
+        /* Slide Transitions */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            transform: scale(0.98) translateY(10px);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Image Overlays */
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,27,112,0.95) 0%, rgba(0,36,156,0.85) 100%);
+            z-index: -1;
+        }
+
+        /* Custom Scrollbar for lists */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen w-screen flex flex-col">
+
+    <!-- Container da Apresentação -->
+    <main id="presentation-container" class="relative w-full h-full flex-1 overflow-hidden">
+
+        <!-- ================= SLIDE 1: CAPA ================= -->
+        <div class="slide active" id="slide-0">
+            <!-- Background Image -->
+            <div class="absolute inset-0 z-[-2]">
+                <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?q=80&w=2073&auto=format&fit=crop" class="w-full h-full object-cover" alt="Platino Office">
+            </div>
+            <div class="bg-overlay"></div>
+
+            <div class="w-full h-full flex flex-col items-center justify-center text-center p-8 relative z-10">
+                <div class="mb-10 w-24 h-24 bg-white rounded-2xl shadow-2xl flex items-center justify-center p-4 transform rotate-3">
+                    <i class="ph ph-shield-check text-[#00249c] text-6xl transform -rotate-3"></i>
+                </div>
+                
+                <h2 class="text-blue-400 font-bold tracking-[0.3em] uppercase text-sm mb-4">Platino Assessoria</h2>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight max-w-5xl">
+                    Treinamento <br> Institucional Integrado
+                </h1>
+                <p class="text-xl text-blue-100 max-w-2xl font-light">
+                    Sua central unificada de apoio, treinamentos e inteligência. Padronizando a excelência do Comercial, Administrativo e Jurídico.
+                </p>
+                
+                <button onclick="nextSlide()" class="mt-12 group flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 rounded-full transition-all backdrop-blur-sm">
+                    Iniciar Treinamento <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 2: O QUE A PLATINO FAZ? ================= -->
+        <div class="slide" id="slide-1">
+            <div class="absolute inset-0 z-[-2] bg-slate-50"></div>
+            
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Left: Content -->
+                <div class="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
+                    <div class="flex items-center gap-3 text-[#00249c] font-bold tracking-widest uppercase text-xs mb-6">
+                        <i class="ph ph-buildings text-xl"></i> Identidade Corporativa
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-8 leading-tight">O que a Platino faz?</h2>
+                    
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        Atuamos com <b>assessoria em revisão de contratos de financiamento</b>, buscando identificar e tratar juros, taxas e cobranças abusivas. 
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="ph ph-target text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Nosso Objetivo Real</h4>
+                                <p class="text-sm text-slate-500 mt-1">Buscar o valor justo, promover economia e segurança financeira. Apoiados pelo Código de Defesa do Consumidor (CDC).</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+                            <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="ph ph-prohibit text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">O que NÃO fazemos</h4>
+                                <p class="text-sm text-slate-500 mt-1">O objetivo <b>não é "dar calote"</b>. Nunca orientamos o cliente a parar de pagar parcelas e nunca fazemos promessas absolutas de ganho de causa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Image -->
+                <div class="hidden lg:block lg:w-1/2 h-full relative">
+                    <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=1974&auto=format&fit=crop" class="w-full h-full object-cover" alt="Equipe Platino">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-50 to-transparent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 3: A JORNADA DO CLIENTE ================= -->
+        <div class="slide" id="slide-2">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#001B70] to-[#000d36] z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col justify-center p-12 lg:p-24 text-white relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4">A Jornada do Cliente</h2>
+                    <p class="text-blue-200 text-lg max-w-2xl mx-auto">Comunicação e alinhamento entre os três setores são a chave da nossa excelência operacional.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto w-full relative">
+                    <!-- Linha conectora -->
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-blue-800/50 -translate-y-1/2 z-0"></div>
+
+                    <!-- Card Comercial -->
+                    <div class="glass-dark p-8 rounded-2xl relative z-10 border-t-4 border-t-green-400 transform hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-green-500/20 text-green-400 rounded-2xl flex items-center justify-center mb-6 text-3xl mx-auto">
+                            <i class="ph ph-handshake"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4">1. Comercial</h3>
+                        <ul class="space-y-3 text-sm text-blue-100">
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-green-400"></i> Recebe o Lead e entende a dor</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-green-400"></i> Quebra objeções com clareza</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-green-400"></i> Fecha contrato (sem falsas promessas)</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-green-400"></i> Envia ao Administrativo</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card ADM -->
+                    <div class="glass-dark p-8 rounded-2xl relative z-10 border-t-4 border-t-blue-400 transform hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mb-6 text-3xl mx-auto">
+                            <i class="ph ph-folders"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4">2. Administrativo</h3>
+                        <ul class="space-y-3 text-sm text-blue-100">
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-blue-400"></i> Conferência rigorosa do Contrato</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-blue-400"></i> Anexa no CRM e sobe pasta</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-blue-400"></i> Reclamação GOV.BR e Notificação</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-blue-400"></i> Emissão do Laudo Técnico</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card Jurídico -->
+                    <div class="glass-dark p-8 rounded-2xl relative z-10 border-t-4 border-t-indigo-400 transform hover:-translate-y-2 transition-transform">
+                        <div class="w-16 h-16 bg-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center mb-6 text-3xl mx-auto">
+                            <i class="ph ph-scales"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-center mb-4">3. Jurídico</h3>
+                        <ul class="space-y-3 text-sm text-blue-100">
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-indigo-400"></i> Abre o Grupo (até 2h)</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-indigo-400"></i> Acolhe o cliente e pede docs</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-indigo-400"></i> Encaminha ao Processual</li>
+                            <li class="flex items-center gap-2"><i class="ph ph-check-circle text-indigo-400"></i> Citação, Audiência e Homologação</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 4: PILARES DO ATENDIMENTO ================= -->
+        <div class="slide" id="slide-3">
+            <div class="absolute inset-0 bg-slate-50 z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
+                <div class="max-w-6xl mx-auto w-full">
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 text-center">Os 4 Pilares do Atendimento</h2>
+                    <p class="text-slate-500 text-center mb-16 max-w-2xl mx-auto text-lg">Regras de ouro para qualquer interação, do primeiro "Alô" até a homologação final.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-lg transition-shadow">
+                            <div class="w-20 h-20 bg-[#00249c]/10 text-[#00249c] rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                                <i class="ph ph-ear"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">1. Ouvir</h3>
+                            <p class="text-slate-600 text-sm">Escute antes de responder. Não interrompa. A dor do cliente está nos detalhes do que ele diz.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-lg transition-shadow">
+                            <div class="w-20 h-20 bg-[#00249c]/10 text-[#00249c] rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                                <i class="ph ph-magnifying-glass"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">2. Analisar</h3>
+                            <p class="text-slate-600 text-sm">Entenda a real objeção. Ela não é um "não", é uma dúvida que você ainda não esclareceu.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-lg transition-shadow">
+                            <div class="w-20 h-20 bg-[#00249c]/10 text-[#00249c] rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                                <i class="ph ph-brain"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">3. Compreender</h3>
+                            <p class="text-slate-600 text-sm">Empatia. Entenda o medo do cliente. Gerar segurança é o nosso principal produto na abordagem.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-lg transition-shadow">
+                            <div class="w-20 h-20 bg-[#00249c]/10 text-[#00249c] rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
+                                <i class="ph ph-chat-centered-text"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3">4. Responder</h3>
+                            <p class="text-slate-600 text-sm">Seja objetivo e claro. Não use "juridiquês" complicado. Não confronte, transforme a dúvida em decisão.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 5: COMERCIAL - OBJEÇÕES ================= -->
+        <div class="slide" id="slide-4">
+            <div class="absolute inset-0 bg-white z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <div class="hidden lg:block lg:w-2/5 h-full relative">
+                    <img src="https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover" alt="Consultor Vendas">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#001B70] to-transparent opacity-80"></div>
+                    <div class="absolute bottom-12 left-12 text-white">
+                        <i class="ph ph-target text-5xl text-green-400 mb-4"></i>
+                        <h2 class="text-4xl font-bold mb-2">Comercial</h2>
+                        <p class="text-blue-100">Quebrando as barreiras iniciais</p>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-3/5 h-full flex flex-col justify-center p-12 lg:p-16 overflow-y-auto custom-scroll">
+                    <h3 class="text-3xl font-extrabold text-slate-900 mb-8">Objeções mais comuns e como lidar</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Objeção 1 -->
+                        <div class="bg-slate-50 border-l-4 border-l-[#00249c] p-6 rounded-r-xl">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2">
+                                <i class="ph ph-wallet text-xl text-slate-500"></i> "A parcela cabe no meu bolso / Já consigo pagar"
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                <b>Postura:</b> A questão não é se consegue pagar, mas sim pagar o <b>valor justo</b>. O juro abusivo consome uma renda que poderia ser investida na sua família. A revisão traz clareza.
+                            </p>
+                        </div>
+
+                        <!-- Objeção 2 -->
+                        <div class="bg-slate-50 border-l-4 border-l-amber-500 p-6 rounded-r-xl">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2">
+                                <i class="ph ph-money text-xl text-slate-500"></i> "Não tenho dinheiro agora"
+                            </h4>
+                            <p class="text-sm text-slate-600">
+                                <b>Postura:</b> Exatamente por isso você precisa revisar. O financiamento atual é uma torneira aberta drenando seu orçamento. A revisão estanca esse prejuízo mensal.
+                            </p>
+                        </div>
+
+                        <!-- Objeção 3 -->
+                        <div class="bg-slate-50 border-l-4 border-l-red-500 p-6 rounded-r-xl">
+                            <h4 class="font-bold text-slate-800 flex items-center gap-2 mb-2">
+                                <i class="ph ph-warning-circle text-xl text-slate-500"></i> Medo e Confiança ("É golpe?", "Vi no Reclame Aqui")
+                            </h4>
+                            <p class="text-sm text-slate-600 mb-3">
+                                <b>Postura:</b> Problemas acontecem em grandes operações, mas nosso diferencial é <b>não abandonar o cliente</b>. Mostre profissionalismo:
+                            </p>
+                            <ul class="text-sm text-slate-600 list-disc pl-5 space-y-1">
+                                <li>Temos contrato formal de prestação de serviços.</li>
+                                <li>Temos equipe setorizada (ADM e Jurídico) focada em resolver.</li>
+                                <li>Você acompanha passo a passo o processo e tem suporte direto.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 6: ADMINISTRATIVO - A ESPINHA DORSAL ================= -->
+        <div class="slide" id="slide-5">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] to-[#1e293b] z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col justify-center p-12 lg:p-24 text-white relative z-10">
+                <div class="flex items-center justify-between mb-12 border-b border-slate-700 pb-8">
+                    <div>
+                        <div class="flex items-center gap-3 text-blue-400 font-bold tracking-widest uppercase text-xs mb-3">
+                            <i class="ph ph-folders text-xl"></i> O Motor da Platino
+                        </div>
+                        <h2 class="text-4xl md:text-5xl font-extrabold text-white">Setor Administrativo</h2>
+                    </div>
+                    <div class="hidden md:flex w-20 h-20 bg-blue-500/20 rounded-full items-center justify-center text-blue-400 text-4xl">
+                        <i class="ph ph-file-text"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Esquerda: Regras de Entrada -->
+                    <div class="glass-dark p-8 rounded-xl border border-slate-700">
+                        <h3 class="text-2xl font-bold mb-6 text-blue-300 flex items-center gap-2">
+                            <i class="ph ph-shield-check"></i> 1. A Regra de Entrada
+                        </h3>
+                        <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                            O ADM é a barreira de qualidade. <b>Contrato irregular não segue para o Jurídico.</b>
+                        </p>
+                        <div class="bg-slate-800/50 p-4 rounded-lg">
+                            <h4 class="text-sm font-bold text-white mb-2">Checklist Rigoroso de Conferência:</h4>
+                            <ul class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                                <li><i class="ph ph-check text-green-400 mr-1"></i> Dados pessoais & RG/CPF</li>
+                                <li><i class="ph ph-check text-green-400 mr-1"></i> Endereço e E-mail</li>
+                                <li><i class="ph ph-check text-green-400 mr-1"></i> Valor do Contrato</li>
+                                <li><i class="ph ph-check text-green-400 mr-1"></i> Informações do Financiamento</li>
+                                <li class="col-span-2 text-red-400 font-bold mt-2"><i class="ph ph-warning mr-1"></i> Sem assinatura do cliente = Devolve pro Comercial!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Direita: Execução Operacional -->
+                    <div class="glass-dark p-8 rounded-xl border border-slate-700">
+                        <h3 class="text-2xl font-bold mb-6 text-blue-300 flex items-center gap-2">
+                            <i class="ph ph-rocket-launch"></i> 2. Execução Operacional
+                        </h3>
+                        <ul class="space-y-4 text-sm text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded bg-blue-900/50 flex items-center justify-center flex-shrink-0 text-blue-400 font-bold">1</div>
+                                <div>
+                                    <strong class="text-white">CRM e Drive:</strong> Anexar contrato, salvar dados e subir pasta. Todos os PDFs devem ir para o Drive.
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded bg-blue-900/50 flex items-center justify-center flex-shrink-0 text-blue-400 font-bold">2</div>
+                                <div>
+                                    <strong class="text-white">Consumidor.gov:</strong> Abrir reclamação (taxas abusivas / 2ª via contrato), gerar termo de ciência e anexar protocolo.
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded bg-blue-900/50 flex items-center justify-center flex-shrink-0 text-blue-400 font-bold">3</div>
+                                <div>
+                                    <strong class="text-white">Laudo (Parecer Técnico):</strong> Emitir laudo padrão matemático demonstrando a abusividade ou solicitar externo (imóveis).
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 7: JURÍDICO - ACOLHIMENTO E AÇÃO ================= -->
+        <div class="slide" id="slide-6">
+            <div class="absolute inset-0 bg-slate-100 z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
+                <div class="text-center mb-12">
+                    <i class="ph ph-scales text-6xl text-indigo-600 mb-4 inline-block"></i>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Setor Jurídico</h2>
+                    <p class="text-slate-600 text-lg max-w-2xl mx-auto">Proteção, formalização e execução. Da abertura do grupo até a homologação final do acordo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto w-full">
+                    
+                    <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-t-indigo-500">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">1. Recepção (Até 2h)</h3>
+                        <p class="text-sm text-slate-600 mb-4">O Jurídico distribui a pasta e abre o grupo de WhatsApp com o cliente rapidamente para evitar ansiedade e cancelamentos.</p>
+                        <div class="bg-indigo-50 text-indigo-800 p-3 rounded-lg text-xs font-semibold">
+                            Integrantes: Cliente + Consultora + ADM + Supervisão
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-t-indigo-500">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">2. Tratativas & Laudo</h3>
+                        <p class="text-sm text-slate-600 mb-4">Solicita notificação e GOV ao ADM. Após negativa do banco e emissão do parecer, altera o status para <b>"Laudo Fechado"</b>.</p>
+                        <ul class="text-xs text-slate-600 space-y-2 mt-4">
+                            <li>• Formalizar tudo por escrito no grupo.</li>
+                            <li>• Enviar o laudo para ciência do cliente.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-t-indigo-500">
+                        <h3 class="text-xl font-bold text-slate-800 mb-4">3. Fase Processual</h3>
+                        <p class="text-sm text-slate-600 mb-4">Em caso de descumprimento ou negativa definitiva, encaminha ao processual e solicita documentação judicial (CTPS, IRPF, Extratos).</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="bg-slate-100 text-slate-600 text-[10px] px-2 py-1 rounded">Citação</span>
+                            <span class="bg-slate-100 text-slate-600 text-[10px] px-2 py-1 rounded">Audiência</span>
+                            <span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">Homologação</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 8: OS 5 DOCUMENTOS INICIAIS ================= -->
+        <div class="slide" id="slide-7">
+            <div class="absolute inset-0 bg-[#001B70] z-[-2]"></div>
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+            
+            <div class="w-full h-full flex flex-col items-center justify-center p-12 text-white relative z-10">
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-center">Os 5 Documentos Iniciais</h2>
+                <p class="text-blue-200 mb-12 text-center">Requisitos básicos para a abertura da pasta e início dos trabalhos pelo Jurídico/ADM.</p>
+                
+                <div class="flex flex-wrap justify-center gap-6 max-w-5xl">
+                    <div class="w-40 h-48 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center p-4 text-center hover:bg-white/20 transition-colors">
+                        <i class="ph ph-identification-card text-4xl text-blue-300 mb-3"></i>
+                        <span class="font-bold text-sm">RG / CPF<br>ou CNH</span>
+                    </div>
+                    
+                    <div class="w-40 h-48 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center p-4 text-center hover:bg-white/20 transition-colors">
+                        <i class="ph ph-file-text text-4xl text-blue-300 mb-3"></i>
+                        <span class="font-bold text-sm">Contrato de<br>Financiamento</span>
+                    </div>
+
+                    <div class="w-40 h-48 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center p-4 text-center hover:bg-white/20 transition-colors">
+                        <i class="ph ph-receipt text-4xl text-blue-300 mb-3"></i>
+                        <span class="font-bold text-sm">Última<br>Parcela Paga</span>
+                    </div>
+
+                    <div class="w-40 h-48 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center p-4 text-center hover:bg-white/20 transition-colors">
+                        <i class="ph ph-map-pin-line text-4xl text-blue-300 mb-3"></i>
+                        <span class="font-bold text-sm">Comprovante de<br>Endereço</span>
+                    </div>
+
+                    <div class="w-40 h-48 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex flex-col items-center justify-center p-4 text-center hover:bg-white/20 transition-colors relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-yellow-500 text-[9px] font-bold px-2 py-1 rounded-bl-lg">*Se aplicável</div>
+                        <i class="ph ph-car text-4xl text-blue-300 mb-3 mt-2"></i>
+                        <span class="font-bold text-sm">Documento<br>do Veículo</span>
+                    </div>
+                </div>
+
+                <p class="mt-12 text-sm text-yellow-300 font-medium bg-black/30 px-6 py-2 rounded-full backdrop-blur-sm">
+                    <i class="ph ph-warning"></i> Importante: Todos os documentos devem estar legíveis e em nome do financiado.
+                </p>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 9: SEGURANÇA E PROTOCOLOS ================= -->
+        <div class="slide" id="slide-8">
+            <div class="absolute inset-0 bg-white z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <div class="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24">
+                    <div class="flex items-center gap-3 text-red-600 font-bold tracking-widest uppercase text-xs mb-4">
+                        <i class="ph ph-shield-warning text-xl"></i> Protocolos Críticos
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-8 leading-tight">Segurança de Dados e Postura</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="ph ph-password text-2xl text-slate-700"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg">A Senha do Cliente</h4>
+                                <p class="text-sm text-slate-600 mt-1">Usamos uma senha de segurança baseada nos últimos dígitos do telefone do cliente. O cliente <b>NÃO</b> deve informá-la a terceiros. A equipe Platino diz a senha para confirmar o contato oficial.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="ph ph-hand-waving text-2xl text-red-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-700 text-lg">O que NUNCA fazer</h4>
+                                <ul class="text-sm text-slate-600 mt-2 space-y-1">
+                                    <li>• Nunca pedir senha, código de cartão ou token bancário.</li>
+                                    <li>• Nunca prometer resultado garantido ("causa ganha").</li>
+                                    <li>• Nunca orientar o cliente a parar de pagar as parcelas do banco.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:block lg:w-1/2 h-full bg-slate-900 relative">
+                    <img src="https://images.unsplash.com/photo-1614064641936-38998978c9cb?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-60" alt="Cyber Security">
+                    <div class="absolute inset-0 flex items-center justify-center flex-col text-white p-12 text-center">
+                        <i class="ph ph-lock-key text-7xl text-blue-400 mb-6"></i>
+                        <h3 class="text-3xl font-bold mb-4">Confiança é a base</h3>
+                        <p class="text-lg text-slate-300">Nossa reputação é construída pela transparência, ética e segurança no trato dos dados e expectativas do cliente.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SLIDE 10: CONCLUSÃO ================= -->
+        <div class="slide" id="slide-9">
+            <div class="absolute inset-0 bg-gradient-to-br from-[#001B70] via-[#00249c] to-[#163AC8] z-[-2]"></div>
+            
+            <div class="w-full h-full flex flex-col items-center justify-center text-center p-8 relative z-10 text-white">
+                <i class="ph ph-check-circle text-7xl text-green-400 mb-8"></i>
+                <h2 class="text-5xl font-extrabold mb-6">Excelência Operacional</h2>
+                <p class="text-xl text-blue-200 max-w-2xl font-light mb-12">
+                    "Sua central unificada de apoio, treinamentos e inteligência. Padronizando a comunicação e garantindo resultados consistentes."
+                </p>
+                
+                <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
+                    <i class="ph ph-sparkle text-yellow-400"></i>
+                    <span class="font-medium tracking-wide">Platino Hub - Treinamento Finalizado</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Overlay de Controles e Rodapé -->
+    <div class="fixed bottom-0 left-0 w-full z-50 pointer-events-none">
+        
+        <!-- Barra de Progresso -->
+        <div class="w-full h-1 bg-slate-800/20">
+            <div id="progress-bar" class="h-full bg-blue-500 progress-bar w-0"></div>
+        </div>
+
+        <!-- Controles -->
+        <div class="px-6 py-4 flex justify-between items-center bg-gradient-to-t from-black/50 to-transparent pointer-events-auto">
+            
+            <!-- Logo Esquerda -->
+            <div class="flex items-center gap-2 text-white/80">
+                <i class="ph ph-shield-check text-2xl text-blue-400"></i>
+                <span class="font-bold text-sm tracking-wider uppercase">Platino Assessoria</span>
+            </div>
+
+            <!-- Setas de Navegação -->
+            <div class="flex items-center gap-4">
+                <button onclick="prevSlide()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md flex items-center justify-center text-white transition-colors border border-white/20 disabled:opacity-30 disabled:cursor-not-allowed" id="btn-prev">
+                    <i class="ph ph-caret-left text-xl"></i>
+                </button>
+                <span id="slide-counter" class="text-white font-mono text-sm">1 / 10</span>
+                <button onclick="nextSlide()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md flex items-center justify-center text-white transition-colors border border-white/20 disabled:opacity-30 disabled:cursor-not-allowed" id="btn-next">
+                    <i class="ph ph-caret-right text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Assinatura Direita -->
+            <div class="text-right">
+                <p class="text-[10px] text-white/60 uppercase tracking-widest">Desenvolvido por</p>
+                <p class="text-xs font-bold text-white tracking-wider">TAFAREL MOREIRA</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script de Controle da Apresentação -->
+    <script>
+        const totalSlides = document.querySelectorAll('.slide').length;
+        let currentSlide = 0;
+
+        function updateUI() {
+            // Atualizar Slides
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Atualizar Barra de Progresso
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Atualizar Contador
+            document.getElementById('slide-counter').innerText = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Atualizar Botões
+            document.getElementById('btn-prev').disabled = currentSlide === 0;
+            document.getElementById('btn-next').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateUI();
+            }
+        }
+
+        // Suporte a teclado (Setas Esquerda/Direita e Espaço)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Inicializar UI
+        updateUI();
+    </script>
+</body>
+</html>
