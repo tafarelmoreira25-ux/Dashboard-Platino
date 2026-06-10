@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,6 +17,13 @@
         
         .chat-bubble-user { border-bottom-right-radius: 0; }
         .chat-bubble-ai { border-bottom-left-radius: 0; }
+
+        .mascot-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: inherit;
+        }
         
         /* Animação suave para accordions */
         .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; max-height: 0; overflow: hidden; }
@@ -85,118 +93,139 @@
             width: 1.5rem;
             border-radius: 0.25rem;
         }
+
+        .dev-badge-container {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            z-index: 50;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.2rem 0.3rem;
+            border-radius: 9999px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .dev-badge-container:hover {
+            transform: translateY(-1px);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.22);
+        }
+
+        .icon-circle {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.5rem;
+            color: white;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+            transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .dev-badge-container:hover .icon-circle {
+            transform: scale(1.02);
+        }
+
+        .text-reveal {
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            transition: max-width 0.35s ease, opacity 0.25s ease, padding 0.25s ease;
+        }
+
+        .dev-badge-container:hover .text-reveal {
+            max-width: 140px;
+            opacity: 1;
+            padding-left: 0.2rem;
+        }
+
+        .text-line-1 {
+            font-size: 0.55rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .text-line-2 {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 h-screen overflow-hidden relative">
+<body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
-    <!-- TELA DE LOGIN (NOVO DESIGN TECNOLÓGICO) -->
-    <div id="login-screen" class="absolute inset-0 z-[200] flex bg-white">
-        
-        <!-- Lado Esquerdo: Branding Minimalista Tecnológico -->
-        <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-[#001B70] via-[#00249c] to-[#163AC8] flex-col justify-between px-14 py-12 relative overflow-hidden">
-            <!-- Fundo tecnológico mais limpo e sutil -->
-            <div class="absolute top-0 left-0 w-full h-full">
-            <div class="absolute top-24 right-24 w-72 h-72 bg-cyan-400/10 rounded-full blur-[120px]"></div>
-            <div class="absolute bottom-24 left-12 w-80 h-80 bg-blue-300/10 rounded-full blur-[150px]"></div>
-</div>
+    <button class="dev-badge-container" type="button" aria-label="Desenvolvido por Tafarel Moreira">
+        <div class="icon-circle">TM</div>
+        <div class="text-reveal">
+            <span class="text-line-1">Desenvolvido por</span>
+            <span class="text-line-2">Tafarel Moreira</span>
+        </div>
+    </button>
 
-            <!-- Topo: Logo e identidade -->
-                <div class="relative z-10">
-                    <div class="mt-6">
-                        <p class="text-white text-2xl font-bold tracking-[0.20em] uppercase">Platino Solulçoes Financeiras</p>
-                    </div>
-                </div>
-
-            <!-- Centro: Mensagem principal -->
-            <div class="relative z-10 max-w-md">
-                <h1 class="text-5xl font-bold text-white leading-[1.05] tracking-tight max-w-lg">
-                    Controle. <br>
-                    Processos.<br>
-                    Performance.
-                </h1>
-
-                <p class="text-blue-100/85 text-sm leading-relaxed mt-4 max-w-md">
-                    Centralize processos, treinamentos, cultura e comunicação da equipe em uma única plataforma.
-                </p>
-            </div>
-
-            <!-- Rodapé: Segurança discreta -->
-            <div class="relative z-10 flex items-center gap-3 text-blue-100/80 text-sm font-medium">
-                <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
-                    <i class="ph ph-shield-check text-lg text-blue-200"></i>
-                </div>
-                <span>Acesso interno • Equipe Platino</span>
-            </div>
+    <section id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white px-4">
+      <div class="w-full max-w-md bg-slate-950/80 border border-blue-500/20 rounded-3xl p-8 shadow-[0_30px_80px_rgba(15,23,42,0.55)] backdrop-blur-xl">
+        <div class="mb-6 text-center">
+          <h1 class="text-3xl font-bold tracking-wide text-blue-200">PLATINO</h1>
+          <p class="text-slate-300 mt-2">Acesso interno restrito</p>
         </div>
 
-        <!-- Lado Direito: Formulário Clean -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-white relative overflow-y-auto">
-<!-- Rodapé Premium Login -->
-<footer class="absolute bottom-6 right-8">
-    <p class="text-xs text-slate-400">
-        Platino Hub • Desenvolvido por
-        <span class="font-semibold text-[#00249c]">
-            Tafarel Moreira
-        </span>
-    </p>
-</footer>
-            <!-- Logo Mobile -->
-            <div class="absolute top-8 left-8 lg:hidden">
-                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-12 object-contain rounded-lg shadow-md bg-[#00249c] p-2">
-            </div>
-            
-            <div class="w-full max-w-md animate-fade-in mt-16 lg:mt-0">
-                <div class="mb-10">
-                    <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Bem-vindo à Platino Hub</h2>
-                    <p class="text-slate-500 mt-2 font-medium">Insira suas credenciais para acessar o painel.</p>
-                </div>
-                
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-bold text-slate-700">E-mail corporativo</label>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="ph ph-envelope text-slate-400 group-focus-within:text-[#00249c] transition-colors text-lg"></i>
-                            </div>
-                            <input type="email" id="login-email" required class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00249c]/20 focus:border-[#00249c] transition-all font-medium text-slate-700" placeholder="nome@platino.com.br">
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between">
-                            <label class="block text-sm font-bold text-slate-700">Senha</label>
-                            <a href="#" class="text-xs font-bold text-blue-600 hover:text-[#00249c] hover:underline transition-colors">Esqueceu a senha?</a>
-                        </div>
-                        <div class="relative group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="ph ph-lock text-slate-400 group-focus-within:text-[#00249c] transition-colors text-lg"></i>
-                            </div>
-                            <input type="password" id="login-password" required class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00249c]/20 focus:border-[#00249c] transition-all font-medium text-slate-700" placeholder="••••••••">
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-[#00249c] hover:bg-blue-800 text-white font-semibold py-4 rounded-xl transition-all shadow-lg shadow-[#00249c]/25 flex items-center justify-center gap-2 hover:-translate-y-0.5 mt-4">
-                        Acessar Plataforma <i class="ph ph-arrow-right text-lg"></i>
-                    </button>
-                    
-                    <div id="login-error" class="hidden flex items-start gap-3 text-sm text-red-600 bg-red-50 p-4 rounded-xl border border-red-100 animate-fade-in mt-4">
-                        <i class="ph ph-warning-circle text-xl mt-0.5"></i> 
-                        <div>
-                            <p class="font-bold">Acesso negado</p>
-                            <p class="opacity-90 mt-0.5">E-mail ou senha incorretos. Tente novamente.</p>
-                        </div>
-                    </div>
-                </form>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm text-slate-300 mb-2">E-mail</label>
+            <input 
+              id="login-email" 
+              type="email" 
+              class="w-full px-4 py-3 rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30"
+              placeholder="Digite seu e-mail"
+            />
+          </div>
 
-            </div>
+          <div>
+            <label class="block text-sm text-slate-300 mb-2">Senha</label>
+            <input 
+              id="login-password" 
+              type="password" 
+              class="w-full px-4 py-3 rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30"
+              placeholder="Digite sua senha"
+            />
+          </div>
+
+          <button 
+            id="login-button"
+            class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition ring-1 ring-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            Entrar
+          </button>
+
+          <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
         </div>
-    </div>
+      </div>
+    </section>
 
+    <div id="app-content" class="hidden">
     <!-- CONTAINER PRINCIPAL DO APP (Oculto até o login) -->
-    <div id="app-container" class="hidden h-full w-full flex overflow-hidden">
+    <div id="app-container" class="h-full w-full flex overflow-hidden">
 
   <!-- Base de Conhecimento para a IA (Invisível) -->
+<script src="config.js"></script>
 <script src="cerebro-platino-organizado.js"></script>
+<script src="knowledge-engine.js"></script>
    
 <!-- Sidebar / Menu Lateral -->
     <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
@@ -245,14 +274,14 @@
         
         <div class="p-4 border-t border-slate-800">
             <div class="flex items-center gap-3">
-                <div id="user-avatar" class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-sm">
-                    TM
+                <div id="user-avatar" class="w-9 h-9 rounded-full bg-blue-950 border border-blue-400/50 overflow-hidden shadow-lg shadow-blue-950/40 flex-shrink-0">
+                    <img src="assets/platino-mascot.png" alt="Mascote da Platino" class="mascot-avatar">
                 </div>
                 <div class="flex-1 overflow-hidden">
                     <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel Moreira</p>
                     <p id="user-role" class="text-[10px] text-blue-300 font-semibold uppercase tracking-wider mt-0.5">Administrador</p>
                 </div>
-                <button onclick="handleLogout()" class="text-slate-500 hover:text-red-400 transition-colors" title="Sair do Sistema">
+                <button onclick="logoutPlatino()" class="text-slate-500 hover:text-red-400 transition-colors" title="Sair do Sistema">
                     <i class="ph ph-sign-out text-xl"></i>
                 </button>
             </div>
@@ -262,22 +291,24 @@
     <!-- Área Principal -->
     <main class="flex-1 flex flex-col h-full relative">
         <!-- Header Principal -->
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10">
-            <div class="flex items-center gap-4">
+        <header class="h-16 bg-white border-b border-slate-200 relative px-4 md:px-8 z-10">
+            <div class="flex items-center gap-4 h-full">
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="text-lg font-semibold text-slate-800">Training Space</h1>
-        
             </div>
-            
-            <!-- Barra de Busca IA -->
-            <div class="relative w-full max-w-md hidden sm:block">
-                <div class="relative flex items-center">
-                    <i class="ph ph-sparkle absolute left-3 text-blue-500"></i>
-                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="w-full pl-10 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" onkeypress="handleSearch(event)">
+
+            <div class="absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
+                <div class="relative">
+                    <i class="ph ph-sparkle absolute left-4 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="w-full pl-12 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" onkeypress="handleSearch(event)">
                 </div>
             </div>
+
+            <button onclick="logoutPlatino()" class="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-700 text-sm transition">
+                Sair
+            </button>
         </header>
 
         <!-- Conteúdo Rolável -->
@@ -623,11 +654,34 @@
                         </button>
                     </div>
 
+                    <div class="relative min-h-[430px] md:min-h-[330px] mb-8 overflow-hidden rounded-3xl border border-blue-500/20 bg-slate-950 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
+                        <img
+                            src="assets/representante-treinamentos.png"
+                            alt="Representante virtual da Platino apresentando os treinamentos"
+                            class="absolute bottom-0 right-0 h-[58%] w-full object-contain object-bottom md:inset-y-0 md:h-full md:w-[64%] md:object-right"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-transparent md:bg-gradient-to-r md:from-slate-950 md:via-slate-950/85 md:to-transparent"></div>
+                        <div class="relative z-10 flex min-h-[430px] max-w-xl flex-col justify-start p-7 pt-8 md:min-h-[330px] md:justify-center md:p-10">
+                            <span class="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                                <i class="ph ph-graduation-cap text-base"></i> Trilha de aprendizagem
+                            </span>
+                            <h3 class="text-2xl font-bold leading-tight text-white md:text-3xl">Olá! Vamos avançar juntos?</h3>
+                            <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100 md:text-base">
+                                Consulte os materiais oficiais e siga os processos da Platino com mais segurança, clareza e padrão de atendimento.
+                            </p>
+                            <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium text-blue-100">
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Comercial</span>
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Administrativo</span>
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Jurídico</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <h3 class="font-semibold text-lg">Script Comercial</h3>
+                                    <h3 class="font-semibold text-lg">Esteira Comercial</h3>
                                     <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Técnicas de vendas, script de quebra de objeções e guia de contrato.</p>
@@ -858,11 +912,12 @@
                         <input id="editor-avisos-main-meta" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Meta do aviso (ex: Postado pela Supervisão há 2 horas)" />
                     </div>
                     <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Destaque do Mês</h4>
+                        <h4 class="font-semibold text-slate-800 mb-3">Destaque e Líder da Semana</h4>
                         <input id="editor-avisos-highlight-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do destaque" />
                         <input id="editor-avisos-highlight-name" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome do destaque" />
                         <input id="editor-avisos-highlight-subtitle" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Subtítulo do destaque" />
                         <input id="editor-avisos-highlight-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor do destaque" />
+                        <input id="editor-avisos-highlight-badge" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Badge do líder (ex: Líder da Semana)" />
                     </div>
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -885,8 +940,13 @@
                 </div>
             </div>
             <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
-                <div class="text-sm text-slate-500">As alterações ficam salvas localmente no seu navegador.</div>
-                <button onclick="saveAvisosEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors">Salvar Alterações</button>
+                <div>
+                    <div class="text-sm text-slate-500">Ao salvar, o sistema tenta sincronizar o aviso para toda a equipe.</div>
+                    <div id="avisos-save-status" class="text-xs text-slate-400 mt-1"></div>
+                </div>
+                <button id="avisos-save-button" onclick="saveAvisosEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                    <i class="ph ph-floppy-disk"></i> Salvar e Publicar
+                </button>
             </div>
         </div>
     </div>
@@ -918,12 +978,12 @@
         <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white/10 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-sm relative">
-                        <i class="ph ph-robot text-2xl text-blue-200"></i>
+                    <div class="w-10 h-10 bg-blue-950 border border-white/20 rounded-full overflow-hidden relative">
+                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
                     </div>
                     <div>
-                        <h4 class="font-bold text-sm">Chat Inteligente</h4>
+                        <h4 class="font-bold text-sm">Tafa, assistente interno</h4>
                         <p class="text-[10px] text-blue-200 opacity-90">Suporte Operacional Platino</p>
                     </div>
                 </div>
@@ -934,8 +994,8 @@
             
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50/50 flex flex-col gap-3 text-sm">
                 <div class="flex items-start gap-2 max-w-[85%]">
-                    <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
-                        <i class="ph ph-robot text-xs"></i>
+                    <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
+                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed">
                         Olá equipe! Estou aqui para ajudar com qualquer dúvida sobre Vendas, Administrativo ou Jurídico. O que você precisa consultar agora?
@@ -956,13 +1016,12 @@
         </button>
     </div>
 
+    </div>
+
     <script>
-        // CONFIGURAÇÕES DA API GEMINI
-const apiKey = "AQ.Ab8RN6Ie3AMUbcLURIEwaZRLizXcGDxHYgFReh-chxuxAMLpeQ";
-
-const modeloGemini = "gemini-2.5-flash";
-
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modeloGemini}:generateContent?key=${apiKey}`;
+        // A IA generativa deve ser exposta por um endpoint seguro no servidor.
+        // Sem endpoint, o sistema continua respondendo com o motor local.
+        const platinoAiEndpoint = window.PLATINO_CONFIG?.aiEndpoint || '';
       
         // DADOS PARA OS ACCORDIONS
         const fluxosComercial = [
@@ -1102,6 +1161,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             if (!type || !sector || !subject || !message) return;
 
             // build feedback object
+            const currentUser = window.firebaseAuthUser || null;
             const feedback = {
                 id: 'fb_' + Date.now(),
                 type,
@@ -1109,7 +1169,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                 subject,
                 message,
                 anonymous: !!anonymous,
-                submittedBy: anonymous ? 'Anônimo' : (sessionStorage.getItem('platinoName') || 'Usuário'),
+                submittedBy: anonymous ? 'Anônimo' : (currentUser?.email || 'Usuário'),
                 createdAt: new Date().toISOString(),
                 handled: false
             };
@@ -1146,162 +1206,62 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             }, 900);
         }
 
-        // LÓGICA DE CHAMADA DA API GEMINI
-      async function fetchGeminiAPI(prompt, isSearch = false) {
-    const instruction = isSearch 
-        ? `Você é o buscador inteligente da Platino Assessoria. Responda à pergunta baseando-se ESTRITAMENTE nos processos da empresa: ${cerebro-platino-organizado.js}. Formate a resposta em HTML simples (<b>, <ul>, <li>) usando classes do Tailwind como 'text-blue-600', 'font-bold', 'mb-2'. Não use html, head ou body, apenas o conteúdo interno.`
-        : `Você é a IA Supervisora da Platino Assessoria. Ajude a equipe baseando-se nas regras internas da empresa: ${cerebro-platino-organizado.js}. Seja cordial, profissional, direto e didático. Responda como uma supervisão treinando funcionário novo. Use no máximo 4 a 6 linhas quando a pergunta for simples.`;
+        // RECUPERAÇÃO DA BASE + IA GENERATIVA OPCIONAL
+        async function fetchKnowledgeAnswer(prompt, isSearch = false) {
+            const local = window.PlatinoKnowledge.localAnswer(prompt, { limit: isSearch ? 5 : 4 });
+            const context = window.PlatinoKnowledge.buildContext(prompt, 6);
 
-    const payload = {
-        contents: [
-            {
-                role: "user",
-                parts: [
-                    { text: prompt }
-                ]
-            }
-        ],
-        systemInstruction: {
-            parts: [
-                { text: instruction }
-            ]
-        },
-        generationConfig: {
-            temperature: 0.3
-        }
-    };
+            if (!platinoAiEndpoint || !context) return local.html;
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            const erroTexto = await response.text();
-            console.error("Erro Gemini:", response.status, erroTexto);
-
-            return fallbackLocalAnswer(prompt, isSearch, response.status);
-        }
-
-        const data = await response.json();
-        const resposta = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!resposta) {
-            console.error("Resposta inesperada da API:", data);
-            return fallbackLocalAnswer(prompt, isSearch, 'resposta inesperada');
-        }
-
-        return resposta;
-
-    } catch (error) {
-        console.error("Erro geral na chamada Gemini:", error);
-        return fallbackLocalAnswer(prompt, isSearch, error);
-    }
-}
-
-        function fallbackLocalAnswer(prompt, isSearch, reason) {
-            const localAnswer = localKnowledgeAnswer(prompt);
-            if (localAnswer) {
-                if (isSearch) {
-                    return `<div class="text-slate-700 leading-relaxed text-sm space-y-3"><p class="font-semibold text-blue-600">Resposta local:</p><p>${localAnswer}</p></div>`;
-                }
-                return localAnswer;
-            }
-
-            const theme = detectTheme(prompt);
-            if (theme) {
-                const sectionText = extractTopicSection(theme);
-                if (sectionText) {
-                    const summary = summarizeTopicSection(sectionText);
-                    const title = theme === 'adm' ? 'ADM' : theme === 'juridico' ? 'Jurídico' : 'Comercial';
-                    if (isSearch) {
-                        return `<div class="text-slate-700 leading-relaxed text-sm space-y-3"><p class="font-semibold text-blue-600">Resposta local (${title}):</p><p>${summary}</p></div>`;
-                    }
-                    return summary;
-                }
-            }
-
-            return "Opa, não tenho certeza. Peço que procure a supervisão e veja os PDF's também";
-        }
-
-        function localKnowledgeAnswer(query) {
-            if (!window.cerebro-platino-organizado.js) return null;
-            const cleanedQuery = query.toLowerCase();
-            const tokens = cleanedQuery.split(/\W+/).filter(token => token.length > 2);
-            const qaPairs = [];
-            const regex = /Pergunta:\s*(.+?)\nResposta:\s*([\s\S]*?)(?=(?:\nPergunta:)|$)/gi;
-            let match;
-
-            while ((match = regex.exec(window.cerebro-platino-organizado.js)) !== null) {
-                qaPairs.push({
-                    question: match[1].trim().toLowerCase(),
-                    answer: match[2].trim().replace(/\n/g, ' ')
+            try {
+                const response = await fetch(platinoAiEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        question: prompt,
+                        context,
+                        mode: isSearch ? 'search' : 'chat'
+                    })
                 });
-            }
 
-            let best = { score: 0, answer: null };
-            qaPairs.forEach(item => {
-                let score = 0;
-                tokens.forEach(token => {
-                    if (item.question.includes(token)) score += 3;
-                    if (item.answer.toLowerCase().includes(token)) score += 1;
+                if (!response.ok) throw new Error(`Endpoint respondeu ${response.status}`);
+
+                const data = await response.json();
+                const answer = data?.answer || data?.text;
+                if (!answer) throw new Error('Resposta vazia do endpoint');
+
+                return markdownToSafeHtml(answer);
+            } catch (error) {
+                console.warn('IA externa indisponível; usando a base local.', error);
+                return local.html;
+            }
+        }
+
+        function markdownToSafeHtml(value) {
+            const escaped = escapeHtml(String(value || ''));
+            return escaped
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^\s*[-•]\s+(.+)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/gs, '<ul class="list-disc pl-5 space-y-1">$1</ul>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function sanitizeAnswerHtml(value) {
+            const template = document.createElement('template');
+            template.innerHTML = String(value || '');
+            const allowedTags = new Set(['B', 'BR', 'DIV', 'LI', 'OL', 'P', 'SPAN', 'STRONG', 'UL']);
+
+            template.content.querySelectorAll('*').forEach(element => {
+                if (!allowedTags.has(element.tagName)) {
+                    element.replaceWith(document.createTextNode(element.textContent || ''));
+                    return;
+                }
+                [...element.attributes].forEach(attribute => {
+                    if (attribute.name !== 'class') element.removeAttribute(attribute.name);
                 });
-                if (score > best.score) best = { score, answer: item.answer };
             });
 
-            if (best.score >= 5) return best.answer;
-
-            const theme = detectTheme(query);
-            if (theme) {
-                const sectionText = extractTopicSection(theme);
-                if (sectionText) {
-                    return summarizeTopicSection(sectionText);
-                }
-            }
-
-            const lines = window.cerebro-platino-organizado.js.split('\n').map(line => line.trim()).filter(Boolean);
-            const matchedLines = lines.filter(line => tokens.some(token => line.toLowerCase().includes(token)));
-            if (matchedLines.length) {
-                return matchedLines.slice(0, 6).join(' ');
-            }
-
-            return null;
-        }
-
-        function detectTheme(query) {
-            const text = query.toLowerCase();
-            const comercialWords = ['comercial', 'venda', 'lead', 'objeção', 'objeção', 'cliente', 'conversão', 'fechamento', 'script', 'prospecção', 'negociação'];
-            const admWords = ['adm', 'administrativo', 'contrato', 'crm', 'gov', 'protocolo', 'laudo', 'documento', 'pasta', 'fluxo', 'reclamação', 'processo', 'assinatura'];
-            const juridicoWords = ['jurídico', 'juridico', 'judicial', 'audiência', 'citação', 'processual', 'advogado', 'homologação', 'comarca', 'justiça', 'petição'];
-
-            if (comercialWords.some(word => text.includes(word))) return 'comercial';
-            if (admWords.some(word => text.includes(word))) return 'adm';
-            if (juridicoWords.some(word => text.includes(word))) return 'juridico';
-            return null;
-        }
-
-        function extractTopicSection(topic) {
-            if (!window.cerebro-platino-organizado.js) return null;
-            const map = {
-                comercial: '2. COMERCIAL — OBJEÇÕES',
-                adm: '4. ADMINISTRATIVO — CRM E CONTRATOS',
-                juridico: '5. ADMINISTRATIVO — GOV E PROTOCOLOS'
-            };
-            const heading = map[topic];
-            const regex = new RegExp(`={10,}\\s*${heading.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}\\s*={10,}([\\s\\S]*?)(?=(?:\\n={10,})|$)`, 'i');
-            const match = regex.exec(window.cerebro-platino-organizado.js);
-            if (!match) return null;
-            return match[1].trim();
-        }
-
-        function summarizeTopicSection(sectionText) {
-            const lines = sectionText.split('\n').map(line => line.trim()).filter(Boolean);
-            const useful = lines.filter(line => !/^OBJETIVO|^REGRA|^PASSO|^CUIDADO|^•|^O QUE|^QUANDO|^RESPONDA|^PERGUNTA/i.test(line));
-            return useful.slice(0, 6).join(' ');
+            return template.innerHTML;
         }
 
         // LÓGICA DA BUSCA E MODAL
@@ -1326,10 +1286,8 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                         <p class="text-sm font-medium text-slate-500">Lendo os manuais e elaborando resposta para '${query}'...</p>
                     </div>`;
 
-                let resposta = await fetchGeminiAPI(query, true);
-                resposta = resposta.replace(/```html/g, '').replace(/```/g, '');
-
-                resultBody.innerHTML = `<div class="text-slate-700 leading-relaxed text-sm space-y-3">${resposta}</div>`;
+                const resposta = await fetchKnowledgeAnswer(query, true);
+                resultBody.innerHTML = `<div class="text-slate-700 leading-relaxed text-sm space-y-3">${sanitizeAnswerHtml(resposta)}</div>`;
                 event.target.value = '';
             }
         }
@@ -1421,19 +1379,18 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             
             if (sender === 'user') {
                 div.className = "flex items-end justify-end gap-2 max-w-[85%] self-end";
-                div.innerHTML = `
-                    <div class="bg-blue-600 text-white p-3 rounded-2xl chat-bubble-user shadow-sm text-sm">
-                        ${text}
-                    </div>
-                `;
+                const bubble = document.createElement('div');
+                bubble.className = 'bg-blue-600 text-white p-3 rounded-2xl chat-bubble-user shadow-sm text-sm';
+                bubble.textContent = text;
+                div.appendChild(bubble);
             } else {
                 div.className = "flex items-start gap-2 max-w-[90%]";
                 div.innerHTML = `
-                    <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
-                        <i class="ph ph-robot text-xs"></i>
+                    <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
+                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed text-sm">
-                        ${text}
+                        ${sanitizeAnswerHtml(text)}
                     </div>
                 `;
             }
@@ -1454,9 +1411,9 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             loadingDiv.id = 'chat-loading';
             loadingDiv.className = "flex items-start gap-2 max-w-[85%]";
             loadingDiv.innerHTML = `
-                <div class="w-7 h-7 bg-blue-600 text-white rounded-full flex-shrink-0 flex items-center justify-center mt-1 shadow-sm">
-                    <i class="ph ph-robot text-xs"></i>
-                </div>
+                    <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
+                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
+                    </div>
                 <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex gap-1 items-center h-[46px]">
                     <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
                     <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
@@ -1466,10 +1423,9 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             container.appendChild(loadingDiv);
             container.scrollTop = container.scrollHeight;
 
-            let resposta = await fetchGeminiAPI(text, false);
+            const resposta = await fetchKnowledgeAnswer(text, false);
             
-            document.getElementById('chat-loading').remove();
-            resposta = resposta.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            document.getElementById('chat-loading')?.remove();
             appendMessage(resposta, 'ai');
         }
 
@@ -1578,17 +1534,30 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                 initials: 'FR',
                 name: 'Fernanda Ramos',
                 subtitle: 'Maior taxa de conversão em Maio!',
-                value: 'R$29.355,50'
+                value: 'R$29.355,50',
+                badge: 'Líder da Semana'
             },
             week: {
                 contracts: '9',
                 laudos: '7',
                 distratos: '2',
                 revenue: '36.505,73'
-            }
+            },
+            updatedAt: null,
+            updatedBy: 'Supervisão'
         };
 
-        let avisosData = { ...defaultAvisosData };
+        let avisosData = normalizeAvisosData(defaultAvisosData);
+
+        function normalizeAvisosData(value = {}) {
+            return {
+                main: { ...defaultAvisosData.main, ...(value.main || {}) },
+                highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
+                week: { ...defaultAvisosData.week, ...(value.week || {}) },
+                updatedAt: value.updatedAt || null,
+                updatedBy: value.updatedBy || 'Supervisão'
+            };
+        }
 
         function loadAvisosData() {
             const saved = localStorage.getItem('platinoAvisos');
@@ -1596,7 +1565,7 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                 try {
                     const parsed = JSON.parse(saved);
                     if (parsed.main && parsed.highlight && parsed.week) {
-                        avisosData = parsed;
+                        avisosData = normalizeAvisosData(parsed);
                     }
                 } catch (e) {
                     console.warn('Erro ao carregar avisos salvos:', e);
@@ -1614,10 +1583,20 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
             document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
             document.getElementById('avisos-highlight-value').innerHTML = `Alcançando o resultado de <span class="text-lg font-bold text-green-400">${avisosData.highlight.value}</span>`;
+            document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
             document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
             document.getElementById('avisos-week-laudos').innerText = avisosData.week.laudos;
             document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
+
+            const updatedTag = document.getElementById('avisos-updated-tag');
+            if (avisosData.updatedAt) {
+                const date = new Date(avisosData.updatedAt);
+                updatedTag.innerHTML = `<i class="ph ph-clock"></i> ${date.toLocaleDateString('pt-BR')} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+                document.getElementById('avisos-main-meta').innerText = `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`;
+            } else {
+                updatedTag.innerHTML = '<i class="ph ph-clock"></i> Conteúdo inicial';
+            }
         }
 
         function openAvisosEditor() {
@@ -1628,10 +1607,12 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             document.getElementById('editor-avisos-highlight-name').value = avisosData.highlight.name;
             document.getElementById('editor-avisos-highlight-subtitle').value = avisosData.highlight.subtitle;
             document.getElementById('editor-avisos-highlight-value').value = avisosData.highlight.value;
+            document.getElementById('editor-avisos-highlight-badge').value = avisosData.highlight.badge;
             document.getElementById('editor-avisos-week-contracts').value = avisosData.week.contracts;
             document.getElementById('editor-avisos-week-laudos').value = avisosData.week.laudos;
             document.getElementById('editor-avisos-week-distratos').value = avisosData.week.distratos;
             document.getElementById('editor-avisos-week-revenue').value = avisosData.week.revenue;
+            document.getElementById('avisos-save-status').innerText = '';
             const modal = document.getElementById('avisos-modal');
             modal.classList.remove('hidden', 'opacity-0');
             document.getElementById('avisos-modal-content').classList.remove('scale-95');
@@ -1739,7 +1720,11 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                 .replace(/'/g, '&#039;');
         }
 
-        function saveAvisosEditor() {
+        async function saveAvisosEditor() {
+            const saveButton = document.getElementById('avisos-save-button');
+            const status = document.getElementById('avisos-save-status');
+            const currentUser = window.firebaseAuthUser?.email || 'Supervisão';
+
             avisosData = {
                 main: {
                     title: document.getElementById('editor-avisos-main-title').value.trim() || defaultAvisosData.main.title,
@@ -1751,19 +1736,48 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
                     initials: document.getElementById('editor-avisos-highlight-name').value.trim().slice(0,2).toUpperCase() || defaultAvisosData.highlight.initials,
                     name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
                     subtitle: document.getElementById('editor-avisos-highlight-subtitle').value.trim() || defaultAvisosData.highlight.subtitle,
-                    value: document.getElementById('editor-avisos-highlight-value').value.trim() || defaultAvisosData.highlight.value
+                    value: document.getElementById('editor-avisos-highlight-value').value.trim() || defaultAvisosData.highlight.value,
+                    badge: document.getElementById('editor-avisos-highlight-badge').value.trim() || defaultAvisosData.highlight.badge
                 },
                 week: {
                     contracts: document.getElementById('editor-avisos-week-contracts').value.trim() || defaultAvisosData.week.contracts,
                     laudos: document.getElementById('editor-avisos-week-laudos').value.trim() || defaultAvisosData.week.laudos,
                     distratos: document.getElementById('editor-avisos-week-distratos').value.trim() || defaultAvisosData.week.distratos,
                     revenue: document.getElementById('editor-avisos-week-revenue').value.trim() || defaultAvisosData.week.revenue
-                }
+                },
+                updatedAt: new Date().toISOString(),
+                updatedBy: currentUser
             };
+
             localStorage.setItem('platinoAvisos', JSON.stringify(avisosData));
             renderAvisos();
-            closeAvisosEditor();
+            saveButton.disabled = true;
+            saveButton.classList.add('opacity-70', 'cursor-wait');
+            status.className = 'text-xs text-blue-600 mt-1';
+            status.innerText = 'Publicando para a equipe...';
+
+            try {
+                if (!window.platinoNoticeStore) throw new Error('Sincronização ainda não conectada');
+                await window.platinoNoticeStore.save(avisosData);
+                status.className = 'text-xs text-green-600 mt-1';
+                status.innerText = 'Aviso publicado para toda a equipe.';
+                setTimeout(closeAvisosEditor, 700);
+            } catch (error) {
+                console.warn('Aviso salvo apenas localmente:', error);
+                status.className = 'text-xs text-amber-600 mt-1';
+                status.innerText = 'Salvo neste navegador. Verifique as regras do Firestore para sincronizar com a equipe.';
+            } finally {
+                saveButton.disabled = false;
+                saveButton.classList.remove('opacity-70', 'cursor-wait');
+            }
         }
+
+        window.applyRemoteAvisos = function (remoteData) {
+            if (!remoteData?.main || !remoteData?.highlight || !remoteData?.week) return;
+            avisosData = normalizeAvisosData(remoteData);
+            localStorage.setItem('platinoAvisos', JSON.stringify(avisosData));
+            renderAvisos();
+        };
 
         window.onload = () => {
             renderAccordions('com-accordions', fluxosComercial);
@@ -1774,90 +1788,140 @@ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelo
             loadRankingData();
             loadAvisosData();
             updateCarouselUI();
-            
-            // Verifica se o usuário já estava logado (simulação via sessionStorage)
-            const savedRole = sessionStorage.getItem('platinoRole');
-            const savedName = sessionStorage.getItem('platinoName');
-            if (savedRole && savedName) {
-                applyLoginState(savedRole, savedName);
-            }
         };
 
-        // --- SISTEMA DE LOGIN E CONTROLE DE ACESSO ---
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const pass = document.getElementById('login-password').value.trim();
-            const errorMsg = document.getElementById('login-error');
-            
-            errorMsg.classList.add('hidden'); // Reset error
-
-            // VERIFICAÇÃO SIMULADA DE CREDENCIAIS
-            if ((email === 'gestor@platino.com' || email === 'gestao@platino.com') && pass === '123') {
-                applyLoginState('gestor', 'Gestão Platino');
-            } else if (email === 'equipe@platino.com' && pass === '123') {
-                applyLoginState('supervisão');
-            } else {
-                errorMsg.classList.remove('hidden');
-            } 
-        }
-
-        function applyLoginState(role, name) {
-            // Salvar sessão para não perder ao recarregar a página
-            sessionStorage.setItem('platinoRole', role);
-            sessionStorage.setItem('platinoName', name);
-
-            // 1. Atualizar UI do Usuário na Sidebar
-            document.getElementById('user-name').innerText = name;
-            document.getElementById('user-avatar').innerText = name.substring(0, 2).toUpperCase();
-            
-            if(role === 'gestor') {
-                document.getElementById('user-role').innerText = 'Supervisão Operacional';
-                document.getElementById('user-avatar').classList.replace('bg-blue-500', 'bg-[#00249c]'); // Cor mais forte para gestor
-            } else {
-                document.getElementById('user-role').innerText = 'Equipe';
-                document.getElementById('user-avatar').classList.replace('bg-[#00249c]', 'bg-blue-500');
-            }
-
-            // 2. Aplicar Restrições de Nível de Acesso (Gestor-Only)
-            const gestorElements = document.querySelectorAll('.gestor-only');
-            if (role === 'gestor') {
-                // Gestor vê os botões de editar e adicionar
-                gestorElements.forEach(el => {
-                    el.classList.remove('hidden');
-                    el.classList.add('flex');
-                });
-            } else {
-                // Equipe não vê nada restrito
-                gestorElements.forEach(el => {
-                    el.classList.add('hidden');
-                    el.classList.remove('flex');
-                });
-            }
-
-            // 3. Transição das Telas
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
-            
-            // Navega para o Início
-            navigateTo('inicio');
-        }
-
-        function handleLogout() {
-            // Limpa a sessão
-            sessionStorage.removeItem('platinoRole');
-            sessionStorage.removeItem('platinoName');
-            
-            // Reseta form de login e troca visibilidade para bloquear o sistema
-            document.getElementById('login-form').reset();
-            document.getElementById('app-container').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
+        // Firebase login will be handled by the auth module imported at the end of the page.
     </script>
-    </div> <!-- FIM DO APP CONTAINER -->
-    <div class="fixed bottom-4 right-4 z-50 text-[11px] text-slate-400/90 tracking-[0.12em] uppercase pointer-events-none">
-        Desenvolvido por Tafarel Moreira
-    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      import {
+        doc,
+        getFirestore,
+        onSnapshot,
+        serverTimestamp,
+        setDoc
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAHy9YPTluXfSFqpJ3lFB7lTO555gmeCKA",
+        authDomain: "platino-hub.firebaseapp.com",
+        projectId: "platino-hub"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const avisosRef = doc(db, "appContent", "centralAvisos");
+      let stopAvisosSubscription = null;
+
+      window.platinoNoticeStore = {
+        save: async (data) => setDoc(avisosRef, {
+          ...data,
+          serverUpdatedAt: serverTimestamp()
+        }, { merge: true }),
+        subscribe: () => {
+          if (stopAvisosSubscription) return;
+          stopAvisosSubscription = onSnapshot(
+            avisosRef,
+            snapshot => {
+              if (snapshot.exists()) window.applyRemoteAvisos?.(snapshot.data());
+            },
+            error => console.warn("Não foi possível sincronizar a Central de Avisos.", error)
+          );
+        }
+      };
+
+      const loginScreen = document.getElementById("login-screen");
+      const appContent = document.getElementById("app-content");
+      const loginButton = document.getElementById("login-button");
+      const loginEmail = document.getElementById("login-email");
+      const loginPassword = document.getElementById("login-password");
+      const loginError = document.getElementById("login-error");
+
+      loginButton.addEventListener("click", async () => {
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value.trim();
+
+        loginError.classList.add("hidden");
+        loginError.textContent = "";
+
+        if (!email || !password) {
+          loginError.textContent = "Preencha o e-mail e a senha.";
+          loginError.classList.remove("hidden");
+          return;
+        }
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+          loginError.textContent = "E-mail ou senha inválidos.";
+          loginError.classList.remove("hidden");
+          console.error(error);
+        }
+      });
+
+      loginPassword.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          loginButton.click();
+        }
+      });
+
+      function updateUserAccess(user) {
+        const gestorEmails = ["gestao@platino.com"];
+        const nomeMap = {
+          "gestao@platino.com": "Gestão Platino",
+          "comercial@platino.com": "Comercial",
+          "juridico@platino.com": "Jurídico",
+          "administrativo@platino.com": "Administrativo"
+        };
+
+        const email = user?.email?.toLowerCase() || "";
+        const role = gestorEmails.includes(email) ? "gestor" : "equipe";
+        const displayName = nomeMap[email] || email || "Usuário";
+        window.firebaseAuthUser = user;
+
+        document.getElementById("user-name").innerText = displayName;
+        document.getElementById("user-role").innerText = role === "gestor" ? "Gestor" : "Equipe";
+
+        document.querySelectorAll(".gestor-only").forEach(el => {
+          if (role === "gestor") {
+            el.classList.remove("hidden");
+            el.classList.add("flex");
+          } else {
+            el.classList.add("hidden");
+            el.classList.remove("flex");
+          }
+        });
+      }
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          loginScreen.classList.add("hidden");
+          appContent.classList.remove("hidden");
+          updateUserAccess(user);
+          window.platinoNoticeStore.subscribe();
+        } else {
+          loginScreen.classList.remove("hidden");
+          appContent.classList.add("hidden");
+          window.firebaseAuthUser = null;
+          if (stopAvisosSubscription) {
+            stopAvisosSubscription();
+            stopAvisosSubscription = null;
+          }
+        }
+      });
+
+      window.logoutPlatino = async function () {
+        await signOut(auth);
+      };
+    </script>
 </body>
 
 </html>

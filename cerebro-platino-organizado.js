@@ -982,3 +982,5 @@ processual, ação judicial, citação judicial, citação extrajudicial, audiê
 conciliação, homologação, acordo, quitação, distrato, chargeback, procon,
 reclame aqui, segurança, dados, senha, golpe, erros comuns.
 `;
+
+window.conhecimentoEmpresa = conhecimentoEmpresa;
