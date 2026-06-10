@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isManagement() {
+      return signedIn()
+        && request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2';
+    }
+
+    match /appContent/{document} {
+      allow read: if signedIn();
+      allow create, update: if isManagement();
+      allow delete: if false;
+    }
+
+    match /feedbacks/{feedbackId} {
+      allow create: if signedIn()
+        && request.resource.data.handled == false;
+      allow read, update: if isManagement();
+      allow delete: if false;
+    }
+  }
+}

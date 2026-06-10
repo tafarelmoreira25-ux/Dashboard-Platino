@@ -443,156 +443,177 @@
 
             <!-- SEÇÃO: CENTRAL DE AVISOS -->
             <section id="section-avisos" class="content-section hidden animate-fade-in">
-                <div class="max-w-5xl mx-auto">
+                <div class="max-w-6xl mx-auto">
                     <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                            <h2 class="text-2xl font-bold text-slate-800">Central de Avisos e Destaques</h2>
-                            <p class="text-slate-500 mt-1">Fique por dentro das novidades, premiações e resultados da equipe.</p>
+                            <h2 class="text-2xl font-bold text-slate-800">Central da Equipe</h2>
+                            <p class="text-slate-500 mt-1">Resultados, ranking, reconhecimentos e comunicados em um só lugar.</p>
                         </div>
                         <div class="flex items-center gap-3">
                             <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
-                                <i class="ph ph-pencil-simple text-lg"></i> Editar Avisos
+                                <i class="ph ph-pencil-simple text-lg"></i> Editar Central
                             </button>
-                            <span id="avisos-updated-tag" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 whitespace-nowrap">
-                                <i class="ph ph-clock"></i> Atualizado hoje
+                            <span id="avisos-updated-tag" class="hidden bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
                             </span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Coluna 1: Mural de Avisos -->
-                        <div class="lg:col-span-2 space-y-6">
-                            <div class="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-xl shadow-sm">
-                                <div class="flex gap-3">
-                                    <i class="ph ph-warning-circle text-blue-600 text-2xl"></i>
-                                    <div>
-                                        <h3 id="avisos-main-title" class="font-bold text-blue-900">Atualização no Fluxo do GOV.BR</h3>
-                                        <p id="avisos-main-text" class="text-sm text-blue-800 mt-1">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.</p>
-                                        <p id="avisos-main-meta" class="text-xs text-blue-600 mt-2 font-medium">Postado pela Supervisão há 2 horas</p>
-                                    </div>
-                                </div>
+                    <!-- Destaque do mês -->
+                    <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6">
+                        <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
+                        <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
+                            <div class="w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden border border-yellow-400/50 bg-blue-950 shadow-[0_0_25px_rgba(250,204,21,0.25)]">
+                                <img src="assets/emblema-destaque-mes.png" alt="Emblema de destaque do mês" class="h-full w-full object-cover">
                             </div>
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
+                                    <h3 id="avisos-highlight-title" class="font-bold text-lg text-yellow-300">Destaque do Mês de Maio - Comercial</h3>
+                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Líder do Mês</span>
+                                </div>
+                                <p id="avisos-highlight-name" class="font-black text-2xl">Fernanda Ramos</p>
+                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em Maio!</p>
+                            </div>
+                            <div class="md:text-right">
+                                <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
+                                <p id="avisos-highlight-value" class="text-2xl font-black text-green-400 mt-1">R$29.355,50</p>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-xl shadow-md text-white relative overflow-hidden">
-                                <i class="ph ph-star text-[120px] text-yellow-500/20 absolute -bottom-4 -right-4"></i>
-                                <div class="relative z-10">
-                                    <div class="flex items-center gap-2 mb-4">
-                                        <i class="ph ph-trophy text-yellow-400 text-2xl"></i>
-                                        <h3 id="avisos-highlight-title" class="font-bold text-lg text-yellow-400">Destaque do Mês de Maio - Comercial</h3>
-                                    </div>
-                                    <div class="flex items-center gap-4">
-                                        <div id="avisos-highlight-initials" class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-800 font-bold text-xl border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]">
-                                            FR
-                                        </div>
-                                        <div>
-                                            <p id="avisos-highlight-name" class="font-bold text-xl">Fernanda Ramos</p>
-                                            <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm">Maior taxa de conversão em Maio!</p>
-                                            <p id="avisos-highlight-value" class="text-slate-300 text-sm">Alcançando o resultado de <span class="text-lg font-bold text-green-400">R$29.355,50</span></p>
-                                            <span id="avisos-highlight-badge" class="inline-block mt-2 bg-yellow-500/20 text-yellow-300 text-xs px-2 py-1 rounded border border-yellow-500/50">Lider Do Mês</span>
-                                        </div>
-                                    </div>
+                    <!-- Placar semanal -->
+                    <div class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 rounded-2xl p-5 md:p-6 shadow-xl shadow-slate-200/70 text-white mb-6 relative overflow-hidden">
+                        <div class="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
+                        <div class="relative flex flex-col gap-5">
+                            <div class="flex items-center justify-between gap-4">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-blue-300">Placar operacional</p>
+                                    <h3 class="mt-1 text-xl font-bold flex items-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
                                 </div>
+                                <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-xs text-blue-100">
+                                    <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span> Semana em andamento
+                                </span>
                             </div>
-                            
-                            <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-                                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="ph ph-trend-up text-green-500"></i> Resultados da Semana</h3>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p id="avisos-week-contracts" class="text-2xl font-bold text-blue-600">9</p>
-                                        <p class="text-xs text-slate-500">Contratos Novos</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p id="avisos-week-laudos" class="text-2xl font-bold text-indigo-600">7</p>
-                                        <p class="text-xs text-slate-500">Laudos Fechados</p>
-                                    </div>
-                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p id="avisos-week-distratos" class="text-2xl font-bold text-red-600">2</p>
-                                        <p class="text-xs text-slate-500"> Distratos </p>
-                                    </div>
-                                    <div class="bg-slate-50 p-3 rounded-lg text-center border border-slate-100">
-                                        <p id="avisos-week-revenue" class="text-2xl font-bold text-purple-600">36.505,73</p>
-                                        <p class="text-xs text-slate-500">Faturamento Total</p>
-                                    </div>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                                    <div class="flex items-center justify-between"><i class="ph ph-file-text text-blue-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Novos</span></div>
+                                    <p id="avisos-week-contracts" class="mt-2 text-3xl font-black">9</p>
+                                    <p class="text-xs text-blue-100">Contratos</p>
+                                </div>
+                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                                    <div class="flex items-center justify-between"><i class="ph ph-check-circle text-indigo-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Concluídos</span></div>
+                                    <p id="avisos-week-laudos" class="mt-2 text-3xl font-black">7</p>
+                                    <p class="text-xs text-blue-100">Laudos fechados</p>
+                                </div>
+                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                                    <div class="flex items-center justify-between"><i class="ph ph-x-circle text-red-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Período</span></div>
+                                    <p id="avisos-week-distratos" class="mt-2 text-3xl font-black">2</p>
+                                    <p class="text-xs text-blue-100">Distratos</p>
+                                </div>
+                                <div class="rounded-xl border border-purple-300/20 bg-purple-400/15 p-4 backdrop-blur-sm">
+                                    <div class="flex items-center justify-between"><i class="ph ph-currency-circle-dollar text-purple-200 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-purple-100">Total</span></div>
+                                    <p id="avisos-week-revenue" class="mt-2 text-2xl md:text-3xl font-black">36.505,73</p>
+                                    <p class="text-xs text-purple-100">Faturamento</p>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Coluna 2: Rankings -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col h-full">
-                            <div class="flex items-center justify-between gap-3">
+                    <!-- Arena de ranking -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm mb-6 overflow-hidden relative">
+                        <div class="absolute right-0 top-0 h-40 w-40 bg-yellow-100/60 rounded-full blur-3xl"></div>
+                        <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                             <div>
-                                <h3 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="ph ph-medal text-orange-500 text-xl"></i> Ranking de Destaques</h3>
-                                <p class="text-xs text-slate-500 mb-4">Atualizado em tempo real</p>
+                                <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500">Arena de performance</p>
+                                <h3 class="mt-1 text-xl font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-trophy text-yellow-500 text-2xl"></i> Ranking da Semana</h3>
+                                <p class="text-xs text-slate-500 mt-1">Quem está no topo agora? A disputa continua aberta.</p>
                             </div>
-                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-slate-900 hover:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
                             </button>
                         </div>
-                            <div class="flex-1 overflow-y-auto pr-1 space-y-6 no-scrollbar" style="max-height: 500px;">
-                                <!-- RANKING COMERCIAL -->
-                                <div>
-                                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1 border-b border-slate-100 pb-1">
-                                        <i class="ph ph-target text-green-500 text-sm"></i> Setor Comercial
-                                    </h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center gap-3 p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-yellow-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-yellow-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
-                                            <div class="flex-1">
-                                                <p id="rank-comercial-1-name" class="font-bold text-slate-800 text-sm">Geovana Xavier</p>
-                                                <p id="rank-comercial-1-value" class="text-[11px] text-green-600 font-semibold">R$ 5.865,22</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
-                                            <div class="flex-1">
-                                                <p id="rank-comercial-2-name" class="font-bold text-slate-800 text-sm">Mayara Cardoso</p>
-                                                <p id="rank-comercial-2-value" class="text-[11px] text-green-600 font-semibold">R$ 3.081,24</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
-                                            <div class="flex-1">
-                                                <p id="rank-comercial-3-name" class="font-bold text-slate-800 text-sm">Gabriel Paes</p>
-                                                <p id="rank-comercial-3-value" class="text-[11px] text-green-600 font-semibold">R$ 2.260,00</p>
-                                            </div>
-                                        </div>
+
+                        <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
+                            <!-- Ranking Comercial -->
+                            <div class="rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 p-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-bold text-slate-800 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center"><i class="ph ph-target"></i></span> Comercial</h4>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Conversão</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="group flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-amber-100/70 border border-yellow-300 rounded-xl shadow-sm transition-transform hover:-translate-y-0.5">
+                                        <div class="relative w-11 h-11 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 text-white flex items-center justify-center font-black shadow-md"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[9px] flex items-center justify-center">1</span></div>
+                                        <div class="flex-1 min-w-0"><p id="rank-comercial-1-name" class="font-bold text-slate-900 truncate">Geovana Xavier</p><p id="rank-comercial-1-value" class="text-sm text-emerald-700 font-bold">R$ 5.865,22</p></div>
+                                        <i class="ph-fill ph-fire text-orange-500 text-2xl animate-pulse"></i>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-slate-200 rounded-xl transition-all hover:border-slate-300 hover:shadow-sm">
+                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-400 text-slate-800 flex items-center justify-center font-black">2</div>
+                                        <div class="flex-1 min-w-0"><p id="rank-comercial-2-name" class="font-semibold text-slate-800 truncate">Mayara Cardoso</p><p id="rank-comercial-2-value" class="text-xs text-emerald-600 font-bold">R$ 3.081,24</p></div>
+                                        <i class="ph ph-arrow-up text-green-500"></i>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-orange-200 rounded-xl transition-all hover:border-orange-300 hover:shadow-sm">
+                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-200 to-orange-400 text-orange-900 flex items-center justify-center font-black">3</div>
+                                        <div class="flex-1 min-w-0"><p id="rank-comercial-3-name" class="font-semibold text-slate-800 truncate">Gabriel Paes</p><p id="rank-comercial-3-value" class="text-xs text-emerald-600 font-bold">R$ 2.260,00</p></div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- RANKING JURÍDICO -->
-                                <div>
-                                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-1 border-b border-slate-100 pb-1 mt-4">
-                                        <i class="ph ph-scales text-indigo-500 text-sm"></i> Setor Jurídico
-                                    </h4>
-                                    <div class="space-y-3">
-                                        <div class="flex items-center gap-3 p-2.5 bg-indigo-50 border border-indigo-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-indigo-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-indigo-400 text-white flex items-center justify-center font-bold shadow-sm text-xs">1</div>
-                                            <div class="flex-1">
-                                                <p id="rank-juridico-1-name" class="font-bold text-slate-800 text-sm">Tabata.</p>
-                                                <p id="rank-juridico-1-value" class="text-[11px] text-green-600 font-semibold">R$14.197,19</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-slate-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold shadow-sm text-xs">2</div>
-                                            <div class="flex-1">
-                                                <p id="rank-juridico-2-name" class="font-bold text-slate-800 text-sm">Nicole.</p>
-                                                <p id="rank-juridico-2-value" class="text-[11px] text-green-600 font-semibold">R$8.769,35</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-3 p-2.5 bg-orange-50 border border-orange-200 rounded-lg relative overflow-hidden">
-                                            <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
-                                            <div class="w-7 h-7 rounded-full bg-orange-300 text-orange-800 flex items-center justify-center font-bold shadow-sm text-xs">3</div>
-                                            <div class="flex-1">
-                                                <p id="rank-juridico-3-name" class="font-medium text-slate-700 text-sm">Elaine</p>
-                                                <p id="rank-juridico-3-value" class="text-[11px] text-green-600 font-semibold">R$2.000,00</p>
-                                            </div>
-                                        </div>
+                            <!-- Ranking Jurídico -->
+                            <div class="rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 p-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-bold text-slate-800 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center"><i class="ph ph-scales"></i></span> Jurídico</h4>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Resultados</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="group flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-amber-100/70 border border-yellow-300 rounded-xl shadow-sm transition-transform hover:-translate-y-0.5">
+                                        <div class="relative w-11 h-11 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 text-white flex items-center justify-center font-black shadow-md"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[9px] flex items-center justify-center">1</span></div>
+                                        <div class="flex-1 min-w-0"><p id="rank-juridico-1-name" class="font-bold text-slate-900 truncate">Tabata.</p><p id="rank-juridico-1-value" class="text-sm text-indigo-700 font-bold">R$14.197,19</p></div>
+                                        <i class="ph-fill ph-fire text-orange-500 text-2xl animate-pulse"></i>
                                     </div>
+                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-slate-200 rounded-xl transition-all hover:border-slate-300 hover:shadow-sm">
+                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-400 text-slate-800 flex items-center justify-center font-black">2</div>
+                                        <div class="flex-1 min-w-0"><p id="rank-juridico-2-name" class="font-semibold text-slate-800 truncate">Nicole.</p><p id="rank-juridico-2-value" class="text-xs text-indigo-600 font-bold">R$8.769,35</p></div>
+                                        <i class="ph ph-arrow-up text-green-500"></i>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-orange-200 rounded-xl transition-all hover:border-orange-300 hover:shadow-sm">
+                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-200 to-orange-400 text-orange-900 flex items-center justify-center font-black">3</div>
+                                        <div class="flex-1 min-w-0"><p id="rank-juridico-3-name" class="font-semibold text-slate-800 truncate">Elaine</p><p id="rank-juridico-3-value" class="text-xs text-indigo-600 font-bold">R$2.000,00</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comunicados e aniversariantes -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                        <div class="lg:col-span-3 bg-white border border-blue-100 rounded-2xl p-5 md:p-6 shadow-sm">
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="ph-fill ph-megaphone text-xl"></i></div>
+                                <div class="min-w-0">
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-500 mb-1">Comunicado importante</p>
+                                    <h3 id="avisos-main-title" class="font-bold text-slate-900 text-lg">Atualização no Fluxo do GOV.BR</h3>
+                                    <p id="avisos-main-text" class="text-sm leading-relaxed text-slate-600 mt-2">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema.</p>
+                                    <p id="avisos-main-meta" class="text-xs text-blue-600 mt-3 font-medium">Postado pela Supervisão</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-gradient-to-br from-fuchsia-50 via-rose-50 to-orange-50 border border-rose-100 rounded-2xl p-5 md:p-6 shadow-sm relative overflow-hidden">
+                            <i class="ph-fill ph-confetti text-[100px] text-rose-200/40 absolute -bottom-6 -right-4 rotate-12"></i>
+                            <div class="relative">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-11 h-11 rounded-xl bg-white text-rose-500 flex items-center justify-center shadow-sm"><i class="ph-fill ph-cake text-xl"></i></div>
+                                    <div class="flex-1">
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-500">Celebração</p>
+                                        <h3 class="font-bold text-slate-900 text-lg">Aniversariantes do Mês</h3>
+                                    </div>
+                                    <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-1 rounded-lg bg-white px-2.5 py-2 text-xs font-semibold text-rose-600 shadow-sm hover:bg-rose-100" title="Editar aniversariantes">
+                                        <i class="ph ph-pencil-simple"></i> Editar
+                                    </button>
+                                </div>
+                                <div id="avisos-birthdays-list" class="space-y-2">
+                                    <div class="rounded-xl bg-white/80 border border-white p-3 text-sm text-slate-500">Nenhum aniversariante cadastrado.</div>
                                 </div>
                             </div>
                         </div>
@@ -764,9 +785,9 @@
                                         <option value="comercial">Setor Comercial</option>
                                         <option value="adm">Setor Administrativo</option>
                                         <option value="juridico">Setor Jurídico</option>
-                                        <option value="adm">Gestão</option>
-                                        <option value="adm">Departamento pessoal - RH</option>
-                                        <option value="adm">Auxiliar de limpeza</option>
+                                        <option value="gestao">Gestão / Supervisão</option>
+                                        <option value="rh">Departamento Pessoal - RH</option>
+                                        <option value="servicos-gerais">Serviços Gerais</option>
                                         <option value="sistemas">Sistemas / Plataforma</option>
                                     </select>
                                 </div>
@@ -790,18 +811,26 @@
                                     <span class="text-sm text-slate-600 font-medium group-hover:text-slate-800 transition-colors">Enviar anonimamente (Ocultar meu nome)</span>
                                 </label>
                                 
-                                <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white font-semibold px-8 py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200/70 hover:shadow-slate-300/40 transform hover:-translate-y-0.5">
+                                <button id="feedback-submit-button" type="submit" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-700 hover:to-sky-600 text-white font-semibold px-8 py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-200/70 hover:shadow-slate-300/40 transform hover:-translate-y-0.5">
                                     <i class="ph ph-paper-plane-right text-lg"></i> Enviar Feedback
                                 </button>
                             </div>
                         </form>
+
+                        <div id="feedback-error" class="hidden mt-6 bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-lg flex items-start gap-3 shadow-sm">
+                            <i class="ph ph-warning-circle text-2xl mt-0.5"></i>
+                            <div>
+                                <p class="text-sm font-bold">Não foi possível enviar.</p>
+                                <p id="feedback-error-text" class="text-xs mt-1">Tente novamente em alguns instantes.</p>
+                            </div>
+                        </div>
                         
                         <!-- Mensagem de Sucesso (Oculta por padrão) -->
                         <div id="feedback-success" class="hidden mt-6 bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-lg flex items-start sm:items-center gap-3 shadow-sm animate-fade-in">
                             <i class="ph ph-check-circle text-2xl mt-0.5 sm:mt-0"></i>
                             <div>
-                                <p class="text-sm font-bold">Mensagem enviada com sucesso!</p>
-                                <p class="text-xs mt-1 opacity-90">A diretoria agradece sua colaboração para o crescimento da Platino.</p>
+                                <p class="text-sm font-bold">Feedback enviado à Gestão/Supervisão!</p>
+                                <p class="text-xs mt-1 opacity-90">Sua mensagem já está disponível na caixa compartilhada dos gestores.</p>
                             </div>
                         </div>
                     </div>
@@ -844,7 +873,7 @@
             <div class="flex items-center justify-between p-5 border-b border-slate-200">
                 <div>
                     <h3 class="text-xl font-bold text-slate-900">Editar Ranking de Destaques</h3>
-                    <p class="text-sm text-slate-500">Atualize nomes e valores de cada posição. Salve para manter no navegador.</p>
+                    <p class="text-sm text-slate-500">Atualize nomes e valores de cada posição e publique para toda a equipe.</p>
                 </div>
                 <button onclick="closeRankingEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
                     <i class="ph ph-x text-2xl"></i>
@@ -885,8 +914,13 @@
                 </div>
             </div>
             <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
-                <div class="text-sm text-slate-500">As alterações ficam salvas localmente no seu navegador.</div>
-                <button onclick="saveRankingEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors">Salvar Alterações</button>
+                <div>
+                    <div class="text-sm text-slate-500">As alterações serão publicadas para toda a equipe.</div>
+                    <div id="ranking-save-status" class="text-xs text-slate-400 mt-1"></div>
+                </div>
+                <button id="ranking-save-button" onclick="saveRankingEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                    <i class="ph ph-floppy-disk"></i> Salvar e Publicar
+                </button>
             </div>
         </div>
     </div>
@@ -897,7 +931,7 @@
             <div class="flex items-center justify-between p-5 border-b border-slate-200">
                 <div>
                     <h3 class="text-xl font-bold text-slate-900">Editar Central de Avisos</h3>
-                    <p class="text-sm text-slate-500">Atualize aviso, destaque do mês e resultados semanais.</p>
+                    <p class="text-sm text-slate-500">Atualize resultados, destaque, comunicado e aniversariantes.</p>
                 </div>
                 <button onclick="closeAvisosEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
                     <i class="ph ph-x text-2xl"></i>
@@ -912,12 +946,12 @@
                         <input id="editor-avisos-main-meta" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Meta do aviso (ex: Postado pela Supervisão há 2 horas)" />
                     </div>
                     <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Destaque e Líder da Semana</h4>
+                        <h4 class="font-semibold text-slate-800 mb-3">Destaque e Líder do mês</h4>
                         <input id="editor-avisos-highlight-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do destaque" />
                         <input id="editor-avisos-highlight-name" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome do destaque" />
                         <input id="editor-avisos-highlight-subtitle" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Subtítulo do destaque" />
                         <input id="editor-avisos-highlight-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor do destaque" />
-                        <input id="editor-avisos-highlight-badge" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Badge do líder (ex: Líder da Semana)" />
+                        <input id="editor-avisos-highlight-badge" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Badge do líder (ex: Líder do mês)" />
                     </div>
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -937,6 +971,14 @@
                         <h4 class="font-semibold text-slate-800 mb-2">Faturamento Total</h4>
                         <input id="editor-avisos-week-revenue" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="36.505,73" />
                     </div>
+                </div>
+                <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="ph-fill ph-cake text-rose-500 text-xl"></i>
+                        <h4 class="font-semibold text-slate-800">Aniversariantes do Mês</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês</p>
+                    <textarea id="editor-avisos-birthdays" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Ana Souza | 08/06&#10;Carlos Lima | 21/06"></textarea>
                 </div>
             </div>
             <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
@@ -1146,8 +1188,8 @@
             }
         }
 
-        // FUNÇÃO DE ENVIO DA Hub de Sugestões (com persistência local)
-        function submitFeedback(event) {
+        // ENVIO DO HUB DE SUGESTÕES PARA GESTÃO/SUPERVISÃO
+        async function submitFeedback(event) {
             event.preventDefault();
             const form = document.getElementById('feedback-form');
             const type = document.getElementById('feedback-type').value;
@@ -1156,14 +1198,20 @@
             const message = document.getElementById('feedback-message').value.trim();
             const anonymous = document.getElementById('feedback-anonymous').checked;
             const successMsg = document.getElementById('feedback-success');
-            const submitBtn = form.querySelector('button[type="submit"]');
+            const errorMsg = document.getElementById('feedback-error');
+            const errorText = document.getElementById('feedback-error-text');
+            const submitBtn = document.getElementById('feedback-submit-button');
 
-            if (!type || !sector || !subject || !message) return;
+            successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden');
 
-            // build feedback object
+            if (!form.checkValidity() || !type || !sector || !subject || !message) {
+                form.reportValidity();
+                return;
+            }
+
             const currentUser = window.firebaseAuthUser || null;
             const feedback = {
-                id: 'fb_' + Date.now(),
                 type,
                 sector,
                 subject,
@@ -1174,36 +1222,35 @@
                 handled: false
             };
 
-            // Save to localStorage array
-            try {
-                const existing = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
-                existing.unshift(feedback);
-                localStorage.setItem('platinoFeedbacks', JSON.stringify(existing));
-            } catch (e) {
-                console.error('Erro salvando feedback:', e);
-            }
-
-            // micro-loading effect
             const originalBtnHtml = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-lg"></i> Enviando...';
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
 
-            setTimeout(() => {
+            try {
+                if (!window.platinoFeedbackStore) {
+                    throw new Error('O serviço de feedback ainda não está conectado.');
+                }
+
+                const savedFeedback = await window.platinoFeedbackStore.save(feedback);
+                const localCache = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+                localStorage.setItem('platinoFeedbacks', JSON.stringify([
+                    savedFeedback,
+                    ...localCache.filter(item => item.id !== savedFeedback.id)
+                ].slice(0, 100)));
+
                 form.reset();
+                successMsg.classList.remove('hidden');
+                setTimeout(() => successMsg.classList.add('hidden'), 5000);
+            } catch (error) {
+                console.error('Erro ao enviar feedback:', error);
+                errorText.innerText = 'A mensagem não chegou à Gestão/Supervisão. Verifique sua conexão e tente novamente.';
+                errorMsg.classList.remove('hidden');
+            } finally {
                 submitBtn.innerHTML = originalBtnHtml;
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
-                successMsg.classList.remove('hidden');
-
-                // hide after 5s
-                setTimeout(() => successMsg.classList.add('hidden'), 5000);
-
-                // if gestor viewing modal, refresh list
-                if (document.getElementById('feedback-modal') && !document.getElementById('feedback-modal').classList.contains('hidden')) {
-                    renderFeedbackList();
-                }
-            }, 900);
+            }
         }
 
         // RECUPERAÇÃO DA BASE + IA GENERATIVA OPCIONAL
@@ -1446,8 +1493,21 @@
             ]
         };
 
-        let rankingData = { ...defaultRankingData };
+        let rankingData = normalizeRankingData(defaultRankingData);
         let chatOpen = false;
+
+        function normalizeRankingData(value = {}) {
+            return {
+                comercial: Array.isArray(value.comercial) && value.comercial.length >= 3
+                    ? value.comercial.slice(0, 3)
+                    : defaultRankingData.comercial.map(item => ({ ...item })),
+                juridico: Array.isArray(value.juridico) && value.juridico.length >= 3
+                    ? value.juridico.slice(0, 3)
+                    : defaultRankingData.juridico.map(item => ({ ...item })),
+                updatedAt: value.updatedAt || null,
+                updatedBy: value.updatedBy || 'Supervisão'
+            };
+        }
 
         function loadRankingData() {
             const saved = localStorage.getItem('platinoRanking');
@@ -1455,7 +1515,7 @@
                 try {
                     const parsed = JSON.parse(saved);
                     if (parsed.comercial && parsed.juridico) {
-                        rankingData = parsed;
+                        rankingData = normalizeRankingData(parsed);
                     }
                 } catch (e) {
                     console.warn('Erro ao carregar ranking salvo:', e);
@@ -1492,6 +1552,7 @@
             document.getElementById('editor-rank-juridico-2-value').value = rankingData.juridico[1].value;
             document.getElementById('editor-rank-juridico-3-name').value = rankingData.juridico[2].name;
             document.getElementById('editor-rank-juridico-3-value').value = rankingData.juridico[2].value;
+            document.getElementById('ranking-save-status').innerText = '';
 
             const modal = document.getElementById('ranking-modal');
             modal.classList.remove('hidden', 'opacity-0');
@@ -1505,7 +1566,9 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
-        function saveRankingEditor() {
+        async function saveRankingEditor() {
+            const saveButton = document.getElementById('ranking-save-button');
+            const status = document.getElementById('ranking-save-status');
             rankingData = {
                 comercial: [
                     { name: document.getElementById('editor-rank-comercial-1-name').value.trim() || 'Geovana Xavier', value: document.getElementById('editor-rank-comercial-1-value').value.trim() || 'R$ 5.865,22' },
@@ -1516,12 +1579,40 @@
                     { name: document.getElementById('editor-rank-juridico-1-name').value.trim() || 'Tabata.', value: document.getElementById('editor-rank-juridico-1-value').value.trim() || 'R$14.197,19' },
                     { name: document.getElementById('editor-rank-juridico-2-name').value.trim() || 'Nicole.', value: document.getElementById('editor-rank-juridico-2-value').value.trim() || 'R$8.769,35' },
                     { name: document.getElementById('editor-rank-juridico-3-name').value.trim() || 'Elaine', value: document.getElementById('editor-rank-juridico-3-value').value.trim() || 'R$2.000,00' }
-                ]
+                ],
+                updatedAt: new Date().toISOString(),
+                updatedBy: window.firebaseAuthUser?.email || 'Supervisão'
             };
             localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
             renderRanking();
-            closeRankingEditor();
+
+            saveButton.disabled = true;
+            saveButton.classList.add('opacity-70', 'cursor-wait');
+            status.className = 'text-xs text-blue-600 mt-1';
+            status.innerText = 'Publicando ranking para a equipe...';
+
+            try {
+                if (!window.platinoRankingStore) throw new Error('Sincronização ainda não conectada');
+                await window.platinoRankingStore.save(rankingData);
+                status.className = 'text-xs text-green-600 mt-1';
+                status.innerText = 'Ranking publicado para toda a equipe.';
+                setTimeout(closeRankingEditor, 700);
+            } catch (error) {
+                console.warn('Ranking salvo apenas localmente:', error);
+                status.className = 'text-xs text-amber-600 mt-1';
+                status.innerText = 'Salvo neste navegador, mas não foi possível publicar para a equipe.';
+            } finally {
+                saveButton.disabled = false;
+                saveButton.classList.remove('opacity-70', 'cursor-wait');
+            }
         }
+
+        window.applyRemoteRanking = function (remoteData) {
+            if (!remoteData?.comercial || !remoteData?.juridico) return;
+            rankingData = normalizeRankingData(remoteData);
+            localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
+            renderRanking();
+        };
 
         const defaultAvisosData = {
             main: {
@@ -1531,11 +1622,10 @@
             },
             highlight: {
                 title: 'Destaque do Mês de Maio - Comercial',
-                initials: 'FR',
                 name: 'Fernanda Ramos',
                 subtitle: 'Maior taxa de conversão em Maio!',
                 value: 'R$29.355,50',
-                badge: 'Líder da Semana'
+                badge: 'Líder do mês'
             },
             week: {
                 contracts: '9',
@@ -1543,6 +1633,7 @@
                 distratos: '2',
                 revenue: '36.505,73'
             },
+            birthdays: [],
             updatedAt: null,
             updatedBy: 'Supervisão'
         };
@@ -1554,6 +1645,7 @@
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
                 week: { ...defaultAvisosData.week, ...(value.week || {}) },
+                birthdays: Array.isArray(value.birthdays) ? value.birthdays : [],
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -1579,24 +1671,57 @@
             document.getElementById('avisos-main-text').innerText = avisosData.main.text;
             document.getElementById('avisos-main-meta').innerText = avisosData.main.meta;
             document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
-            document.getElementById('avisos-highlight-initials').innerText = avisosData.highlight.initials;
             document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
             document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
-            document.getElementById('avisos-highlight-value').innerHTML = `Alcançando o resultado de <span class="text-lg font-bold text-green-400">${avisosData.highlight.value}</span>`;
+            document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
             document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
             document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
             document.getElementById('avisos-week-laudos').innerText = avisosData.week.laudos;
             document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
+            renderBirthdays();
 
             const updatedTag = document.getElementById('avisos-updated-tag');
             if (avisosData.updatedAt) {
                 const date = new Date(avisosData.updatedAt);
                 updatedTag.innerHTML = `<i class="ph ph-clock"></i> ${date.toLocaleDateString('pt-BR')} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+                updatedTag.classList.remove('hidden');
+                updatedTag.classList.add('flex');
                 document.getElementById('avisos-main-meta').innerText = `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`;
             } else {
-                updatedTag.innerHTML = '<i class="ph ph-clock"></i> Conteúdo inicial';
+                updatedTag.innerHTML = '';
+                updatedTag.classList.add('hidden');
+                updatedTag.classList.remove('flex');
             }
+        }
+
+        function renderBirthdays() {
+            const container = document.getElementById('avisos-birthdays-list');
+            if (!avisosData.birthdays.length) {
+                container.innerHTML = '<div class="rounded-xl bg-white/80 border border-white p-3 text-sm text-slate-500">Nenhum aniversariante cadastrado neste mês.</div>';
+                return;
+            }
+
+            container.innerHTML = avisosData.birthdays.map(person => {
+                const initials = person.name
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map(part => part.charAt(0))
+                    .join('')
+                    .toUpperCase();
+
+                return `
+                    <div class="flex items-center gap-3 rounded-xl bg-white/80 border border-white p-2.5 shadow-sm">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-fuchsia-500 text-white flex items-center justify-center text-xs font-bold">${escapeHtml(initials || '🎉')}</div>
+                        <div class="min-w-0 flex-1">
+                            <p class="font-semibold text-slate-800 text-sm truncate">${escapeHtml(person.name)}</p>
+                            <p class="text-xs text-rose-500 font-medium">${escapeHtml(person.date || 'Data a confirmar')}</p>
+                        </div>
+                        <i class="ph-fill ph-confetti text-orange-400"></i>
+                    </div>
+                `;
+            }).join('');
         }
 
         function openAvisosEditor() {
@@ -1612,6 +1737,9 @@
             document.getElementById('editor-avisos-week-laudos').value = avisosData.week.laudos;
             document.getElementById('editor-avisos-week-distratos').value = avisosData.week.distratos;
             document.getElementById('editor-avisos-week-revenue').value = avisosData.week.revenue;
+            document.getElementById('editor-avisos-birthdays').value = avisosData.birthdays
+                .map(person => `${person.name} | ${person.date}`)
+                .join('\n');
             document.getElementById('avisos-save-status').innerText = '';
             const modal = document.getElementById('avisos-modal');
             modal.classList.remove('hidden', 'opacity-0');
@@ -1625,6 +1753,8 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
+        let feedbackData = [];
+
         // Feedback viewer (Gestor)
         function openFeedbackModal() {
             const modal = document.getElementById('feedback-modal');
@@ -1634,6 +1764,7 @@
                 document.getElementById('feedback-modal-content').classList.remove('scale-95');
             }, 10);
             renderFeedbackList();
+            window.platinoFeedbackStore?.subscribe?.();
         }
 
         function closeFeedbackModal() {
@@ -1646,7 +1777,9 @@
         function renderFeedbackList() {
             const listEl = document.getElementById('feedback-list');
             const countEl = document.getElementById('feedback-count');
-            const data = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+            const data = feedbackData.length
+                ? feedbackData
+                : JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
             listEl.innerHTML = '';
             countEl.innerText = data.length;
 
@@ -1675,22 +1808,25 @@
             });
         }
 
-        function toggleHandled(id) {
+        async function toggleHandled(id) {
             try {
-                const arr = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
-                const idx = arr.findIndex(f => f.id === id);
+                const idx = feedbackData.findIndex(item => item.id === id);
                 if (idx === -1) return;
-                arr[idx].handled = !arr[idx].handled;
-                localStorage.setItem('platinoFeedbacks', JSON.stringify(arr));
+                const handled = !feedbackData[idx].handled;
+                await window.platinoFeedbackStore.updateHandled(id, handled);
+                feedbackData[idx].handled = handled;
                 renderFeedbackList();
             } catch (e) {
-                console.error(e);
+                console.error('Erro ao atualizar feedback:', e);
+                alert('Não foi possível atualizar o feedback. Tente novamente.');
             }
         }
 
         function exportFeedbackCSV() {
             try {
-                const arr = JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
+                const arr = feedbackData.length
+                    ? feedbackData
+                    : JSON.parse(localStorage.getItem('platinoFeedbacks') || '[]');
                 if (!arr.length) return alert('Nenhum feedback para exportar.');
                 const headers = ['id','createdAt','type','sector','subject','message','submittedBy','anonymous','handled'];
                 const rows = arr.map(r => headers.map(h => `"${String(r[h] ?? '').replace(/"/g, '""')}"`).join(','));
@@ -1709,6 +1845,14 @@
                 alert('Não foi possível exportar o arquivo. Veja o console.');
             }
         }
+
+        window.applyRemoteFeedbacks = function (items) {
+            feedbackData = Array.isArray(items) ? items : [];
+            localStorage.setItem('platinoFeedbacks', JSON.stringify(feedbackData.slice(0, 100)));
+            if (!document.getElementById('feedback-modal').classList.contains('hidden')) {
+                renderFeedbackList();
+            }
+        };
 
         function escapeHtml(str) {
             if (!str) return '';
@@ -1733,7 +1877,6 @@
                 },
                 highlight: {
                     title: document.getElementById('editor-avisos-highlight-title').value.trim() || defaultAvisosData.highlight.title,
-                    initials: document.getElementById('editor-avisos-highlight-name').value.trim().slice(0,2).toUpperCase() || defaultAvisosData.highlight.initials,
                     name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
                     subtitle: document.getElementById('editor-avisos-highlight-subtitle').value.trim() || defaultAvisosData.highlight.subtitle,
                     value: document.getElementById('editor-avisos-highlight-value').value.trim() || defaultAvisosData.highlight.value,
@@ -1745,6 +1888,16 @@
                     distratos: document.getElementById('editor-avisos-week-distratos').value.trim() || defaultAvisosData.week.distratos,
                     revenue: document.getElementById('editor-avisos-week-revenue').value.trim() || defaultAvisosData.week.revenue
                 },
+                birthdays: document.getElementById('editor-avisos-birthdays').value
+                    .split('\n')
+                    .map(line => {
+                        const [name, ...dateParts] = line.split('|');
+                        return {
+                            name: name.trim(),
+                            date: dateParts.join('|').trim()
+                        };
+                    })
+                    .filter(person => person.name),
                 updatedAt: new Date().toISOString(),
                 updatedBy: currentUser
             };
@@ -1802,11 +1955,17 @@
         signOut
       } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
       import {
+        addDoc,
+        collection,
         doc,
         getFirestore,
+        limit,
         onSnapshot,
+        orderBy,
+        query,
         serverTimestamp,
-        setDoc
+        setDoc,
+        updateDoc
       } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
       const firebaseConfig = {
@@ -1819,7 +1978,11 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
       const avisosRef = doc(db, "appContent", "centralAvisos");
+      const rankingRef = doc(db, "appContent", "ranking");
+      const feedbacksRef = collection(db, "feedbacks");
       let stopAvisosSubscription = null;
+      let stopRankingSubscription = null;
+      let stopFeedbackSubscription = null;
 
       window.platinoNoticeStore = {
         save: async (data) => setDoc(avisosRef, {
@@ -1834,6 +1997,53 @@
               if (snapshot.exists()) window.applyRemoteAvisos?.(snapshot.data());
             },
             error => console.warn("Não foi possível sincronizar a Central de Avisos.", error)
+          );
+        }
+      };
+
+      window.platinoRankingStore = {
+        save: async (data) => setDoc(rankingRef, {
+          ...data,
+          serverUpdatedAt: serverTimestamp()
+        }, { merge: true }),
+        subscribe: () => {
+          if (stopRankingSubscription) return;
+          stopRankingSubscription = onSnapshot(
+            rankingRef,
+            snapshot => {
+              if (snapshot.exists()) window.applyRemoteRanking?.(snapshot.data());
+            },
+            error => console.warn("Não foi possível sincronizar o ranking.", error)
+          );
+        }
+      };
+
+      window.platinoFeedbackStore = {
+        save: async (data) => {
+          const reference = await addDoc(feedbacksRef, {
+            ...data,
+            createdAtServer: serverTimestamp()
+          });
+          return { ...data, id: reference.id };
+        },
+        updateHandled: async (id, handled) => updateDoc(doc(db, "feedbacks", id), {
+          handled,
+          handledAt: handled ? serverTimestamp() : null,
+          handledBy: handled ? (auth.currentUser?.email || "Gestão/Supervisão") : null
+        }),
+        subscribe: () => {
+          if (stopFeedbackSubscription) return;
+          const feedbackQuery = query(feedbacksRef, orderBy("createdAt", "desc"), limit(200));
+          stopFeedbackSubscription = onSnapshot(
+            feedbackQuery,
+            snapshot => {
+              const items = snapshot.docs.map(item => ({
+                id: item.id,
+                ...item.data()
+              }));
+              window.applyRemoteFeedbacks?.(items);
+            },
+            error => console.warn("Não foi possível carregar os feedbacks.", error)
           );
         }
       };
@@ -1874,7 +2084,7 @@
       });
 
       function updateUserAccess(user) {
-        const gestorEmails = ["gestao@platino.com"];
+        const managementUid = "yRW5stqXWZT7ovrQyn1Fd3WNuta2";
         const nomeMap = {
           "gestao@platino.com": "Gestão Platino",
           "comercial@platino.com": "Comercial",
@@ -1883,9 +2093,11 @@
         };
 
         const email = user?.email?.toLowerCase() || "";
-        const role = gestorEmails.includes(email) ? "gestor" : "equipe";
+        const isManagement = user?.uid === managementUid;
+        const role = isManagement ? "gestor" : "equipe";
         const displayName = nomeMap[email] || email || "Usuário";
         window.firebaseAuthUser = user;
+        window.platinoUserRole = role;
 
         document.getElementById("user-name").innerText = displayName;
         document.getElementById("user-role").innerText = role === "gestor" ? "Gestor" : "Equipe";
@@ -1907,6 +2119,10 @@
           appContent.classList.remove("hidden");
           updateUserAccess(user);
           window.platinoNoticeStore.subscribe();
+          window.platinoRankingStore.subscribe();
+          if (window.platinoUserRole === "gestor") {
+            window.platinoFeedbackStore.subscribe();
+          }
         } else {
           loginScreen.classList.remove("hidden");
           appContent.classList.add("hidden");
@@ -1914,6 +2130,14 @@
           if (stopAvisosSubscription) {
             stopAvisosSubscription();
             stopAvisosSubscription = null;
+          }
+          if (stopRankingSubscription) {
+            stopRankingSubscription();
+            stopRankingSubscription = null;
+          }
+          if (stopFeedbackSubscription) {
+            stopFeedbackSubscription();
+            stopFeedbackSubscription = null;
           }
         }
       });
