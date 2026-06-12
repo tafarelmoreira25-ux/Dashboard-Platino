@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilho de Etapas - Revisão de Contratos</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        /* ESTILOS PRINCIPAIS - TUDO EM PORTUGUES */
+        :root {
+            --cor-primaria: #071a3d;
+            --cor-secundaria: #2563eb;
+            --cor-destaque-venda: #c77b12;
+            --cor-fundo-venda: #fff8e8;
+            --cor-fundo-tela: #eef3f9;
+            --cor-texto: #1e293b;
+            --cor-texto-claro: #64748b;
+            --cor-branco: #ffffff;
+            --fonte-titulo: 'Inter', 'Segoe UI', sans-serif;
+            --fonte-texto: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--fonte-texto);
+            background:
+                radial-gradient(circle at 80% 10%, rgba(37, 99, 235, 0.1), transparent 28%),
+                var(--cor-fundo-tela);
+            color: var(--cor-texto);
+            display: flex;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        .barra-lateral {
+            width: 300px;
+            background: linear-gradient(180deg, #05132f 0%, #071a3d 58%, #0b2554 100%);
+            color: var(--cor-branco);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 12px 0 40px rgba(7, 26, 61, 0.16);
+            z-index: 10;
+        }
+
+        .area-logotipo {
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background-color: rgba(2, 11, 30, 0.48);
+        }
+
+        .area-logotipo img {
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            object-fit: cover;
+            border-radius: 16px;
+            display: block;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+        }
+
+        .area-logotipo .logo-text {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+        }
+
+        .capa-imagem-card {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2.05 / 1;
+            border-radius: 22px;
+            overflow: hidden;
+            margin: 30px 0;
+            border: 1px solid #bfdbfe;
+            background: #071a3d;
+            box-shadow: 0 24px 55px rgba(15, 23, 42, 0.16);
+        }
+
+        .capa-imagem-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+        }
+
+        .capa-imagem-overlay {
+            position: absolute;
+            right: 18px;
+            bottom: 16px;
+            left: 18px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 13px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            background: rgba(2, 11, 30, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .capa-imagem-overlay p {
+            color: #ffffff;
+            font-size: clamp(12px, 1vw, 14px);
+            font-weight: 700;
+            line-height: 1.4;
+            max-width: 100%;
+            text-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            margin: 0;
+        }
+
+        .titulo-trilho {
+            padding: 18px 20px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #93c5fd;
+        }
+
+        .lista-etapas {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+            list-style: none;
+        }
+
+        .lista-etapas::-webkit-scrollbar {
+            width: 6px;
+        }
+        .lista-etapas::-webkit-scrollbar-thumb {
+            background-color: var(--cor-secundaria);
+            border-radius: 10px;
+        }
+
+        .item-etapa {
+            margin: 3px 10px;
+            padding: 11px 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+        }
+
+        .item-etapa:hover {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--cor-branco);
+        }
+
+        .item-etapa.ativo {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-color: rgba(147, 197, 253, 0.4);
+            color: var(--cor-branco);
+            font-weight: bold;
+            box-shadow: 0 10px 24px rgba(2, 11, 30, 0.25);
+        }
+
+        .numero-etapa {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .item-etapa.ativo .numero-etapa {
+            background-color: #60a5fa;
+            color: var(--cor-primaria);
+        }
+
+        .area-conteudo {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: transparent;
+        }
+
+        .container-slides {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 48px clamp(36px, 6vw, 84px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateY(20px);
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.94);
+        }
+
+        .slide.ativo {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        h1.titulo-principal {
+            font-size: clamp(28px, 3vw, 40px);
+            line-height: 1.15;
+            color: var(--cor-primaria);
+            margin-bottom: 24px;
+            border-bottom: 0;
+            padding-bottom: 14px;
+            display: inline-block;
+            position: relative;
+            letter-spacing: -0.035em;
+        }
+
+        h1.titulo-principal::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 72px;
+            height: 4px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #2563eb, #38bdf8);
+        }
+
+        h2.subtitulo {
+            font-size: 24px;
+            color: var(--cor-secundaria);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: var(--cor-primaria);
+        }
+
+        .caixa-venda {
+            background-color: var(--cor-fundo-venda);
+            border: 1px solid #f6d898;
+            border-left: 5px solid var(--cor-destaque-venda);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 4px 16px 16px 4px;
+            box-shadow: 0 12px 30px rgba(146, 64, 14, 0.08);
+        }
+
+        .caixa-venda-titulo {
+            color: var(--cor-destaque-venda);
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .caixa-venda p {
+            color: #92400e;
+            font-size: 19px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .imagem-criativa {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .visual-etapa {
+            position: relative;
+            margin: 24px 0 30px;
+            overflow: hidden;
+            border: 1px solid #bfdbfe;
+            border-radius: 20px;
+            background: #071a3d;
+            box-shadow: 0 20px 42px rgba(15, 23, 42, 0.16);
+        }
+
+        .visual-etapa img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .visual-etapa figcaption {
+            position: absolute;
+            right: 20px;
+            bottom: 18px;
+            max-width: 420px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            background: rgba(2, 11, 30, 0.78);
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.45;
+            backdrop-filter: blur(12px);
+        }
+
+        .exercicio-agravo {
+            margin: 26px 0 10px;
+            padding: 22px;
+            border: 1px solid #bfdbfe;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #eff6ff, #ffffff);
+        }
+
+        .exercicio-agravo-cabecalho {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .exercicio-agravo-icone {
+            display: flex;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+        }
+
+        .exercicio-agravo-cabecalho span {
+            display: block;
+            margin-bottom: 4px;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .exercicio-agravo-cabecalho strong {
+            color: #0f172a;
+            font-size: 17px;
+            line-height: 1.4;
+        }
+
+        .opcoes-agravo {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .opcao-agravo {
+            min-height: 74px;
+            padding: 12px;
+            border: 1px solid #dbe3ef;
+            border-radius: 13px;
+            background: #ffffff;
+            color: #334155;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .opcao-agravo:hover {
+            transform: translateY(-2px);
+            border-color: #60a5fa;
+            background: #f8fbff;
+        }
+
+        .opcao-agravo.correta {
+            border-color: #22c55e;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .opcao-agravo.incorreta {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        #feedback-agravo {
+            min-height: 24px;
+            margin: 14px 2px 0;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .espaco-imagem-png {
+            background-color: #e2e8f0;
+            border: 3px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            color: #475569;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .grade-duas-colunas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .caixa-destaque {
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #dbeafe;
+            border-left: 4px solid var(--cor-secundaria);
+            margin-bottom: 20px;
+        }
+
+        .controles-navegacao {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 28px;
+            background-color: rgba(255, 255, 255, 0.92);
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.05);
+            backdrop-filter: blur(16px);
+            z-index: 10;
+        }
+
+        .botao-nav {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: var(--cor-branco);
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+        }
+
+        .botao-nav:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(37, 99, 235, 0.28);
+        }
+
+        .botao-nav:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+            }
+
+            .barra-lateral {
+                width: 100%;
+                flex-shrink: 0;
+                box-shadow: 0 10px 30px rgba(7, 26, 61, 0.16);
+            }
+
+            .area-logotipo {
+                padding: 10px 16px;
+            }
+
+            .area-logotipo img {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+            }
+
+            .titulo-trilho {
+                display: none;
+            }
+
+            .lista-etapas {
+                display: flex;
+                flex: none;
+                gap: 4px;
+                overflow-x: auto;
+                padding: 8px;
+            }
+
+            .item-etapa {
+                flex: 0 0 auto;
+                max-width: 230px;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+            .slide {
+                padding: 30px 20px;
+                height: 100%;
+            }
+
+            .grade-duas-colunas {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .area-conteudo {
+                flex: 1;
+                min-height: 0;
+            }
+
+            .capa-imagem-overlay p {
+                max-width: 66%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            h1.titulo-principal { font-size: 28px; }
+            h2.subtitulo { font-size: 20px; }
+            p, ul, ol { font-size: 16px; }
+            .area-logotipo .logo-text { font-size: 11px; }
+            .capa-imagem-overlay {
+                right: 10px;
+                bottom: 10px;
+                left: 10px;
+                padding: 10px 12px;
+            }
+            .capa-imagem-overlay p { max-width: 100%; }
+            .visual-etapa figcaption {
+                right: 12px;
+                bottom: 12px;
+                left: 12px;
+                max-width: none;
+            }
+            .opcoes-agravo { grid-template-columns: 1fr; }
+            .controles-navegacao { gap: 10px; padding: 12px; }
+            .botao-nav { flex: 1; padding: 11px 12px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TRILHO DE ETAPAS (BARRA LATERAL) -->
+    <div class="barra-lateral">
+        <div class="area-logotipo">
+            <img src="sou-platino.png" alt="Logotipo Platino Assessoria" />
+            <div class="logo-text">Platino Assessoria</div>
+        </div>
+        <div class="titulo-trilho">Trilho do Processo</div>
+        
+        
+        <ul class="lista-etapas" id="menu-trilho">
+            <!-- Os itens serão gerados via Javascript para manter o código limpo, 
+                 mas representam cada etapa do treinamento -->
+        </ul>
+    </div>
+
+    <!--   -->
+    <div class="area-conteudo">
+        
+        <div class="container-slides" id="container-slides">
+            
+            <!-- SLIDE 0: CAPA -->
+            <div class="slide ativo">
+                <h1 class="titulo-principal">Treinamento: Estratégia em Revisão de Contratos</h1>
+                <p>Guia definitivo detalhado sobre cada fase extrajudicial e judicial, com foco em estratégias comerciais e aceleração de resultados para o cliente.</p>
+                
+                <div class="capa-imagem-card">
+                    <img src="assets/capa-treinamento-platino.jpg" alt="Representante da Platino apresentando um treinamento em sala corporativa" />
+                    <div class="capa-imagem-overlay">
+                        <p>Vamos profissionalizar o nosso conhecimento. O consultor que entende do processo converte em triplo. Cada informação para o cliente é uma projeção para a próxima atualização do processo.</p>
+                    </div>
+                </div>
+                
+                <div class="caixa-destaque">
+                    <p><strong>Objetivo:</strong> Compreender o trilho do processo e identificar exatamente os pontos onde a nossa equipe deve atuar estrategicamente vendendo soluções que aceleram a sentença ou facilitam acordos.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 1: FASE EXTRAJUDICIAL -->
+            <div class="slide">
+                <h1 class="titulo-principal">1. Fase Extrajudicial - Revisão de Contrato</h1>
+                <p>Antes de ajuizar a ação, normalmente acontece a parte administrativa e técnica. É a base de todo o processo.</p>
+                
+                <div class="grade-duas-colunas">
+                    <div>
+                        <h2 class="subtitulo">1.1. Coleta de Documentos</h2>
+                        <p>Geralmente são reunidos:</p>
+                        <ul>
+                            <li>Contrato de financiamento/empréstimo;</li>
+                            <li>Comprovantes de pagamento;</li>
+                            <li>Extrato de evolução da dívida;</li>
+                            <li>Carnês ou boletos;</li>
+                            <li>Documento pessoal do cliente;</li>
+                            <li>Comprovante de residência;</li>
+                            <li>CTPS;</li>
+                            <li>Procuração;</li>
+                            <li>Declaração de hipossuficiência (justiça gratuita);</li>
+                            <li>Declaração de isenção de imposto de renda;</li>
+                            <li>Documento do veículo (se financiamento de veículo);</li>
+                            <li>Laudo pericial.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="subtitulo">1.2. Análise do Contrato</h2>
+                        <p>Aqui se verifica minuciosamente:</p>
+                        <ul>
+                            <li>Taxa mensal contratada e Taxa anual contratada;</li>
+                            <li>CET (Custo Efetivo Total);</li>
+                            <li>Capitalização de juros;</li>
+                            <li>Tarifas administrativas e Seguro embutido;</li>
+                            <li>Comissão de permanência;</li>
+                            <li>Juros de mora, Multa e IOF;</li>
+                            <li>Saldo devedor, Parcelas pagas e Vencidas;</li>
+                            <li>Risco de busca e apreensão (se for veículo).</li>
+                        </ul>
+
+                        <h2 class="subtitulo">1.3. Laudo ou Parecer Técnico</h2>
+                        <p>O laudo mostra se existe diferença entre o valor cobrado e o valor revisado. Compara a taxa contratada com a taxa média de mercado do Banco Central. Fundamenta a inicial, mas o juiz pode pedir perícia judicial depois.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: DISTRIBUIÇÃO E INICIAL -->
+            <div class="slide">
+                <h1 class="titulo-principal">Iniciando o Processo Judicial</h1>
+                
+                <h2 class="subtitulo">2. Distribuição da Ação - Protocolo Liberado</h2>
+                <p>A primeira movimentação judicial costuma ser: <strong>“Processo distribuído”</strong>.</p>
+                <p>Significa que a ação foi protocolada no tribunal e recebeu número. Nessa fase, o sistema define a vara responsável.</p>
+                <div class="caixa-destaque">
+                    <p><em>Exemplo de movimentação:</em> Processo distribuído por sorteio | Classe: Procedimento Comum Cível | Assunto: Revisão de Contrato / Bancários / Juros Remuneratórios.</p>
+                </div>
+
+                <h2 class="subtitulo">3. Petição Inicial Juntada</h2>
+                <p>Documento que inicia o processo cível (art. 319 do CPC). Deve conter partes, fatos, fundamentos, pedidos, valor da causa e provas. Na ação revisional, a inicial geralmente pede:</p>
+                
+                <div class="grade-duas-colunas">
+                    <ul>
+                        <li>Revisão dos juros remuneratórios;</li>
+                        <li>Limitação à taxa média de mercado;</li>
+                        <li>Afastamento de encargos abusivos;</li>
+                        <li>Recálculo do saldo devedor;</li>
+                        <li>Devolução ou compensação de valores pagos a maior;</li>
+                    </ul>
+                    <ul>
+                        <li>Tutela de urgência (impedir negativação, busca e apreensão);</li>
+                        <li>Autorização para depósito judicial;</li>
+                        <li>Inversão do ônus da prova;</li>
+                        <li>Exibição do contrato (se faltar documentos);</li>
+                        <li>Justiça gratuita.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: CONCLUSOS E EMENDA -->
+            <div class="slide">
+                <h1 class="titulo-principal">Análise Inicial do Juiz</h1>
+                
+                <h2 class="subtitulo">4. Conclusos para Despacho Inicial</h2>
+                <p>Movimentação: <strong>“Conclusos para despacho”</strong>.</p>
+                <p>O processo foi enviado para o juiz analisar a inicial. Ele pode fazer três coisas principais:</p>
+                <ul>
+                    <li>Mandar emendar a inicial;</li>
+                    <li>Analisar justiça gratuita e tutela de urgência;</li>
+                    <li>Mandar citar o banco.</li>
+                </ul>
+
+                <figure class="visual-etapa">
+                    <img src="assets/despacho-inicial-treinamento.jpg" alt="Representante da Platino analisando documentos de um processo que aguarda despacho inicial">
+                    <figcaption>O processo está organizado e pronto para análise. Agora o juiz define o próximo movimento da ação.</figcaption>
+                </figure>
+
+                <h2 class="subtitulo">5. Emenda à Inicial</h2>
+                <p>Movimentação: <strong>“Intimação para emendar a inicial”</strong>.</p>
+                <p>Acontece quando falta informação. O CPC prevê prazo para correção antes de indeferir. Exemplos de faltas comuns:</p>
+                <ul>
+                    <li>Faltou contrato, procuração ou comprovante de residência;</li>
+                    <li>Valor da causa está incorreto ou pedido genérico;</li>
+                    <li>Faltou planilha de cálculo ou comprovação de hipossuficiência;</li>
+                    <li>Não ficou claro qual cláusula está sendo questionada.</li>
+                </ul>
+                <p>Movimentações comuns: <em>Determinada a emenda da inicial, Juntada de petição de emenda, Conclusos para decisão.</em></p>
+            </div>
+
+            <!-- SLIDE 4: JUSTIÇA GRATUITA E TUTELA -->
+            <div class="slide">
+                <h1 class="titulo-principal">Decisões Urgentes e Custas</h1>
+                
+                <h2 class="subtitulo">6. Justiça Gratuita</h2>
+                <p><strong>“Deferida a gratuidade da justiça”</strong>: Juiz aceitou o pedido; o cliente não paga custas naquele momento.</p>
+                <p><strong>“Indeferido o pedido”</strong>: Juiz manda recolher custas ou comprovar melhor a necessidade.</p>
+
+                <h2 class="subtitulo">7. Tutela de Urgência</h2>
+                <p>Uma das partes mais importantes. Decisão antes da sentença, baseada na probabilidade do direito e perigo de dano (Art. 300 CPC).</p>
+                
+                <div class="grade-duas-colunas">
+                    <div>
+                        <p><strong>O que pode ser pedido?</strong></p>
+                        <ul>
+                            <li>Impedir negativação do cliente (SPC/Serasa);</li>
+                            <li>Impedir busca e apreensão / Manter posse do veículo;</li>
+                            <li>Suspender cobranças abusivas;</li>
+                            <li>Autorizar depósito judicial das parcelas revisadas;</li>
+                            <li>Impedir protesto e cobrança vexatória;</li>
+                            <li>Impedir vencimento antecipado da dívida;</li>
+                            <li>Determinar que o banco apresente contrato.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="caixa-destaque">
+                            <p><strong>Possíveis movimentações:</strong></p>
+                            <ul>
+                                <li>Deferida tutela de urgência</li>
+                                <li>Indeferida / Deferida parcialmente</li>
+                                <li>Intime-se o réu para cumprimento</li>
+                                <li>Expedido ofício ao órgão de proteção</li>
+                            </ul>
+                            <p><em>*Se o juiz indefere, o autor pode tentar recurso chamado agravo de instrumento.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: CITAÇÃO DO BANCO (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">8. Citação do Banco</h1>
+                <p>Depois que o juiz aceita o andamento inicial, ele manda citar o banco.</p>
+                
+                <p>Movimentação: <strong>“Expedição de citação”</strong>.</p>
+                <p>Significa que o tribunal enviará comunicação oficial ao banco para ele saber que foi processado.</p>
+                
+                <ul>
+                    <li>Expedido mandado de citação / Expedido AR / Carta de citação enviada</li>
+                    <li>Citação eletrônica realizada</li>
+                    <li>Banco citado / Certidão de citação positiva / Certidão de citação negativa</li>
+                </ul>
+                <p><em>Se a citação for negativa, o juiz pode mandar informar novo endereço ou tentar outro meio.</em></p>
+
+                <div class="caixa-venda">
+                    <div class="caixa-venda-titulo">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        MOMENTO DA VENDA: Citação Judicial
+                    </div>
+                    <p>Esse é o momento de entrar em contato com o cliente, informar que <strong>já realizamos uma reunião com o Dr. responsável pelo processo</strong>, e informar que a melhor estratégia jurídica agora é intimar o banco de forma direcionada, para que o processo tenha andamento imediato.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: AUDIÊNCIA E CONTESTAÇÃO -->
+            <div class="slide">
+                <h1 class="titulo-principal">Fase de Defesa e Conciliação</h1>
+                
+                <h2 class="subtitulo">9. Audiência de Conciliação</h2>
+                <p>O juiz pode designar audiência de conciliação ou mediação. A audiência pode ser cancelada quando ambas as partes manifestam desinteresse.</p>
+                <p><strong>Na prática:</strong> Em ação revisional bancária, muitas vezes o banco não faz proposta boa no começo. Mas, quando há risco para o banco ou laudo forte, pode surgir proposta no meio do processo.</p>
+                
+                <h2 class="subtitulo">10. Contestação do Banco</h2>
+                <p><strong>“Juntada de contestação”</strong>: O banco respondeu ao processo. O prazo comum é de 15 dias (art. 335 do CPC).</p>
+                
+                <p><strong>O que o banco normalmente alega?</strong></p>
+                <div class="grade-duas-colunas">
+                    <ul>
+                        <li>Que o contrato foi assinado livremente;</li>
+                        <li>Que o cliente tinha ciência das taxas;</li>
+                        <li>Que não existe abusividade;</li>
+                        <li>Que os juros estão dentro da média de mercado;</li>
+                        <li>Que a capitalização estava pactuada;</li>
+                        <li>Que o contrato é válido e o cliente inadimplente;</li>
+                    </ul>
+                    <ul>
+                        <li>Que não cabe afastar mora nem devolução em dobro;</li>
+                        <li>Que as tarifas são legais;</li>
+                        <li>Que não há prova suficiente;</li>
+                        <li>Que o laudo particular é unilateral;</li>
+                        <li>Que eventual perícia deve ser paga pelo autor.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SLIDE 7: RÉPLICA (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">11. Réplica / Impugnação à Contestação</h1>
+                <p><strong>“Intimação para réplica”</strong>: Depois da contestação, o autor é intimado para responder e rebater o que o banco alegou.</p>
+                
+                <p><strong>O que o autor responde?</strong></p>
+                <div class="grade-duas-colunas">
+                    <ul>
+                        <li>Que a abusividade está demonstrada;</li>
+                        <li>Que os documentos do banco confirmam a cobrança;</li>
+                        <li>Que a taxa contratada é superior à média;</li>
+                        <li>Que há cobrança cumulada indevida;</li>
+                        <li>Que a capitalização não foi informada corretamente;</li>
+                    </ul>
+                    <ul>
+                        <li>Que há venda casada;</li>
+                        <li>Que as tarifas são abusivas;</li>
+                        <li>Que o laudo técnico comprova diferença;</li>
+                        <li>Que é necessária perícia contábil;</li>
+                        <li>Que a mora deve ser afastada.</li>
+                    </ul>
+                </div>
+
+                <div class="caixa-venda">
+                    <div class="caixa-venda-titulo">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        MOMENTO DA VENDA: Citação Judicial / Réplica
+                    </div>
+                    <p>Esse é o momento de entrar em contato com o cliente, informar que <strong>já realizamos uma reunião com o Dr. responsável pelo processo</strong>, e informar que a melhor estratégia jurídica agora é pressionar o banco e intimar para que o processo avance sem barreiras da contestação.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 8: PROVAS E SANEAMENTO (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">Fase Instrutória e Organização</h1>
+                
+                <h2 class="subtitulo">12. Especificação de Provas</h2>
+                <p><strong>“Intimem-se as partes para especificarem provas”</strong></p>
+                <p>As provas mais comuns são: Prova documental; Perícia contábil; Exibição de contrato/evolução da dívida; Prova testemunhal (incomum); Depoimento pessoal (raramente útil).</p>
+
+                <div class="caixa-venda" style="margin: 15px 0;">
+                    <div class="caixa-venda-titulo">
+                        MOMENTO DA VENDA: Citação Judicial / Fase de Provas
+                    </div>
+                    <p>Entre em contato com o cliente. Informe que <strong>já realizamos uma reunião com o Dr. responsável</strong>. A melhor estratégia jurídica agora é intimar o banco para forçar a apresentação das provas e dar andamento célere.</p>
+                </div>
+
+                <h2 class="subtitulo">13. Saneamento do Processo</h2>
+                <p>O juiz organiza o processo (Art. 357 do CPC), resolve questões pendentes e define o que será discutido.</p>
+                <div class="grade-duas-colunas">
+                    <ul>
+                        <li>Se haverá perícia contábil e quem paga;</li>
+                        <li>Quais cláusulas serão analisadas;</li>
+                        <li>Se a discussão é apenas documental;</li>
+                        <li>Se o banco deve apresentar documentos;</li>
+                    </ul>
+                    <ul>
+                        <li>Quais pontos precisam ser provados;</li>
+                        <li>Se há relação de consumo;</li>
+                        <li>Se haverá inversão do ônus da prova.</li>
+                    </ul>
+                </div>
+
+                <div class="caixa-venda" style="margin: 15px 0;">
+                    <div class="caixa-venda-titulo">
+                        MOMENTO DA VENDA: Audiência / Certidão / Jurisprudência
+                    </div>
+                    <p>Contate o cliente. Informe que <strong>já realizamos a reunião com o Dr. responsável</strong>. A estratégia agora é intimar o banco de forma cirúrgica para consolidar o saneamento a nosso favor e dar andamento imediato.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 9: COMISSÃO E ALEGAÇÕES (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">Encerramento da Instrução</h1>
+                
+                <h2 class="subtitulo">14. Comissão de Permanência e Encargos de Mora</h2>
+                <p>Ponto muito presente nas ações bancárias. A comissão de permanência pode ser admitida, <strong>mas não deve ser cumulada</strong> com correção monetária, juros remuneratórios, moratórios e multa. (Súmulas 30, 294, 296 e 472 do STJ).</p>
+                <p>Na prática, se o banco cobra comissão junto com multa e juros, isso é discutido e combatido na revisional.</p>
+
+                <h2 class="subtitulo">15. Alegações Finais</h2>
+                <p><strong>“Intimadas as partes para alegações finais” / “Conclusos para sentença”</strong></p>
+                <p>Últimas manifestações antes do juiz decidir. A parte autora reforça:</p>
+                <ul>
+                    <li>Resultado da perícia e as cláusulas abusivas;</li>
+                    <li>Diferença encontrada e necessidade de recálculo;</li>
+                    <li>Valores pagos a maior e pedido de procedência.</li>
+                </ul>
+
+                <div class="caixa-venda">
+                    <div class="caixa-venda-titulo">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        MOMENTO DA VENDA: Audiência / Jurisprudência
+                    </div>
+                    <p>Esse é o momento de entrar em contato com o cliente, informar que <strong>já realizamos uma reunião com o Dr. responsável pelo processo</strong>, e informar que a melhor estratégia jurídica na reta final é intimar o banco para garantir a segurança processual até a sentença.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 10: A SENTENÇA -->
+            <div class="slide">
+                <h1 class="titulo-principal">18. A Sentença</h1>
+                <p>A sentença é a decisão final da primeira instância.</p>
+                
+                <h2 class="subtitulo" style="color: #16a34a;">Sentença Procedente</h2>
+                <p>O juiz aceita os pedidos principais. Pode determinar:</p>
+                <ul>
+                    <li>Revisão da taxa; limitação à taxa média; afastamento de encargos;</li>
+                    <li>Recálculo do saldo; compensação/restituição de valores;</li>
+                    <li>Exclusão de negativação; manutenção do veículo; condenação do banco.</li>
+                </ul>
+
+                <h2 class="subtitulo" style="color: #d97706;">Sentença Parcialmente Procedente</h2>
+                <p>Aceita apenas parte dos pedidos. Exemplo:</p>
+                <ul>
+                    <li>Reconhece tarifa abusiva, mas mantém juros;</li>
+                    <li>Afasta comissão cumulada, mas não revisa taxa principal;</li>
+                    <li>Manda recalcular apenas encargos de mora.</li>
+                </ul>
+
+                <h2 class="subtitulo" style="color: #dc2626;">Sentença Improcedente</h2>
+                <p>Rejeita os pedidos, entendendo que não houve abusividade, juros na média, contrato claro, capitalização pactuada, etc.</p>
+            </div>
+
+            <!-- SLIDE 11: RECURSOS INICIAIS -->
+            <div class="slide">
+                <h1 class="titulo-principal">Recursos e Contestações à Decisão</h1>
+                
+                <h2 class="subtitulo">19. Embargos de Declaração</h2>
+                <p>Após a sentença, qualquer parte pode apresentar se a decisão tiver: <strong>Omissão, Contradição, Obscuridade ou Erro Material</strong>.</p>
+                <p>Os embargos não servem para “recorrer de tudo”, mas para pedir correção ou esclarecimento.</p>
+
+                <h2 class="subtitulo">27. Apelação</h2>
+                <p>Recurso cabível contra sentença (art. 1.009 CPC). O processo é remetido ao Tribunal de Justiça. O banco pode apelar para derrubar sentença favorável, e o cliente pode apelar se perdeu ou ganhou parcialmente.</p>
+
+                <h2 class="subtitulo">21. Agravo de Instrumento</h2>
+                <p>Aparece no meio do processo, antes da sentença. Comum quando o juiz decide algo importante liminarmente: Nega/concede tutela; decide sobre busca e apreensão; inverte ônus da prova; decide justiça gratuita.</p>
+
+                <figure class="visual-etapa">
+                    <img src="assets/agravo-instrumento-interativo.jpg" alt="Instrutor da Platino apresentando diferentes decisões processuais em uma atividade de treinamento">
+                    <figcaption>Observe a decisão tomada no meio do processo: ela pode exigir reação rápida e o recurso adequado.</figcaption>
+                </figure>
+
+                <div class="exercicio-agravo">
+                    <div class="exercicio-agravo-cabecalho">
+                        <div class="exercicio-agravo-icone">?</div>
+                        <div>
+                            <span>Desafio rápido</span>
+                            <strong>Clique em cada situação e identifique quando o Agravo de Instrumento pode ser utilizado.</strong>
+                        </div>
+                    </div>
+                    <div class="opcoes-agravo">
+                        <button class="opcao-agravo" type="button" onclick="responderAgravo(this, true)">Tutela de urgência negada durante o processo</button>
+                        <button class="opcao-agravo" type="button" onclick="responderAgravo(this, false)">Sentença final desfavorável ao cliente</button>
+                        <button class="opcao-agravo" type="button" onclick="responderAgravo(this, true)">Pedido de justiça gratuita indeferido</button>
+                    </div>
+                    <p id="feedback-agravo">Selecione uma situação para conferir a resposta.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 12: TRIBUNAL (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">22. Julgamento no Tribunal</h1>
+                <p>No Tribunal de Justiça, o processo será analisado por desembargadores.</p>
+                
+                <p><strong>Movimentações comuns:</strong></p>
+                <ul>
+                    <li>Autos conclusos ao relator / Incluído em pauta de julgamento;</li>
+                    <li>Julgamento iniciado / Acórdão publicado;</li>
+                    <li>Recurso provido / parcialmente provido / desprovido.</li>
+                </ul>
+
+                <p><strong>Possíveis resultados:</strong> O tribunal pode manter a sentença, reformar, aumentar/reduzir condenação, anular, mandar voltar para 1ª instância ou reconhecer/afastar abusividade.</p>
+
+                <div class="caixa-venda" style="margin-top: 40px;">
+                    <div class="caixa-venda-titulo">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        MOMENTO DA VENDA: Citação Judicial / Tribunal
+                    </div>
+                    <p>Esse é o momento de entrar em contato com o cliente, informar que <strong>já realizamos uma reunião com o Dr. responsável pelo processo</strong>, e informar que a melhor estratégia jurídica agora é intimar o banco para não travar o andamento nesta instância superior.</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 13: RETA FINAL (VENDA) -->
+            <div class="slide">
+                <h1 class="titulo-principal">Reta Final do Processo</h1>
+                
+                <h2 class="subtitulo">18. Recursos aos Tribunais Superiores (STJ/STF)</h2>
+                <p>Comum ao STJ para discutir lei federal ou jurisprudência. Nem todo processo chega lá, muitos acabam no TJ.</p>
+
+                <h2 class="subtitulo">19. Trânsito em Julgado</h2>
+                <p>Quando não cabe mais recurso. A decisão se tornou definitiva.</p>
+
+                <div class="caixa-venda">
+                    <div class="caixa-venda-titulo">
+                        MOMENTO DA VENDA: Fim da Fase de Conhecimento
+                    </div>
+                    <p>Contato com cliente. Informe que <strong>a reunião com o Dr. já foi realizada</strong>. Estratégia de intimação final para acelerar o pagamento/execução.</p>
+                </div>
+
+                <h2 class="subtitulo">25. Cumprimento de Sentença</h2>
+                <p>Fase de executar o ganho. Apresentação de memória de cálculo atualizada, intimação para pagamento, expedição de alvará e saque.</p>
+
+                <h2 class="subtitulo">26. Arquivamento</h2>
+                <p>Baixa definitiva / Processo extinto. Terminou no sistema.</p>
+            </div>
+
+            <!-- SLIDE 14: PONTOS CRUCIAIS -->
+            <div class="slide">
+                <h1 class="titulo-principal">Os 5 Pilares de Atenção na Revisão</h1>
+                <p>Em revisional, o processo geralmente gira em torno de cinco pontos principais que definem o ganho ou perda:</p>
+                
+                <ol>
+                    <li><strong>Juros remuneratórios:</strong> Se a taxa contratada é abusiva ou não.</li>
+                    <li><strong>Capitalização de juros:</strong> Se foi pactuada de forma válida.</li>
+                    <li><strong>Taxa média do Banco Central:</strong> Usada como referência técnica, mas não como limite automático.</li>
+                    <li><strong>Encargos de inadimplência:</strong> Multa, mora, comissão de permanência e eventual cumulação indevida.</li>
+                    <li><strong>Perícia contábil:</strong> Muitas vezes é o que define se existe valor cobrado a maior.</li>
+                </ol>
+
+                <div class="caixa-destaque">
+                    <p><strong>Cuidado Principal:</strong> Não basta dizer “o juros é alto”. É preciso demonstrar tecnicamente a abusividade, comparar com a modalidade correta do BC e explicar as particularidades do contrato (risco, garantias, economia da época).</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 15: FECHAMENTO COMERCIAL -->
+            <div class="slide" style="display: flex; flex-direction: column; justify-content: center; text-align: center; background-color: var(--cor-primaria); color: var(--cor-branco);">
+                <h1 class="titulo-principal" style="color: var(--cor-branco); border-color: var(--cor-destaque-venda);">A Verdade do Processo</h1>
+                
+                <p style="font-size: 28px; margin: 40px 0; font-weight: 300; line-height: 1.4;">
+                    O PROCESSO JUDICIAL DE REVISÃO É BEM MOROSO, BEM DEMORADO E DURA ANOS.
+                </p>
+
+                <div style="background-color: var(--cor-destaque-venda); padding: 30px; border-radius: 12px; margin: 0 auto; max-width: 800px;">
+                    <p style="font-size: 24px; color: var(--cor-branco); font-weight: bold; margin: 0;">
+                        Com MUITA estratégia, conseguimos apresentar opções judiciais de acelerar esse processo para uma sentença mais rápida ou até mesmo um acordo extrajudicial vantajoso para o cliente.
+                    </p>
+                </div>
+
+                <p style="margin-top: 50px; color: #93c5fd; font-size: 16px; text-transform: uppercase; letter-spacing: 2px;">Use este conhecimento para converter.</p>
+            </div>
+
+        </div>
+
+        <div class="controles-navegacao">
+            <button class="botao-nav" id="botao-anterior" disabled>&#8592; Etapa Anterior</button>
+            <button class="botao-nav" id="botao-proximo">Próxima Etapa &#8594;</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nomesEtapas = [
+                "Capa e Introdução",
+                "1. Fase Extrajudicial",
+                "2 e 3. Distribuição e Inicial",
+                "4 e 5. Despacho e Emenda",
+                "6 e 7. Gratuidade e Tutela",
+                "8. Citação do Banco",
+                "9 e 10. Audiência e Contestação",
+                "11. Réplica",
+                "12 e 13. Provas e Saneamento",
+                "14 e 15. Comissão e Alegações",
+                "18. A Sentença",
+                "Recursos (Embargos, Apelação)",
+                "22. Tribunal de Justiça",
+                "Reta Final e Arquivamento",
+                "Os 5 Pilares Principais",
+                "Visão Estratégica"
+            ];
+
+            const containerMenu = document.getElementById('menu-trilho');
+            const slides = document.querySelectorAll('.slide');
+            const botaoAnterior = document.getElementById('botao-anterior');
+            const botaoProximo = document.getElementById('botao-proximo');
+            const totalSlides = slides.length;
+            const etapaSolicitada = Number.parseInt(new URLSearchParams(window.location.search).get('etapa'), 10);
+            let indiceAtual = Number.isInteger(etapaSolicitada) && etapaSolicitada >= 0 && etapaSolicitada < totalSlides
+                ? etapaSolicitada
+                : 0;
+
+            nomesEtapas.forEach((nome, index) => {
+                const li = document.createElement('li');
+                li.className = `item-etapa ${index === indiceAtual ? 'ativo' : ''}`;
+                li.innerHTML = `<div class="numero-etapa">${index + 1}</div> ${nome}`;
+                li.addEventListener('click', () => {
+                    mudarParaSlide(index);
+                });
+                containerMenu.appendChild(li);
+            });
+
+            const itensMenu = document.querySelectorAll('.item-etapa');
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('ativo', index === indiceAtual);
+            });
+            atualizarBotoes();
+
+            function mudarParaSlide(novoIndice) {
+                if (novoIndice < 0 || novoIndice >= totalSlides) return;
+                slides[indiceAtual].classList.remove('ativo');
+                itensMenu[indiceAtual].classList.remove('ativo');
+                indiceAtual = novoIndice;
+                slides[indiceAtual].classList.add('ativo');
+                itensMenu[indiceAtual].classList.add('ativo');
+                itensMenu[indiceAtual].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                slides[indiceAtual].scrollTop = 0;
+                atualizarBotoes();
+            }
+
+            function atualizarBotoes() {
+                botaoAnterior.disabled = indiceAtual === 0;
+                botaoProximo.disabled = indiceAtual === totalSlides - 1;
+                if(indiceAtual === totalSlides - 1) {
+                    botaoProximo.innerText = "Finalizar";
+                } else {
+                    botaoProximo.innerText = "Próxima Etapa \u2192";
+                }
+            }
+
+            botaoAnterior.addEventListener('click', () => mudarParaSlide(indiceAtual - 1));
+            botaoProximo.addEventListener('click', () => mudarParaSlide(indiceAtual + 1));
+        });
+
+        function responderAgravo(botao, correto) {
+            botao.classList.remove('correta', 'incorreta');
+            botao.classList.add(correto ? 'correta' : 'incorreta');
+
+            const feedback = document.getElementById('feedback-agravo');
+            feedback.textContent = correto
+                ? 'Correto. Essa decisão ocorre durante o processo e, em regra, pode ser questionada por Agravo de Instrumento.'
+                : 'Atenção: contra a sentença final, o recurso normalmente utilizado é a Apelação.';
+            feedback.style.color = correto ? '#166534' : '#92400e';
+        }
+    </script>
+</body>
+</html>

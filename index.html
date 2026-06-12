@@ -166,6 +166,37 @@
             font-weight: 700;
             color: #e2e8f0;
         }
+
+        #app-content,
+        #app-container {
+            min-height: 100vh;
+        }
+
+        .training-card {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .training-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #38bdf8);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .training-card:hover {
+            transform: translateY(-3px);
+            border-color: #bfdbfe;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+        }
+
+        .training-card:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
@@ -258,6 +289,12 @@
             </button>
             <button id="nav-juridico" onclick="navigateTo('juridico')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-scales text-lg text-indigo-400"></i> Jurídico
+            </button>
+            <button id="nav-rh" onclick="navigateTo('rh')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-users-three text-lg text-rose-400"></i> RH
+            </button>
+            <button id="nav-financeiro" onclick="navigateTo('financeiro')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
+                <i class="ph ph-coins text-lg text-amber-400"></i> Financeiro
             </button>
             
             <div class="pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Recursos & Comunicação</div>
@@ -436,6 +473,22 @@
                             </div>
                             <h3 class="font-semibold text-slate-800 mb-1">Jurídico</h3>
                             <p class="text-xs text-slate-500">Gestão de pastas, produtos e objeções judiciais.</p>
+                        </div>
+
+                        <div onclick="navigateTo('rh')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-rose-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-users-three text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Recursos Humanos</h3>
+                            <p class="text-xs text-slate-500">Pessoas, documentos, benefícios e comunicados internos.</p>
+                        </div>
+
+                        <div onclick="navigateTo('financeiro')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-amber-300 transition-all cursor-pointer group">
+                            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                <i class="ph ph-coins text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-slate-800 mb-1">Financeiro</h3>
+                            <p class="text-xs text-slate-500">Controles, pagamentos, recebimentos e relatórios.</p>
                         </div>
                     </div>
                 </div>
@@ -659,6 +712,349 @@
                 </div>
             </section>
 
+            <!-- SEÇÃO: RH -->
+            <section id="section-rh" class="content-section hidden animate-fade-in">
+                <div class="max-w-6xl mx-auto">
+                    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <div class="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500">
+                                <i class="ph ph-users-three text-base"></i> Gestão de pessoas
+                            </div>
+                            <h2 class="text-2xl font-bold text-slate-800">Dashboard de Recursos Humanos</h2>
+                            <p class="text-slate-500 mt-1">Ocorrências, talentos, desenvolvimento e rotinas trabalhistas em um só lugar.</p>
+                        </div>
+                        <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Central operacional
+                        </span>
+                    </div>
+
+                    <div class="mb-3 flex items-center gap-3">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white"><i class="ph ph-lightning"></i></span>
+                        <div>
+                            <h3 class="font-bold text-slate-800">Ocorrências e Rotina</h3>
+                            <p class="text-xs text-slate-500">Ações rápidas para o acompanhamento diário.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_1.25fr]">
+                        <button type="button" onclick="openRhPanel('frequencia')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
+                            <div class="flex items-start justify-between">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="ph ph-clock-counter-clockwise text-2xl"></i></span>
+                                <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-blue-500"></i>
+                            </div>
+                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-600">Acesso rápido</p>
+                            <h4 class="mt-1 font-bold text-slate-800">Frequência e Ponto</h4>
+                            <p class="mt-2 text-sm leading-relaxed text-slate-500">Registrar atrasos, faltas, justificativas e ajustes de ponto.</p>
+                        </button>
+
+                        <button type="button" onclick="openRhPanel('conduta')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-violet-300 hover:shadow-lg">
+                            <div class="flex items-start justify-between">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><i class="ph ph-identification-badge text-2xl"></i></span>
+                                <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-violet-500"></i>
+                            </div>
+                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-600">Acesso rápido</p>
+                            <h4 class="mt-1 font-bold text-slate-800">Conduta e Postura</h4>
+                            <p class="mt-2 text-sm leading-relaxed text-slate-500">Apontamentos de uniforme, crachá, postura e orientações aplicadas.</p>
+                        </button>
+
+                        <div class="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+                            <i class="ph-fill ph-push-pin absolute right-4 top-4 rotate-12 text-xl text-amber-500"></i>
+                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">Mural da semana</p>
+                            <textarea id="rh-weekly-notes" rows="4" class="mt-3 w-full resize-none rounded-xl border border-amber-200 bg-white/70 p-3 text-sm leading-relaxed text-slate-700 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-200" placeholder="Adicione lembretes rápidos para a equipe..."></textarea>
+                            <div class="mt-3 flex items-center justify-between gap-3">
+                                <span id="rh-notes-status" class="text-[11px] text-amber-700">Visível neste navegador</span>
+                                <button type="button" onclick="saveRhNotes()" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-600">Salvar mural</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 mt-8 flex items-center gap-3">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white"><i class="ph ph-trend-up"></i></span>
+                        <div>
+                            <h3 class="font-bold text-slate-800">Talentos e Desenvolvimento</h3>
+                            <p class="text-xs text-slate-500">Acompanhamento de candidatos e evolução da equipe.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <button type="button" onclick="openRhPanel('recrutamento')" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-left text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                            <div class="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl"></div>
+                            <div class="relative">
+                                <div class="flex items-start justify-between">
+                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-blue-200"><i class="ph ph-user-plus text-2xl"></i></span>
+                                    <i class="ph ph-arrow-up-right text-blue-300"></i>
+                                </div>
+                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">R&S</p>
+                                <h4 class="mt-1 text-xl font-bold">Recrutamento e Seleção</h4>
+                                <p class="mt-3 max-w-md text-sm leading-relaxed text-slate-300">Centralize candidatos, currículos, entrevistas e o andamento das novas contratações.</p>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="openRhPanel('desenvolvimento')" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-600 p-6 text-left text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                            <div class="absolute -bottom-16 -right-8 h-44 w-44 rounded-full bg-white/15 blur-3xl"></div>
+                            <div class="relative">
+                                <div class="flex items-start justify-between">
+                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/15 text-white"><i class="ph ph-student text-2xl"></i></span>
+                                    <i class="ph ph-arrow-up-right text-cyan-100"></i>
+                                </div>
+                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100">T&D</p>
+                                <h4 class="mt-1 text-xl font-bold">Desenvolvimento e Performance</h4>
+                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-50">Documente treinamentos, evolução, pontos de apoio e ações para manter a equipe motivada e segura.</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="mb-3 mt-8 flex items-center gap-3">
+                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-200 text-slate-700"><i class="ph ph-files"></i></span>
+                        <div>
+                            <h3 class="font-bold text-slate-800">Burocracia e Contabilidade</h3>
+                            <p class="text-xs text-slate-500">Documentos, informações contábeis e processos de saída.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <button type="button" onclick="openRhPanel('contabilidade')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><i class="ph ph-calculator text-2xl"></i></span>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-600">Documentos e dúvidas</p>
+                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-emerald-500"></i>
+                                    </div>
+                                    <h4 class="mt-1 font-bold text-slate-800">Central da Contabilidade</h4>
+                                    <p class="mt-2 text-sm leading-relaxed text-slate-500">Folha, holerites, benefícios, informações mensais e dúvidas contábeis.</p>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button type="button" onclick="openRhPanel('desligamento')" class="group rounded-2xl border border-red-200 bg-gradient-to-br from-white to-red-50 p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-400 hover:shadow-lg">
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600"><i class="ph ph-user-minus text-2xl"></i></span>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">Atenção</p>
+                                        <i class="ph ph-warning text-lg text-red-400"></i>
+                                    </div>
+                                    <h4 class="mt-1 font-bold text-slate-800">Desligamento e Rescisão</h4>
+                                    <p class="mt-2 text-sm leading-relaxed text-slate-500">Inicie o processo de saída e acompanhe o checklist de desligamento.</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div id="rh-action-panel" class="mt-6 hidden rounded-2xl border border-blue-200 bg-white p-6 shadow-lg">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-start gap-4">
+                                <span id="rh-action-icon" class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="ph ph-check-square-offset text-2xl"></i></span>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">Painel de orientação</p>
+                                    <h3 id="rh-action-title" class="mt-1 text-xl font-bold text-slate-800"></h3>
+                                    <p id="rh-action-description" class="mt-2 text-sm leading-relaxed text-slate-500"></p>
+                                </div>
+                            </div>
+                            <button type="button" onclick="closeRhPanel()" class="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Fechar painel">
+                                <i class="ph ph-x text-xl"></i>
+                            </button>
+                        </div>
+                        <div id="rh-action-checklist" class="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO: FINANCEIRO -->
+            <section id="section-financeiro" class="content-section hidden animate-fade-in">
+                <div class="max-w-7xl mx-auto">
+                    <!-- CABEÇALHO -->
+                    <div class="mb-8">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                                <i class="ph ph-coins text-2xl"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-3xl font-bold text-slate-800">Setor Financeiro</h2>
+                                <p class="text-slate-500 text-sm mt-1">Resultados • Operação • Comunicação</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILEIRA 1: TERMÔMETRO DE RESULTADOS -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                            <i class="ph ph-target text-amber-500"></i> Termômetro de Resultados
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <!-- Card: Meta do Mês -->
+                            <div class="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Meta do Mês</span>
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph ph-chart-line-up text-2xl text-amber-500"></i>
+                                        <button onclick="openFinanceiroPanel('meta')" class="gestor-only hidden text-amber-500 hover:text-amber-700 p-1 rounded hover:bg-amber-100 transition" title="Editar meta">
+                                            <i class="ph ph-pencil text-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-slate-800 mb-2">R$ 125.400</p>
+                                <p class="text-sm text-slate-600 mb-4">de R$ 150.000 (83%)</p>
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-amber-500 h-2 rounded-full" style="width: 83%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Card: Premiações do Dia -->
+                            <div class="rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-white p-6 shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-green-600">Premiações do Dia</span>
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph ph-lightning text-2xl text-green-500"></i>
+                                        <button onclick="openFinanceiroPanel('premiacoes_dia')" class="gestor-only hidden text-green-500 hover:text-green-700 p-1 rounded hover:bg-green-100 transition" title="Editar premiações">
+                                            <i class="ph ph-pencil text-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-slate-700 font-semibold mb-3">PIX Imediato:</p>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li>• 3 contratos = R$ 150</li>
+                                    <li>• 5 contratos = R$ 300</li>
+                                </ul>
+                            </div>
+
+                            <!-- Card: Premiações da Semana -->
+                            <div class="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Premiações da Semana</span>
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph ph-star text-2xl text-blue-500"></i>
+                                        <button onclick="openFinanceiroPanel('premiacoes_semana')" class="gestor-only hidden text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-100 transition" title="Editar premiações">
+                                            <i class="ph ph-pencil text-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-slate-700 font-semibold mb-3">Bônus e Vantagens:</p>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li>• 1º lugar = R$ 500</li>
+                                    <li>• 2º lugar = Folga extra</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILEIRA 2: DINÂMICA E REGRAS -->
+                    <div class="mb-8">
+                        <div class="rounded-2xl border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 p-6 shadow-md">
+                            <div class="flex items-start gap-4">
+                                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white">
+                                    <i class="ph ph-flag-checkered text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg text-slate-800 mb-1">Dinâmica Atual</h4>
+                                    <p class="text-amber-700 font-semibold mb-3">Revisão de Juros - Esta Semana</p>
+                                    <p class="text-slate-700 text-sm leading-relaxed">Quem fechar <strong>5 contratos de revisão de juros</strong> até sexta-feira ganha <strong>R$ 250 + folga na segunda</strong>. Cada contrato adicional = +R$ 50.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FILEIRA 3: CONTROLE OPERACIONAL -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                            <i class="ph ph-gear text-slate-600"></i> Controle Operacional
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Card: Gastos/Despesas -->
+                            <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-300 hover:shadow-lg hover:bg-red-50/30">
+                                <div class="flex items-start justify-between mb-4">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600">
+                                        <i class="ph ph-credit-card text-2xl"></i>
+                                    </span>
+                                    <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-red-500"></i>
+                                </div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-red-600">Acesso Rápido</p>
+                                <h4 class="mt-2 font-bold text-slate-800">Registrar Despesa</h4>
+                                <p class="mt-2 text-sm text-slate-500">Contas a pagar, custos fixos, variáveis e materiais.</p>
+                            </button>
+
+                            <!-- Card: Apontamentos de Investimento -->
+                            <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-green-300 hover:shadow-lg hover:bg-green-50/30">
+                                <div class="flex items-start justify-between mb-4">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                                        <i class="ph ph-trend-up text-2xl"></i>
+                                    </span>
+                                    <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-green-500"></i>
+                                </div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-green-600">Acesso Rápido</p>
+                                <h4 class="mt-2 font-bold text-slate-800">Injetar Investimento</h4>
+                                <p class="mt-2 text-sm text-slate-500">Tráfego pago, equipamentos, reformas e expansão.</p>
+                            </button>
+
+                            <!-- Card: Apontamentos Gerais -->
+                            <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:bg-blue-50/30">
+                                <div class="flex items-start justify-between mb-4">
+                                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                                        <i class="ph ph-note-pencil text-2xl"></i>
+                                    </span>
+                                    <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-blue-500"></i>
+                                </div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-blue-600">Acesso Rápido</p>
+                                <h4 class="mt-2 font-bold text-slate-800">Apontar Ocorrência</h4>
+                                <p class="mt-2 text-sm text-slate-500">Pendências, estornos, boletos e conferências.</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FILEIRA 4: MURAL DE COMUNICAÇÃO -->
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                            <i class="ph ph-megaphone text-slate-600"></i> Mural de Comunicação
+                        </h3>
+                        
+                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="mb-4 pb-4 border-b border-slate-100">
+                                <h4 class="font-bold text-slate-800 mb-2">Novidades Financeiras</h4>
+                                <p class="text-xs text-slate-500 uppercase tracking-wider">Saúde da empresa • Atualizações • Resultados</p>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Notícia 1 -->
+                                <div class="flex gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
+                                        <i class="ph ph-check-circle text-lg"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-slate-800 text-sm">Saúde Financeira Q2: Crescimento 18%</p>
+                                        <p class="text-xs text-slate-600 mt-1">Resultados positivos. Continuar atuação com disciplina nos custos variáveis.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Notícia 2 -->
+                                <div class="flex gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                        <i class="ph ph-info text-lg"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-slate-800 text-sm">Novo Parceiro Bancário</p>
+                                        <p class="text-xs text-slate-600 mt-1">Banco X iniciando operações. Taxas competitivas para clientes estratégicos.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Notícia 3 -->
+                                <div class="flex gap-4">
+                                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                                        <i class="ph ph-warning text-lg"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-slate-800 text-sm">Atenção: Mudança de Taxas de Juros</p>
+                                        <p class="text-xs text-slate-600 mt-1">Banco Central alterou percentuais. Atualizar simuladores até sexta-feira.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- SEÇÃO: TREINAMENTOS -->
             <section id="section-treinamentos" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
@@ -698,43 +1094,71 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <h3 class="font-semibold text-lg">Esteira Comercial</h3>
-                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><i class="ph ph-target text-xl"></i></span>
+                                        <h3 class="font-semibold text-lg">Esteira Comercial</h3>
+                                    </div>
+                                    <span class="bg-red-50 text-red-600 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">PDF</span>
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Técnicas de vendas, script de quebra de objeções e guia de contrato.</p>
                             </div>
-                            <a href="esteira-comercial.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-comercial.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
                             </a>
                         </div>
 
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                        <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <h3 class="font-semibold text-lg">Esteira Administrativa</h3>
-                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="ph ph-folders text-xl"></i></span>
+                                        <h3 class="font-semibold text-lg">Esteira Administrativa</h3>
+                                    </div>
+                                    <span class="bg-red-50 text-red-600 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">PDF</span>
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Fluxo completo: GOV, documentos, laudo, CRM e acompanhamento.</p>
                             </div>
-                            <a href="esteira-adm.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-adm.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
                             </a>
                         </div>
                         
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+                        <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <h3 class="font-semibold text-lg">Esteira Jurídica</h3>
-                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-medium">PDF</span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600"><i class="ph ph-scales text-xl"></i></span>
+                                        <h3 class="font-semibold text-lg">Esteira Jurídica</h3>
+                                    </div>
+                                    <span class="bg-red-50 text-red-600 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">PDF</span>
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Fluxo completo: abertura de grupo, processual, citação e homologação.</p>
                             </div>
-                            <a href="esteira-juridico.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-medium rounded border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-juridico.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
+                            </a>
+                        </div>
+
+                        <div class="training-card flex flex-col justify-between rounded-2xl border border-blue-200 bg-gradient-to-br from-white to-blue-50/70 p-6 shadow-sm">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-200"><i class="ph ph-presentation-chart text-xl"></i></span>
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">Novo treinamento</p>
+                                            <h3 class="font-semibold text-lg">Trilho de Revisão</h3>
+                                        </div>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Interativo</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-6">Material interativo com etapas do processo, estratégia comercial e instruções para a equipe jurídica.</p>
+                            </div>
+                            <a href="treinamento-trilho-revisao-contratos.html" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm">
+                                <i class="ph ph-play-circle text-lg"></i> Iniciar treinamento
                             </a>
                         </div>
                     </div>
@@ -1092,6 +1516,141 @@
             { id: "j6", icon: "🚀", title: "6. Encaminhar ao Processual", tasks: ["Solicitar documentos esfera judicial para o cliente", "Solicitar procurações para o ADM", "Solicitar no grupo: Nome do cliente - encaminhar processual"] }
         ];
 
+        const rhPanels = {
+            frequencia: {
+                title: 'Frequência e Ponto',
+                description: 'Use este fluxo para documentar ocorrências de jornada com clareza e manter o histórico organizado.',
+                items: ['Identificar colaborador e data', 'Selecionar atraso, falta ou ajuste', 'Registrar justificativa apresentada', 'Anexar comprovante quando necessário']
+            },
+            conduta: {
+                title: 'Conduta e Postura',
+                description: 'Centralize apontamentos de apresentação e comportamento, sempre registrando a orientação aplicada.',
+                items: ['Identificar a ocorrência', 'Descrever o fato objetivamente', 'Registrar orientação realizada', 'Definir necessidade de acompanhamento']
+            },
+            recrutamento: {
+                title: 'Recrutamento e Seleção',
+                description: 'Acompanhe cada etapa da contratação e mantenha candidatos e documentos fáceis de consultar.',
+                items: ['Cadastrar vaga e perfil', 'Organizar currículos recebidos', 'Registrar entrevistas e avaliações', 'Atualizar etapa de cada candidato']
+            },
+            desenvolvimento: {
+                title: 'Desenvolvimento e Performance',
+                description: 'Documente a evolução da equipe, os treinamentos concluídos e os próximos pontos de desenvolvimento.',
+                items: ['Registrar treinamento realizado', 'Avaliar evolução observada', 'Mapear pontos de apoio', 'Definir próxima ação de desenvolvimento']
+            },
+            contabilidade: {
+                title: 'Central da Contabilidade',
+                description: 'Prepare e acompanhe as informações enviadas à contabilidade com conferência e prazo definidos.',
+                items: ['Organizar documentos mensais', 'Conferir folha e holerites', 'Registrar dúvidas pendentes', 'Acompanhar retorno da contabilidade']
+            },
+            desligamento: {
+                title: 'Desligamento e Rescisão',
+                description: 'Conduza o processo de saída com atenção, confidencialidade e conferência de todas as etapas.',
+                items: ['Formalizar solicitação e data', 'Conferir documentos rescisórios', 'Revogar acessos e recolher materiais', 'Registrar entrega e encerramento']
+            }
+        };
+
+        const financeiroPanels = {
+            meta: {
+                title: 'Editar Meta do Mês',
+                description: 'Atualize a meta de vendas e acompanhe o progresso em tempo real.',
+                items: ['Definir meta mensal em R$', 'Atualizar valor alcançado', 'Ajustar percentual de progresso', 'Registrar data de atualização']
+            },
+            premiacoes_dia: {
+                title: 'Atualizar Premiações do Dia',
+                description: 'Configure os prêmios e bônus para os colaboradores que atingem metas diárias.',
+                items: ['Definir número de contratos necessários', 'Configurar valor PIX imediato', 'Ajustar múltiplos prêmios', 'Validar regras de acumulação']
+            },
+            premiacoes_semana: {
+                title: 'Editar Premiações da Semana',
+                description: 'Gerencie os bônus maiores e benefícios especiais para a melhor performance semanal.',
+                items: ['Configurar 1º, 2º e 3º lugar', 'Definir valores ou benefícios', 'Registrar período vigente', 'Comunicar alterações à equipe']
+            },
+            dinamica: {
+                title: 'Atualizar Dinâmica Atual',
+                description: 'Defina as regras do desafio semanal que motiva a equipe a alcançar novos objetivos.',
+                items: ['Descrever objetivo da dinâmica', 'Definir meta específica', 'Configurar período vigente', 'Informar prêmios e benefícios']
+            },
+            despesas: {
+                title: 'Gerenciar Despesas',
+                description: 'Registre e acompanhe contas a pagar, custos fixos e variáveis da operação.',
+                items: ['Categorizar tipo de despesa', 'Registrar valor e beneficiário', 'Informar data de vencimento', 'Manter conferência e comprovantes']
+            },
+            investimentos: {
+                title: 'Apontar Investimentos',
+                description: 'Documente alocação de recursos em crescimento, marketing, infraestrutura e expansão.',
+                items: ['Especificar tipo de investimento', 'Informar valor investido', 'Detalhar objetivo/resultado esperado', 'Acompanhar ROI periodicamente']
+            },
+            mural: {
+                title: 'Atualizar Mural de Comunicação',
+                description: 'Mantenha a equipe informada sobre saúde financeira, parcerias e atualizações importantes.',
+                items: ['Preparar notícia financeira', 'Descrever impacto na empresa', 'Indicar prioridade de leitura', 'Agendar publicação']
+            }
+        };
+
+        function openRhPanel(panelId) {
+            const data = rhPanels[panelId];
+            const panel = document.getElementById('rh-action-panel');
+            if (!data || !panel) return;
+
+            document.getElementById('rh-action-title').innerText = data.title;
+            document.getElementById('rh-action-description').innerText = data.description;
+            document.getElementById('rh-action-checklist').innerHTML = data.items.map(item => `
+                <div class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+                    <i class="ph ph-check-circle text-lg text-blue-500"></i>
+                    <span>${item}</span>
+                </div>
+            `).join('');
+
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function closeRhPanel() {
+            document.getElementById('rh-action-panel')?.classList.add('hidden');
+        }
+
+        function openFinanceiroPanel(panelId) {
+            const data = financeiroPanels[panelId];
+            const panel = document.getElementById('financeiro-action-panel');
+            if (!data || !panel) return;
+
+            document.getElementById('financeiro-action-title').innerText = data.title;
+            document.getElementById('financeiro-action-description').innerText = data.description;
+            document.getElementById('financeiro-action-checklist').innerHTML = data.items.map(item => `
+                <div class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
+                    <i class="ph ph-check-circle text-lg text-amber-500"></i>
+                    <span>${item}</span>
+                </div>
+            `).join('');
+
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function closeFinanceiroPanel() {
+            document.getElementById('financeiro-action-panel')?.classList.add('hidden');
+        }
+
+        function loadRhNotes() {
+            const notes = document.getElementById('rh-weekly-notes');
+            if (!notes) return;
+            notes.value = localStorage.getItem('platinoRhWeeklyNotes') || '• Conferir ajustes de ponto pendentes\n• Atualizar andamento das vagas abertas\n• Enviar documentos mensais à contabilidade';
+        }
+
+        function saveRhNotes() {
+            const notes = document.getElementById('rh-weekly-notes');
+            const status = document.getElementById('rh-notes-status');
+            if (!notes || !status) return;
+
+            localStorage.setItem('platinoRhWeeklyNotes', notes.value);
+            status.innerText = 'Mural salvo agora';
+            status.className = 'text-[11px] font-semibold text-emerald-700';
+            setTimeout(() => {
+                status.innerText = 'Visível neste navegador';
+                status.className = 'text-[11px] text-amber-700';
+            }, 1800);
+        }
+
         // FUNÇÃO DE NAVEGAÇÃO INTELIGENTE (SPA)
         const titles = {
             'inicio': 'Início',
@@ -1099,6 +1658,8 @@
             'comercial': 'Setor Comercial',
             'adm': 'Setor Administrativo',
             'juridico': 'Setor Jurídico',
+            'rh': 'Recursos Humanos',
+            'financeiro': 'Setor Financeiro',
             'treinamentos': 'Manuais e Treinamentos',
             'ideias': 'Feedback e Ouvidoria' // ADICIONADO AQUI
         };
@@ -1936,6 +2497,7 @@
             renderAccordions('com-accordions', fluxosComercial);
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
+            loadRhNotes();
             
             // Carregar ranking e avisos salvos localmente e inicializar o carousel
             loadRankingData();
