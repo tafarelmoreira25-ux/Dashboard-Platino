@@ -101,8 +101,8 @@
             z-index: 50;
             display: inline-flex;
             align-items: center;
-            gap: 0.2rem;
-            padding: 0.2rem 0.3rem;
+            gap: 0.35rem;
+            padding: 0.22rem 0.38rem 0.22rem 0.24rem;
             border-radius: 9999px;
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(148, 163, 184, 0.18);
@@ -119,19 +119,27 @@
         }
 
         .icon-circle {
-            width: 18px;
-            height: 18px;
+            width: 30px;
+            height: 30px;
             flex-shrink: 0;
             border-radius: 9999px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 0.5rem;
-            color: white;
-            background: linear-gradient(135deg, #38bdf8, #818cf8);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-            transition: transform 0.25s ease, background 0.25s ease;
+            background: #020617;
+            border: 1px solid rgba(226, 232, 240, 0.42);
+            box-shadow:
+                0 8px 18px rgba(0, 0, 0, 0.28),
+                inset 0 0 0 1px rgba(255,255,255,0.14);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .icon-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .dev-badge-container:hover .icon-circle {
@@ -197,55 +205,193 @@
         .training-card:hover::before {
             opacity: 1;
         }
+
+        .login-hero-bg {
+            background-image:
+                linear-gradient(90deg, rgba(2, 6, 23, 0.82) 0%, rgba(2, 6, 23, 0.58) 38%, rgba(2, 6, 23, 0.12) 72%),
+                url('assets/platino-login-bg.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-glow-overlay {
+            background:
+                radial-gradient(circle at 72% 32%, rgba(37, 99, 235, 0.12), transparent 30%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.34));
+        }
+
+        .login-panel {
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.82), rgba(15, 23, 42, 0.72));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+        }
+
+        .login-input {
+            background: rgba(15, 23, 42, 0.74);
+            border: 1px solid rgba(148, 163, 184, 0.26);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .login-input:focus {
+            border-color: rgba(59, 130, 246, 0.85);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .metal-login-button {
+            position: relative;
+            overflow: hidden;
+            color: #07111f;
+            background:
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
+            border: 1px solid rgba(255, 255, 255, 0.72);
+            box-shadow:
+                0 16px 36px rgba(0, 25, 80, 0.36),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
+        }
+
+        .metal-login-button::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.75) 42%, transparent 58%);
+            transform: translateX(-120%);
+            transition: transform 0.7s ease;
+        }
+
+        .metal-login-button:hover::before {
+            transform: translateX(120%);
+        }
+
+        .login-feature-strip {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            width: 100%;
+            padding: 0.7rem 0.95rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(59, 130, 246, 0.08) 42%, rgba(15, 23, 42, 0.26)),
+                rgba(255, 255, 255, 0.04);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                0 14px 34px rgba(0, 0, 0, 0.18);
+            color: rgba(219, 234, 254, 0.86);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .login-feature-strip::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 8%, rgba(255, 255, 255, 0.18) 45%, transparent 62%);
+            transform: translateX(-120%);
+            animation: loginFeatureSheen 5.5s ease-in-out infinite;
+        }
+
+        .login-feature-strip span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes loginFeatureSheen {
+            0%, 35% { transform: translateX(-120%); }
+            70%, 100% { transform: translateX(120%); }
+        }
+
+        @media (max-width: 640px) {
+            .login-feature-strip {
+                gap: 0.45rem;
+                padding-inline: 0.75rem;
+                font-size: 0.62rem;
+                letter-spacing: 0.13em;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
     <button class="dev-badge-container" type="button" aria-label="Desenvolvido por Tafarel Moreira">
-        <div class="icon-circle">TM</div>
+        <div class="icon-circle">
+            <img src="assets/tafarel-moreira-logo-badge.png" alt="Logo Tafarel Moreira">
+        </div>
         <div class="text-reveal">
             <span class="text-line-1">Desenvolvido por</span>
             <span class="text-line-2">Tafarel Moreira</span>
         </div>
     </button>
 
-    <section id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white px-4">
-      <div class="w-full max-w-md bg-slate-950/80 border border-blue-500/20 rounded-3xl p-8 shadow-[0_30px_80px_rgba(15,23,42,0.55)] backdrop-blur-xl">
-        <div class="mb-6 text-center">
-          <h1 class="text-3xl font-bold tracking-wide text-blue-200">PLATINO</h1>
-          <p class="text-slate-300 mt-2">Acesso interno restrito</p>
-        </div>
+    <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
+      <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
+      <div class="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-[440px_1fr] gap-10 items-center">
+        <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
+          <div class="mb-8">
+            <div class="inline-flex items-center gap-2 rounded-full border border-blue-300/20 bg-blue-400/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-100">
+              <span class="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_18px_rgba(59,130,246,0.9)]"></span>
+              Ambiente interno seguro
+            </div>
+            <div class="mt-5 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-white/8 border border-white/12 flex items-center justify-center shadow-lg shadow-blue-950/30">
+                <i class="ph ph-shield-check text-3xl text-blue-200"></i>
+              </div>
+              <div>
+                <h1 class="text-3xl font-bold tracking-wide text-white leading-none">PLATINO</h1>
+                <p class="text-xs uppercase tracking-[0.24em] text-blue-200/80 mt-1">Hub operacional</p>
+              </div>
+            </div>
 
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm text-slate-300 mb-2">E-mail</label>
-            <input 
-              id="login-email" 
-              type="email" 
-              class="w-full px-4 py-3 rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30"
-              placeholder="Digite seu e-mail"
-            />
+            <div class="login-feature-strip mt-6">
+              <span>Tecnologia</span>
+              <span aria-hidden="true">-</span>
+              <span>Controle</span>
+              <span aria-hidden="true">-</span>
+              <span>Suporte</span>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-sm text-slate-300 mb-2">Senha</label>
-            <input 
-              id="login-password" 
-              type="password" 
-              class="w-full px-4 py-3 rounded-2xl bg-slate-800 text-slate-100 border border-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/30"
-              placeholder="Digite sua senha"
-            />
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm text-slate-300 mb-2">E-mail</label>
+              <input
+                id="login-email"
+                type="email"
+                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
+                placeholder="Digite seu e-mail"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-300 mb-2">Senha</label>
+              <input
+                id="login-password"
+                type="password"
+                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
+                placeholder="Digite sua senha"
+              />
+            </div>
+
+            <button
+              id="login-button"
+              class="metal-login-button w-full py-3.5 rounded-2xl font-bold transition focus:outline-none focus:ring-4 focus:ring-blue-500/25"
+            >
+              Entrar
+            </button>
+
+            <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
           </div>
 
-          <button 
-            id="login-button"
-            class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition ring-1 ring-blue-500/40 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            Entrar
-          </button>
-
-          <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
         </div>
+
+        <div class="hidden lg:block relative min-h-[560px]"></div>
       </div>
     </section>
 
@@ -2530,18 +2676,32 @@
         updateDoc
       } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyAHy9YPTluXfSFqpJ3lFB7lTO555gmeCKA",
-        authDomain: "platino-hub.firebaseapp.com",
-        projectId: "platino-hub"
-      };
+      async function loadFirebaseConfig() {
+        const response = await fetch("/api/firebase-config", { cache: "no-store" });
+        if (!response.ok) {
+          let details = "";
+          try {
+            const data = await response.json();
+            if (Array.isArray(data?.missing) && data.missing.length) {
+              details = ` Variáveis ausentes: ${data.missing.join(", ")}.`;
+            }
+          } catch (error) {
+            console.warn("Não foi possível ler o erro da configuração Firebase.", error);
+          }
+          throw new Error(`Não foi possível carregar a configuração segura do Firebase.${details}`);
+        }
+        const config = await response.json();
+        if (!config?.apiKey || !config?.authDomain || !config?.projectId) {
+          throw new Error("Configuração do Firebase incompleta.");
+        }
+        return config;
+      }
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const avisosRef = doc(db, "appContent", "centralAvisos");
-      const rankingRef = doc(db, "appContent", "ranking");
-      const feedbacksRef = collection(db, "feedbacks");
+      let auth = null;
+      let db = null;
+      let avisosRef = null;
+      let rankingRef = null;
+      let feedbacksRef = null;
       let stopAvisosSubscription = null;
       let stopRankingSubscription = null;
       let stopFeedbackSubscription = null;
@@ -2617,6 +2777,38 @@
       const loginPassword = document.getElementById("login-password");
       const loginError = document.getElementById("login-error");
 
+      function showLoginError(message) {
+        loginError.textContent = message;
+        loginError.classList.remove("hidden");
+      }
+
+      function setLoginReady(ready) {
+        loginButton.disabled = !ready;
+        loginButton.classList.toggle("opacity-70", !ready);
+        loginButton.classList.toggle("cursor-not-allowed", !ready);
+        loginButton.textContent = ready ? "Entrar" : "Conectando...";
+      }
+
+      function getAuthErrorMessage(error) {
+        switch (error?.code) {
+          case "auth/invalid-credential":
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+            return "E-mail ou senha inválidos.";
+          case "auth/too-many-requests":
+            return "Muitas tentativas. Aguarde alguns minutos e tente novamente.";
+          case "auth/network-request-failed":
+            return "Falha de conexão. Verifique a internet e tente novamente.";
+          case "auth/invalid-api-key":
+          case "auth/api-key-not-valid.-please-pass-a-valid-api-key.":
+            return "A chave do Firebase está inválida. Confira as Environment Variables no Vercel.";
+          default:
+            return "Não foi possível entrar agora. Verifique a configuração do Firebase e tente novamente.";
+        }
+      }
+
+      setLoginReady(false);
+
       loginButton.addEventListener("click", async () => {
         const email = loginEmail.value.trim();
         const password = loginPassword.value.trim();
@@ -2630,12 +2822,21 @@
           return;
         }
 
+        if (!auth) {
+          showLoginError("Firebase ainda não está conectado. Confira as Environment Variables no Vercel e faça um novo deploy.");
+          return;
+        }
+
         try {
+          loginButton.disabled = true;
+          loginButton.textContent = "Entrando...";
           await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
-          loginError.textContent = "E-mail ou senha inválidos.";
-          loginError.classList.remove("hidden");
+          showLoginError(getAuthErrorMessage(error));
           console.error(error);
+        } finally {
+          loginButton.disabled = false;
+          loginButton.textContent = "Entrar";
         }
       });
 
@@ -2675,7 +2876,17 @@
         });
       }
 
-      onAuthStateChanged(auth, (user) => {
+      async function startFirebase() {
+        try {
+          const firebaseConfig = await loadFirebaseConfig();
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
+          avisosRef = doc(db, "appContent", "centralAvisos");
+          rankingRef = doc(db, "appContent", "ranking");
+          feedbacksRef = collection(db, "feedbacks");
+
+          onAuthStateChanged(auth, (user) => {
         if (user) {
           loginScreen.classList.add("hidden");
           appContent.classList.remove("hidden");
@@ -2702,11 +2913,21 @@
             stopFeedbackSubscription = null;
           }
         }
-      });
+          });
+
+          setLoginReady(true);
+        } catch (error) {
+          console.error(error);
+          loginButton.textContent = "Entrar";
+          showLoginError(`${error.message} No Vercel, confirme FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN e FIREBASE_PROJECT_ID e depois faça Redeploy.`);
+        }
+      }
 
       window.logoutPlatino = async function () {
-        await signOut(auth);
+        if (auth) await signOut(auth);
       };
+
+      startFirebase();
     </script>
 </body>
 
