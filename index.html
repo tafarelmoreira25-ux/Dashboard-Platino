@@ -24,6 +24,64 @@
             object-fit: cover;
             border-radius: inherit;
         }
+
+        .metallic-title {
+            color: #e5edf7;
+            background: linear-gradient(110deg, #ffffff 0%, #9fb1c8 28%, #f8fafc 48%, #7f8da3 72%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 12px 28px rgba(15, 23, 42, 0.35);
+        }
+
+        .metallic-title i {
+            -webkit-text-fill-color: currentColor;
+        }
+
+        .metallic-kicker {
+            color: #93c5fd;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .performance-arena {
+            background:
+                radial-gradient(circle at 12% 0%, rgba(59, 130, 246, 0.28), transparent 34%),
+                radial-gradient(circle at 95% 15%, rgba(250, 204, 21, 0.16), transparent 30%),
+                linear-gradient(135deg, #020617 0%, #0f1b3d 48%, #07111f 100%);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .ranking-board {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.52));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .ranking-row {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(15, 23, 42, 0.2));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .ranking-row:hover {
+            transform: translateY(-2px);
+            border-color: rgba(147, 197, 253, 0.42);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(255, 255, 255, 0.1));
+        }
+
+        .ranking-row-leader {
+            border-color: rgba(250, 204, 21, 0.5);
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(37, 99, 235, 0.16));
+            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
+        }
+
+        .ranking-editor-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
         
         /* Animação suave para accordions */
         .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; max-height: 0; overflow: hidden; }
@@ -643,22 +701,27 @@
             <!-- SEÇÃO: CENTRAL DE AVISOS -->
             <section id="section-avisos" class="content-section hidden animate-fade-in">
                 <div class="max-w-6xl mx-auto">
-                    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-800">Central da Equipe</h2>
-                            <p class="text-slate-500 mt-1">Resultados, ranking, reconhecimentos e comunicados em um só lugar.</p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
-                                <i class="ph ph-pencil-simple text-lg"></i> Editar Central
-                            </button>
-                            <span id="avisos-updated-tag" class="hidden bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
-                            </span>
+                    <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
+                        <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
+                        <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
+                        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5 pl-2">
+                            <div>
+                                <p class="metallic-kicker text-[10px]">Central operacional</p>
+                                <h2 class="metallic-title mt-1 text-3xl font-black tracking-tight">Central da Equipe</h2>
+                                <p class="mt-2 max-w-2xl text-sm text-blue-100">Resultados, ranking, reconhecimentos e comunicados em uma visão organizada para manter a equipe alinhada e motivada.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                    <i class="ph ph-pencil-simple text-lg"></i> Editar Central
+                                </button>
+                                <span id="avisos-updated-tag" class="hidden bg-white/10 text-blue-100 border border-white/10 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
+                                </span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Destaque do mês -->
-                    <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6">
+                    <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
@@ -668,15 +731,15 @@
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
                                     <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
-                                    <h3 id="avisos-highlight-title" class="font-bold text-lg text-yellow-300">Destaque do Mês de Maio - Comercial</h3>
+                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque do Mês de Maio - Comercial</h3>
                                     <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Líder do Mês</span>
                                 </div>
                                 <p id="avisos-highlight-name" class="font-black text-2xl">Fernanda Ramos</p>
                                 <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em Maio!</p>
                             </div>
                             <div class="md:text-right">
-                                <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                <p id="avisos-highlight-value" class="text-2xl font-black text-green-400 mt-1">R$29.355,50</p>
+                                    <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
+                                    <p id="avisos-highlight-value" class="metallic-title text-2xl font-black mt-1">R$29.355,50</p>
                             </div>
                         </div>
                     </div>
@@ -687,8 +750,8 @@
                         <div class="relative flex flex-col gap-5">
                             <div class="flex items-center justify-between gap-4">
                                 <div>
-                                    <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-blue-300">Placar operacional</p>
-                                    <h3 class="mt-1 text-xl font-bold flex items-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
+                                    <p class="metallic-kicker text-[10px]">Placar operacional</p>
+                                    <h3 class="metallic-title mt-1 text-xl font-bold flex items-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
                                 </div>
                                 <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-xs text-blue-100">
                                     <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span> Semana em andamento
@@ -720,101 +783,64 @@
                     </div>
 
                     <!-- Arena de ranking -->
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm mb-6 overflow-hidden relative">
-                        <div class="absolute right-0 top-0 h-40 w-40 bg-yellow-100/60 rounded-full blur-3xl"></div>
+                    <div class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
+                        <div class="absolute right-0 top-0 h-40 w-40 bg-blue-400/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -left-10 bottom-0 h-40 w-40 bg-yellow-300/10 rounded-full blur-3xl"></div>
                         <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-orange-500">Arena de performance</p>
-                                <h3 class="mt-1 text-xl font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-trophy text-yellow-500 text-2xl"></i> Ranking da Semana</h3>
-                                <p class="text-xs text-slate-500 mt-1">Quem está no topo agora? A disputa continua aberta.</p>
+                                <p class="metallic-kicker text-[10px]">Arena de performance</p>
+                                <h3 class="metallic-title mt-1 text-2xl font-black flex items-center gap-2"><i class="ph-fill ph-trophy text-yellow-300 text-2xl"></i> Ranking da Semana</h3>
+                                <p class="text-xs text-blue-100 mt-1">Comercial e Jurídico disputam dentro do próprio setor. Cada atualização vira combustível para a próxima posição.</p>
                             </div>
-                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-slate-900 hover:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
                             </button>
                         </div>
 
                         <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
                             <!-- Ranking Comercial -->
-                            <div class="rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 p-4">
+                            <div class="ranking-board rounded-2xl p-4">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold text-slate-800 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center"><i class="ph ph-target"></i></span> Comercial</h4>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Conversão</span>
+                                    <h4 class="font-bold text-white flex items-center gap-2"><span class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-300/25 text-emerald-200 flex items-center justify-center"><i class="ph ph-target"></i></span> Comercial</h4>
+                                    <span id="ranking-comercial-count" class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">0 membros</span>
                                 </div>
-                                <div class="space-y-2">
-                                    <div class="group flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-amber-100/70 border border-yellow-300 rounded-xl shadow-sm transition-transform hover:-translate-y-0.5">
-                                        <div class="relative w-11 h-11 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 text-white flex items-center justify-center font-black shadow-md"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[9px] flex items-center justify-center">1</span></div>
-                                        <div class="flex-1 min-w-0"><p id="rank-comercial-1-name" class="font-bold text-slate-900 truncate">Geovana Xavier</p><p id="rank-comercial-1-value" class="text-sm text-emerald-700 font-bold">R$ 5.865,22</p></div>
-                                        <i class="ph-fill ph-fire text-orange-500 text-2xl animate-pulse"></i>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-slate-200 rounded-xl transition-all hover:border-slate-300 hover:shadow-sm">
-                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-400 text-slate-800 flex items-center justify-center font-black">2</div>
-                                        <div class="flex-1 min-w-0"><p id="rank-comercial-2-name" class="font-semibold text-slate-800 truncate">Mayara Cardoso</p><p id="rank-comercial-2-value" class="text-xs text-emerald-600 font-bold">R$ 3.081,24</p></div>
-                                        <i class="ph ph-arrow-up text-green-500"></i>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-orange-200 rounded-xl transition-all hover:border-orange-300 hover:shadow-sm">
-                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-200 to-orange-400 text-orange-900 flex items-center justify-center font-black">3</div>
-                                        <div class="flex-1 min-w-0"><p id="rank-comercial-3-name" class="font-semibold text-slate-800 truncate">Gabriel Paes</p><p id="rank-comercial-3-value" class="text-xs text-emerald-600 font-bold">R$ 2.260,00</p></div>
-                                    </div>
-                                </div>
+                                <div id="ranking-comercial-list" class="space-y-2"></div>
+                                <p class="mt-4 text-[11px] text-blue-100/70">Meta visual: valor vendido atualizado pela Gestão.</p>
                             </div>
 
                             <!-- Ranking Jurídico -->
-                            <div class="rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 p-4">
+                            <div class="ranking-board rounded-2xl p-4">
                                 <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold text-slate-800 flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center"><i class="ph ph-scales"></i></span> Jurídico</h4>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Resultados</span>
+                                    <h4 class="font-bold text-white flex items-center gap-2"><span class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-300/25 text-indigo-200 flex items-center justify-center"><i class="ph ph-scales"></i></span> Jurídico</h4>
+                                    <span id="ranking-juridico-count" class="text-[10px] font-bold uppercase tracking-wider text-indigo-200">0 membros</span>
                                 </div>
-                                <div class="space-y-2">
-                                    <div class="group flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-amber-100/70 border border-yellow-300 rounded-xl shadow-sm transition-transform hover:-translate-y-0.5">
-                                        <div class="relative w-11 h-11 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 text-white flex items-center justify-center font-black shadow-md"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 text-white text-[9px] flex items-center justify-center">1</span></div>
-                                        <div class="flex-1 min-w-0"><p id="rank-juridico-1-name" class="font-bold text-slate-900 truncate">Tabata.</p><p id="rank-juridico-1-value" class="text-sm text-indigo-700 font-bold">R$14.197,19</p></div>
-                                        <i class="ph-fill ph-fire text-orange-500 text-2xl animate-pulse"></i>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-slate-200 rounded-xl transition-all hover:border-slate-300 hover:shadow-sm">
-                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-slate-200 to-slate-400 text-slate-800 flex items-center justify-center font-black">2</div>
-                                        <div class="flex-1 min-w-0"><p id="rank-juridico-2-name" class="font-semibold text-slate-800 truncate">Nicole.</p><p id="rank-juridico-2-value" class="text-xs text-indigo-600 font-bold">R$8.769,35</p></div>
-                                        <i class="ph ph-arrow-up text-green-500"></i>
-                                    </div>
-                                    <div class="flex items-center gap-3 p-3 bg-white/80 border border-orange-200 rounded-xl transition-all hover:border-orange-300 hover:shadow-sm">
-                                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-orange-200 to-orange-400 text-orange-900 flex items-center justify-center font-black">3</div>
-                                        <div class="flex-1 min-w-0"><p id="rank-juridico-3-name" class="font-semibold text-slate-800 truncate">Elaine</p><p id="rank-juridico-3-value" class="text-xs text-indigo-600 font-bold">R$2.000,00</p></div>
-                                    </div>
-                                </div>
+                                <div id="ranking-juridico-list" class="space-y-2"></div>
+                                <p class="mt-4 text-[11px] text-blue-100/70">Disputa interna do setor jurídico com atualização por resultado.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Comunicados e aniversariantes -->
-                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                        <div class="lg:col-span-3 bg-white border border-blue-100 rounded-2xl p-5 md:p-6 shadow-sm">
-                            <div class="flex items-start gap-4">
-                                <div class="w-11 h-11 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0"><i class="ph-fill ph-megaphone text-xl"></i></div>
-                                <div class="min-w-0">
-                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-500 mb-1">Comunicado importante</p>
-                                    <h3 id="avisos-main-title" class="font-bold text-slate-900 text-lg">Atualização no Fluxo do GOV.BR</h3>
-                                    <p id="avisos-main-text" class="text-sm leading-relaxed text-slate-600 mt-2">Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema.</p>
-                                    <p id="avisos-main-meta" class="text-xs text-blue-600 mt-3 font-medium">Postado pela Supervisão</p>
+                    <!-- Aniversariantes -->
+                    <div class="performance-arena rounded-3xl p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-blue-400/20 blur-3xl"></div>
+                        <div class="absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-slate-100/10 blur-3xl"></div>
+                        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-20 h-20 rounded-2xl overflow-hidden border border-blue-200/40 bg-slate-950 shadow-[0_0_30px_rgba(37,99,235,0.32)] flex-shrink-0">
+                                    <img src="assets/aniversariantes-mes.png" alt="Emblema de aniversariantes do mês" class="h-full w-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="metallic-kicker text-[10px]">Reconhecimento da equipe</p>
+                                    <h3 class="metallic-title mt-1 text-2xl font-black">Aniversariantes do Mês</h3>
+                                    <p class="mt-1 text-sm text-blue-100">Celebre as pessoas da operação Platino e mantenha a equipe conectada.</p>
                                 </div>
                             </div>
+                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors" title="Editar aniversariantes">
+                                <i class="ph ph-pencil-simple"></i> Editar aniversariantes
+                            </button>
                         </div>
-
-                        <div class="lg:col-span-2 bg-gradient-to-br from-fuchsia-50 via-rose-50 to-orange-50 border border-rose-100 rounded-2xl p-5 md:p-6 shadow-sm relative overflow-hidden">
-                            <i class="ph-fill ph-confetti text-[100px] text-rose-200/40 absolute -bottom-6 -right-4 rotate-12"></i>
-                            <div class="relative">
-                                <div class="flex items-center gap-3 mb-4">
-                                    <div class="w-11 h-11 rounded-xl bg-white text-rose-500 flex items-center justify-center shadow-sm"><i class="ph-fill ph-cake text-xl"></i></div>
-                                    <div class="flex-1">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-500">Celebração</p>
-                                        <h3 class="font-bold text-slate-900 text-lg">Aniversariantes do Mês</h3>
-                                    </div>
-                                    <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-1 rounded-lg bg-white px-2.5 py-2 text-xs font-semibold text-rose-600 shadow-sm hover:bg-rose-100" title="Editar aniversariantes">
-                                        <i class="ph ph-pencil-simple"></i> Editar
-                                    </button>
-                                </div>
-                                <div id="avisos-birthdays-list" class="space-y-2">
-                                    <div class="rounded-xl bg-white/80 border border-white p-3 text-sm text-slate-500">Nenhum aniversariante cadastrado.</div>
-                                </div>
-                            </div>
+                        <div id="avisos-birthdays-list" class="relative grid gap-4 md:grid-cols-2">
+                            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-blue-100">Nenhum aniversariante cadastrado.</div>
                         </div>
                     </div>
                 </div>
@@ -1439,47 +1465,43 @@
 
     <!-- Modal de Edição de Ranking -->
     <div id="ranking-modal" class="fixed inset-0 z-[110] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="ranking-modal-content">
-            <div class="flex items-center justify-between p-5 border-b border-slate-200">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="ranking-modal-content">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 text-white">
                 <div>
-                    <h3 class="text-xl font-bold text-slate-900">Editar Ranking de Destaques</h3>
-                    <p class="text-sm text-slate-500">Atualize nomes e valores de cada posição e publique para toda a equipe.</p>
+                    <p class="metallic-kicker text-[10px]">Gestão da arena</p>
+                    <h3 class="metallic-title text-xl font-black">Editar Ranking de Destaques</h3>
+                    <p class="text-sm text-blue-100">Adicione membros, atualize valores vendidos e publique para toda a equipe.</p>
                 </div>
-                <button onclick="closeRankingEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
+                <button onclick="closeRankingEditor()" class="text-white/70 hover:text-white rounded-full p-2">
                     <i class="ph ph-x text-2xl"></i>
                 </button>
             </div>
             <div class="p-6 overflow-y-auto space-y-6" id="ranking-editor-form">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 1º lugar</h4>
-                        <input id="editor-rank-comercial-1-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-comercial-1-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <div class="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
+                        <div class="mb-4 flex items-center justify-between gap-3">
+                            <div>
+                                <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-target text-emerald-600"></i> Comercial</h4>
+                                <p class="text-xs text-slate-500">Ranking interno de vendas do setor.</p>
+                            </div>
+                            <button type="button" onclick="addRankingMember('comercial')" class="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700 flex items-center gap-1">
+                                <i class="ph ph-plus"></i> Adicionar
+                            </button>
+                        </div>
+                        <div id="editor-ranking-comercial-list" class="space-y-3"></div>
                     </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 2º lugar</h4>
-                        <input id="editor-rank-comercial-2-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-comercial-2-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Comercial - 3º lugar</h4>
-                        <input id="editor-rank-comercial-3-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-comercial-3-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 1º lugar</h4>
-                        <input id="editor-rank-juridico-1-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-juridico-1-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 2º lugar</h4>
-                        <input id="editor-rank-juridico-2-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-juridico-2-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Jurídico - 3º lugar</h4>
-                        <input id="editor-rank-juridico-3-name" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Nome" />
-                        <input id="editor-rank-juridico-3-value" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Valor" />
+
+                    <div class="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4">
+                        <div class="mb-4 flex items-center justify-between gap-3">
+                            <div>
+                                <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-scales text-indigo-600"></i> Jurídico</h4>
+                                <p class="text-xs text-slate-500">Ranking interno de resultados jurídicos.</p>
+                            </div>
+                            <button type="button" onclick="addRankingMember('juridico')" class="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white hover:bg-indigo-700 flex items-center gap-1">
+                                <i class="ph ph-plus"></i> Adicionar
+                            </button>
+                        </div>
+                        <div id="editor-ranking-juridico-list" class="space-y-3"></div>
                     </div>
                 </div>
             </div>
@@ -1508,13 +1530,7 @@
                 </button>
             </div>
             <div class="p-6 overflow-y-auto space-y-6">
-                <div class="grid gap-4 sm:grid-cols-2">
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-3">Aviso Principal</h4>
-                        <input id="editor-avisos-main-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do aviso" />
-                        <textarea id="editor-avisos-main-text" rows="4" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Texto do aviso"></textarea>
-                        <input id="editor-avisos-main-meta" type="text" class="w-full mt-3 border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Meta do aviso (ex: Postado pela Supervisão há 2 horas)" />
-                    </div>
+                <div class="grid gap-4">
                     <div>
                         <h4 class="font-semibold text-slate-800 mb-3">Destaque e Líder do mês</h4>
                         <input id="editor-avisos-highlight-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título do destaque" />
@@ -1544,7 +1560,9 @@
                 </div>
                 <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
                     <div class="flex items-center gap-2 mb-2">
-                        <i class="ph-fill ph-cake text-rose-500 text-xl"></i>
+                        <span class="h-8 w-8 rounded-lg overflow-hidden border border-blue-200 bg-slate-950 flex-shrink-0">
+                            <img src="assets/aniversariantes-mes.png" alt="" class="h-full w-full object-cover">
+                        </span>
                         <h4 class="font-semibold text-slate-800">Aniversariantes do Mês</h4>
                     </div>
                     <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês</p>
@@ -1591,7 +1609,7 @@
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-950 border border-white/20 rounded-full overflow-hidden relative">
-                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
+                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
                     </div>
                     <div>
@@ -1607,7 +1625,7 @@
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50/50 flex flex-col gap-3 text-sm">
                 <div class="flex items-start gap-2 max-w-[85%]">
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
+                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed">
                         Olá equipe! Estou aqui para ajudar com qualquer dúvida sobre Vendas, Administrativo ou Jurídico. O que você precisa consultar agora?
@@ -2141,7 +2159,7 @@
                 div.className = "flex items-start gap-2 max-w-[90%]";
                 div.innerHTML = `
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
+                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed text-sm">
                         ${sanitizeAnswerHtml(text)}
@@ -2166,7 +2184,7 @@
             loadingDiv.className = "flex items-start gap-2 max-w-[85%]";
             loadingDiv.innerHTML = `
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/platino-mascot.png" alt="" class="mascot-avatar">
+                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
                     </div>
                 <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex gap-1 items-center h-[46px]">
                     <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -2204,16 +2222,38 @@
         let chatOpen = false;
 
         function normalizeRankingData(value = {}) {
+            const normalizeList = (items, fallback) => {
+                const source = Array.isArray(items) && items.length
+                    ? items
+                    : fallback;
+
+                return source
+                    .map(item => ({
+                        name: String(item?.name || '').trim(),
+                        value: String(item?.value || '').trim()
+                    }))
+                    .filter(item => item.name || item.value);
+            };
+
             return {
-                comercial: Array.isArray(value.comercial) && value.comercial.length >= 3
-                    ? value.comercial.slice(0, 3)
-                    : defaultRankingData.comercial.map(item => ({ ...item })),
-                juridico: Array.isArray(value.juridico) && value.juridico.length >= 3
-                    ? value.juridico.slice(0, 3)
-                    : defaultRankingData.juridico.map(item => ({ ...item })),
+                comercial: normalizeList(value.comercial, defaultRankingData.comercial),
+                juridico: normalizeList(value.juridico, defaultRankingData.juridico),
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
+        }
+
+        function parseRankingValue(value) {
+            const normalized = String(value || '')
+                .replace(/[^\d,.-]/g, '')
+                .replace(/\./g, '')
+                .replace(',', '.');
+            const number = Number.parseFloat(normalized);
+            return Number.isFinite(number) ? number : 0;
+        }
+
+        function getSortedRankingList(items) {
+            return [...items].sort((a, b) => parseRankingValue(b.value) - parseRankingValue(a.value));
         }
 
         function loadRankingData() {
@@ -2232,38 +2272,126 @@
         }
 
         function renderRanking() {
-            rankingData.comercial.forEach((item, index) => {
-                const nameEl = document.getElementById(`rank-comercial-${index + 1}-name`);
-                const valueEl = document.getElementById(`rank-comercial-${index + 1}-value`);
-                if (nameEl) nameEl.innerText = item.name;
-                if (valueEl) valueEl.innerText = item.value;
+            renderRankingDepartment('comercial', rankingData.comercial, {
+                color: 'emerald',
+                icon: 'ph-target',
+                label: 'Conversão'
             });
-            rankingData.juridico.forEach((item, index) => {
-                const nameEl = document.getElementById(`rank-juridico-${index + 1}-name`);
-                const valueEl = document.getElementById(`rank-juridico-${index + 1}-value`);
-                if (nameEl) nameEl.innerText = item.name;
-                if (valueEl) valueEl.innerText = item.value;
+            renderRankingDepartment('juridico', rankingData.juridico, {
+                color: 'indigo',
+                icon: 'ph-scales',
+                label: 'Resultados'
             });
         }
 
+        function renderRankingDepartment(sector, items, config) {
+            const listEl = document.getElementById(`ranking-${sector}-list`);
+            const countEl = document.getElementById(`ranking-${sector}-count`);
+            if (!listEl) return;
+
+            const sorted = getSortedRankingList(items);
+            if (countEl) {
+                countEl.innerText = `${sorted.length} ${sorted.length === 1 ? 'membro' : 'membros'}`;
+            }
+
+            if (!sorted.length) {
+                listEl.innerHTML = `
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-blue-100">
+                        Nenhum membro cadastrado neste setor.
+                    </div>
+                `;
+                return;
+            }
+
+            const medalIcons = ['ph-fill ph-crown', 'ph-fill ph-medal', 'ph-fill ph-star'];
+            const accentClasses = {
+                emerald: 'text-emerald-200',
+                indigo: 'text-indigo-200'
+            };
+
+            listEl.innerHTML = sorted.map((item, index) => {
+                const position = index + 1;
+                const isLeader = index === 0;
+                const positionBadge = isLeader
+                    ? `<div class="relative w-12 h-12 rounded-full bg-gradient-to-br from-yellow-200 via-yellow-400 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-950 text-white text-[9px] flex items-center justify-center">${position}</span></div>`
+                    : `<div class="w-10 h-10 rounded-full bg-white/10 border border-white/15 text-blue-100 flex items-center justify-center font-black">${position}</div>`;
+                const icon = medalIcons[index] || config.icon;
+                const motionIcon = isLeader
+                    ? '<i class="ph-fill ph-fire text-orange-400 text-2xl animate-pulse"></i>'
+                    : '<i class="ph ph-arrow-up-right text-blue-200/70 text-xl"></i>';
+
+                return `
+                    <div class="ranking-row ${isLeader ? 'ranking-row-leader' : ''} flex items-center gap-3 rounded-2xl p-3">
+                        ${positionBadge}
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <i class="${icon} ${isLeader ? 'text-yellow-300' : accentClasses[config.color]}"></i>
+                                <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Sem nome')}</p>
+                            </div>
+                            <p class="mt-1 text-sm font-black ${accentClasses[config.color]}">${escapeHtml(item.value || 'R$ 0,00')}</p>
+                        </div>
+                        <div class="flex flex-col items-end gap-1">
+                            ${motionIcon}
+                            <span class="text-[9px] uppercase tracking-wider text-blue-100/60">${config.label}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         function openRankingEditor() {
-            document.getElementById('editor-rank-comercial-1-name').value = rankingData.comercial[0].name;
-            document.getElementById('editor-rank-comercial-1-value').value = rankingData.comercial[0].value;
-            document.getElementById('editor-rank-comercial-2-name').value = rankingData.comercial[1].name;
-            document.getElementById('editor-rank-comercial-2-value').value = rankingData.comercial[1].value;
-            document.getElementById('editor-rank-comercial-3-name').value = rankingData.comercial[2].name;
-            document.getElementById('editor-rank-comercial-3-value').value = rankingData.comercial[2].value;
-            document.getElementById('editor-rank-juridico-1-name').value = rankingData.juridico[0].name;
-            document.getElementById('editor-rank-juridico-1-value').value = rankingData.juridico[0].value;
-            document.getElementById('editor-rank-juridico-2-name').value = rankingData.juridico[1].name;
-            document.getElementById('editor-rank-juridico-2-value').value = rankingData.juridico[1].value;
-            document.getElementById('editor-rank-juridico-3-name').value = rankingData.juridico[2].name;
-            document.getElementById('editor-rank-juridico-3-value').value = rankingData.juridico[2].value;
+            renderRankingEditorList('comercial');
+            renderRankingEditorList('juridico');
             document.getElementById('ranking-save-status').innerText = '';
 
             const modal = document.getElementById('ranking-modal');
             modal.classList.remove('hidden', 'opacity-0');
             document.getElementById('ranking-modal-content').classList.remove('scale-95');
+        }
+
+        function renderRankingEditorList(sector) {
+            const listEl = document.getElementById(`editor-ranking-${sector}-list`);
+            if (!listEl) return;
+
+            const items = rankingData[sector] || [];
+            listEl.innerHTML = items.map((item, index) => `
+                <div class="ranking-editor-row rounded-2xl p-3" data-ranking-row data-sector="${sector}">
+                    <div class="mb-2 flex items-center justify-between gap-2">
+                        <span class="rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">#${index + 1}</span>
+                        <button type="button" onclick="removeRankingMember('${sector}', ${index})" class="rounded-lg px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">
+                            <i class="ph ph-trash"></i> Remover
+                        </button>
+                    </div>
+                    <div class="grid gap-2 sm:grid-cols-[1fr_160px]">
+                        <input data-ranking-name type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Nome do membro" value="${escapeHtml(item.name)}" />
+                        <input data-ranking-value type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Valor vendido" value="${escapeHtml(item.value)}" />
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function syncRankingEditorState() {
+            ['comercial', 'juridico'].forEach(sector => {
+                const rows = document.querySelectorAll(`#editor-ranking-${sector}-list [data-ranking-row]`);
+                rankingData[sector] = Array.from(rows)
+                    .map(row => ({
+                        name: row.querySelector('[data-ranking-name]')?.value.trim() || '',
+                        value: row.querySelector('[data-ranking-value]')?.value.trim() || ''
+                    }))
+                    .filter(item => item.name || item.value);
+            });
+        }
+
+        function addRankingMember(sector) {
+            syncRankingEditorState();
+            rankingData[sector].push({ name: '', value: '' });
+            renderRankingEditorList(sector);
+        }
+
+        function removeRankingMember(sector, index) {
+            syncRankingEditorState();
+            rankingData[sector].splice(index, 1);
+            renderRankingEditorList(sector);
         }
 
         function closeRankingEditor() {
@@ -2276,20 +2404,13 @@
         async function saveRankingEditor() {
             const saveButton = document.getElementById('ranking-save-button');
             const status = document.getElementById('ranking-save-status');
-            rankingData = {
-                comercial: [
-                    { name: document.getElementById('editor-rank-comercial-1-name').value.trim() || 'Geovana Xavier', value: document.getElementById('editor-rank-comercial-1-value').value.trim() || 'R$ 5.865,22' },
-                    { name: document.getElementById('editor-rank-comercial-2-name').value.trim() || 'Mayara Cardoso', value: document.getElementById('editor-rank-comercial-2-value').value.trim() || 'R$ 3.081,24' },
-                    { name: document.getElementById('editor-rank-comercial-3-name').value.trim() || 'Gabriel Paes', value: document.getElementById('editor-rank-comercial-3-value').value.trim() || 'R$ 2.260,00' }
-                ],
-                juridico: [
-                    { name: document.getElementById('editor-rank-juridico-1-name').value.trim() || 'Tabata.', value: document.getElementById('editor-rank-juridico-1-value').value.trim() || 'R$14.197,19' },
-                    { name: document.getElementById('editor-rank-juridico-2-name').value.trim() || 'Nicole.', value: document.getElementById('editor-rank-juridico-2-value').value.trim() || 'R$8.769,35' },
-                    { name: document.getElementById('editor-rank-juridico-3-name').value.trim() || 'Elaine', value: document.getElementById('editor-rank-juridico-3-value').value.trim() || 'R$2.000,00' }
-                ],
+            syncRankingEditorState();
+            rankingData = normalizeRankingData({
+                comercial: rankingData.comercial.length ? rankingData.comercial : defaultRankingData.comercial,
+                juridico: rankingData.juridico.length ? rankingData.juridico : defaultRankingData.juridico,
                 updatedAt: new Date().toISOString(),
                 updatedBy: window.firebaseAuthUser?.email || 'Supervisão'
-            };
+            });
             localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
             renderRanking();
 
@@ -2340,7 +2461,18 @@
                 distratos: '2',
                 revenue: '36.505,73'
             },
-            birthdays: [],
+            birthdays: [
+                {
+                    name: 'Giovana Dilena',
+                    date: '28 de junho',
+                    photo: 'assets/aniversariante-giovana-dilena.png'
+                },
+                {
+                    name: 'Tafarel Moreira',
+                    date: '30 de junho',
+                    photo: 'assets/aniversariante-tafarel-moreira.png'
+                }
+            ],
             updatedAt: null,
             updatedBy: 'Supervisão'
         };
@@ -2348,11 +2480,36 @@
         let avisosData = normalizeAvisosData(defaultAvisosData);
 
         function normalizeAvisosData(value = {}) {
+            const birthdayPhotoByName = {
+                'giovana dilena': 'assets/aniversariante-giovana-dilena.png',
+                'giovana dilena rocha': 'assets/aniversariante-giovana-dilena.png',
+                'tafarel moreira': 'assets/aniversariante-tafarel-moreira.png'
+            };
+            const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length
+                ? value.birthdays
+                : defaultAvisosData.birthdays;
+            const mergedBirthdays = birthdaySource.filter(person =>
+                String(person.name || '').trim().toLowerCase() !== 'giovana dilena rocha'
+            );
+
+            defaultAvisosData.birthdays.forEach(defaultPerson => {
+                const exists = mergedBirthdays.some(person =>
+                    String(person.name || '').trim().toLowerCase() === defaultPerson.name.toLowerCase()
+                );
+
+                if (!exists) {
+                    mergedBirthdays.push({ ...defaultPerson });
+                }
+            });
+
             return {
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
                 week: { ...defaultAvisosData.week, ...(value.week || {}) },
-                birthdays: Array.isArray(value.birthdays) ? value.birthdays : [],
+                birthdays: mergedBirthdays.map(person => ({
+                    ...person,
+                    photo: person.photo || birthdayPhotoByName[String(person.name || '').trim().toLowerCase()] || ''
+                })),
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -2374,9 +2531,14 @@
         }
 
         function renderAvisos() {
-            document.getElementById('avisos-main-title').innerText = avisosData.main.title;
-            document.getElementById('avisos-main-text').innerText = avisosData.main.text;
-            document.getElementById('avisos-main-meta').innerText = avisosData.main.meta;
+            const setTextIfExists = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.innerText = value;
+            };
+
+            setTextIfExists('avisos-main-title', avisosData.main.title);
+            setTextIfExists('avisos-main-text', avisosData.main.text);
+            setTextIfExists('avisos-main-meta', avisosData.main.meta);
             document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
             document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
             document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
@@ -2394,7 +2556,7 @@
                 updatedTag.innerHTML = `<i class="ph ph-clock"></i> ${date.toLocaleDateString('pt-BR')} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
                 updatedTag.classList.remove('hidden');
                 updatedTag.classList.add('flex');
-                document.getElementById('avisos-main-meta').innerText = `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`;
+                setTextIfExists('avisos-main-meta', `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`);
             } else {
                 updatedTag.innerHTML = '';
                 updatedTag.classList.add('hidden');
@@ -2405,7 +2567,7 @@
         function renderBirthdays() {
             const container = document.getElementById('avisos-birthdays-list');
             if (!avisosData.birthdays.length) {
-                container.innerHTML = '<div class="rounded-xl bg-white/80 border border-white p-3 text-sm text-slate-500">Nenhum aniversariante cadastrado neste mês.</div>';
+                container.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-blue-100">Nenhum aniversariante cadastrado neste mês.</div>';
                 return;
             }
 
@@ -2419,22 +2581,24 @@
                     .toUpperCase();
 
                 return `
-                    <div class="flex items-center gap-3 rounded-xl bg-white/80 border border-white p-2.5 shadow-sm">
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-fuchsia-500 text-white flex items-center justify-center text-xs font-bold">${escapeHtml(initials || '🎉')}</div>
-                        <div class="min-w-0 flex-1">
-                            <p class="font-semibold text-slate-800 text-sm truncate">${escapeHtml(person.name)}</p>
-                            <p class="text-xs text-rose-500 font-medium">${escapeHtml(person.date || 'Data a confirmar')}</p>
+                    <div class="ranking-row flex flex-col items-center gap-4 rounded-2xl p-5 text-center">
+                        <div class="h-36 w-36 rounded-full bg-gradient-to-br from-slate-100 via-blue-100 to-slate-500 text-slate-950 flex items-center justify-center text-xs font-black shadow-[0_18px_42px_rgba(15,23,42,0.32)] overflow-hidden border-4 border-white/50 flex-shrink-0">
+                            ${person.photo
+                                ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" class="h-full w-full object-cover">`
+                                : escapeHtml(initials || 'PL')
+                            }
                         </div>
-                        <i class="ph-fill ph-confetti text-orange-400"></i>
+                        <div class="min-w-0 flex-1">
+                            <p class="font-black text-white text-lg">${escapeHtml(person.name)}</p>
+                            <p class="mt-1 text-sm text-blue-200 font-semibold">${escapeHtml(person.date || 'Data a confirmar')}</p>
+                            <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-blue-100/60">Aniversariante Platino</p>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
         function openAvisosEditor() {
-            document.getElementById('editor-avisos-main-title').value = avisosData.main.title;
-            document.getElementById('editor-avisos-main-text').value = avisosData.main.text;
-            document.getElementById('editor-avisos-main-meta').value = avisosData.main.meta;
             document.getElementById('editor-avisos-highlight-title').value = avisosData.highlight.title;
             document.getElementById('editor-avisos-highlight-name').value = avisosData.highlight.name;
             document.getElementById('editor-avisos-highlight-subtitle').value = avisosData.highlight.subtitle;
@@ -2577,11 +2741,7 @@
             const currentUser = window.firebaseAuthUser?.email || 'Supervisão';
 
             avisosData = {
-                main: {
-                    title: document.getElementById('editor-avisos-main-title').value.trim() || defaultAvisosData.main.title,
-                    text: document.getElementById('editor-avisos-main-text').value.trim() || defaultAvisosData.main.text,
-                    meta: document.getElementById('editor-avisos-main-meta').value.trim() || defaultAvisosData.main.meta
-                },
+                main: avisosData.main || defaultAvisosData.main,
                 highlight: {
                     title: document.getElementById('editor-avisos-highlight-title').value.trim() || defaultAvisosData.highlight.title,
                     name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
@@ -2676,7 +2836,21 @@
         updateDoc
       } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+      const localFirebaseConfig = {
+        apiKey: "AIzaSyAHy9YPTluXfSFqpJ3lFB7lTO555gmeCKA",
+        authDomain: "platino-hub.firebaseapp.com",
+        projectId: "platino-hub"
+      };
+
+      function isLocalStaticPreview() {
+        return ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.protocol === "file:";
+      }
+
       async function loadFirebaseConfig() {
+        if (isLocalStaticPreview()) {
+          return localFirebaseConfig;
+        }
+
         const response = await fetch("/api/firebase-config", { cache: "no-store" });
         if (!response.ok) {
           let details = "";
