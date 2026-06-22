@@ -25,6 +25,150 @@
             border-radius: inherit;
         }
 
+        #sidebar {
+            background:
+                radial-gradient(circle at 20% 0%, rgba(96, 165, 250, 0.28), transparent 34%),
+                radial-gradient(circle at 100% 42%, rgba(37, 99, 235, 0.2), transparent 38%),
+                linear-gradient(180deg, #031533 0%, #062a5f 46%, #020817 100%) !important;
+            color: #dbeafe;
+            border-right: 1px solid rgba(147, 197, 253, 0.22);
+            box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08), 18px 0 44px rgba(2, 6, 23, 0.24);
+        }
+
+        #sidebar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.08) 42%, transparent 58%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 18px);
+            opacity: 0.52;
+        }
+
+        #sidebar > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-brand {
+            border-bottom: 1px solid rgba(147, 197, 253, 0.18) !important;
+            background: linear-gradient(135deg, rgba(2, 6, 23, 0.42), rgba(37, 99, 235, 0.14)) !important;
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-section-label {
+            color: rgba(191, 219, 254, 0.64) !important;
+            letter-spacing: 0.22em;
+        }
+
+        .nav-btn {
+            position: relative;
+            overflow: hidden;
+            border-left-color: transparent !important;
+            color: rgba(219, 234, 254, 0.8) !important;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(59, 130, 246, 0.035)) !important;
+            border: 1px solid rgba(147, 197, 253, 0.08) !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        }
+
+        .nav-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 0%, rgba(147, 197, 253, 0.08) 44%, transparent 62%);
+            transform: translateX(-120%);
+            transition: transform 0.55s ease;
+        }
+
+        .nav-btn:hover::before,
+        .nav-btn.nav-active::before {
+            transform: translateX(120%);
+        }
+
+        .nav-btn:hover,
+        .nav-btn.nav-active {
+            color: #ffffff !important;
+            background:
+                radial-gradient(circle at 18% 50%, rgba(147, 197, 253, 0.2), transparent 32%),
+                linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(15, 23, 42, 0.22)) !important;
+            border-color: rgba(191, 219, 254, 0.34) !important;
+            box-shadow:
+                0 14px 26px rgba(2, 6, 23, 0.24),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                inset 0 -1px 0 rgba(37, 99, 235, 0.22);
+            transform: translateX(2px);
+        }
+
+        .nav-btn i {
+            position: relative;
+            z-index: 1;
+            width: 1.9rem;
+            height: 1.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 0.65rem;
+            color: #f8fafc !important;
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            box-shadow:
+                0 8px 16px rgba(2, 6, 23, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                inset 0 -1px 0 rgba(15, 23, 42, 0.28);
+            text-shadow: none;
+        }
+
+        #nav-inicio i {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-avisos i {
+            background: linear-gradient(135deg, #f59e0b, #92400e);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-comercial i {
+            background: linear-gradient(135deg, #10b981, #047857);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-adm i {
+            background: linear-gradient(135deg, #0ea5e9, #0369a1);
+            box-shadow: 0 8px 16px rgba(14, 165, 233, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-juridico i {
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-rh i {
+            background: linear-gradient(135deg, #f43f5e, #be123c);
+            box-shadow: 0 8px 16px rgba(244, 63, 94, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-financeiro i {
+            background: linear-gradient(135deg, #eab308, #a16207);
+            box-shadow: 0 8px 16px rgba(234, 179, 8, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-treinamentos i {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        #nav-ideias i {
+            background: linear-gradient(135deg, #facc15, #ca8a04);
+            box-shadow: 0 8px 16px rgba(250, 204, 21, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        .nav-btn span,
+        .nav-btn {
+            z-index: 1;
+        }
+
         .metallic-title {
             color: #e5edf7;
             background: linear-gradient(110deg, #ffffff 0%, #9fb1c8 28%, #f8fafc 48%, #7f8da3 72%, #ffffff 100%);
@@ -36,6 +180,16 @@
 
         .metallic-title i {
             -webkit-text-fill-color: currentColor;
+        }
+
+        .silver-value {
+            color: #f8fafc;
+            background: linear-gradient(110deg, #64748b 0%, #ffffff 22%, #cbd5e1 42%, #f8fafc 58%, #94a3b8 78%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 18px rgba(226, 232, 240, 0.42), 0 0 34px rgba(148, 163, 184, 0.28);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.18));
         }
 
         .metallic-kicker {
@@ -60,6 +214,117 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
+        .ranking-sector-title {
+            color: #e2e8f0;
+            background: linear-gradient(105deg, #64748b 0%, #ffffff 24%, #cbd5e1 46%, #f8fafc 58%, #7f8da3 78%, #ffffff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 22px rgba(226, 232, 240, 0.28);
+        }
+
+        .money-value {
+            color: #fde68a;
+            text-shadow: 0 0 16px rgba(250, 204, 21, 0.24);
+        }
+
+        .metal-level-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(15, 23, 42, 0.24));
+            border: 1px solid rgba(226, 232, 240, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .metal-level-icon {
+            box-shadow: 0 0 28px rgba(147, 197, 253, 0.22);
+        }
+
+        .metal-level-gap {
+            background: rgba(15, 23, 42, 0.38);
+            border: 1px solid rgba(226, 232, 240, 0.12);
+        }
+
+        .metal-level-track {
+            position: relative;
+            height: 18px;
+            overflow: hidden;
+            border-radius: 999px;
+            background:
+                linear-gradient(180deg, rgba(2, 6, 23, 0.96), rgba(15, 23, 42, 0.82)),
+                repeating-linear-gradient(90deg, rgba(148, 163, 184, 0.14) 0 1px, transparent 1px 18px);
+            border: 1px solid rgba(226, 232, 240, 0.16);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .metal-level-fill {
+            position: relative;
+            height: 100%;
+            width: var(--level-width, 0%);
+            border-radius: inherit;
+            overflow: hidden;
+            transition: width 0.8s ease;
+            isolation: isolate;
+        }
+
+        .metal-level-fill::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.1) 34%, rgba(2, 6, 23, 0.24) 100%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 14px);
+            opacity: 0.72;
+            z-index: 1;
+        }
+
+        .metal-level-fill::after {
+            content: "";
+            position: absolute;
+            top: -35%;
+            bottom: -35%;
+            left: -45%;
+            width: 45%;
+            background:
+                linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.12) 30%, rgba(255, 255, 255, 0.72) 48%, rgba(255, 255, 255, 0.18) 62%, transparent 100%),
+                radial-gradient(circle at 72% 50%, rgba(255, 255, 255, 0.72), transparent 24%);
+            mix-blend-mode: screen;
+            filter: blur(0.2px);
+            z-index: 2;
+            animation: energyScan 2.4s ease-in-out infinite;
+        }
+
+        .metal-level-fill.emerald::after {
+            background:
+                linear-gradient(115deg, transparent 0%, rgba(52, 211, 153, 0.2) 30%, rgba(209, 250, 229, 0.9) 48%, rgba(16, 185, 129, 0.32) 62%, transparent 100%),
+                radial-gradient(circle at 72% 50%, rgba(167, 243, 208, 0.78), transparent 24%);
+        }
+
+        .metal-level-fill.indigo::after {
+            background:
+                linear-gradient(115deg, transparent 0%, rgba(129, 140, 248, 0.2) 30%, rgba(224, 231, 255, 0.9) 48%, rgba(99, 102, 241, 0.34) 62%, transparent 100%),
+                radial-gradient(circle at 72% 50%, rgba(199, 210, 254, 0.82), transparent 24%);
+        }
+
+        .metal-level-fill.emerald {
+            background:
+                radial-gradient(circle at 18% 50%, rgba(167, 243, 208, 0.42), transparent 18%),
+                linear-gradient(90deg, #042f2e, #047857 22%, #10b981 54%, #a7f3d0 78%, #059669 100%);
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.42), inset 0 0 12px rgba(167, 243, 208, 0.2);
+        }
+
+        .metal-level-fill.indigo {
+            background:
+                radial-gradient(circle at 18% 50%, rgba(199, 210, 254, 0.42), transparent 18%),
+                linear-gradient(90deg, #1e1b4b, #3730a3 22%, #6366f1 54%, #c7d2fe 78%, #4f46e5 100%);
+            box-shadow: 0 0 18px rgba(99, 102, 241, 0.44), inset 0 0 12px rgba(199, 210, 254, 0.22);
+        }
+
+        @keyframes energyScan {
+            0% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+            16% { opacity: 0.9; }
+            52% { opacity: 1; }
+            100% { transform: translateX(330%) skewX(-18deg); opacity: 0; }
+        }
+
         .ranking-row {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(15, 23, 42, 0.2));
             border: 1px solid rgba(148, 163, 184, 0.18);
@@ -78,6 +343,14 @@
             box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
         }
 
+        .ranking-position-img {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 999px;
+            object-fit: cover;
+            filter: drop-shadow(0 10px 18px rgba(2, 6, 23, 0.32));
+        }
+
         .ranking-editor-row {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -85,7 +358,7 @@
         
         /* Animação suave para accordions */
         .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; max-height: 0; overflow: hidden; }
-        .accordion-content.open { max-height: 600px; padding-bottom: 1rem; }
+        .accordion-content.open { max-height: 1600px; padding-bottom: 1rem; }
         
         /* Animações extras */
         .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
@@ -125,6 +398,101 @@
             visibility: visible;
             transform: scale(1) translateY(0);
             z-index: 10;
+        }
+
+        .portal-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92));
+            border: 1px solid rgba(203, 213, 225, 0.78);
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+        }
+
+        .notice-card {
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .notice-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(37, 99, 235, 0.26);
+            box-shadow: 0 18px 34px rgba(37, 99, 235, 0.12);
+        }
+
+        .team-carousel {
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+        }
+
+        .team-track {
+            display: flex;
+            gap: 1rem;
+            width: max-content;
+            animation: teamSlide 24s linear infinite;
+        }
+
+        .team-carousel:hover .team-track {
+            animation-play-state: paused;
+        }
+
+        .team-card {
+            width: 220px;
+            flex: 0 0 auto;
+            background: linear-gradient(180deg, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 38px rgba(15, 23, 42, 0.12);
+        }
+
+        .team-avatar {
+            background: linear-gradient(135deg, #0f3a7a, #2563eb);
+            color: #eff6ff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 12px 26px rgba(37, 99, 235, 0.2);
+        }
+
+        .team-extra {
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .team-card:hover .team-extra {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .group-opening-slide {
+            background:
+                radial-gradient(circle at 12% 10%, rgba(37, 99, 235, 0.16), transparent 28%),
+                linear-gradient(180deg, #ffffff, #f8fafc);
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
+        }
+
+        .group-cover-card {
+            background:
+                radial-gradient(circle at 50% 12%, rgba(59, 130, 246, 0.32), transparent 34%),
+                linear-gradient(135deg, #061535, #0f2b56 48%, #06111f);
+            border: 1px solid rgba(126, 163, 212, 0.5);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 32px rgba(15, 23, 42, 0.18);
+        }
+
+        .opening-step {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #0f2b56;
+        }
+
+        .opening-step-number {
+            background: #0f2b56;
+            color: #ffffff;
+            box-shadow: 0 6px 12px rgba(15, 43, 86, 0.24);
+        }
+
+        @keyframes teamSlide {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
         }
 
         .slide-dots {
@@ -464,7 +832,7 @@
    
 <!-- Sidebar / Menu Lateral -->
     <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
-        <div class="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950/50">
+        <div class="sidebar-brand h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950/50">
             <div class="flex items-center gap-2 text-white font-bold text-xl tracking-wide">
                 <i class="ph ph-shield-check text-blue-500 text-2xl"></i>
                 PLATINO
@@ -474,16 +842,16 @@
             </button>
         </div>
 
-        <div class="p-4 uppercase text-xs font-semibold text-slate-500 tracking-wider mt-4">Menu de Navegação</div>
+        <div class="sidebar-section-label p-4 uppercase text-xs font-semibold text-slate-500 tracking-wider mt-4">Menu de Navegação</div>
         <nav class="flex-1 px-3 space-y-1 overflow-y-auto no-scrollbar">
-            <button id="nav-inicio" onclick="navigateTo('inicio')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors bg-blue-600/10 text-blue-400 border-l-4 border-blue-500">
+            <button id="nav-inicio" onclick="navigateTo('inicio')" class="nav-btn nav-active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors bg-blue-600/10 text-blue-400 border-l-4 border-blue-500">
                 <i class="ph ph-house text-lg"></i> Início
             </button>
             <button id="nav-avisos" onclick="navigateTo('avisos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
-                <i class="ph ph-megaphone text-lg text-amber-400"></i> Central de Avisos
+                <i class="ph ph-megaphone text-lg text-amber-400"></i> Centro de informações
             </button>
             
-            <div class="pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Departamentos</div>
+            <div class="sidebar-section-label pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Departamentos</div>
             
             <button id="nav-comercial" onclick="navigateTo('comercial')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-target text-lg text-green-400"></i> Comercial
@@ -501,7 +869,7 @@
                 <i class="ph ph-coins text-lg text-amber-400"></i> Financeiro
             </button>
             
-            <div class="pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Recursos & Comunicação</div>
+            <div class="sidebar-section-label pt-4 pb-1 uppercase text-[10px] font-bold text-slate-500 tracking-wider pl-3">Recursos & Comunicação</div>
             
             <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-books text-lg"></i> Treinamentos
@@ -516,7 +884,7 @@
         <div class="p-4 border-t border-slate-800">
             <div class="flex items-center gap-3">
                 <div id="user-avatar" class="w-9 h-9 rounded-full bg-blue-950 border border-blue-400/50 overflow-hidden shadow-lg shadow-blue-950/40 flex-shrink-0">
-                    <img src="assets/platino-mascot.png" alt="Mascote da Platino" class="mascot-avatar">
+                    <img src="assets/platino-infohub-icon.png" alt="Ícone Platino" class="mascot-avatar">
                 </div>
                 <div class="flex-1 overflow-hidden">
                     <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel Moreira</p>
@@ -537,7 +905,7 @@
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
-                <h1 id="page-title" class="text-lg font-semibold text-slate-800">Training Space</h1>
+                <h1 id="page-title" class="text-lg font-semibold text-slate-800">Sistema Platino</h1>
             </div>
 
             <div class="absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
@@ -562,8 +930,8 @@
                         <div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
                             <i class="ph ph-shield-check text-[200px]"></i>
                         </div>
-                        <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo à Platino Hub</h2>
-                        <p class="text-blue-100 max-w-2xl relative z-8">Apoio, treinamentos e suporte em um único portal para guiar sua rotina com clareza.</p>
+                        <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo ao Sistema Platino</h2>
+                        <p class="text-blue-100 max-w-2xl relative z-8">Portal de boas-vindas, comunicação interna e conexão entre equipes.</p>
                     </div>
 
                     <!-- CAROUSEL DE SLIDES -->
@@ -573,62 +941,62 @@
                             <div class="slide-item active" id="carousel-slide-0">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-shield-check text-6xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Treinamento Institucional Integrado</h2>
-                                    <p class="text-lg text-blue-100 max-w-xl">Sua central unificada de apoio, treinamentos e inteligência. Padronizando a excelência.</p>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Bem-vindo ao Sistema Platino</h2>
+                                    <p class="text-lg text-blue-100 max-w-xl">Um portal para orientar a rotina e aproximar toda a equipe.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 2 -->
                             <div class="slide-item" id="carousel-slide-1">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-buildings text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">O que a Platino faz?</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Assessoria em revisão de contratos de financiamento, buscando cobranças abusivas.</p>
+                                    <i class="ph ph-chats-circle text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Comunicação, treinamentos e suporte</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Tudo em um só lugar para manter informação e aprendizado sempre acessíveis.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 3 -->
                             <div class="slide-item" id="carousel-slide-2">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-handshake text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">A Jornada do Cliente</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Integração perfeita entre Comercial, Administrativo e Jurídico.</p>
+                                    <i class="ph ph-users-three text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Conectando equipes</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Compartilhando conhecimento para que todos avancem na mesma direção.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 4 -->
                             <div class="slide-item" id="carousel-slide-3">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-brain text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">4 Pilares do Atendimento</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Ouvir, Analisar, Compreender, Responder com excelência.</p>
+                                    <i class="ph ph-megaphone text-5xl text-white"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Comunicados Internos</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Novidades, avisos importantes e atualizações da operação Platino.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 5 -->
                             <div class="slide-item" id="carousel-slide-4">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-target text-5xl text-green-400"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Comercial</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Quebrando objeções e gerando confiança nos primeiros contatos.</p>
+                                    <i class="ph ph-graduation-cap text-5xl text-blue-100"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Treinamentos sempre à mão</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Materiais e procedimentos para fortalecer a execução diária.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 6 -->
                             <div class="slide-item" id="carousel-slide-5">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-folders text-5xl text-blue-300"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Administrativo</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">O motor da Platino - organização, documentos e tratativas.</p>
+                                    <i class="ph ph-lightbulb text-5xl text-yellow-200"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Conhecimento compartilhado</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Cada atualização ajuda a equipe a trabalhar com mais clareza.</p>
                                 </div>
                             </div>
 
                             <!-- Slide 7 -->
                             <div class="slide-item" id="carousel-slide-6">
                                 <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-scales text-5xl text-indigo-300"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Setor Jurídico</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Proteção, formalização e execução até a homologação final.</p>
+                                    <i class="ph ph-rocket-launch text-5xl text-cyan-200"></i>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Sistema Platino em evolução</h2>
+                                    <p class="text-base text-blue-100 max-w-xl">Um espaço vivo para comunicação, suporte e melhoria contínua.</p>
                                 </div>
                             </div>
 
@@ -653,46 +1021,94 @@
                         </div>
                     </div>
 
-                    <h3 class="text-lg font-semibold text-slate-700 mb-4">Acesso Rápido</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div onclick="navigateTo('comercial')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-green-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-target text-xl"></i>
+                    <div class="portal-card rounded-2xl p-5 md:p-6 mb-8">
+                        <div class="flex items-center justify-between gap-4 mb-4">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Comunicados Internos</p>
+                                <h3 class="mt-1 text-2xl font-black text-slate-900">Últimas novidades da empresa</h3>
                             </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Setor Comercial</h3>
-                            <p class="text-xs text-slate-500">Técnicas de conversão de Leads e objeções.</p>
+                            <i class="ph ph-megaphone text-3xl text-blue-600"></i>
                         </div>
-
-                        <div onclick="navigateTo('adm')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-folders text-xl"></i>
+                        <div class="grid gap-3 md:grid-cols-2">
+                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Sistema</p>
+                                <h4 class="mt-1 font-bold text-slate-900">Atualização do sistema disponível.</h4>
+                                <p class="mt-1 text-xs text-slate-500">Melhorias visuais e novos recursos de comunicação interna.</p>
                             </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Administrativo</h3>
-                            <p class="text-xs text-slate-500">Análise, organização e documentos jurídicos.</p>
+                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-amber-600">Agenda</p>
+                                <h4 class="mt-1 font-bold text-slate-900">Reunião geral na sexta-feira às 16h.</h4>
+                                <p class="mt-1 text-xs text-slate-500">Alinhamento de resultados, metas e próximos passos da operação.</p>
+                            </div>
+                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Treinamentos</p>
+                                <h4 class="mt-1 font-bold text-slate-900">Novo treinamento adicionado à plataforma.</h4>
+                                <p class="mt-1 text-xs text-slate-500">Conteúdo atualizado para apoiar atendimento e padronização.</p>
+                            </div>
+                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Procedimentos</p>
+                                <h4 class="mt-1 font-bold text-slate-900">Novos procedimentos operacionais publicados.</h4>
+                                <p class="mt-1 text-xs text-slate-500">Consulte os fluxos revisados antes de iniciar novas tratativas.</p>
+                            </div>
                         </div>
+                    </div>
 
-                        <div onclick="navigateTo('juridico')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-scales text-xl"></i>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Jurídico</h3>
-                            <p class="text-xs text-slate-500">Gestão de pastas, produtos e objeções judiciais.</p>
+                    <div class="portal-card rounded-2xl p-5 md:p-6">
+                        <div class="mb-5 text-center">
+                            <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Conheça a Equipe</p>
+                            <h3 class="mt-1 text-2xl font-black text-slate-900">Pessoas que movem a Platino</h3>
                         </div>
-
-                        <div onclick="navigateTo('rh')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-rose-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-users-three text-xl"></i>
+                        <div class="team-carousel">
+                            <div class="team-track">
+                                <div class="team-card rounded-2xl p-4 text-center">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">GS</div>
+                                    <h4 class="font-black text-slate-900">Giovana Santos</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Supervisora Administrativa</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Administrativo • ramal 201 • giovana@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">CS</div>
+                                    <h4 class="font-black text-slate-900">Carlos Silva</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Suporte Técnico</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Sistemas • ramal 204 • suporte@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">AO</div>
+                                    <h4 class="font-black text-slate-900">Amanda Oliveira</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Jurídico</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Jurídico • ramal 209 • juridico@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">FC</div>
+                                    <h4 class="font-black text-slate-900">Felipe Costa</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Financeiro</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Financeiro • ramal 212 • financeiro@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">GS</div>
+                                    <h4 class="font-black text-slate-900">Giovana Santos</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Supervisora Administrativa</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Administrativo • ramal 201 • giovana@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">CS</div>
+                                    <h4 class="font-black text-slate-900">Carlos Silva</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Suporte Técnico</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Sistemas • ramal 204 • suporte@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">AO</div>
+                                    <h4 class="font-black text-slate-900">Amanda Oliveira</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Jurídico</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Jurídico • ramal 209 • juridico@platino.com</p>
+                                </div>
+                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
+                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">FC</div>
+                                    <h4 class="font-black text-slate-900">Felipe Costa</h4>
+                                    <p class="text-sm font-semibold text-blue-600">Financeiro</p>
+                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Financeiro • ramal 212 • financeiro@platino.com</p>
+                                </div>
                             </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Recursos Humanos</h3>
-                            <p class="text-xs text-slate-500">Pessoas, documentos, benefícios e comunicados internos.</p>
-                        </div>
-
-                        <div onclick="navigateTo('financeiro')" class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-amber-300 transition-all cursor-pointer group">
-                            <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                <i class="ph ph-coins text-xl"></i>
-                            </div>
-                            <h3 class="font-semibold text-slate-800 mb-1">Financeiro</h3>
-                            <p class="text-xs text-slate-500">Controles, pagamentos, recebimentos e relatórios.</p>
                         </div>
                     </div>
                 </div>
@@ -704,13 +1120,11 @@
                     <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
                         <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
-                        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5 pl-2">
+                        <div class="relative flex flex-col items-center justify-center gap-5 text-center min-h-10">
                             <div>
-                                <p class="metallic-kicker text-[10px]">Central operacional</p>
-                                <h2 class="metallic-title mt-1 text-3xl font-black tracking-tight">Central da Equipe</h2>
-                                <p class="mt-2 max-w-2xl text-sm text-blue-100">Resultados, ranking, reconhecimentos e comunicados em uma visão organizada para manter a equipe alinhada e motivada.</p>
+                                <h2 class="metallic-title text-3xl md:text-4xl font-black tracking-tight">Central da Equipe Platino</h2>
                             </div>
-                            <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex flex-wrap items-center justify-center gap-3 lg:absolute lg:right-0 lg:top-0">
                                 <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
                                     <i class="ph ph-pencil-simple text-lg"></i> Editar Central
                                 </button>
@@ -725,8 +1139,8 @@
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
-                            <div class="w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden border border-yellow-400/50 bg-blue-950 shadow-[0_0_25px_rgba(250,204,21,0.25)]">
-                                <img src="assets/emblema-destaque-mes.png" alt="Emblema de destaque do mês" class="h-full w-full object-cover">
+                            <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
+                                <img src="assets/platino-infohub-icon.png" alt="Emblema Platino do destaque do mês" class="mascot-avatar">
                             </div>
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -739,7 +1153,7 @@
                             </div>
                             <div class="md:text-right">
                                     <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                    <p id="avisos-highlight-value" class="metallic-title text-2xl font-black mt-1">R$29.355,50</p>
+                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">R$29.355,50</p>
                             </div>
                         </div>
                     </div>
@@ -748,12 +1162,12 @@
                     <div class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 rounded-2xl p-5 md:p-6 shadow-xl shadow-slate-200/70 text-white mb-6 relative overflow-hidden">
                         <div class="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
                         <div class="relative flex flex-col gap-5">
-                            <div class="flex items-center justify-between gap-4">
+                            <div class="relative flex flex-col items-center justify-center gap-4 text-center">
                                 <div>
                                     <p class="metallic-kicker text-[10px]">Placar operacional</p>
-                                    <h3 class="metallic-title mt-1 text-xl font-bold flex items-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
+                                    <h3 class="metallic-title mt-1 text-xl font-bold flex items-center justify-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
                                 </div>
-                                <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-xs text-blue-100">
+                                <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-xs text-blue-100 lg:absolute lg:right-0 lg:top-0">
                                     <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span> Semana em andamento
                                 </span>
                             </div>
@@ -786,23 +1200,69 @@
                     <div class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
                         <div class="absolute right-0 top-0 h-40 w-40 bg-blue-400/20 rounded-full blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 bg-yellow-300/10 rounded-full blur-3xl"></div>
-                        <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                        <div class="relative flex flex-col items-center justify-center gap-3 mb-6 text-center">
                             <div>
                                 <p class="metallic-kicker text-[10px]">Arena de performance</p>
-                                <h3 class="metallic-title mt-1 text-2xl font-black flex items-center gap-2"><i class="ph-fill ph-trophy text-yellow-300 text-2xl"></i> Ranking da Semana</h3>
-                                <p class="text-xs text-blue-100 mt-1">Comercial e Jurídico disputam dentro do próprio setor. Cada atualização vira combustível para a próxima posição.</p>
+                                <h3 class="metallic-title mt-1 text-2xl font-black flex items-center justify-center gap-2"><i class="ph-fill ph-trophy text-yellow-300 text-2xl"></i> Ranking da Semana</h3>
                             </div>
-                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
                             </button>
+                        </div>
+
+                        <div class="relative grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+                            <div class="metal-level-card rounded-2xl p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="metal-level-icon w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-300/25 text-emerald-100 flex items-center justify-center">
+                                        <i class="ph-fill ph-rocket-launch text-2xl"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center justify-end gap-3">
+                                            <span id="metal-comercial-percent" class="money-value text-[10px] font-black uppercase tracking-wider">36%</span>
+                                        </div>
+                                        <div class="metal-level-track mt-2">
+                                            <div id="metal-comercial-fill" class="metal-level-fill emerald" style="--level-width: 36%"></div>
+                                        </div>
+                                        <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-emerald-100/80">
+                                            <span id="metal-comercial-label" class="font-bold uppercase tracking-wider">Bronze mensal</span>
+                                            <span id="metal-comercial-total" class="money-value">R$ 53.499,65 / R$ 150.000,00</span>
+                                        </div>
+                                        <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider money-value">
+                                            <span id="metal-comercial-gap">Gap: R$ 96.500,35</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metal-level-card rounded-2xl p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="metal-level-icon w-11 h-11 rounded-2xl bg-indigo-500/20 border border-indigo-300/25 text-indigo-100 flex items-center justify-center">
+                                        <i class="ph-fill ph-gavel text-2xl"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center justify-end gap-3">
+                                            <span id="metal-juridico-percent" class="money-value text-[10px] font-black uppercase tracking-wider">61%</span>
+                                        </div>
+                                        <div class="metal-level-track mt-2">
+                                            <div id="metal-juridico-fill" class="metal-level-fill indigo" style="--level-width: 61%"></div>
+                                        </div>
+                                        <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-indigo-100/80">
+                                            <span id="metal-juridico-label" class="font-bold uppercase tracking-wider">Prata mensal</span>
+                                            <span id="metal-juridico-total" class="money-value">R$ 188.207,80 / R$ 310.000,00</span>
+                                        </div>
+                                        <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider money-value">
+                                            <span id="metal-juridico-gap">Gap: R$ 121.792,20</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
                             <!-- Ranking Comercial -->
                             <div class="ranking-board rounded-2xl p-4">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold text-white flex items-center gap-2"><span class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-300/25 text-emerald-200 flex items-center justify-center"><i class="ph ph-target"></i></span> Comercial</h4>
-                                    <span id="ranking-comercial-count" class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">0 membros</span>
+                                <div class="mb-4 text-center">
+                                    <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Comercial</h4>
                                 </div>
                                 <div id="ranking-comercial-list" class="space-y-2"></div>
                                 <p class="mt-4 text-[11px] text-blue-100/70">Meta visual: valor vendido atualizado pela Gestão.</p>
@@ -810,9 +1270,8 @@
 
                             <!-- Ranking Jurídico -->
                             <div class="ranking-board rounded-2xl p-4">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold text-white flex items-center gap-2"><span class="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-300/25 text-indigo-200 flex items-center justify-center"><i class="ph ph-scales"></i></span> Jurídico</h4>
-                                    <span id="ranking-juridico-count" class="text-[10px] font-bold uppercase tracking-wider text-indigo-200">0 membros</span>
+                                <div class="mb-4 text-center">
+                                    <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Jurídico</h4>
                                 </div>
                                 <div id="ranking-juridico-list" class="space-y-2"></div>
                                 <p class="mt-4 text-[11px] text-blue-100/70">Disputa interna do setor jurídico com atualização por resultado.</p>
@@ -824,18 +1283,15 @@
                     <div class="performance-arena rounded-3xl p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 relative overflow-hidden">
                         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-blue-400/20 blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-slate-100/10 blur-3xl"></div>
-                        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-20 h-20 rounded-2xl overflow-hidden border border-blue-200/40 bg-slate-950 shadow-[0_0_30px_rgba(37,99,235,0.32)] flex-shrink-0">
-                                    <img src="assets/aniversariantes-mes.png" alt="Emblema de aniversariantes do mês" class="h-full w-full object-cover">
-                                </div>
+                        <div class="relative flex flex-col items-center justify-center gap-5 mb-6 text-center">
+                            <div class="flex flex-col items-center gap-4">
                                 <div>
                                     <p class="metallic-kicker text-[10px]">Reconhecimento da equipe</p>
                                     <h3 class="metallic-title mt-1 text-2xl font-black">Aniversariantes do Mês</h3>
                                     <p class="mt-1 text-sm text-blue-100">Celebre as pessoas da operação Platino e mantenha a equipe conectada.</p>
                                 </div>
                             </div>
-                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors" title="Editar aniversariantes">
+                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors lg:absolute lg:right-0 lg:top-0" title="Editar aniversariantes">
                                 <i class="ph ph-pencil-simple"></i> Editar aniversariantes
                             </button>
                         </div>
@@ -1266,6 +1722,52 @@
                         </div>
                     </div>
 
+                    <div class="group-opening-slide rounded-3xl p-5 md:p-6 mb-8">
+                        <div class="mb-5 flex flex-col gap-2 text-center">
+                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-700">Slide de treinamento</p>
+                            <h3 class="text-2xl font-black text-slate-900">1º Passo: A Imagem Oficial do Grupo</h3>
+                            <p class="text-sm text-slate-500">Use a capa oficial de atendimento ao criar grupos de WhatsApp para padronizar a identidade da Platino.</p>
+                        </div>
+                        <div class="grid gap-5 lg:grid-cols-[280px_1fr]">
+                            <div class="group-cover-card flex flex-col items-center justify-center rounded-2xl p-6 text-center text-white">
+                                <img src="assets/capa-grupo-atendimento-platino-icon.png" alt="Capa oficial do grupo de atendimento Platino" class="h-44 w-44 rounded-full object-cover border-4 border-white/80 shadow-2xl">
+                                <a href="assets/capa-grupo-atendimento-platino-icon.png" download="capa-grupo-atendimento-platino.png" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-900 shadow-lg hover:bg-white transition-colors">
+                                    <i class="ph ph-download-simple text-lg"></i> Baixar capa do grupo
+                                </a>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="opening-step flex gap-4 rounded-2xl p-4">
+                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">1</span>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Criação do grupo</h4>
+                                        <p class="mt-1 text-sm text-slate-600">Inicie um novo grupo de WhatsApp dedicado ao atendimento do cliente.</p>
+                                    </div>
+                                </div>
+                                <div class="opening-step flex gap-4 rounded-2xl p-4">
+                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">2</span>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Inclusão de participantes</h4>
+                                        <p class="mt-1 text-sm text-slate-600">Adicione Cliente, Consultora, Administrativo e Supervisão.</p>
+                                    </div>
+                                </div>
+                                <div class="opening-step flex gap-4 rounded-2xl p-4">
+                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">3</span>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Download da imagem</h4>
+                                        <p class="mt-1 text-sm text-slate-600">Baixe a capa oficial e salve para aplicar como foto do grupo.</p>
+                                    </div>
+                                </div>
+                                <div class="opening-step flex gap-4 rounded-2xl p-4">
+                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">4</span>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Configuração do perfil</h4>
+                                        <p class="mt-1 text-sm text-slate-600">Defina o arquivo baixado como a foto de perfil do grupo criado.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6">
                             <div>
@@ -1522,7 +2024,7 @@
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="avisos-modal-content">
             <div class="flex items-center justify-between p-5 border-b border-slate-200">
                 <div>
-                    <h3 class="text-xl font-bold text-slate-900">Editar Central de Avisos</h3>
+                    <h3 class="text-xl font-bold text-slate-900">Editar InfoHub</h3>
                     <p class="text-sm text-slate-500">Atualize resultados, destaque, comunicado e aniversariantes.</p>
                 </div>
                 <button onclick="closeAvisosEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
@@ -1561,7 +2063,7 @@
                 <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="h-8 w-8 rounded-lg overflow-hidden border border-blue-200 bg-slate-950 flex-shrink-0">
-                            <img src="assets/aniversariantes-mes.png" alt="" class="h-full w-full object-cover">
+                            <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                         </span>
                         <h4 class="font-semibold text-slate-800">Aniversariantes do Mês</h4>
                     </div>
@@ -1609,7 +2111,7 @@
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-950 border border-white/20 rounded-full overflow-hidden relative">
-                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
+                        <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                         <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full"></span>
                     </div>
                     <div>
@@ -1625,7 +2127,7 @@
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50/50 flex flex-col gap-3 text-sm">
                 <div class="flex items-start gap-2 max-w-[85%]">
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
+                        <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed">
                         Olá equipe! Estou aqui para ajudar com qualquer dúvida sobre Vendas, Administrativo ou Jurídico. O que você precisa consultar agora?
@@ -1641,8 +2143,8 @@
             </div>
         </div>
 
-        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-all group">
-            <i class="ph ph-sparkle text-2xl group-hover:animate-pulse"></i>
+        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-blue-950 hover:bg-blue-900 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-all group overflow-hidden border border-blue-200/40">
+            <img src="assets/platino-infohub-icon.png" alt="Abrir chat" class="mascot-avatar">
         </button>
     </div>
 
@@ -1673,7 +2175,43 @@
 
         const fluxosJuridico = [
             { id: "j1", icon: "📂", title: "1. CRM e Gestão de Pasta", tasks: ["Supervisão distribui a pasta para o consultor no CRM", "A pasta vai para o consultor - Pasta Pendente", "O consultor abre o grupo e inicia as tratativas"] },
-            { id: "j2", icon: "👥", title: "2. Abertura de Grupo", tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + Adm + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"] },
+            {
+                id: "j2",
+                icon: "👥",
+                title: "2. Abertura de Grupo",
+                tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + Adm + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"],
+                extraHtml: `
+                    <div class="group-opening-slide mt-4 rounded-3xl p-4 md:p-5">
+                        <div class="mb-4 text-center">
+                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-700">Imagem oficial do grupo</p>
+                            <h4 class="mt-1 text-xl font-black text-slate-900">Capa de Atendimento Platino</h4>
+                            <p class="mt-1 text-xs text-slate-500">Baixe e aplique esta imagem como foto de perfil do grupo.</p>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-[220px_1fr]">
+                            <div class="group-cover-card flex flex-col items-center justify-center rounded-2xl p-5 text-center text-white">
+                                <img src="assets/capa-grupo-atendimento-platino-icon.png" alt="Capa oficial do grupo de atendimento Platino" class="h-36 w-36 rounded-full object-cover border-4 border-white/80 shadow-2xl">
+                                <a href="assets/capa-grupo-atendimento-platino-icon.png" download="capa-grupo-atendimento-platino.png" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-xs font-bold text-slate-900 shadow-lg hover:bg-white transition-colors">
+                                    <i class="ph ph-download-simple text-base"></i> Baixar capa
+                                </a>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="opening-step flex gap-3 rounded-2xl p-3">
+                                    <span class="opening-step-number flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-black">1</span>
+                                    <p class="text-sm text-slate-700"><strong>Crie o grupo</strong> dedicado ao atendimento do cliente.</p>
+                                </div>
+                                <div class="opening-step flex gap-3 rounded-2xl p-3">
+                                    <span class="opening-step-number flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-black">2</span>
+                                    <p class="text-sm text-slate-700"><strong>Adicione os participantes:</strong> Cliente, Consultora, Administrativo e Supervisão.</p>
+                                </div>
+                                <div class="opening-step flex gap-3 rounded-2xl p-3">
+                                    <span class="opening-step-number flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-black">3</span>
+                                    <p class="text-sm text-slate-700"><strong>Configure a capa</strong> como foto oficial do grupo criado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
             { id: "j3", icon: "📬", title: "3. CRM Operacional - Consultores", tasks: ["Consultor Jurídico anexa os 5 doc. salva e envia para o ADM", "Após a reclamação do gov, a pasta vai voltar para 'LAUDO'", "Em laudo, alterar status e encaminhar para 'Laudo fechado'"] },
             { id: "j4", icon: "🎥", title: "4. Documentos para Solicitar", tasks: ["Notificação extrajudicial", "GOV", "Laudo", "Procurações", "Citação", "Documentos Judiciais"] },
             { id: "j5", icon: "🤝", title: "5. Procedimentos", tasks: ["Laudo Pericial", "Citação - Judicial ou Extrajudicial", "Certidão", "Homologação", "Audiência de conciliação", "Jurisprudência"] },
@@ -1817,8 +2355,8 @@
 
         // FUNÇÃO DE NAVEGAÇÃO INTELIGENTE (SPA)
         const titles = {
-            'inicio': 'Início',
-            'avisos': 'Central de Avisos',
+            'inicio': 'Sistema Platino',
+            'avisos': 'Centro de informações',
             'comercial': 'Setor Comercial',
             'adm': 'Setor Administrativo',
             'juridico': 'Setor Jurídico',
@@ -1833,7 +2371,7 @@
                 sec.classList.add('hidden');
             });
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600/10', 'text-blue-400', 'border-blue-500', 'bg-slate-800', 'text-white');
+                btn.classList.remove('bg-blue-600/10', 'text-blue-400', 'border-blue-500', 'bg-slate-800', 'text-white', 'nav-active');
                 btn.classList.add('border-transparent');
             });
 
@@ -1848,7 +2386,7 @@
             const activeBtn = document.getElementById(`nav-${sectionId}`);
             if(activeBtn) {
                 activeBtn.classList.remove('border-transparent');
-                activeBtn.classList.add('bg-blue-600/10', 'text-blue-400', 'border-blue-500');
+                activeBtn.classList.add('bg-blue-600/10', 'text-blue-400', 'border-blue-500', 'nav-active');
             }
 
             document.getElementById('page-title').innerText = titles[sectionId];
@@ -1892,6 +2430,7 @@
                                 </li>
                             `).join('')}
                         </ul>
+                        ${item.extraHtml || ''}
                     </div>
                 </div>
             `).join('');
@@ -2159,7 +2698,7 @@
                 div.className = "flex items-start gap-2 max-w-[90%]";
                 div.innerHTML = `
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
+                        <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                     </div>
                     <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm text-slate-700 leading-relaxed text-sm">
                         ${sanitizeAnswerHtml(text)}
@@ -2184,7 +2723,7 @@
             loadingDiv.className = "flex items-start gap-2 max-w-[85%]";
             loadingDiv.innerHTML = `
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
-                        <img src="assets/chat-suporte-platino.png" alt="" class="mascot-avatar">
+                        <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                     </div>
                 <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex gap-1 items-center h-[46px]">
                     <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
@@ -2218,7 +2757,19 @@
             ]
         };
 
+        const monthlyMetalGoals = {
+            comercial: {
+                goal: 150000,
+                realized: 53499.65
+            },
+            juridico: {
+                goal: 310000,
+                realized: 188207.80
+            }
+        };
+
         let rankingData = normalizeRankingData(defaultRankingData);
+        let monthlyMetalProgress = loadMonthlyMetalProgress();
         let chatOpen = false;
 
         function normalizeRankingData(value = {}) {
@@ -2256,6 +2807,78 @@
             return [...items].sort((a, b) => parseRankingValue(b.value) - parseRankingValue(a.value));
         }
 
+        function getRankingDepartmentTotal(sector) {
+            return (rankingData[sector] || []).reduce((sum, item) => sum + parseRankingValue(item.value), 0);
+        }
+
+        function loadMonthlyMetalProgress() {
+            const fallback = {
+                comercial: monthlyMetalGoals.comercial.realized,
+                juridico: monthlyMetalGoals.juridico.realized
+            };
+            const saved = localStorage.getItem('platinoMonthlyMetalProgress');
+            if (!saved) return fallback;
+
+            try {
+                const parsed = JSON.parse(saved);
+                return {
+                    comercial: Math.max(Number(parsed.comercial) || 0, fallback.comercial),
+                    juridico: Math.max(Number(parsed.juridico) || 0, fallback.juridico)
+                };
+            } catch (error) {
+                console.warn('Erro ao carregar progresso mensal das metas:', error);
+                return fallback;
+            }
+        }
+
+        function syncMonthlyMetalProgressFromRanking() {
+            ['comercial', 'juridico'].forEach(sector => {
+                const baseline = monthlyMetalGoals[sector]?.realized || 0;
+                const rankingTotal = getRankingDepartmentTotal(sector);
+                const currentProgress = monthlyMetalProgress[sector] || baseline;
+                monthlyMetalProgress[sector] = Math.max(baseline, currentProgress, rankingTotal);
+            });
+            localStorage.setItem('platinoMonthlyMetalProgress', JSON.stringify(monthlyMetalProgress));
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value || 0);
+        }
+
+        function getMetalLevelName(percent) {
+            if (percent >= 100) return 'Platina mensal';
+            if (percent >= 75) return 'Ouro mensal';
+            if (percent >= 50) return 'Prata mensal';
+            return 'Bronze mensal';
+        }
+
+        function renderMonthlyMetalLevels() {
+            syncMonthlyMetalProgressFromRanking();
+
+            ['comercial', 'juridico'].forEach(sector => {
+                const data = monthlyMetalGoals[sector] || {};
+                const goal = data.goal || 1;
+                const realized = monthlyMetalProgress[sector] || data.realized || 0;
+                const gap = Math.max(goal - realized, 0);
+                const percent = Math.min(Math.round((realized / goal) * 100), 100);
+
+                const fill = document.getElementById(`metal-${sector}-fill`);
+                const percentEl = document.getElementById(`metal-${sector}-percent`);
+                const labelEl = document.getElementById(`metal-${sector}-label`);
+                const totalEl = document.getElementById(`metal-${sector}-total`);
+                const gapEl = document.getElementById(`metal-${sector}-gap`);
+
+                if (fill) fill.style.setProperty('--level-width', `${percent}%`);
+                if (percentEl) percentEl.innerText = `${percent}%`;
+                if (labelEl) labelEl.innerText = getMetalLevelName(percent);
+                if (totalEl) totalEl.innerText = `${formatCurrency(realized)} / ${formatCurrency(goal)}`;
+                if (gapEl) gapEl.innerText = `Gap: ${formatCurrency(gap)}`;
+            });
+        }
+
         function loadRankingData() {
             const saved = localStorage.getItem('platinoRanking');
             if (saved) {
@@ -2282,6 +2905,7 @@
                 icon: 'ph-scales',
                 label: 'Resultados'
             });
+            renderMonthlyMetalLevels();
         }
 
         function renderRankingDepartment(sector, items, config) {
@@ -2303,19 +2927,11 @@
                 return;
             }
 
-            const medalIcons = ['ph-fill ph-crown', 'ph-fill ph-medal', 'ph-fill ph-star'];
-            const accentClasses = {
-                emerald: 'text-emerald-200',
-                indigo: 'text-indigo-200'
-            };
-
             listEl.innerHTML = sorted.map((item, index) => {
                 const position = index + 1;
                 const isLeader = index === 0;
-                const positionBadge = isLeader
-                    ? `<div class="relative w-12 h-12 rounded-full bg-gradient-to-br from-yellow-200 via-yellow-400 to-amber-600 text-slate-950 flex items-center justify-center font-black shadow-lg"><i class="ph-fill ph-crown text-xl"></i><span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-950 text-white text-[9px] flex items-center justify-center">${position}</span></div>`
-                    : `<div class="w-10 h-10 rounded-full bg-white/10 border border-white/15 text-blue-100 flex items-center justify-center font-black">${position}</div>`;
-                const icon = medalIcons[index] || config.icon;
+                const badgeSrc = position <= 4 ? `assets/ranking-position-${position}.png` : 'assets/ranking-position-4.png';
+                const positionBadge = `<img src="${badgeSrc}" alt="${position}ª posição" class="ranking-position-img">`;
                 const motionIcon = isLeader
                     ? '<i class="ph-fill ph-fire text-orange-400 text-2xl animate-pulse"></i>'
                     : '<i class="ph ph-arrow-up-right text-blue-200/70 text-xl"></i>';
@@ -2324,11 +2940,8 @@
                     <div class="ranking-row ${isLeader ? 'ranking-row-leader' : ''} flex items-center gap-3 rounded-2xl p-3">
                         ${positionBadge}
                         <div class="min-w-0 flex-1">
-                            <div class="flex items-center gap-2">
-                                <i class="${icon} ${isLeader ? 'text-yellow-300' : accentClasses[config.color]}"></i>
-                                <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Sem nome')}</p>
-                            </div>
-                            <p class="mt-1 text-sm font-black ${accentClasses[config.color]}">${escapeHtml(item.value || 'R$ 0,00')}</p>
+                            <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Sem nome')}</p>
+                            <p class="mt-1 text-sm font-black money-value">${escapeHtml(item.value || 'R$ 0,00')}</p>
                         </div>
                         <div class="flex flex-col items-end gap-1">
                             ${motionIcon}
@@ -2485,6 +3098,11 @@
                 'giovana dilena rocha': 'assets/aniversariante-giovana-dilena.png',
                 'tafarel moreira': 'assets/aniversariante-tafarel-moreira.png'
             };
+            const birthdayOrderByName = {
+                'giovana dilena': 1,
+                'giovana dilena rocha': 1,
+                'tafarel moreira': 2
+            };
             const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length
                 ? value.birthdays
                 : defaultAvisosData.birthdays;
@@ -2506,10 +3124,17 @@
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
                 week: { ...defaultAvisosData.week, ...(value.week || {}) },
-                birthdays: mergedBirthdays.map(person => ({
-                    ...person,
-                    photo: person.photo || birthdayPhotoByName[String(person.name || '').trim().toLowerCase()] || ''
-                })),
+                birthdays: mergedBirthdays
+                    .map(person => {
+                        const normalizedName = String(person.name || '').trim().toLowerCase();
+                        return {
+                            ...person,
+                            photo: person.photo || birthdayPhotoByName[normalizedName] || '',
+                            order: birthdayOrderByName[normalizedName] || 99
+                        };
+                    })
+                    .sort((a, b) => a.order - b.order || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR'))
+                    .map(({ order, ...person }) => person),
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -3037,7 +3662,7 @@
         window.platinoUserRole = role;
 
         document.getElementById("user-name").innerText = displayName;
-        document.getElementById("user-role").innerText = role === "gestor" ? "Gestor" : "Equipe";
+        document.getElementById("user-role").innerText = role === "gestor" ? "Tafarel" : "Equipe";
 
         document.querySelectorAll(".gestor-only").forEach(el => {
           if (role === "gestor") {
