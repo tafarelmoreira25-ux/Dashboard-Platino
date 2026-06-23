@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -53,8 +52,88 @@
 
         .sidebar-brand {
             border-bottom: 1px solid rgba(147, 197, 253, 0.18) !important;
-            background: linear-gradient(135deg, rgba(2, 6, 23, 0.42), rgba(37, 99, 235, 0.14)) !important;
+            background:
+                linear-gradient(110deg, rgba(2, 6, 23, 0.98), rgba(15, 45, 90, 0.96) 74%, rgba(226, 232, 240, 0.08) 75%, rgba(2, 6, 23, 0.96)) !important;
             box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .platino-menu-wordmark {
+            display: block;
+            width: 148px;
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(22, 111, 237, 0.2));
+        }
+
+        .app-topbar {
+            min-height: 5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.35) !important;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96)) !important;
+            box-shadow:
+                0 16px 34px rgba(15, 23, 42, 0.08),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.82);
+        }
+
+        .app-topbar-title {
+            color: #0f172a;
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .topbar-search-shell {
+            width: min(34rem, calc(100vw - 30rem));
+        }
+
+        .topbar-search-input {
+            min-height: 3.25rem;
+            background: rgba(248, 250, 252, 0.92) !important;
+            border: 1px solid rgba(203, 213, 225, 0.74) !important;
+            border-radius: 999px !important;
+            box-shadow:
+                0 12px 26px rgba(15, 23, 42, 0.12),
+                inset 0 1px 2px rgba(255, 255, 255, 0.92);
+        }
+
+        .topbar-logout {
+            min-height: 3rem;
+            padding-inline: 1.35rem !important;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 999px;
+            background:
+                linear-gradient(145deg, #102a56, #06172f) !important;
+            box-shadow:
+                0 12px 24px rgba(15, 23, 42, 0.24),
+                inset 0 1px 0 rgba(255, 255, 255, 0.14);
+            color: white;
+            font-weight: 800;
+        }
+
+        .topbar-logout:hover {
+    box-shadow:
+        0 16px 30px rgba(15, 23, 42, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+        @media (max-width: 1024px) {
+            .topbar-search-shell {
+                width: min(30rem, calc(100vw - 16rem));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-topbar {
+                min-height: 4.5rem;
+            }
+
+            .app-topbar-title {
+                font-size: 1.05rem;
+            }
+
+            .topbar-search-shell {
+                display: none;
+            }
         }
 
         .sidebar-section-label {
@@ -400,10 +479,19 @@
             z-index: 10;
         }
 
-        .portal-card {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92));
-            border: 1px solid rgba(203, 213, 225, 0.78);
-            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+        .portal-card,
+        .notice-card,
+        .training-card,
+        .dark-panel,
+        #rh-action-panel {
+            background:
+                radial-gradient(circle at 15% 0%, rgba(96, 165, 250, 0.18), transparent 35%),
+                linear-gradient(145deg, rgba(9, 43, 85, 0.96), rgba(5, 25, 51, 0.98)) !important;
+            border-color: rgba(203, 213, 225, 0.2) !important;
+            color: #eaf1fb;
+            box-shadow:
+                0 24px 56px rgba(2, 6, 23, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.11);
         }
 
         .notice-card {
@@ -435,8 +523,9 @@
         .team-card {
             width: 220px;
             flex: 0 0 auto;
-            background: linear-gradient(180deg, #ffffff, #f8fafc);
-            border: 1px solid #e2e8f0;
+            background:
+                linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98)) !important;
+            border-color: rgba(203, 213, 225, 0.18) !important;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -520,85 +609,43 @@
             border-radius: 0.25rem;
         }
 
-        .dev-badge-container {
+        .celios-powered-badge {
             position: fixed;
-            bottom: 1rem;
             left: 1rem;
+            bottom: 0.85rem;
             z-index: 50;
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.22rem 0.38rem 0.22rem 0.24rem;
+            gap: 0.3rem;
+            padding: 0.38rem 0.58rem;
             border-radius: 9999px;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+            background: rgba(15, 23, 42, 0.48);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
             backdrop-filter: blur(12px);
-            cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        }
-
-        .dev-badge-container:hover {
-            transform: translateY(-1px);
-            background: rgba(15, 23, 42, 0.95);
-            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.22);
-        }
-
-        .icon-circle {
-            width: 30px;
-            height: 30px;
-            flex-shrink: 0;
-            border-radius: 9999px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #020617;
-            border: 1px solid rgba(226, 232, 240, 0.42);
-            box-shadow:
-                0 8px 18px rgba(0, 0, 0, 0.28),
-                inset 0 0 0 1px rgba(255,255,255,0.14);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .icon-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .dev-badge-container:hover .icon-circle {
-            transform: scale(1.02);
-        }
-
-        .text-reveal {
-            max-width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            opacity: 0;
-            display: flex;
-            flex-direction: column;
-            transition: max-width 0.35s ease, opacity 0.25s ease, padding 0.25s ease;
-        }
-
-        .dev-badge-container:hover .text-reveal {
-            max-width: 140px;
-            opacity: 1;
-            padding-left: 0.2rem;
-        }
-
-        .text-line-1 {
-            font-size: 0.55rem;
-            letter-spacing: 0.16em;
+            color: rgba(226, 232, 240, 0.76);
+            font-size: 0.66rem;
+            line-height: 1;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #94a3b8;
+            pointer-events: none;
+            opacity: 0.78;
         }
 
-        .text-line-2 {
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: #e2e8f0;
+        .celios-powered-badge strong {
+            color: rgba(255, 255, 255, 0.92);
+            font-weight: 800;
+            letter-spacing: 0.12em;
+        }
+
+        @media (max-width: 640px) {
+            .celios-powered-badge {
+                left: 0.65rem;
+                bottom: 0.65rem;
+                padding: 0.32rem 0.48rem;
+                font-size: 0.58rem;
+                opacity: 0.68;
+            }
         }
 
         #app-content,
@@ -664,20 +711,23 @@
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
-        .metal-login-button {
+        .metal-login-button,
+        .metal-button {
             position: relative;
             overflow: hidden;
-            color: #07111f;
+            color: #07111f !important;
             background:
-                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
-            border: 1px solid rgba(255, 255, 255, 0.72);
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.72) !important;
             box-shadow:
                 0 16px 36px rgba(0, 25, 80, 0.36),
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22) !important;
+            transition: transform 0.2s, filter 0.2s;
         }
 
-        .metal-login-button::before {
+        .metal-login-button::before,
+        .metal-button::before {
             content: "";
             position: absolute;
             inset: 0;
@@ -686,8 +736,15 @@
             transition: transform 0.7s ease;
         }
 
-        .metal-login-button:hover::before {
+        .metal-login-button:hover::before,
+        .metal-button:hover::before {
             transform: translateX(120%);
+        }
+        
+        .metal-login-button:hover,
+        .metal-button:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.04);
         }
 
         .login-feature-strip {
@@ -742,19 +799,254 @@
                 letter-spacing: 0.13em;
             }
         }
-    </style>
+
+        :root {
+            --platino-ocean: #092b55;
+            --platino-ocean-soft: #0d3c74;
+            --platino-ocean-dark: #03162f;
+            --platino-silver: #dbe4ef;
+            --platino-gold: #ded9e6;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 18% 0%, rgba(29, 78, 216, 0.15), transparent 32%),
+                linear-gradient(180deg, #071a34 0%, #0a2446 42%, #06152b 100%);
+        }
+
+        #sidebar {
+            background:
+                radial-gradient(circle at 18% 0%, rgba(59, 130, 246, 0.22), transparent 34%),
+                linear-gradient(180deg, #061b36 0%, #0b3769 46%, #031124 100%) !important;
+            filter: saturate(1.16) brightness(0.86);
+        }
+
+        .app-topbar {
+            background:
+                linear-gradient(180deg, rgba(10, 31, 59, 0.98), rgba(5, 20, 41, 0.96)) !important;
+            border-bottom-color: rgba(203, 213, 225, 0.22) !important;
+        }
+
+        .app-topbar-title,
+        .content-section h2,
+        .content-section h3,
+        .content-section h4 {
+            color: var(--platino-silver);
+        }
+
+        .content-section h2,
+        .section-title {
+            font-size: clamp(1.65rem, 1.2vw + 1.25rem, 2.25rem);
+            font-weight: 900;
+            background: linear-gradient(105deg, #f8fafc 0%, #aab7c8 30%, #ffffff 48%, #8b98aa 72%, #edf2f7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 14px 30px rgba(2, 6, 23, 0.32);
+        }
+
+        .content-section > div,
+        .content-section p {
+            color: rgba(219, 234, 254, 0.78);
+        }
+
+        .portal-card h3,
+        .portal-card h4,
+        .notice-card h4,
+        .training-card h3,
+        .team-card h4,
+        #rh-action-panel h3 {
+            color: #f8fafc !important;
+        }
+
+        .portal-card p,
+        .notice-card p,
+        .training-card p,
+        .team-card p,
+        #rh-action-panel p {
+            color: rgba(219, 234, 254, 0.76) !important;
+        }
+
+        .team-card h4,
+        .employee-name,
+        #avisos-highlight-name,
+        .ranking-row p:first-child {
+            color: #ffffff !important;
+            text-transform: capitalize;
+            letter-spacing: 0;
+            text-shadow: 0 8px 22px rgba(2, 6, 23, 0.36);
+        }
+
+        .money-value,
+        #avisos-highlight-value,
+        #avisos-week-contracts,
+        #avisos-week-laudos,
+        #avisos-week-distratos,
+        #avisos-week-revenue,
+        .content-section [class*="text-3xl"].font-bold,
+        .content-section [class*="text-3xl"].font-black {
+            color: var(--platino-gold) !important;
+            -webkit-text-fill-color: var(--platino-gold);
+            text-shadow: 0 0 18px rgba(250, 204, 21, 0.34);
+        }
+
+        .icon-pill {
+            background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(148,163,184,0.12));
+            border: 1px solid rgba(226, 232, 240, 0.22);
+            color: #e5edf7;
+        }
+ 
+        .rh-modal-shell {
+            background:
+                radial-gradient(circle at 10% 0%, rgba(96, 165, 250, 0.18), transparent 32%),
+                linear-gradient(145deg, #092b55, #04172f 70%);
+            border: 1px solid rgba(203, 213, 225, 0.2);
+        }
+
+        .rh-module-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(226, 232, 240, 0.14);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .kanban-column {
+            background: rgba(2, 6, 23, 0.24);
+            border: 1px solid rgba(226, 232, 240, 0.12);
+        }
+
+        .dev-badge-container {
+       position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            z-index: 50;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.22rem 0.38rem 0.22rem 0.24rem;
+            border-radius: 9999px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.2);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+.dev-badge-container:hover {
+    width: 230px;
+    max-width: 230px;
+    border-color: rgba(9, 113, 216, 0.968);
+    box-shadow:
+        0 16px 34px rgba(2, 6, 23, 0.32),
+        0 0 22px rgba(59, 130, 246, 0.18),
+        inset 0 1px 0 rgba(0, 0, 0, 0.879);
+}
+
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.icon-circle img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 9999px;
+    background: #020617;
+}
+
+.text-reveal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+
+    transform: translateX(-6px);
+    transition:
+        max-width 0.35s ease,
+        opacity 0.25s ease,
+        transform 0.35s ease;
+}
+
+.dev-badge-container:hover .text-reveal {
+    max-width: 160px;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.text-line-1 {
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    line-height: 1;
+}
+
+.text-line-2 {
+    margin-top: 0.18rem;
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: #f8fafc;
+    line-height: 1;
+    text-shadow: 0 0 14px rgba(226, 232, 240, 0.32);
+}
+
+@media (max-width: 640px) {
+    .dev-badge-container {
+        .login-feature-strip {
+                gap: 0.45rem;
+                padding-inline: 0.75rem;
+                font-size: 0.62rem;
+                letter-spacing: 0.13em;
+            }
+        }
+
+    .dev-badge-container:hover {
+        width: 205px;
+        max-width: 205px;
+    }
+
+    .icon-circle {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+    }
+
+    .text-line-1 {
+        font-size: 0.5rem;
+    }
+
+    .text-line-2 {
+        font-size: 0.68rem;
+    }
+}
+
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
-    <button class="dev-badge-container" type="button" aria-label="Desenvolvido por Tafarel Moreira">
-        <div class="icon-circle">
-            <img src="assets/tafarel-moreira-logo-badge.png" alt="Logo Tafarel Moreira">
-        </div>
-        <div class="text-reveal">
-            <span class="text-line-1">Desenvolvido por</span>
-            <span class="text-line-2">Tafarel Moreira</span>
-        </div>
-    </button>
+   <button class="dev-badge-container" type="button" aria-label="Desenvolvido por Tafarel Moreira">
+    <div class="icon-circle">
+        <img src="assets/tafarel-moreira-logo-badge.png" alt="Logo Tafarel Moreira">
+    </div>
+
+    <div class="text-reveal">
+        <span class="text-line-1">Desenvolvido por</span>
+        <span class="text-line-2">Tafarel Moreira</span>
+    </div>
+</button>
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
@@ -770,8 +1062,8 @@
                 <i class="ph ph-shield-check text-3xl text-blue-200"></i>
               </div>
               <div>
-                <h1 class="text-3xl font-bold tracking-wide text-white leading-none">PLATINO</h1>
-                <p class="text-xs uppercase tracking-[0.24em] text-blue-200/80 mt-1">Hub operacional</p>
+                <h1 class="text-3xl font-bold tracking-wide text-white leading-none">HUB OPERACIONAL</h1>
+                <p class="text-xs uppercase tracking-[0.24em] text-blue-200/80 mt-1">Assessoria Platino</p>
               </div>
             </div>
 
@@ -822,21 +1114,15 @@
     </section>
 
     <div id="app-content" class="hidden">
-    <!-- CONTAINER PRINCIPAL DO APP (Oculto até o login) -->
     <div id="app-container" class="h-full w-full flex overflow-hidden">
 
-  <!-- Base de Conhecimento para a IA (Invisível) -->
-<script src="config.js"></script>
+  <script src="config.js"></script>
 <script src="cerebro-platino-organizado.js"></script>
 <script src="knowledge-engine.js"></script>
    
-<!-- Sidebar / Menu Lateral -->
-    <aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
+<aside id="sidebar" class="bg-slate-900 text-slate-300 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
         <div class="sidebar-brand h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950/50">
-            <div class="flex items-center gap-2 text-white font-bold text-xl tracking-wide">
-                <i class="ph ph-shield-check text-blue-500 text-2xl"></i>
-                PLATINO
-            </div>
+            <img src="assets/platino-wordmark-header.png" alt="Platino" class="platino-menu-wordmark">
             <button onclick="toggleSidebar()" class="md:hidden ml-auto text-slate-400 hover:text-white">
                 <i class="ph ph-x text-xl"></i>
             </button>
@@ -874,7 +1160,6 @@
             <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-books text-lg"></i> Treinamentos
             </button>
-            <!-- NOVO BOTÃO: Hub de Sugestões -->
             <button id="nav-ideias" onclick="navigateTo('ideias')" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm font-medium transition-colors hover:bg-slate-800 hover:text-white border-l-4 border-transparent">
                 <i class="ph ph-lightbulb text-lg text-yellow-400"></i> Hub de Sugestões
             </button>
@@ -887,7 +1172,7 @@
                     <img src="assets/platino-infohub-icon.png" alt="Ícone Platino" class="mascot-avatar">
                 </div>
                 <div class="flex-1 overflow-hidden">
-                    <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel Moreira</p>
+                    <p id="user-name" class="text-sm font-medium text-white truncate">Usuário</p>
                     <p id="user-role" class="text-[10px] text-blue-300 font-semibold uppercase tracking-wider mt-0.5">Administrador</p>
                 </div>
                 <button onclick="logoutPlatino()" class="text-slate-500 hover:text-red-400 transition-colors" title="Sair do Sistema">
@@ -897,56 +1182,49 @@
         </div>
         </aside>
 
-    <!-- Área Principal -->
     <main class="flex-1 flex flex-col h-full relative">
-        <!-- Header Principal -->
-        <header class="h-16 bg-white border-b border-slate-200 relative px-4 md:px-8 z-10">
+        <header class="app-topbar bg-white border-b border-slate-200 relative px-4 md:px-8 z-10">
             <div class="flex items-center gap-4 h-full">
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
-                <h1 id="page-title" class="text-lg font-semibold text-slate-800">Sistema Platino</h1>
             </div>
 
-            <div class="absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
+            <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
                 <div class="relative">
-                    <i class="ph ph-sparkle absolute left-4 top-1/2 -translate-y-1/2 text-blue-500"></i>
-                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="w-full pl-12 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" onkeypress="handleSearch(event)">
+                    <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
+                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="topbar-search-input w-full pl-16 pr-4 py-2 bg-slate-100 border-transparent rounded-full text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none" onkeypress="handleSearch(event)">
                 </div>
             </div>
 
-            <button onclick="logoutPlatino()" class="absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-700 text-sm transition">
-                Sair
+            <button onclick="logoutPlatino()" class="topbar-logout absolute right-4 top-1/2 -translate-y-1/2 px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-700 text-sm transition inline-flex items-center gap-2">
+                <span>Sair</span>
+                <i class="ph ph-sign-out text-lg"></i>
             </button>
         </header>
 
-        <!-- Conteúdo Rolável -->
         <div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
             
-            <!-- SEÇÃO: INÍCIO -->
             <section id="section-inicio" class="content-section animate-fade-in">
                 <div class="max-w-5xl mx-auto">
                     <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
                         <div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
                             <i class="ph ph-shield-check text-[200px]"></i>
                         </div>
-                        <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo ao Sistema Platino</h2>
+                        <h2 class="text-3xl font-bold mb-2 relative z-10">Bem-vindo ao Platino Hub</h2>
                         <p class="text-blue-100 max-w-2xl relative z-8">Portal de boas-vindas, comunicação interna e conexão entre equipes.</p>
                     </div>
 
-                    <!-- CAROUSEL DE SLIDES -->
                     <div class="mb-8">
                         <div class="slide-carousel relative">
-                            <!-- Slide 1: Capa -->
                             <div class="slide-item active" id="carousel-slide-0">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-shield-check text-6xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Bem-vindo ao Sistema Platino</h2>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Bem-vindo ao Platino Hub</h2>
                                     <p class="text-lg text-blue-100 max-w-xl">Um portal para orientar a rotina e aproximar toda a equipe.</p>
                                 </div>
                             </div>
 
-                            <!-- Slide 2 -->
                             <div class="slide-item" id="carousel-slide-1">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-chats-circle text-5xl text-white"></i>
@@ -955,7 +1233,6 @@
                                 </div>
                             </div>
 
-                            <!-- Slide 3 -->
                             <div class="slide-item" id="carousel-slide-2">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-users-three text-5xl text-white"></i>
@@ -964,7 +1241,6 @@
                                 </div>
                             </div>
 
-                            <!-- Slide 4 -->
                             <div class="slide-item" id="carousel-slide-3">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-megaphone text-5xl text-white"></i>
@@ -973,7 +1249,6 @@
                                 </div>
                             </div>
 
-                            <!-- Slide 5 -->
                             <div class="slide-item" id="carousel-slide-4">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-graduation-cap text-5xl text-blue-100"></i>
@@ -982,7 +1257,6 @@
                                 </div>
                             </div>
 
-                            <!-- Slide 6 -->
                             <div class="slide-item" id="carousel-slide-5">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-lightbulb text-5xl text-yellow-200"></i>
@@ -991,16 +1265,14 @@
                                 </div>
                             </div>
 
-                            <!-- Slide 7 -->
                             <div class="slide-item" id="carousel-slide-6">
                                 <div class="flex flex-col items-center gap-4">
                                     <i class="ph ph-rocket-launch text-5xl text-cyan-200"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Sistema Platino em evolução</h2>
+                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Platino Hub em evolução</h2>
                                     <p class="text-base text-blue-100 max-w-xl">Um espaço vivo para comunicação, suporte e melhoria contínua.</p>
                                 </div>
                             </div>
 
-                            <!-- Dots / Indicadores -->
                             <div class="slide-dots">
                                 <div class="dot active" onclick="goToSlide(0)"></div>
                                 <div class="dot" onclick="goToSlide(1)"></div>
@@ -1011,7 +1283,6 @@
                                 <div class="dot" onclick="goToSlide(6)"></div>
                             </div>
 
-                            <!-- Botões de Navegação -->
                             <button onclick="prevCarouselSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm">
                                 <i class="ph ph-caret-left text-lg"></i>
                             </button>
@@ -1027,94 +1298,30 @@
                                 <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Comunicados Internos</p>
                                 <h3 class="mt-1 text-2xl font-black text-slate-900">Últimas novidades da empresa</h3>
                             </div>
-                            <i class="ph ph-megaphone text-3xl text-blue-600"></i>
+                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-pencil-simple text-lg"></i> Editar comunicados
+                            </button>
                         </div>
-                        <div class="grid gap-3 md:grid-cols-2">
-                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-blue-600">Sistema</p>
-                                <h4 class="mt-1 font-bold text-slate-900">Atualização do sistema disponível.</h4>
-                                <p class="mt-1 text-xs text-slate-500">Melhorias visuais e novos recursos de comunicação interna.</p>
-                            </div>
-                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-amber-600">Agenda</p>
-                                <h4 class="mt-1 font-bold text-slate-900">Reunião geral na sexta-feira às 16h.</h4>
-                                <p class="mt-1 text-xs text-slate-500">Alinhamento de resultados, metas e próximos passos da operação.</p>
-                            </div>
-                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Treinamentos</p>
-                                <h4 class="mt-1 font-bold text-slate-900">Novo treinamento adicionado à plataforma.</h4>
-                                <p class="mt-1 text-xs text-slate-500">Conteúdo atualizado para apoiar atendimento e padronização.</p>
-                            </div>
-                            <div class="notice-card rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-600">Procedimentos</p>
-                                <h4 class="mt-1 font-bold text-slate-900">Novos procedimentos operacionais publicados.</h4>
-                                <p class="mt-1 text-xs text-slate-500">Consulte os fluxos revisados antes de iniciar novas tratativas.</p>
-                            </div>
-                        </div>
+                        <div id="inicio-notices-list" class="grid gap-3 md:grid-cols-2"></div>
                     </div>
 
                     <div class="portal-card rounded-2xl p-5 md:p-6">
-                        <div class="mb-5 text-center">
-                            <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Conheça a Equipe</p>
-                            <h3 class="mt-1 text-2xl font-black text-slate-900">Pessoas que movem a Platino</h3>
+                        <div class="mb-5 flex flex-col items-center justify-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Conheça a Equipe</p>
+                                <h3 class="mt-1 text-2xl font-black text-slate-900">Pessoas que movem a Platino</h3>
+                            </div>
+                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-images-square text-lg"></i> Editar carrossel
+                            </button>
                         </div>
                         <div class="team-carousel">
-                            <div class="team-track">
-                                <div class="team-card rounded-2xl p-4 text-center">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">GS</div>
-                                    <h4 class="font-black text-slate-900">Giovana Santos</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Supervisora Administrativa</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Administrativo • ramal 201 • giovana@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">CS</div>
-                                    <h4 class="font-black text-slate-900">Carlos Silva</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Suporte Técnico</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Sistemas • ramal 204 • suporte@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">AO</div>
-                                    <h4 class="font-black text-slate-900">Amanda Oliveira</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Jurídico</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Jurídico • ramal 209 • juridico@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">FC</div>
-                                    <h4 class="font-black text-slate-900">Felipe Costa</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Financeiro</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Financeiro • ramal 212 • financeiro@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">GS</div>
-                                    <h4 class="font-black text-slate-900">Giovana Santos</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Supervisora Administrativa</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Administrativo • ramal 201 • giovana@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">CS</div>
-                                    <h4 class="font-black text-slate-900">Carlos Silva</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Suporte Técnico</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Sistemas • ramal 204 • suporte@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">AO</div>
-                                    <h4 class="font-black text-slate-900">Amanda Oliveira</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Jurídico</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Jurídico • ramal 209 • juridico@platino.com</p>
-                                </div>
-                                <div class="team-card rounded-2xl p-4 text-center" aria-hidden="true">
-                                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center rounded-full text-2xl font-black">FC</div>
-                                    <h4 class="font-black text-slate-900">Felipe Costa</h4>
-                                    <p class="text-sm font-semibold text-blue-600">Financeiro</p>
-                                    <p class="team-extra mt-2 text-xs text-slate-500">Setor Financeiro • ramal 212 • financeiro@platino.com</p>
-                                </div>
-                            </div>
+                            <div id="team-track" class="team-track"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SEÇÃO: CENTRAL DE AVISOS -->
             <section id="section-avisos" class="content-section hidden animate-fade-in">
                 <div class="max-w-6xl mx-auto">
                     <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
@@ -1125,7 +1332,7 @@
                                 <h2 class="metallic-title text-3xl md:text-4xl font-black tracking-tight">Central da Equipe Platino</h2>
                             </div>
                             <div class="flex flex-wrap items-center justify-center gap-3 lg:absolute lg:right-0 lg:top-0">
-                                <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
                                     <i class="ph ph-pencil-simple text-lg"></i> Editar Central
                                 </button>
                                 <span id="avisos-updated-tag" class="hidden bg-white/10 text-blue-100 border border-white/10 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
@@ -1134,7 +1341,6 @@
                         </div>
                     </div>
 
-                    <!-- Destaque do mês -->
                     <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
@@ -1158,7 +1364,6 @@
                         </div>
                     </div>
 
-                    <!-- Placar semanal -->
                     <div class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 rounded-2xl p-5 md:p-6 shadow-xl shadow-slate-200/70 text-white mb-6 relative overflow-hidden">
                         <div class="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
                         <div class="relative flex flex-col gap-5">
@@ -1196,7 +1401,6 @@
                         </div>
                     </div>
 
-                    <!-- Arena de ranking -->
                     <div class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
                         <div class="absolute right-0 top-0 h-40 w-40 bg-blue-400/20 rounded-full blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 bg-yellow-300/10 rounded-full blur-3xl"></div>
@@ -1205,7 +1409,7 @@
                                 <p class="metallic-kicker text-[10px]">Arena de performance</p>
                                 <h3 class="metallic-title mt-1 text-2xl font-black flex items-center justify-center gap-2"><i class="ph-fill ph-trophy text-yellow-300 text-2xl"></i> Ranking da Semana</h3>
                             </div>
-                            <button onclick="openRankingEditor()" class="gestor-only hidden items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
+                            <button onclick="openRankingEditor()" class="gestor-only metal-button hidden items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
                             </button>
                         </div>
@@ -1259,39 +1463,33 @@
                         </div>
 
                         <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
-                            <!-- Ranking Comercial -->
                             <div class="ranking-board rounded-2xl p-4">
                                 <div class="mb-4 text-center">
                                     <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Comercial</h4>
                                 </div>
                                 <div id="ranking-comercial-list" class="space-y-2"></div>
-                                <p class="mt-4 text-[11px] text-blue-100/70">Meta visual: valor vendido atualizado pela Gestão.</p>
                             </div>
 
-                            <!-- Ranking Jurídico -->
                             <div class="ranking-board rounded-2xl p-4">
                                 <div class="mb-4 text-center">
                                     <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Jurídico</h4>
                                 </div>
                                 <div id="ranking-juridico-list" class="space-y-2"></div>
-                                <p class="mt-4 text-[11px] text-blue-100/70">Disputa interna do setor jurídico com atualização por resultado.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Aniversariantes -->
                     <div class="performance-arena rounded-3xl p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 relative overflow-hidden">
                         <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-blue-400/20 blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-slate-100/10 blur-3xl"></div>
                         <div class="relative flex flex-col items-center justify-center gap-5 mb-6 text-center">
                             <div class="flex flex-col items-center gap-4">
                                 <div>
-                                    <p class="metallic-kicker text-[10px]">Reconhecimento da equipe</p>
                                     <h3 class="metallic-title mt-1 text-2xl font-black">Aniversariantes do Mês</h3>
                                     <p class="mt-1 text-sm text-blue-100">Celebre as pessoas da operação Platino e mantenha a equipe conectada.</p>
                                 </div>
                             </div>
-                            <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors lg:absolute lg:right-0 lg:top-0" title="Editar aniversariantes">
+                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors lg:absolute lg:right-0 lg:top-0" title="Editar aniversariantes">
                                 <i class="ph ph-pencil-simple"></i> Editar aniversariantes
                             </button>
                         </div>
@@ -1302,7 +1500,6 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: COMERCIAL -->
             <section id="section-comercial" class="content-section hidden animate-fade-in">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8 flex items-center justify-between">
@@ -1310,15 +1507,14 @@
                             <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-target text-green-500"></i> Setor Comercial</h2>
                             <p class="text-slate-500 mt-1">Manual de conversão, abordagens e fechamento de contratos.</p>
                         </div>
-                        <button class="hidden sm:flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
-                            <i class="ph ph-file-pdf text-red-500"></i> Baixar Script Completo
-                        </button>
+                        <a href="Treinamento Oficial Platino.pdf" download="script-comercial-platino.pdf" class="metal-button hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm">
+                            <i class="ph ph-file-pdf text-red-500 text-lg"></i> Baixar Script Completo
+                        </a>
                     </div>
                     <div class="space-y-4" id="com-accordions"></div>
                 </div>
             </section>
 
-            <!-- SEÇÃO: ADMINISTRATIVO -->
             <section id="section-adm" class="content-section hidden animate-fade-in">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8">
@@ -1329,7 +1525,6 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: JURÍDICO -->
             <section id="section-juridico" class="content-section hidden animate-fade-in">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8">
@@ -1340,7 +1535,6 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: RH -->
             <section id="section-rh" class="content-section hidden animate-fade-in">
                 <div class="max-w-6xl mx-auto">
                     <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -1365,33 +1559,36 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_1.25fr]">
-                        <button type="button" onclick="openRhPanel('frequencia')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
+                        <button type="button" onclick="openRhPanel('frequencia')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-400 hover:shadow-lg">
                             <div class="flex items-start justify-between">
-                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="ph ph-clock-counter-clockwise text-2xl"></i></span>
-                                <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-blue-500"></i>
+                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/20 text-blue-300"><i class="ph ph-clock-counter-clockwise text-2xl"></i></span>
+                                <i class="ph ph-arrow-up-right text-blue-300/50 transition-colors group-hover:text-blue-400"></i>
                             </div>
-                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-600">Acesso rápido</p>
-                            <h4 class="mt-1 font-bold text-slate-800">Frequência e Ponto</h4>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-500">Registrar atrasos, faltas, justificativas e ajustes de ponto.</p>
+                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-400">Acesso rápido</p>
+                            <h4 class="mt-1 font-bold text-white">Frequência e Ponto</h4>
+                            <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Registrar atrasos, faltas, justificativas e ajustes de ponto.</p>
                         </button>
 
-                        <button type="button" onclick="openRhPanel('conduta')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-violet-300 hover:shadow-lg">
+                        <button type="button" onclick="openRhPanel('conduta')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-violet-400 hover:shadow-lg">
                             <div class="flex items-start justify-between">
-                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><i class="ph ph-identification-badge text-2xl"></i></span>
-                                <i class="ph ph-arrow-up-right text-slate-300 transition-colors group-hover:text-violet-500"></i>
+                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/20 text-violet-300"><i class="ph ph-identification-badge text-2xl"></i></span>
+                                <i class="ph ph-arrow-up-right text-violet-300/50 transition-colors group-hover:text-violet-400"></i>
                             </div>
-                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-600">Acesso rápido</p>
-                            <h4 class="mt-1 font-bold text-slate-800">Conduta e Postura</h4>
-                            <p class="mt-2 text-sm leading-relaxed text-slate-500">Apontamentos de uniforme, crachá, postura e orientações aplicadas.</p>
+                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-400">Acesso rápido</p>
+                            <h4 class="mt-1 font-bold text-white">Conduta e Postura</h4>
+                            <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Apontamentos de uniforme, crachá, postura e orientações aplicadas.</p>
                         </button>
 
-                        <div class="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+                        <div class="relative overflow-hidden portal-card rounded-2xl p-5 shadow-sm transition-all hover:border-amber-400 border border-white/10 group">
                             <i class="ph-fill ph-push-pin absolute right-4 top-4 rotate-12 text-xl text-amber-500"></i>
-                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">Mural da semana</p>
-                            <textarea id="rh-weekly-notes" rows="4" class="mt-3 w-full resize-none rounded-xl border border-amber-200 bg-white/70 p-3 text-sm leading-relaxed text-slate-700 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-200" placeholder="Adicione lembretes rápidos para a equipe..."></textarea>
+                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-400">Mural da semana</p>
+                            <textarea id="rh-weekly-notes" rows="4" class="mt-3 w-full resize-none rounded-xl border border-white/20 bg-white/5 p-3 text-sm leading-relaxed text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20" placeholder="Adicione lembretes rápidos para a equipe..."></textarea>
                             <div class="mt-3 flex items-center justify-between gap-3">
-                                <span id="rh-notes-status" class="text-[11px] text-amber-700">Visível neste navegador</span>
-                                <button type="button" onclick="saveRhNotes()" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-600">Salvar mural</button>
+                                <span id="rh-notes-status" class="text-[11px] text-amber-400/80">Visível neste navegador</span>
+                                <div class="flex flex-wrap items-center justify-end gap-2">
+                                    <button type="button" onclick="openRhPanel('mural')" class="rounded-lg px-3 py-1.5 text-xs font-bold transition hover:bg-white/10">Abrir central</button>
+                                    <button type="button" onclick="saveRhNotes()" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-600">Salvar mural</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1405,7 +1602,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        <button type="button" onclick="openRhPanel('recrutamento')" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-left text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
+                        <button type="button" onclick="openRhPanel('recrutamento')" class="group relative overflow-hidden portal-card rounded-2xl p-6 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-blue-400">
                             <div class="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl"></div>
                             <div class="relative">
                                 <div class="flex items-start justify-between">
@@ -1414,20 +1611,20 @@
                                 </div>
                                 <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">R&S</p>
                                 <h4 class="mt-1 text-xl font-bold">Recrutamento e Seleção</h4>
-                                <p class="mt-3 max-w-md text-sm leading-relaxed text-slate-300">Centralize candidatos, currículos, entrevistas e o andamento das novas contratações.</p>
+                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100">Centralize candidatos, currículos, entrevistas e o andamento das novas contratações.</p>
                             </div>
                         </button>
 
-                        <button type="button" onclick="openRhPanel('desenvolvimento')" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-600 p-6 text-left text-white shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl">
-                            <div class="absolute -bottom-16 -right-8 h-44 w-44 rounded-full bg-white/15 blur-3xl"></div>
+                        <button type="button" onclick="openRhPanel('desenvolvimento')" class="group relative overflow-hidden portal-card rounded-2xl p-6 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-cyan-400">
+                            <div class="absolute -bottom-16 -right-8 h-44 w-44 rounded-full bg-cyan-500/20 blur-3xl"></div>
                             <div class="relative">
                                 <div class="flex items-start justify-between">
-                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/15 text-white"><i class="ph ph-student text-2xl"></i></span>
-                                    <i class="ph ph-arrow-up-right text-cyan-100"></i>
+                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-cyan-200"><i class="ph ph-student text-2xl"></i></span>
+                                    <i class="ph ph-arrow-up-right text-cyan-300"></i>
                                 </div>
-                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100">T&D</p>
+                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">T&D</p>
                                 <h4 class="mt-1 text-xl font-bold">Desenvolvimento e Performance</h4>
-                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-50">Documente treinamentos, evolução, pontos de apoio e ações para manter a equipe motivada e segura.</p>
+                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100">Documente treinamentos, evolução, pontos de apoio e ações para manter a equipe motivada e segura.</p>
                             </div>
                         </button>
                     </div>
@@ -1441,30 +1638,30 @@
                     </div>
 
                     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        <button type="button" onclick="openRhPanel('contabilidade')" class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg">
+                        <button type="button" onclick="openRhPanel('contabilidade')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg">
                             <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><i class="ph ph-calculator text-2xl"></i></span>
+                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300"><i class="ph ph-calculator text-2xl"></i></span>
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-600">Documentos e dúvidas</p>
-                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-emerald-500"></i>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-400">Documentos e dúvidas</p>
+                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-emerald-400"></i>
                                     </div>
-                                    <h4 class="mt-1 font-bold text-slate-800">Central da Contabilidade</h4>
-                                    <p class="mt-2 text-sm leading-relaxed text-slate-500">Folha, holerites, benefícios, informações mensais e dúvidas contábeis.</p>
+                                    <h4 class="mt-1 font-bold text-white">Central da Contabilidade</h4>
+                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Folha, holerites, benefícios, informações mensais e dúvidas contábeis.</p>
                                 </div>
                             </div>
                         </button>
 
-                        <button type="button" onclick="openRhPanel('desligamento')" class="group rounded-2xl border border-red-200 bg-gradient-to-br from-white to-red-50 p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-400 hover:shadow-lg">
+                        <button type="button" onclick="openRhPanel('desligamento')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-400 hover:shadow-lg">
                             <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600"><i class="ph ph-user-minus text-2xl"></i></span>
+                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-500/20 text-red-300"><i class="ph ph-user-minus text-2xl"></i></span>
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-red-600">Atenção</p>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">Atenção</p>
                                         <i class="ph ph-warning text-lg text-red-400"></i>
                                     </div>
-                                    <h4 class="mt-1 font-bold text-slate-800">Desligamento e Rescisão</h4>
-                                    <p class="mt-2 text-sm leading-relaxed text-slate-500">Inicie o processo de saída e acompanhe o checklist de desligamento.</p>
+                                    <h4 class="mt-1 font-bold text-white">Desligamento e Rescisão</h4>
+                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Inicie o processo de saída e acompanhe o checklist de desligamento.</p>
                                 </div>
                             </div>
                         </button>
@@ -1489,10 +1686,8 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: FINANCEIRO -->
             <section id="section-financeiro" class="content-section hidden animate-fade-in">
                 <div class="max-w-7xl mx-auto">
-                    <!-- CABEÇALHO -->
                     <div class="mb-8">
                         <div class="flex items-center gap-3 mb-2">
                             <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
@@ -1505,14 +1700,12 @@
                         </div>
                     </div>
 
-                    <!-- FILEIRA 1: TERMÔMETRO DE RESULTADOS -->
                     <div class="mb-8">
                         <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
                             <i class="ph ph-target text-amber-500"></i> Termômetro de Resultados
                         </h3>
                         
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <!-- Card: Meta do Mês -->
                             <div class="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-white p-6 shadow-sm">
                                 <div class="flex items-center justify-between mb-4">
                                     <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Meta do Mês</span>
@@ -1530,7 +1723,6 @@
                                 </div>
                             </div>
 
-                            <!-- Card: Premiações do Dia -->
                             <div class="rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-white p-6 shadow-sm">
                                 <div class="flex items-center justify-between mb-4">
                                     <span class="text-xs font-bold uppercase tracking-wider text-green-600">Premiações do Dia</span>
@@ -1548,7 +1740,6 @@
                                 </ul>
                             </div>
 
-                            <!-- Card: Premiações da Semana -->
                             <div class="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-6 shadow-sm">
                                 <div class="flex items-center justify-between mb-4">
                                     <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Premiações da Semana</span>
@@ -1568,7 +1759,6 @@
                         </div>
                     </div>
 
-                    <!-- FILEIRA 2: DINÂMICA E REGRAS -->
                     <div class="mb-8">
                         <div class="rounded-2xl border-2 border-amber-400 bg-gradient-to-r from-amber-50 to-orange-50 p-6 shadow-md">
                             <div class="flex items-start gap-4">
@@ -1584,14 +1774,12 @@
                         </div>
                     </div>
 
-                    <!-- FILEIRA 3: CONTROLE OPERACIONAL -->
                     <div class="mb-8">
                         <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
                             <i class="ph ph-gear text-slate-600"></i> Controle Operacional
                         </h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- Card: Gastos/Despesas -->
                             <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-300 hover:shadow-lg hover:bg-red-50/30">
                                 <div class="flex items-start justify-between mb-4">
                                     <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600">
@@ -1604,7 +1792,6 @@
                                 <p class="mt-2 text-sm text-slate-500">Contas a pagar, custos fixos, variáveis e materiais.</p>
                             </button>
 
-                            <!-- Card: Apontamentos de Investimento -->
                             <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-green-300 hover:shadow-lg hover:bg-green-50/30">
                                 <div class="flex items-start justify-between mb-4">
                                     <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-green-600">
@@ -1617,7 +1804,6 @@
                                 <p class="mt-2 text-sm text-slate-500">Tráfego pago, equipamentos, reformas e expansão.</p>
                             </button>
 
-                            <!-- Card: Apontamentos Gerais -->
                             <button class="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg hover:bg-blue-50/30">
                                 <div class="flex items-start justify-between mb-4">
                                     <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -1632,7 +1818,6 @@
                         </div>
                     </div>
 
-                    <!-- FILEIRA 4: MURAL DE COMUNICAÇÃO -->
                     <div>
                         <h3 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
                             <i class="ph ph-megaphone text-slate-600"></i> Mural de Comunicação
@@ -1645,7 +1830,6 @@
                             </div>
                             
                             <div class="space-y-4">
-                                <!-- Notícia 1 -->
                                 <div class="flex gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
                                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
                                         <i class="ph ph-check-circle text-lg"></i>
@@ -1656,7 +1840,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Notícia 2 -->
                                 <div class="flex gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
                                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
                                         <i class="ph ph-info text-lg"></i>
@@ -1667,7 +1850,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Notícia 3 -->
                                 <div class="flex gap-4">
                                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
                                         <i class="ph ph-warning text-lg"></i>
@@ -1683,7 +1865,6 @@
                 </div>
             </section>
 
-            <!-- SEÇÃO: TREINAMENTOS -->
             <section id="section-treinamentos" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -1694,7 +1875,7 @@
                                 <p class="text-slate-500 mt-1">Materiais oficiais de apoio para consulta e padronização.</p>
                             </div>
                         </div>
-                        <button class="gestor-only hidden items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
+                        <button class="gestor-only metal-button hidden items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm whitespace-nowrap">
                             <i class="ph ph-upload-simple text-lg"></i> Subir Novo PDF
                         </button>
                     </div>
@@ -1722,52 +1903,6 @@
                         </div>
                     </div>
 
-                    <div class="group-opening-slide rounded-3xl p-5 md:p-6 mb-8">
-                        <div class="mb-5 flex flex-col gap-2 text-center">
-                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-700">Slide de treinamento</p>
-                            <h3 class="text-2xl font-black text-slate-900">1º Passo: A Imagem Oficial do Grupo</h3>
-                            <p class="text-sm text-slate-500">Use a capa oficial de atendimento ao criar grupos de WhatsApp para padronizar a identidade da Platino.</p>
-                        </div>
-                        <div class="grid gap-5 lg:grid-cols-[280px_1fr]">
-                            <div class="group-cover-card flex flex-col items-center justify-center rounded-2xl p-6 text-center text-white">
-                                <img src="assets/capa-grupo-atendimento-platino-icon.png" alt="Capa oficial do grupo de atendimento Platino" class="h-44 w-44 rounded-full object-cover border-4 border-white/80 shadow-2xl">
-                                <a href="assets/capa-grupo-atendimento-platino-icon.png" download="capa-grupo-atendimento-platino.png" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-900 shadow-lg hover:bg-white transition-colors">
-                                    <i class="ph ph-download-simple text-lg"></i> Baixar capa do grupo
-                                </a>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="opening-step flex gap-4 rounded-2xl p-4">
-                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">1</span>
-                                    <div>
-                                        <h4 class="font-bold text-slate-900">Criação do grupo</h4>
-                                        <p class="mt-1 text-sm text-slate-600">Inicie um novo grupo de WhatsApp dedicado ao atendimento do cliente.</p>
-                                    </div>
-                                </div>
-                                <div class="opening-step flex gap-4 rounded-2xl p-4">
-                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">2</span>
-                                    <div>
-                                        <h4 class="font-bold text-slate-900">Inclusão de participantes</h4>
-                                        <p class="mt-1 text-sm text-slate-600">Adicione Cliente, Consultora, Administrativo e Supervisão.</p>
-                                    </div>
-                                </div>
-                                <div class="opening-step flex gap-4 rounded-2xl p-4">
-                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">3</span>
-                                    <div>
-                                        <h4 class="font-bold text-slate-900">Download da imagem</h4>
-                                        <p class="mt-1 text-sm text-slate-600">Baixe a capa oficial e salve para aplicar como foto do grupo.</p>
-                                    </div>
-                                </div>
-                                <div class="opening-step flex gap-4 rounded-2xl p-4">
-                                    <span class="opening-step-number flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-black">4</span>
-                                    <div>
-                                        <h4 class="font-bold text-slate-900">Configuração do perfil</h4>
-                                        <p class="mt-1 text-sm text-slate-600">Defina o arquivo baixado como a foto de perfil do grupo criado.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6">
                             <div>
@@ -1780,7 +1915,7 @@
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Técnicas de vendas, script de quebra de objeções e guia de contrato.</p>
                             </div>
-                            <a href="esteira-comercial.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-comercial.pdf" target="_blank" rel="noopener noreferrer" class="metal-button w-full py-2.5 text-sm font-semibold rounded-xl border transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
                             </a>
                         </div>
@@ -1796,7 +1931,7 @@
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Fluxo completo: GOV, documentos, laudo, CRM e acompanhamento.</p>
                             </div>
-                            <a href="esteira-adm.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-adm.pdf" target="_blank" rel="noopener noreferrer" class="metal-button w-full py-2.5 text-sm font-semibold rounded-xl border transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
                             </a>
                         </div>
@@ -1812,7 +1947,7 @@
                                 </div>
                                 <p class="text-sm text-slate-500 mb-6">Fluxo completo: abertura de grupo, processual, citação e homologação.</p>
                             </div>
-                            <a href="esteira-juridico.pdf" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 transition-colors flex items-center justify-center gap-2">
+                            <a href="esteira-juridico.pdf" target="_blank" rel="noopener noreferrer" class="metal-button w-full py-2.5 text-sm font-semibold rounded-xl border transition-colors flex items-center justify-center gap-2">
                                 <i class="ph ph-file-pdf text-red-500"></i> Abrir PDF
                             </a>
                         </div>
@@ -1839,7 +1974,6 @@
                 </div>
             </section>
             
-            <!-- NOVA SEÇÃO: Feedback e Ouvidoria -->
             <section id="section-ideias" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-8 flex items-center gap-4">
@@ -1870,10 +2004,10 @@
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Qual o tipo de mensagem?</label>
                                     <select id="feedback-type" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         <option value="" disabled selected>Selecione uma opção...</option>
-                                        <option value="ideia">💡 Ideia de Inovação</option>
-                                        <option value="melhoria">📈 Sugestão de Melhoria</option>
-                                        <option value="problema">⚠️ Relatar um Problema</option>
-                                        <option value="outro">💬 Outros</option>
+                                        <option value="ideia">Ideia de Inovação</option>
+                                        <option value="melhoria">Sugestão de Melhoria</option>
+                                        <option value="problema">Relatar um Problema</option>
+                                        <option value="outro">Outros</option>
                                     </select>
                                 </div>
                                 <div>
@@ -1923,7 +2057,6 @@
                             </div>
                         </div>
                         
-                        <!-- Mensagem de Sucesso (Oculta por padrão) -->
                         <div id="feedback-success" class="hidden mt-6 bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-lg flex items-start sm:items-center gap-3 shadow-sm animate-fade-in">
                             <i class="ph ph-check-circle text-2xl mt-0.5 sm:mt-0"></i>
                             <div>
@@ -1934,18 +2067,15 @@
                     </div>
                 </div>
             </section>
-           
-</footer>
-            <div class="flex justify-center gap-6 text-xs text-slate-500 mt-5">
-    <span>🔒 Ambiente Seguro</span>
-    <span>✓ Acesso Restrito</span>
-    <span>🛡️ Dados Protegidos</span>
-
-</div>
+            
+        <div class="flex justify-center gap-6 text-xs text-slate-500 mt-5 mb-4">
+            <span>Ambiente Seguro</span>
+            <span>Acesso Restrito</span>
+            <span>Dados Protegidos</span>
+        </div>
         </div>
     </main>
 
-    <!-- Modal de Resultado da Busca IA -->
     <div id="search-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col transform scale-95 transition-transform" id="search-modal-content">
             <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
@@ -1965,7 +2095,6 @@
         </div>
     </div>
 
-    <!-- Modal de Edição de Ranking -->
     <div id="ranking-modal" class="fixed inset-0 z-[110] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="ranking-modal-content">
             <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 text-white">
@@ -1986,7 +2115,7 @@
                                 <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-target text-emerald-600"></i> Comercial</h4>
                                 <p class="text-xs text-slate-500">Ranking interno de vendas do setor.</p>
                             </div>
-                            <button type="button" onclick="addRankingMember('comercial')" class="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700 flex items-center gap-1">
+                            <button type="button" onclick="addRankingMember('comercial')" class="metal-button rounded-xl px-3 py-2 text-xs font-bold text-white flex items-center gap-1">
                                 <i class="ph ph-plus"></i> Adicionar
                             </button>
                         </div>
@@ -1999,7 +2128,7 @@
                                 <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-scales text-indigo-600"></i> Jurídico</h4>
                                 <p class="text-xs text-slate-500">Ranking interno de resultados jurídicos.</p>
                             </div>
-                            <button type="button" onclick="addRankingMember('juridico')" class="rounded-xl bg-indigo-600 px-3 py-2 text-xs font-bold text-white hover:bg-indigo-700 flex items-center gap-1">
+                            <button type="button" onclick="addRankingMember('juridico')" class="metal-button rounded-xl px-3 py-2 text-xs font-bold text-white flex items-center gap-1">
                                 <i class="ph ph-plus"></i> Adicionar
                             </button>
                         </div>
@@ -2012,14 +2141,13 @@
                     <div class="text-sm text-slate-500">As alterações serão publicadas para toda a equipe.</div>
                     <div id="ranking-save-status" class="text-xs text-slate-400 mt-1"></div>
                 </div>
-                <button id="ranking-save-button" onclick="saveRankingEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
-                    <i class="ph ph-floppy-disk"></i> Salvar e Publicar
+                <button id="ranking-save-button" onclick="saveRankingEditor()" class="metal-button px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                    <i class="ph ph-floppy-disk text-lg"></i> Salvar e Publicar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Edição de Avisos -->
     <div id="avisos-modal" class="fixed inset-0 z-[110] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="avisos-modal-content">
             <div class="flex items-center justify-between p-5 border-b border-slate-200">
@@ -2032,6 +2160,16 @@
                 </button>
             </div>
             <div class="p-6 overflow-y-auto space-y-6">
+                <div class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                    <h4 class="font-semibold text-slate-800 mb-3">Comunicados Internos do Início</h4>
+                    <div class="grid gap-3">
+                        <input id="editor-avisos-main-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título principal do comunicado" />
+                        <textarea id="editor-avisos-main-text" rows="3" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Texto do comunicado principal"></textarea>
+                        <input id="editor-avisos-main-meta" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Ex: Postado pela Gestão hoje" />
+                    </div>
+                    <p class="mt-4 text-xs text-slate-500">Cards do início: Categoria | Título | Descrição</p>
+                    <textarea id="editor-inicio-notices" rows="5" class="mt-2 w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Sistema | Atualização do sistema disponível. | Melhorias visuais e novos recursos"></textarea>
+                </div>
                 <div class="grid gap-4">
                     <div>
                         <h4 class="font-semibold text-slate-800 mb-3">Destaque e Líder do mês</h4>
@@ -2070,20 +2208,40 @@
                     <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês</p>
                     <textarea id="editor-avisos-birthdays" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Ana Souza | 08/06&#10;Carlos Lima | 21/06"></textarea>
                 </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <h4 class="font-semibold text-slate-800 mb-2">Carrossel Pessoas que movem a Platino</h4>
+                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Cargo | Detalhes | URL ou caminho da foto</p>
+                    <textarea id="editor-team-carousel" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Giovana Santos | Supervisora Administrativa | Administrativo - ramal 201 - giovana@platino.com | assets/foto.png"></textarea>
+                </div>
             </div>
             <div class="p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
                 <div>
                     <div class="text-sm text-slate-500">Ao salvar, o sistema tenta sincronizar o aviso para toda a equipe.</div>
                     <div id="avisos-save-status" class="text-xs text-slate-400 mt-1"></div>
                 </div>
-                <button id="avisos-save-button" onclick="saveAvisosEditor()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
-                    <i class="ph ph-floppy-disk"></i> Salvar e Publicar
+                <button id="avisos-save-button" onclick="saveAvisosEditor()" class="metal-button px-5 py-3 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2">
+                    <i class="ph ph-floppy-disk text-lg"></i> Salvar e Publicar
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Visualizador de Feedbacks (Gestor) -->
+    <div id="rh-module-modal" class="fixed inset-0 z-[112] hidden bg-slate-950/70 backdrop-blur-sm p-4 opacity-0 transition-opacity">
+        <div class="ml-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-3xl rh-modal-shell text-white shadow-2xl transform translate-x-8 transition-transform" id="rh-module-content">
+            <div class="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+                <div>
+                    <p id="rh-module-kicker" class="metallic-kicker text-[10px]">Recursos Humanos</p>
+                    <h3 id="rh-module-title" class="metallic-title mt-1 text-2xl font-black">Submódulo RH</h3>
+                    <p id="rh-module-description" class="mt-2 max-w-2xl text-sm text-blue-100"></p>
+                </div>
+                <button onclick="closeRhPanel()" class="rounded-full p-2 text-slate-100 transition hover:bg-white/10" aria-label="Fechar módulo de RH">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            <div id="rh-module-body" class="flex-1 overflow-y-auto p-5"></div>
+        </div>
+    </div>
+
     <div id="feedback-modal" class="fixed inset-0 z-[115] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform scale-95 transition-transform" id="feedback-modal-content">
             <div class="flex items-center justify-between p-4 border-b border-slate-200">
@@ -2105,7 +2263,6 @@
         </div>
     </div>
 
-    <!-- Widget de Chat IA -->
     <div class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
         <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
@@ -2154,30 +2311,30 @@
         // A IA generativa deve ser exposta por um endpoint seguro no servidor.
         // Sem endpoint, o sistema continua respondendo com o motor local.
         const platinoAiEndpoint = window.PLATINO_CONFIG?.aiEndpoint || '';
-      
+       
         // DADOS PARA OS ACCORDIONS
         const fluxosComercial = [
-            { id: "c1", icon: "🎯", title: "1. Objetivo e Introdução", tasks: ["Conduzir o lead com segurança, identificando a dor e quebrando objeções.", "O que é: Análise técnica do contrato para achar cobranças indevidas e abusivas.", "Função da assessoria: Acompanhar, organizar e negociar com o banco, para o cliente não estar sozinho.", "<span class='text-red-500 font-semibold'>Atenção:</span> Nunca prometa resultado garantido. Vendemos uma análise especializada e tratativa técnica."] },
-            { id: "c2", icon: "📞", title: "2. O Primeiro Contato (Abordagem)", tasks: ["Abertura: Se apresente, confirme o nome do cliente e explique o motivo da ligação.", "Entendimento da dor: Pergunte o banco, valor da parcela, quantas faltam e o que incomoda (Ouça ativamente).", "Explicação: Mostre que o valor 'caber no bolso' não significa que é justo. A assessoria busca reduzir ou recuperar.", "Geração de confiança: Explique que temos contrato formal, acompanhamento administrativo e suporte Jurídico."] },
-            { id: "c3", icon: "🛡️", title: "3. Gestão de Objeções", tasks: ["<span class='font-medium text-slate-700'>'Já consigo pagar':</span> A questão não é pagar, é pagar o valor justo. A revisão traz clareza.", "<span class='font-medium text-slate-700'>'Não tenho dinheiro':</span> Exatamente por isso precisa revisar. O juro abusivo consome a renda mês a mês.", "<span class='font-medium text-slate-700'>'É golpe?':</span> Temos contrato formal, equipe setorizada e você acompanha o processo.", "<span class='font-medium text-slate-700'>'Vou no meu advogado':</span> O advogado foca no judicial. Nós fazemos negociação prática e administrativa.", "<span class='font-medium text-slate-700'>'Vi no Reclame Aqui':</span> Problemas acontecem, nosso diferencial é não abandonar o cliente e resolver."] },
-            { id: "c4", icon: "📝", title: "4. Fechamento e Contrato", tasks: ["PARABÉNS! Você está no caminho certo.", "Elabore o Contrato de Prestação de Serviços: Revise CPF, valores e forma de pagamento (Zero erros).", "Envie para assinatura do cliente.", "Após assinado, baixe e nomeie o arquivo como: <span class='bg-slate-200 px-1 rounded font-mono text-xs'>NOME DO CLIENTE - CONTRATO ASSINADO</span>.", "Encaminhe no grupo 'Contratos Assinados' para o Administrativo assumir."] },
-            { id: "c5", icon: "🧠", title: "5. Postura e Mentalidade", tasks: ["Fale com educação, chame pelo nome, ouça sem interromper e não use tom robótico.", "Erro comum: Falar demais e confundir o cliente. Seja objetivo.", "Mentalidade: Vender revisão é vender segurança, clareza e possibilidade de economia.", "Lembre-se: O cliente chega curioso/com medo. O papel do analista é transformar isso em decisão e confiança."] }
+            { id: "c1", icon: "ph-target", title: "1. Objetivo e Introdução", tasks: ["Conduzir o lead com segurança, identificando a dor e quebrando objeções.", "O que é: Análise técnica do contrato para achar cobranças indevidas e abusivas.", "Função da assessoria: Acompanhar, organizar e negociar com o banco, para o cliente não estar sozinho.", "<span class='text-red-400 font-semibold'>Atenção:</span> Nunca prometa resultado garantido. Vendemos uma análise especializada e tratativa técnica."] },
+            { id: "c2", icon: "ph-phone-call", title: "2. O Primeiro Contato (Abordagem)", tasks: ["Abertura: Se apresente, confirme o nome do cliente e explique o motivo da ligação.", "Entendimento da dor: Pergunte o banco, valor da parcela, quantas faltam e o que incomoda (Ouça ativamente).", "Explicação: Mostre que o valor 'caber no bolso' não significa que é justo. A assessoria busca reduzir ou recuperar.", "Geração de confiança: Explique que temos contrato formal, acompanhamento administrativo e suporte Jurídico."] },
+            { id: "c3", icon: "ph-shield-check", title: "3. Gestão de Objeções", tasks: ["<span class='font-bold text-white'>'Já consigo pagar':</span> A questão não é pagar, é pagar o valor justo. A revisão traz clareza.", "<span class='font-bold text-white'>'Não tenho dinheiro':</span> Exatamente por isso precisa revisar. O juro abusivo consome a renda mês a mês.", "<span class='font-bold text-white'>'É golpe?':</span> Temos contrato formal, equipe setorizada e você acompanha o processo.", "<span class='font-bold text-white'>'Vou no meu advogado':</span> O advogado foca no judicial. Nós fazemos negociação prática e administrativa.", "<span class='font-bold text-white'>'Vi no Reclame Aqui':</span> Problemas acontecem, nosso diferencial é não abandonar o cliente e resolver."] },
+            { id: "c4", icon: "ph-note-pencil", title: "4. Fechamento e Contrato", tasks: ["PARABÉNS! Você está no caminho certo.", "Elabore o Contrato de Prestação de Serviços: Revise CPF, valores e forma de pagamento (Zero erros).", "Envie para assinatura do cliente.", "Após assinado, baixe e nomeie o arquivo como: <span class='bg-white/10 px-2 py-0.5 rounded font-mono text-xs'>NOME DO CLIENTE - CONTRATO ASSINADO</span>.", "Encaminhe no grupo 'Contratos Assinados' para o Administrativo assumir."] },
+            { id: "c5", icon: "ph-brain", title: "5. Postura e Mentalidade", tasks: ["Fale com educação, chame pelo nome, ouça sem interromper e não use tom robótico.", "Erro comum: Falar demais e confundir o cliente. Seja objetivo.", "Mentalidade: Vender revisão é vender segurança, clareza e possibilidade de economia.", "Lembre-se: O cliente chega curioso/com medo. O papel do analista é transformar isso em decisão e confiança."] }
         ];
 
         const fluxosAdmin = [
-            { id: "a1", icon: "📑", title: "1. Análise Contratual e Distribuição", tasks: ["Receber contrato no grupo 'CONTRATOS ASSINADOS'", "Conferir dados pessoais, financeiros e assinatura", "Anexar contrato no CRM e subir pasta", "Elaborar documentos iniciais (Modelos no drive)", "Notificação extra / Reclamação (GOV) / Termos de Ciência", "Anexar todos documentos no Drive"] },
-            { id: "a2", icon: "📨", title: "2. GOV.BR (Reclamação)", tasks: ["Acessar Consumidor.gov", "Abrir reclamação e enviar protocolo ao cliente", "Elaborar Termo de Ciência e Coletar assinatura", "Anexar protocolo no CRM e no drive", "Analisar o protocolo até o banco retornar", "Atualizar planilha geral a cada tarefa concluída"] },
-            { id: "a3", icon: "🌐", title: "3. Laudo (Parecer Técnico)", tasks: ["Acessar CRM e elaborar Laudo", "Preencher os campos com os dados do contrato", "Se for imóvel, solicitar para Contabilidade", "Encaminhar PDF no grupo e anexar no drive"] },
-            { id: "a4", icon: "⚖️", title: "4. Homologação (Negociação)", tasks: ["Entrar em contato Semanalmente com banco", "Em ligação com o banco, solicitar 3 informações", "Negociar margem de desconto", "Elaborar relatório com as informações e alimentar planilhas", "Manter cliente atualizado sobre a negociação e assinar o relatório"] },
-            { id: "a5", icon: "🛡️", title: "5. Elaborar Documentos", tasks: ["Notificação Extrajudicial", "Termo de ciência de prestação de serviços", "Procuração Judicial e Declaração de Hipossuficiência", "Declaração de isenção de Imposto de renda / CTPS", "Procuração de audiência Extrajudicial", "Citação Judicial e Extrajudicial", "Solicitação de Postergação das parcelas", "Distratos e Documentos Administrativos"] },
-            { id: "a6", icon: "🛡️", title: "6. Gestão de Contestação", tasks: ["Procon", "Contestação de charge", "Reclame aqui", "Contrárias"] }
+            { id: "a1", icon: "ph-files", title: "1. Análise Contratual e Distribuição", tasks: ["Receber contrato no grupo 'CONTRATOS ASSINADOS'", "Conferir dados pessoais, financeiros e assinatura", "Anexar contrato no CRM e subir pasta", "Elaborar documentos iniciais (Modelos no drive)", "Notificação extra / Reclamação (GOV) / Termos de Ciência", "Anexar todos documentos no Drive"] },
+            { id: "a2", icon: "ph-envelope-simple", title: "2. GOV.BR (Reclamação)", tasks: ["Acessar Consumidor.gov", "Abrir reclamação e enviar protocolo ao cliente", "Elaborar Termo de Ciência e Coletar assinatura", "Anexar protocolo no CRM e no drive", "Analisar o protocolo até o banco retornar", "Atualizar planilha geral a cada tarefa concluída"] },
+            { id: "a3", icon: "ph-globe", title: "3. Laudo (Parecer Técnico)", tasks: ["Acessar CRM e elaborar Laudo", "Preencher os campos com os dados do contrato", "Se for imóvel, solicitar para Contabilidade", "Encaminhar PDF no grupo e anexar no drive"] },
+            { id: "a4", icon: "ph-scales", title: "4. Homologação (Negociação)", tasks: ["Entrar em contato Semanalmente com banco", "Em ligação com o banco, solicitar 3 informações", "Negociar margem de desconto", "Elaborar relatório com as informações e alimentar planilhas", "Manter cliente atualizado sobre a negociação e assinar o relatório"] },
+            { id: "a5", icon: "ph-shield-check", title: "5. Elaborar Documentos", tasks: ["Notificação Extrajudicial", "Termo de ciência de prestação de serviços", "Procuração Judicial e Declaração de Hipossuficiência", "Declaração de isenção de Imposto de renda / CTPS", "Procuração de audiência Extrajudicial", "Citação Judicial e Extrajudicial", "Solicitação de Postergação das parcelas", "Distratos e Documentos Administrativos"] },
+            { id: "a6", icon: "ph-shield-star", title: "6. Gestão de Contestação", tasks: ["Procon", "Contestação de charge", "Reclame aqui", "Contrárias"] }
         ];
 
         const fluxosJuridico = [
-            { id: "j1", icon: "📂", title: "1. CRM e Gestão de Pasta", tasks: ["Supervisão distribui a pasta para o consultor no CRM", "A pasta vai para o consultor - Pasta Pendente", "O consultor abre o grupo e inicia as tratativas"] },
+            { id: "j1", icon: "ph-folder-open", title: "1. CRM e Gestão de Pasta", tasks: ["Supervisão distribui a pasta para o consultor no CRM", "A pasta vai para o consultor - Pasta Pendente", "O consultor abre o grupo e inicia as tratativas"] },
             {
                 id: "j2",
-                icon: "👥",
+                icon: "ph-users-three",
                 title: "2. Abertura de Grupo",
                 tasks: ["Consultor deve abrir o grupo de cada pasta pendente em 2h", "Integrantes: Cliente + Consultora + Adm + Supervisão", "Consultor Jurídico se apresenta e solicita documentação"],
                 extraHtml: `
@@ -2212,42 +2369,68 @@
                     </div>
                 `
             },
-            { id: "j3", icon: "📬", title: "3. CRM Operacional - Consultores", tasks: ["Consultor Jurídico anexa os 5 doc. salva e envia para o ADM", "Após a reclamação do gov, a pasta vai voltar para 'LAUDO'", "Em laudo, alterar status e encaminhar para 'Laudo fechado'"] },
-            { id: "j4", icon: "🎥", title: "4. Documentos para Solicitar", tasks: ["Notificação extrajudicial", "GOV", "Laudo", "Procurações", "Citação", "Documentos Judiciais"] },
-            { id: "j5", icon: "🤝", title: "5. Procedimentos", tasks: ["Laudo Pericial", "Citação - Judicial ou Extrajudicial", "Certidão", "Homologação", "Audiência de conciliação", "Jurisprudência"] },
-            { id: "j6", icon: "🚀", title: "6. Encaminhar ao Processual", tasks: ["Solicitar documentos esfera judicial para o cliente", "Solicitar procurações para o ADM", "Solicitar no grupo: Nome do cliente - encaminhar processual"] }
+            { id: "j3", icon: "ph-envelope-open", title: "3. CRM Operacional - Consultores", tasks: ["Consultor Jurídico anexa os 5 doc. salva e envia para o ADM", "Após a reclamação do gov, a pasta vai voltar para 'LAUDO'", "Em laudo, alterar status e encaminhar para 'Laudo fechado'"] },
+            { id: "j4", icon: "ph-video-camera", title: "4. Documentos para Solicitar", tasks: ["Notificação extrajudicial", "GOV", "Laudo", "Procurações", "Citação", "Documentos Judiciais"] },
+            { id: "j5", icon: "ph-handshake", title: "5. Procedimentos", tasks: ["Laudo Pericial", "Citação - Judicial ou Extrajudicial", "Certidão", "Homologação", "Audiência de conciliação", "Jurisprudência"] },
+            { id: "j6", icon: "ph-rocket-launch", title: "6. Encaminhar ao Processual", tasks: ["Solicitar documentos esfera judicial para o cliente", "Solicitar procurações para o ADM", "Solicitar no grupo: Nome do cliente - encaminhar processual"] }
         ];
 
-        const rhPanels = {
+        const rhMockData = {
             frequencia: {
-                title: 'Frequência e Ponto',
-                description: 'Use este fluxo para documentar ocorrências de jornada com clareza e manter o histórico organizado.',
-                items: ['Identificar colaborador e data', 'Selecionar atraso, falta ou ajuste', 'Registrar justificativa apresentada', 'Anexar comprovante quando necessário']
+                title: 'Frequência',
+                description: 'Folgas programadas, exames médicos, day-off de aniversariantes e escala do último sábado do mês.',
+                timeOff: [
+                    { name: 'Marina Alves', area: 'Comercial', type: 'Folga programada', date: '26/06', note: 'Compensação de banco de horas' },
+                    { name: 'Rafael Nunes', area: 'Jurídico', type: 'Exame médico', date: '27/06', note: 'ASO periódico às 10h' },
+                    { name: 'Tafarel Moreira', area: 'Gestão', type: 'Day-off aniversário', date: '30/06', note: 'Retorno no próximo dia útil' }
+                ],
+                saturdayScale: [
+                    { date: '27/06', team: 'Administrativo', people: 'Giovana Dilena, Lucas Prado', shift: '09h às 13h' },
+                    { date: '27/06', team: 'Comercial', people: 'Mayara Cardoso, Gabriel Paes', shift: '09h às 13h' },
+                    { date: '27/06', team: 'Jurídico', people: 'Nicole Martins, Elaine Costa', shift: '09h às 13h' }
+                ]
             },
             conduta: {
                 title: 'Conduta e Postura',
-                description: 'Centralize apontamentos de apresentação e comportamento, sempre registrando a orientação aplicada.',
-                items: ['Identificar a ocorrência', 'Descrever o fato objetivamente', 'Registrar orientação realizada', 'Definir necessidade de acompanhamento']
+                description: 'Checklist diário de apresentação e formulário para apontamentos de comportamento.',
+                checklist: ['Uniforme alinhado', 'Crachá visível', 'Postura profissional no atendimento', 'Mesa organizada', 'Comunicação respeitosa'],
+                occurrences: [
+                    { name: 'Colaborador em acompanhamento', area: 'Comercial', type: 'Postura em ligação', status: 'Orientação verbal registrada' },
+                    { name: 'Colaborador em acompanhamento', area: 'Administrativo', type: 'Uso de crachá', status: 'Atenção preventiva' }
+                ]
             },
             recrutamento: {
                 title: 'Recrutamento e Seleção',
-                description: 'Acompanhe cada etapa da contratação e mantenha candidatos e documentos fáceis de consultar.',
-                items: ['Cadastrar vaga e perfil', 'Organizar currículos recebidos', 'Registrar entrevistas e avaliações', 'Atualizar etapa de cada candidato']
+                description: 'Kanban de candidatos e checklist de integração para aprovados.',
+                columns: [
+                    { title: 'Vagas em aberto', cards: ['Analista Comercial - SDR', 'Auxiliar Administrativo', 'Assistente Jurídico'] },
+                    { title: 'Em entrevista', cards: ['Camila Rocha - Comercial', 'Bruno Freitas - Administrativo', 'Lívia Martins - Jurídico'] },
+                    { title: 'Aprovados', cards: ['Pedro Henrique - Comercial', 'Ana Clara - Jurídico'] },
+                    { title: 'Reprovados', cards: ['Candidato 014 - Perfil incompatível', 'Candidato 019 - Sem disponibilidade'] }
+                ],
+                onboarding: ['Contrato e documentos conferidos', 'Acesso ao Platino Hub criado', 'Apresentação à equipe', 'Treinamento inicial agendado', 'Primeiro feedback em 7 dias']
             },
             desenvolvimento: {
                 title: 'Desenvolvimento e Performance',
-                description: 'Documente a evolução da equipe, os treinamentos concluídos e os próximos pontos de desenvolvimento.',
-                items: ['Registrar treinamento realizado', 'Avaliar evolução observada', 'Mapear pontos de apoio', 'Definir próxima ação de desenvolvimento']
+                description: 'Acompanhamento de novos candidatos em treinamento e registros de feedbacks 1:1.',
+                trainees: [
+                    { name: 'Pedro Henrique', area: 'Comercial', progress: '72%', focus: 'Quebra de objeções e fechamento' },
+                    { name: 'Ana Clara', area: 'Jurídico', progress: '64%', focus: 'Organização de documentos e CRM' },
+                    { name: 'Bruno Freitas', area: 'Administrativo', progress: '48%', focus: 'Conferência de dados e prazos' }
+                ],
+                feedbacks: [
+                    { name: 'Pedro Henrique', date: '20/06', note: 'Boa evolução na abordagem. Próximo passo: objetividade no fechamento.' },
+                    { name: 'Ana Clara', date: '21/06', note: 'Atenção positiva à rotina jurídica. Reforçar nomenclatura dos arquivos.' }
+                ]
             },
-            contabilidade: {
-                title: 'Central da Contabilidade',
-                description: 'Prepare e acompanhe as informações enviadas à contabilidade com conferência e prazo definidos.',
-                items: ['Organizar documentos mensais', 'Conferir folha e holerites', 'Registrar dúvidas pendentes', 'Acompanhar retorno da contabilidade']
-            },
-            desligamento: {
-                title: 'Desligamento e Rescisão',
-                description: 'Conduza o processo de saída com atenção, confidencialidade e conferência de todas as etapas.',
-                items: ['Formalizar solicitação e data', 'Conferir documentos rescisórios', 'Revogar acessos e recolher materiais', 'Registrar entrega e encerramento']
+            mural: {
+                title: 'Mural da Semana / Central de Avisos',
+                description: 'Cadastro e exibição de informativos gerais do DP, dinâmicas de equipe e solicitações internas.',
+                notices: [
+                    { type: 'DP', title: 'Conferência de documentos mensais', text: 'Enviar pendências de folha até quinta-feira às 12h.' },
+                    { type: 'Dinâmica', title: 'Integração comercial e jurídico', text: 'Atividade rápida na sexta-feira para alinhamento de tratativas.' },
+                    { type: 'Solicitação', title: 'Atualização cadastral', text: 'Colaboradores devem revisar telefone e endereço no RH.' }
+                ]
             }
         };
 
@@ -2289,26 +2472,161 @@
             }
         };
 
-        function openRhPanel(panelId) {
-            const data = rhPanels[panelId];
-            const panel = document.getElementById('rh-action-panel');
-            if (!data || !panel) return;
-
-            document.getElementById('rh-action-title').innerText = data.title;
-            document.getElementById('rh-action-description').innerText = data.description;
-            document.getElementById('rh-action-checklist').innerHTML = data.items.map(item => `
-                <div class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700">
-                    <i class="ph ph-check-circle text-lg text-blue-500"></i>
-                    <span>${item}</span>
+        function rhInfoCard(title, content, icon = 'ph-check-circle') {
+            return `
+                <div class="rh-module-card rounded-2xl p-4">
+                    <div class="mb-2 flex items-center gap-2">
+                        <span class="icon-pill flex h-9 w-9 items-center justify-center rounded-xl"><i class="ph ${icon}"></i></span>
+                        <h4 class="font-bold text-white">${title}</h4>
+                    </div>
+                    <div class="text-sm leading-relaxed text-blue-100">${content}</div>
                 </div>
-            `).join('');
+            `;
+        }
 
-            panel.classList.remove('hidden');
-            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        function renderRhModule(panelId, data) {
+            if (panelId === 'frequencia') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-2">
+                        ${rhInfoCard('Avisos programados', data.timeOff.map(item => `
+                            <div class="mb-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                                <p class="employee-name font-bold">${escapeHtml(item.name)}</p>
+                                <p>${escapeHtml(item.area)} - ${escapeHtml(item.type)} - <span class="money-value font-black">${escapeHtml(item.date)}</span></p>
+                                <p class="text-xs text-blue-100/70">${escapeHtml(item.note)}</p>
+                            </div>
+                        `).join(''), 'ph-calendar-check')}
+                        ${rhInfoCard('Escala do último sábado', data.saturdayScale.map(item => `
+                            <div class="mb-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                                <p class="font-bold text-white">${escapeHtml(item.team)} - <span class="money-value">${escapeHtml(item.date)}</span></p>
+                                <p>${escapeHtml(item.people)}</p>
+                                <p class="text-xs text-blue-100/70">${escapeHtml(item.shift)}</p>
+                            </div>
+                        `).join(''), 'ph-clock-countdown')}
+                    </div>
+                `;
+            }
+
+            if (panelId === 'conduta') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                        ${rhInfoCard('Checklist diário de vestimenta', data.checklist.map(item => `
+                            <label class="mb-2 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                                <input type="checkbox" class="h-4 w-4 rounded border-slate-300">
+                                <span>${escapeHtml(item)}</span>
+                            </label>
+                        `).join(''), 'ph-identification-badge')}
+                        <div class="rh-module-card rounded-2xl p-4">
+                            <h4 class="mb-3 font-bold text-white">Apontamento de Comportamento</h4>
+                            <div class="grid gap-3">
+                                <input class="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none" placeholder="Nome do colaborador">
+                                <select class="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none">
+                                    <option>Comercial</option><option>Administrativo</option><option>Jurídico</option>
+                                </select>
+                                <textarea rows="4" class="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none" placeholder="Descreva a ocorrência de forma objetiva"></textarea>
+                                <button type="button" class="w-fit rounded-xl px-4 py-2 text-sm font-bold bg-white/10 hover:bg-white/20">Registrar apontamento</button>
+                            </div>
+                            <div class="mt-5 space-y-2">
+                                ${data.occurrences.map(item => `<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm"><strong>${escapeHtml(item.area)}</strong> - ${escapeHtml(item.type)}<br><span class="text-blue-100/70">${escapeHtml(item.status)}</span></div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (panelId === 'recrutamento') {
+                return `
+                    <div class="grid gap-4 xl:grid-cols-4">
+                        ${data.columns.map(column => `
+                            <div class="kanban-column rounded-2xl p-4">
+                                <h4 class="mb-3 font-bold text-white">${escapeHtml(column.title)}</h4>
+                                <div class="space-y-3">
+                                    ${column.cards.map(card => `<div class="rounded-xl border border-white/10 bg-white/10 p-3 text-sm text-blue-50">${escapeHtml(card)}</div>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="rh-module-card mt-4 rounded-2xl p-4">
+                        <h4 class="mb-3 font-bold text-white">Checklist de Integração de Novos Funcionários</h4>
+                        <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                            ${data.onboarding.map(item => `<label class="flex items-center gap-2 rounded-xl bg-white/5 p-3 text-sm"><input type="checkbox" class="h-4 w-4 rounded"> ${escapeHtml(item)}</label>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (panelId === 'desenvolvimento') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-3">
+                        ${data.trainees.map(item => `
+                            <div class="rh-module-card rounded-2xl p-4">
+                                <p class="employee-name text-lg font-black">${escapeHtml(item.name)}</p>
+                                <p class="text-sm text-blue-100/70">${escapeHtml(item.area)}</p>
+                                <p class="money-value mt-4 text-3xl font-black">${escapeHtml(item.progress)}</p>
+                                <p class="mt-2 text-sm text-blue-100">${escapeHtml(item.focus)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="rh-module-card mt-4 rounded-2xl p-4">
+                        <h4 class="mb-3 font-bold text-white">Feedbacks 1:1 aplicados</h4>
+                        <div class="grid gap-3 lg:grid-cols-2">
+                            ${data.feedbacks.map(item => `<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm"><strong class="employee-name">${escapeHtml(item.name)}</strong> <span class="money-value">${escapeHtml(item.date)}</span><p class="mt-1 text-blue-100/80">${escapeHtml(item.note)}</p></div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (panelId === 'mural') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+                        <div class="rh-module-card rounded-2xl p-4">
+                            <h4 class="mb-3 font-bold text-white">Cadastrar aviso do DP</h4>
+                            <input class="mb-3 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" placeholder="Título do aviso">
+                            <textarea rows="5" class="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" placeholder="Informativo, dinâmica ou solicitação geral"></textarea>
+                            <button type="button" class="mt-3 rounded-xl px-4 py-2 text-sm font-bold bg-white/10 hover:bg-white/20">Adicionar aviso</button>
+                        </div>
+                        <div class="space-y-3">
+                            ${data.notices.map(item => `<div class="rh-module-card rounded-2xl p-4"><p class="metallic-kicker text-[10px]">${escapeHtml(item.type)}</p><h4 class="mt-1 font-bold text-white">${escapeHtml(item.title)}</h4><p class="mt-2 text-sm text-blue-100/80">${escapeHtml(item.text)}</p></div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="grid gap-2 sm:grid-cols-2">
+                    ${(data.items || []).map(item => `<div class="rh-module-card rounded-xl p-3 text-sm text-blue-100"><i class="ph ph-check-circle"></i> ${escapeHtml(item)}</div>`).join('')}
+                </div>
+            `;
+        }
+
+        function openRhPanel(panelId) {
+            const data = rhMockData[panelId] || {
+                title: 'Módulo em estruturação',
+                description: 'Este painel segue preparado para receber os dados oficiais do RH.',
+                items: ['Cadastro', 'Edição', 'Acompanhamento', 'Histórico']
+            };
+            const modal = document.getElementById('rh-module-modal');
+            const content = document.getElementById('rh-module-content');
+            if (!modal || !content) return;
+
+            document.getElementById('rh-module-title').innerText = data.title;
+            document.getElementById('rh-module-description').innerText = data.description;
+            document.getElementById('rh-module-body').innerHTML = renderRhModule(panelId, data);
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('translate-x-8');
+            }, 10);
         }
 
         function closeRhPanel() {
             document.getElementById('rh-action-panel')?.classList.add('hidden');
+            const modal = document.getElementById('rh-module-modal');
+            const content = document.getElementById('rh-module-content');
+            if (!modal || !content) return;
+            modal.classList.add('opacity-0');
+            content.classList.add('translate-x-8');
+            setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
         function openFinanceiroPanel(panelId) {
@@ -2346,24 +2664,12 @@
 
             localStorage.setItem('platinoRhWeeklyNotes', notes.value);
             status.innerText = 'Mural salvo agora';
-            status.className = 'text-[11px] font-semibold text-emerald-700';
+            status.className = 'text-[11px] font-semibold text-emerald-400';
             setTimeout(() => {
                 status.innerText = 'Visível neste navegador';
-                status.className = 'text-[11px] text-amber-700';
+                status.className = 'text-[11px] text-amber-400/80';
             }, 1800);
-        }
-
-        // FUNÇÃO DE NAVEGAÇÃO INTELIGENTE (SPA)
-        const titles = {
-            'inicio': 'Sistema Platino',
-            'avisos': 'Centro de informações',
-            'comercial': 'Setor Comercial',
-            'adm': 'Setor Administrativo',
-            'juridico': 'Setor Jurídico',
-            'rh': 'Recursos Humanos',
-            'financeiro': 'Setor Financeiro',
-            'treinamentos': 'Manuais e Treinamentos',
-            'ideias': 'Feedback e Ouvidoria' // ADICIONADO AQUI
+ 
         };
 
         function navigateTo(sectionId) {
@@ -2408,24 +2714,26 @@
         function renderAccordions(containerId, data) {
             const container = document.getElementById(containerId);
             container.innerHTML = data.map(item => `
-                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:border-slate-300 transition-colors">
-                    <button onclick="toggleAccordion('${item.id}')" class="w-full flex items-center justify-between p-5 text-left hover:bg-slate-50 transition-colors focus:outline-none">
+                <div class="dark-panel border border-white/10 rounded-xl overflow-hidden shadow-sm transition-colors">
+                    <button onclick="toggleAccordion('${item.id}')" class="w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors focus:outline-none">
                         <div class="flex items-center gap-3">
-                            <span class="text-xl">${item.icon}</span>
-                            <h3 class="font-semibold text-slate-800 text-lg">${item.title}</h3>
+                            <span class="icon-pill flex h-10 w-10 items-center justify-center rounded-xl text-xl">
+                                <i class="ph ${item.icon}"></i>
+                            </span>
+                            <h3 class="font-semibold text-white text-lg">${item.title}</h3>
                         </div>
                         <div class="flex items-center gap-4">
-                            <span onclick="event.stopPropagation(); alert('Ação disponível apenas para perfil Gestor (Em breve será conectada ao banco de dados).')" class="gestor-only hidden text-blue-500 hover:text-blue-700 text-sm font-medium items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-blue-50">
+                            <span onclick="event.stopPropagation(); alert('Ação disponível apenas para perfil Gestor (Em breve será conectada ao banco de dados).')" class="gestor-only hidden text-blue-400 hover:text-blue-300 text-sm font-medium items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-white/10">
                                 <i class="ph ph-pencil-simple"></i> Editar
                             </span>
-                            <i id="icon-${item.id}" class="ph ph-caret-down text-slate-400 transition-transform"></i>
+                            <i id="icon-${item.id}" class="ph ph-caret-down text-blue-300 transition-transform"></i>
                         </div>
                     </button>
-                    <div id="content-${item.id}" class="accordion-content bg-slate-50 px-5">
-                        <ul class="space-y-3 pb-4 pt-2 border-t border-slate-100">
+                    <div id="content-${item.id}" class="accordion-content bg-transparent px-5">
+                        <ul class="space-y-3 pb-4 pt-2 border-t border-white/10">
                             ${item.tasks.map(task => `
-                                <li class="flex items-start gap-3 text-sm text-slate-700">
-                                    <i class="ph ph-check-circle text-green-500 mt-0.5 text-lg flex-shrink-0"></i>
+                                <li class="flex items-start gap-3 text-sm text-blue-100">
+                                    <i class="ph ph-check-circle text-green-400 mt-0.5 text-lg flex-shrink-0"></i>
                                     <span class="leading-relaxed">${task}</span>
                                 </li>
                             `).join('')}
@@ -3055,12 +3363,18 @@
             renderRanking();
         };
 
-        const defaultAvisosData = {
+      const defaultAvisosData = {
             main: {
                 title: 'Atualização no Fluxo do GOV.BR',
                 text: 'Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.',
                 meta: 'Postado pela Supervisão há 2 horas'
             },
+            notices: [
+                { category: 'Sistema', title: 'Atualização do sistema disponível.', text: 'Melhorias visuais e novos recursos de comunicação interna.' },
+                { category: 'Agenda', title: 'Reunião geral na sexta-feira às 16h.', text: 'Alinhamento de resultados, metas e próximos passos da operação.' },
+                { category: 'Treinamentos', title: 'Novo treinamento adicionado à plataforma.', text: 'Conteúdo atualizado para apoiar atendimento e padronização.' },
+                { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas.' }
+            ],
             highlight: {
                 title: 'Destaque do Mês de Maio - Comercial',
                 name: 'Fernanda Ramos',
@@ -3075,71 +3389,72 @@
                 revenue: '36.505,73'
             },
             birthdays: [
-                {
-                    name: 'Giovana Dilena',
-                    date: '28 de junho',
-                    photo: 'assets/aniversariante-giovana-dilena.png'
-                },
-                {
-                    name: 'Tafarel Moreira',
-                    date: '30 de junho',
-                    photo: 'assets/aniversariante-tafarel-moreira.png'
-                }
+                { name: 'Giovana Dilena', date: '28 de junho', photo: 'assets/aniversariante-giovana-dilena.png' },
+                { name: 'Tafarel Moreira', date: '30 de junho', photo: 'assets/aniversariante-tafarel-moreira.png' }
+            ],
+            team: [
+                { name: 'Roberta Brandão', role: 'Supervisora Comercial', details: 'Contato - Roberta@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Tafarel Moreira', role: 'Supervisor  Administrativo', details: 'Contato - Tafarel@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Nicolas Peres', role: 'Supervisor Jurídico', details: 'Contato - Nicolas@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Thamires Millena', role: 'Setor Financeiro', details: 'Contato - Thamires@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Vanessa Ilana', role: 'Gerente', details: 'Contato - Vanessa@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Isabela Lima', role: 'CEO', details: 'Contato - Isabela@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Emily', role: 'Departamento Pessoal', details: 'Contato - Emily@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Grazielly Aguilar', role: 'Recrutamento e Seleção', details: 'Contato - Grazielly@platino.com', photo: 'logo.carrocel.png' }
+
+
             ],
             updatedAt: null,
             updatedBy: 'Supervisão'
         };
-
         let avisosData = normalizeAvisosData(defaultAvisosData);
 
-        function normalizeAvisosData(value = {}) {
+ function normalizeAvisosData(value = {}) {
             const birthdayPhotoByName = {
                 'giovana dilena': 'assets/aniversariante-giovana-dilena.png',
-                'giovana dilena rocha': 'assets/aniversariante-giovana-dilena.png',
                 'tafarel moreira': 'assets/aniversariante-tafarel-moreira.png'
             };
             const birthdayOrderByName = {
                 'giovana dilena': 1,
-                'giovana dilena rocha': 1,
                 'tafarel moreira': 2
             };
-            const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length
-                ? value.birthdays
-                : defaultAvisosData.birthdays;
-            const mergedBirthdays = birthdaySource.filter(person =>
-                String(person.name || '').trim().toLowerCase() !== 'giovana dilena rocha'
-            );
+            const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length ? value.birthdays : defaultAvisosData.birthdays;
+            const mergedBirthdays = birthdaySource.filter(person => String(person.name || '').trim().toLowerCase() !== 'giovana dilena rocha');
 
             defaultAvisosData.birthdays.forEach(defaultPerson => {
-                const exists = mergedBirthdays.some(person =>
-                    String(person.name || '').trim().toLowerCase() === defaultPerson.name.toLowerCase()
-                );
-
-                if (!exists) {
-                    mergedBirthdays.push({ ...defaultPerson });
-                }
+                const exists = mergedBirthdays.some(person => String(person.name || '').trim().toLowerCase() === defaultPerson.name.toLowerCase());
+                if (!exists) mergedBirthdays.push({ ...defaultPerson });
             });
+
+            const normalizeList = (items, fallback) => Array.isArray(items) && items.length ? items : fallback;
 
             return {
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
+                notices: normalizeList(value.notices, defaultAvisosData.notices).map(item => ({
+                    category: String(item?.category || '').trim(),
+                    title: String(item?.title || '').trim(),
+                    text: String(item?.text || '').trim()
+                })).filter(item => item.category || item.title || item.text),
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
                 week: { ...defaultAvisosData.week, ...(value.week || {}) },
-                birthdays: mergedBirthdays
-                    .map(person => {
-                        const normalizedName = String(person.name || '').trim().toLowerCase();
-                        return {
-                            ...person,
-                            photo: person.photo || birthdayPhotoByName[normalizedName] || '',
-                            order: birthdayOrderByName[normalizedName] || 99
-                        };
-                    })
-                    .sort((a, b) => a.order - b.order || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR'))
-                    .map(({ order, ...person }) => person),
+                birthdays: mergedBirthdays.map(person => {
+                    const normalizedName = String(person.name || '').trim().toLowerCase();
+                    return {
+                        ...person,
+                        photo: person.photo || birthdayPhotoByName[normalizedName] || '',
+                        order: birthdayOrderByName[normalizedName] || 99
+                    };
+                }).sort((a, b) => a.order - b.order || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR')).map(({ order, ...person }) => person),
+                team: normalizeList(value.team, defaultAvisosData.team).map(item => ({
+                    name: String(item?.name || '').trim(),
+                    role: String(item?.role || '').trim(),
+                    details: String(item?.details || '').trim(),
+                    photo: String(item?.photo || '').trim()
+                })).filter(item => item.name || item.role || item.details || item.photo),
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
         }
-
         function loadAvisosData() {
             const saved = localStorage.getItem('platinoAvisos');
             if (saved) {
@@ -3173,7 +3488,11 @@
             document.getElementById('avisos-week-laudos').innerText = avisosData.week.laudos;
             document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
+            
+            // FUNÇÕES QUE ESTAVAM FALTANDO NO SEU CÓDIGO E FORAM RESTAURADAS AQUI:
             renderBirthdays();
+            renderInicioNotices();
+            renderTeamCarousel();
 
             const updatedTag = document.getElementById('avisos-updated-tag');
             if (avisosData.updatedAt) {
@@ -3189,6 +3508,49 @@
             }
         }
 
+        // --- BLOCO RESTAURADO DO CARROSSEL E DOS CARDS MENORES ---
+
+        function renderInicioNotices() {
+            const container = document.getElementById('inicio-notices-list');
+            if (!container) return;
+
+            container.innerHTML = avisosData.notices.map(item => `
+                <div class="notice-card rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-blue-300">${escapeHtml(item.category || 'Comunicado')}</p>
+                    <h4 class="mt-1 font-bold text-white">${escapeHtml(item.title || 'Comunicado interno')}</h4>
+                    <p class="mt-1 text-xs text-blue-100/70">${escapeHtml(item.text || 'Detalhes a confirmar pela Gestão.')}</p>
+                </div>
+            `).join('');
+        }
+
+        function getInitials(name) {
+            return String(name || 'PL').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part.charAt(0)).join('').toUpperCase() || 'PL';
+        }
+
+        function formatPersonName(value) {
+            return String(value || '').replace(/[.]+$/g, '').trim().toLocaleLowerCase('pt-BR').replace(/(^|\s)([a-zà-ú])/g, (_, space, letter) => `${space}${letter.toLocaleUpperCase('pt-BR')}`);
+        }
+
+        function renderTeamCarousel() {
+            const container = document.getElementById('team-track');
+            if (!container) return;
+
+            const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
+            const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
+            container.innerHTML = doubled.map((person, index) => `
+                <div class="team-card rounded-2xl p-4 text-center" ${index >= team.length ? 'aria-hidden="true"' : ''}>
+                    <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-2xl font-black">
+                        ${person.photo
+                            ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(formatPersonName(person.name))}" class="h-full w-full object-cover">`
+                            : escapeHtml(getInitials(person.name))
+                        }
+                    </div>
+                    <h4 class="employee-name font-black text-white">${escapeHtml(formatPersonName(person.name) || 'Nome da equipe')}</h4>
+                    <p class="text-sm font-semibold text-blue-300">${escapeHtml(person.role || 'Função')}</p>
+                    <p class="team-extra mt-2 text-xs text-blue-100/70">${escapeHtml(person.details || 'Detalhes de contato')}</p>
+                </div>
+            `).join('');
+        }
         function renderBirthdays() {
             const container = document.getElementById('avisos-birthdays-list');
             if (!avisosData.birthdays.length) {
@@ -3207,16 +3569,19 @@
 
                 return `
                     <div class="ranking-row flex flex-col items-center gap-4 rounded-2xl p-5 text-center">
-                        <div class="h-36 w-36 rounded-full bg-gradient-to-br from-slate-100 via-blue-100 to-slate-500 text-slate-950 flex items-center justify-center text-xs font-black shadow-[0_18px_42px_rgba(15,23,42,0.32)] overflow-hidden border-4 border-white/50 flex-shrink-0">
-                            ${person.photo
-                                ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" class="h-full w-full object-cover">`
-                                : escapeHtml(initials || 'PL')
-                            }
-                        </div>
+                        <div class="h-36 w-36 rounded-full p-[4px] bg-[conic-gradient(from_180deg,#ffffff,#94a3b8,#334155,#f8fafc,#64748b,#ffffff)] shadow-[0_0_28px_rgba(37,99,235,0.55),0_18px_42px_rgba(15,23,42,0.38)] flex-shrink-0">
+    <div class="h-full w-full rounded-full bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center text-xs font-black text-slate-100 overflow-hidden ring-2 ring-blue-500/60">
+        ${person.photo
+            ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" class="h-full w-full object-cover rounded-full">`
+            : escapeHtml(initials || 'PL')
+        }
+    </div>
+</div>
                         <div class="min-w-0 flex-1">
                             <p class="font-black text-white text-lg">${escapeHtml(person.name)}</p>
                             <p class="mt-1 text-sm text-blue-200 font-semibold">${escapeHtml(person.date || 'Data a confirmar')}</p>
-                            <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-blue-100/60">Aniversariante Platino</p>
+                            <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-blue-100/60">Day off de aniversário
+</p>
                         </div>
                     </div>
                 `;

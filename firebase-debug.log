@@ -1,0 +1,40 @@
+[debug] [2026-06-23T02:11:33.580Z] ----------------------------------------------------------------------
+[debug] [2026-06-23T02:11:33.584Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only firestore:rules --project platino-hub --dry-run
+[debug] [2026-06-23T02:11:33.584Z] CLI Version:   15.19.1
+[debug] [2026-06-23T02:11:33.584Z] Platform:      win32
+[debug] [2026-06-23T02:11:33.584Z] Node Version:  v24.16.0
+[debug] [2026-06-23T02:11:33.585Z] Time:          Mon Jun 22 2026 23:11:33 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2026-06-23T02:11:33.585Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-23T02:11:35.905Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-06-23T02:11:35.906Z] > authorizing via signed-in user (tafarelmoreira2015@gmail.com)
+[debug] [2026-06-23T02:11:35.906Z] [iam] checking project platino-hub for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2026-06-23T02:11:35.909Z] Checked if tokens are valid: false, expires at: 1782176863465
+[debug] [2026-06-23T02:11:35.909Z] Checked if tokens are valid: false, expires at: 1782176863465
+[debug] [2026-06-23T02:11:35.909Z] > refreshing access token with scopes: []
+[debug] [2026-06-23T02:11:35.913Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-06-23T02:11:35.914Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-06-23T02:11:36.125Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-06-23T02:11:36.126Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-06-23T02:11:36.142Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/platino-hub:testIamPermissions [none]
+[debug] [2026-06-23T02:11:36.142Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/platino-hub:testIamPermissions  x-goog-user-project=platino-hub
+[debug] [2026-06-23T02:11:36.143Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/platino-hub:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2026-06-23T02:11:37.048Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/platino-hub:testIamPermissions 200
+[debug] [2026-06-23T02:11:37.048Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/platino-hub:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[info] 
+[info] === Deploying to 'platino-hub'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2026-06-23T02:11:37.058Z] Checked if tokens are valid: true, expires at: 1782184295126
+[debug] [2026-06-23T02:11:37.058Z] Checked if tokens are valid: true, expires at: 1782184295126
+[debug] [2026-06-23T02:11:37.059Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/platino-hub/databases/(default) [none]
+[debug] [2026-06-23T02:11:38.087Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/platino-hub/databases/(default) 200
+[debug] [2026-06-23T02:11:38.087Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/platino-hub/databases/(default) {"name":"projects/platino-hub/databases/(default)","uid":"032a6d43-3567-4745-bba1-58c8d79167ef","createTime":"2026-06-10T10:29:25.204571Z","updateTime":"2026-06-10T10:29:25.204571Z","locationId":"nam5","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2026-06-23T01:08:48.475670Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"s","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"ILqXzeqjnJUDMPKfjsXb/JQD"}
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2026-06-23T02:11:38.089Z] Checked if tokens are valid: true, expires at: 1782184295126
+[debug] [2026-06-23T02:11:38.090Z] Checked if tokens are valid: true, expires at: 1782184295126
+[debug] [2026-06-23T02:11:38.090Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/platino-hub:test [none]
+[debug] [2026-06-23T02:11:38.090Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/platino-hub:test [omitted]
+[debug] [2026-06-23T02:11:39.468Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/platino-hub:test 200

@@ -1,4 +1,11 @@
 export default function handler(request, response) {
+  if (request.method !== "GET") {
+    response.setHeader("Allow", "GET");
+    return response.status(405).json({
+      error: "Method not allowed."
+    });
+  }
+
   const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,

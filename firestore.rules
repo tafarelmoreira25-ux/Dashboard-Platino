@@ -8,7 +8,47 @@ service cloud.firestore {
 
     function isManagement() {
       return signedIn()
-        && request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2';
+        && (
+          request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
+          || request.auth.token.email == 'gestao@platino.com'
+        );
+    }
+
+    function isValidShortText(value, maxSize) {
+      return value is string
+        && value.size() > 0
+        && value.size() <= maxSize;
+    }
+
+    function isValidFeedbackCreate() {
+      let data = request.resource.data;
+      return request.resource.data.keys().hasOnly([
+          'type',
+          'sector',
+          'subject',
+          'message',
+          'anonymous',
+          'submittedBy',
+          'createdAt',
+          'handled'
+        ])
+        && isValidShortText(data.type, 40)
+        && isValidShortText(data.sector, 80)
+        && isValidShortText(data.subject, 140)
+        && isValidShortText(data.message, 2000)
+        && data.anonymous is bool
+        && isValidShortText(data.submittedBy, 160)
+        && isValidShortText(data.createdAt, 40)
+        && data.handled == false;
+    }
+
+    function isValidFeedbackManagementUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'handled',
+          'handledAt',
+          'handledBy'
+        ])
+        && request.resource.data.handled is bool;
     }
 
     match /appContent/{document} {
@@ -18,9 +58,9 @@ service cloud.firestore {
     }
 
     match /feedbacks/{feedbackId} {
-      allow create: if signedIn()
-        && request.resource.data.handled == false;
-      allow read, update: if isManagement();
+      allow create: if signedIn() && isValidFeedbackCreate();
+      allow read: if isManagement();
+      allow update: if isManagement() && isValidFeedbackManagementUpdate();
       allow delete: if false;
     }
   }
