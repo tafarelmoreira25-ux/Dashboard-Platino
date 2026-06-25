@@ -11,6 +11,12 @@ service cloud.firestore {
         && (
           request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
           || request.auth.token.email == 'gestao@platino.com'
+          || request.auth.token.email == 'tafarel@platino.com'
+          || request.auth.token.email == 'tafarel.moreira@platino.com'
+          || request.auth.token.email == 'tafarelmoreira@platino.com'
+          || request.auth.token.email == 'supervisao@platino.com'
+          || request.auth.token.email == 'diretoria@platino.com'
+          || request.auth.token.email == 'admin@platino.com'
         );
     }
 
@@ -30,6 +36,7 @@ service cloud.firestore {
           'anonymous',
           'submittedBy',
           'createdAt',
+          'createdAtServer',
           'handled'
         ])
         && isValidShortText(data.type, 40)
@@ -39,6 +46,7 @@ service cloud.firestore {
         && data.anonymous is bool
         && isValidShortText(data.submittedBy, 160)
         && isValidShortText(data.createdAt, 40)
+        && data.createdAtServer is timestamp
         && data.handled == false;
     }
 

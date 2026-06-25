@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo Apresentacao - Platino Solucoes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-slide: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-light: #F8FAFC;
+            --metallic-blue: linear-gradient(135deg, #0F2B56 0%, #1A4480 30%, #2C68C2 50%, #1A4480 70%, #0F2B56 100%);
+            --metallic-border: #7EA3D4;
+            --metallic-shadow: inset 0 0 15px rgba(255,255,255,0.15), 0 10px 20px rgba(0,0,0,0.15);
+            --wa-bg: #EFEAE2;
+            --wa-header: #075E54;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            overflow: hidden;
+        }
+
+        .presentation-frame {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            background-color: #CBD5E1;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .slide-container {
+            background-color: var(--bg-slide);
+            height: 100%;
+            width: 100%;
+            padding: 50px 80px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .slide-container.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1, h2, h3 {
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+            width: 100%;
+        }
+
+        .slide-title {
+            font-size: 38px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 15px;
+            color: #0F2B56;
+            text-align: left;
+        }
+
+        p, li { font-size: 18px; line-height: 1.6; }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #0F2B56;
+            margin-bottom: 20px;
+            background-color: #0F2B56;
+            object-fit: cover;
+            box-shadow: 0 18px 38px rgba(15,43,86,0.22);
+        }
+
+        .card-metallic {
+            background: var(--metallic-blue);
+            border: 1px solid var(--metallic-border);
+            border-radius: 12px;
+            box-shadow: var(--metallic-shadow);
+            padding: 35px;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .card-metallic h3 {
+            color: #FFFFFF;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 26px;
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #F8FAFC;
+            padding: 18px 25px;
+            border-radius: 8px;
+            border-left: 5px solid #0F2B56;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            background: #0F2B56;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(15, 43, 86, 0.3);
+        }
+
+        .step-text h4 {
+            color: #0F2B56;
+            font-size: 18px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+        }
+
+        .step-text p {
+            font-size: 16px;
+            color: #475569;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .wa-mockup {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--wa-bg);
+            border-radius: 16px;
+            border: 2px solid #E2E8F0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            margin: 0 auto;
+        }
+
+        .wa-header {
+            background: var(--wa-header);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #FFF;
+        }
+
+        .wa-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #FFF;
+            border: 2px solid #FFF;
+            object-fit: cover;
+        }
+
+        .wa-title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            color: #FFF;
+        }
+
+        .wa-subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .wa-body {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .wa-bubble {
+            background: var(--metallic-blue);
+            border: 1px solid var(--metallic-border);
+            box-shadow: var(--metallic-shadow);
+            color: #FFFFFF;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 12px;
+            max-width: 90%;
+            font-size: 17px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .wa-bubble::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -15px;
+            border-right: 15px solid #0F2B56;
+            border-bottom: 15px solid transparent;
+        }
+
+        .slide-controls {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn-nav {
+            background-color: #0F2B56;
+            color: #FFF;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+
+        .btn-nav:hover { background-color: #1A4480; }
+        .btn-nav:disabled { background-color: #94A3B8; cursor: not-allowed; }
+
+        .btn-action {
+            background-color: #F8FAFC;
+            color: #0F2B56;
+            border: 2px solid #0F2B56;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            align-self: flex-start;
+        }
+
+        .btn-action:hover { background-color: #0F2B56; color: #FFFFFF; }
+
+        .btn-download {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb 48%, #0f4fb8);
+            color: #ffffff;
+            border: 1px solid rgba(147, 197, 253, 0.7);
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+            margin-top: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(135deg, #0f4fb8, #1d4ed8);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px rgba(37, 99, 235, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        #toast-msg {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10B981;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+            animation: dropDown 0.3s ease-out;
+        }
+
+        @keyframes dropDown {
+            from { top: -50px; opacity: 0; }
+            to { top: 40px; opacity: 1; }
+        }
+
+        .ai-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid var(--metallic-border);
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: none;
+            height: 90px;
+        }
+
+        .ai-input:focus {
+            outline: none;
+            border-color: #0F2B56;
+            box-shadow: 0 0 10px rgba(15, 43, 86, 0.2);
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.36);
+            transition: transform 0.2s;
+        }
+
+        .btn-ai:hover { transform: translateY(-2px); }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 45% 55%;
+            gap: 40px;
+            width: 100%;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-frame">
+        <div id="toast-msg"><i class="fa-solid fa-check-circle"></i> Mensagem copiada com sucesso!</div>
+
+        <div class="slide-container active" id="slide-0">
+            <div class="content-area" style="text-align: center;">
+                <img src="assets/platino-infohub-icon.png" alt="Logo Platino" class="brand-logo">
+                <h1 style="font-size: 56px; color: #0F2B56; margin-bottom: 10px; text-align: center;">Guia Pratico da Equipe</h1>
+                <h2 style="font-size: 28px; color: #475569; font-family: 'Open Sans', sans-serif; font-weight: 400; text-align: center;">Roteiro de Abertura de Grupos e Coleta de Documentos</h2>
+            </div>
+        </div>
+
+        <div class="slide-container" id="slide-1">
+            <h2 class="slide-title">1º Passo: A Imagem Oficial do Grupo</h2>
+            <div class="content-area">
+                <div class="two-column">
+                    <div class="card-metallic" style="align-items: center; text-align: center; padding: 40px;">
+                        <img src="assets/capa-grupo-atendimento-platino-icon.png" alt="Capa do Grupo Platino" style="width: 220px; height: 220px; border-radius: 50%; border: 4px solid #FFF; box-shadow: 0 10px 20px rgba(0,0,0,0.4); background-color: #0F2B56; object-fit: cover;">
+                        <a href="assets/capa-grupo-atendimento-platino-icon.png" download="capa_grupo_platino.png" class="btn-download">
+                            <i class="fa-solid fa-download"></i> Baixar Capa do Grupo
+                        </a>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size: 28px; color: #0F2B56; margin-bottom: 25px;">Instruções de Abertura</h3>
+                        <div class="step-list">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">
+                                    <h4>Criação do Grupo</h4>
+                                    <p>Inicie um novo grupo de WhatsApp dedicado ao atendimento.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">
+                                    <h4>Inclusão de Participantes</h4>
+                                    <p>Adicione: <strong>Cliente, Consultora e Administrativo</strong>.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">
+                                    <h4>Download da Imagem</h4>
+                                    <p>Clique no botão azul ao lado para salvar a foto oficial.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-text">
+                                    <h4>Configuração do Perfil</h4>
+                                    <p>Defina o arquivo baixado como a foto de perfil do grupo criado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-container" id="slide-2">
+            <h2 class="slide-title">2º Passo: Apresentação e Segurança</h2>
+            <div class="content-area">
+                <p style="text-align: left; width: 100%; margin-bottom: 15px; font-weight: 600; color: #475569;">Assim que o grupo for criado e a foto inserida, envie esta mensagem:</p>
+                <div class="wa-mockup">
+                    <div class="wa-header">
+                        <img src="assets/capa-grupo-atendimento-platino-icon.png" class="wa-avatar" alt="Avatar">
+                        <div>
+                            <p class="wa-title">GRUPO DO CLIENTE</p>
+                            <p class="wa-subtitle">Você, Cliente, Consultora...</p>
+                        </div>
+                    </div>
+                    <div class="wa-body">
+                        <div class="wa-bubble">
+                            Olá, <strong>[Nome do Cliente]</strong>! Tudo bem? Seja muito bem-vindo(a) ao seu grupo de atendimento exclusivo da Platino Solucões Financeiras.<br><br>
+                            Meu nome e <strong>[Seu Nome]</strong>, faço parte do departamento Jurídico, e estou aqui para darmos inicio as tratativas da sua revisão de contrato.<br><br>
+                            <strong>Aviso rapido de Seguranca:</strong> Para garantir a sua total proteção contra golpes e confirmar a autenticidade do nosso atendimento, geramos uma senha de seguranca de 4 digitos exclusiva para este grupo: <strong>[XXXX]</strong>.<br><br>
+                            Nossos consultores sempre dirão essa senha a você em eventuais contatos. Você nunca precisará informá-la a ninguém, combinado?
+                        </div>
+                        <textarea id="msg1" style="position: absolute; left: -9999px;">Olá, [Nome do Cliente]! Tudo bem? Seja muito bem-vindo(a) ao seu grupo de atendimento exclusivo da Platino Solucões Financeiras.
+
+Meu nome é [Seu Nome], faço parte do departamento Jurídico e estou aqui para darmos início às tratativas da sua revisão de contrato.
+
+Aviso rápido de segurança: Para garantir a sua total proteção contra golpes e confirmar a autenticidade do nosso atendimento, geramos uma senha de segurança de 4 dígitos exclusiva para este grupo: [XXXX]</textarea>
+                        <button class="btn-action" onclick="copiarTexto('msg1')">
+                            <i class="fa-regular fa-copy"></i> Copiar Mensagem 1
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-container" id="slide-3">
+            <h2 class="slide-title">3º Passo: Solicitacao de Documentos</h2>
+            <div class="content-area">
+                <p style="text-align: left; width: 100%; margin-bottom: 15px; font-weight: 600; color: #475569;">Logo apos a mensagem de boas-vindas, envie o checklist de documentos:</p>
+                <div class="wa-mockup">
+                    <div class="wa-header">
+                        <img src="assets/capa-grupo-atendimento-platino-icon.png" class="wa-avatar" alt="Avatar">
+                        <div><p class="wa-title">GRUPO DO CLIENTE</p></div>
+                    </div>
+                    <div class="wa-body" style="max-height: 450px;">
+                        <div class="wa-bubble">
+                            Para darmos o primeiro passo e analisarmos o seu caso com toda a atenção que ele merece, precisamos de alguns documentos. Eles são primordiais e a base do nosso protocolo de revisão, garantindo que tudo seja feito com precisão e agilidade.<br><br>
+                            Por favor, nos envie fotos legíveis ou PDFs dos seguintes itens (todos em nome do financiado):<br><br>
+                            - CNH ou RG (precisa conter o número do CPF);<br>
+                            - Comprovante de residência atualizado;<br>
+                            - Última parcela paga (comprovante ou foto do carnê);<br>
+                            - Contrato do financiamento ou empréstimo;<br>
+                            - Documento do veículo (em casos de financiamento automotivo).<br><br>
+                            Se você não tiver o contrato em mãos ou encontrar qualquer dificuldade para enviar os arquivos, fique tranquilo(a)! Nossa equipe está à disposição aqui no grupo para te dar todo o suporte necessário.
+                        </div>
+                        <textarea id="msg2" style="position: absolute; left: -9999px;">Para darmos o primeiro passo e analisarmos o seu caso com toda a atenção que ele merece, precisamos de alguns documentos. Eles são primordiais e a base do nosso protocolo de revisão, garantindo que tudo seja feito com precisão e agilidade.
+
+Por favor, nos envie fotos legíveis ou PDFs dos seguintes itens (todos em nome do financiado):
+- CNH ou RG (precisa conter o número do CPF);
+- Comprovante de residência atualizado;
+- Última parcela paga (comprovante ou foto do carnê);
+- Contrato do financiamento ou empréstimo;
+- Documento do veículo (em casos de financiamento automotivo).
+
+Se você não tiver o contrato em mãos ou encontrar qualquer dificuldade para enviar os arquivos, fique tranquilo(a)! Nossa equipe está à disposição aqui no grupo para te dar todo o suporte necessário.</textarea>
+                        <button class="btn-action" onclick="copiarTexto('msg2')">
+                            <i class="fa-regular fa-copy"></i> Copiar Mensagem 2
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-container" id="slide-4">
+            <h2 class="slide-title">4º Passo: Solicitacao do GOV.BR</h2>
+            <div class="content-area">
+                <p style="text-align: left; width: 100%; margin-bottom: 15px; font-weight: 700; color: #B91C1C;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> ATENCAO: Envie esta mensagem APENAS apos o cliente ter mandado os documentos!
+                </p>
+                <div class="wa-mockup">
+                    <div class="wa-header">
+                        <img src="assets/capa-grupo-atendimento-platino-icon.png" class="wa-avatar" alt="Avatar">
+                        <div><p class="wa-title">GRUPO DO CLIENTE</p></div>
+                    </div>
+                    <div class="wa-body" style="max-height: 450px;">
+                        <div class="wa-bubble">
+                            Muito obrigado pelo envio dos documentos, <strong>[Nome do Cliente]</strong>! Já recebemos e conferimos por aqui.<br><br>
+                            Agora, vamos avançar para a próxima etapa administrativa do seu caso. Para que possamos realizar o requerimento oficial e registrar a sua revisão de contrato na plataforma adequada, precisaremos temporariamente do seu acesso ao Gov.br.<br><br>
+                            Fique tranquilo(a), pois essa tratativa é um procedimento padrão e estritamente administrativo. O acesso será utilizado pela nossa equipe única e exclusivamente para o Advogado incluir o seu caso no protocolo de revisão.<br><br>
+                            Por favor, nos informe:<br>
+                            <strong>CPF: ></strong><br>
+                            <strong>Senha do Gov.br: ></strong><br><br>
+                            Assim que o requerimento for registrado, nós te avisaremos por aqui para que você possa acompanhar!
+                        </div>
+                        <textarea id="msg3" style="position: absolute; left: -9999px;">Muito obrigado pelo envio dos documentos, [Nome do Cliente]! Já recebemos e conferimos por aqui.
+
+Agora, vamos avançar para a próxima etapa administrativa do seu caso. Para que possamos realizar o requerimento oficial e registrar a sua revisão de contrato na plataforma adequada, precisaremos temporariamente do seu acesso ao Gov.br.
+
+Fique tranquilo(a), pois essa tratativa é um procedimento padrão e estritamente administrativo. O acesso será utilizado pela nossa equipe única e exclusivamente para o Advogado incluir o seu caso no protocolo de revisão.
+
+Por favor, nos informe:
+CPF: >
+Senha do Gov.br: >
+
+Assim que o requerimento for registrado, nós te avisaremos por aqui para que você possa acompanhar!</textarea>
+                        <button class="btn-action" onclick="copiarTexto('msg3')">
+                            <i class="fa-regular fa-copy"></i> Copiar Mensagem 3
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-container" id="slide-5">
+            <h2 class="slide-title">Estrategia: Cliente recusou o Gov.br</h2>
+            <div class="content-area">
+                <p style="text-align: left; width: 100%; margin-bottom: 30px; font-weight: 600; color: #475569;">
+                    Se o cliente questionar ou sentir receio, utilize os argumentos abaixo nos cards azuis:
+                </p>
+                <div class="two-column" style="grid-template-columns: 1fr 1fr;">
+                    <div class="card-metallic">
+                        <h3>1. Termo de Responsabilidade</h3>
+                        <p style="margin-bottom: 20px; font-size: 16px; color: #CBD5E1;">Mostre que a empresa atua de forma legalizada.</p>
+                        <p style="font-style: italic; background: rgba(0,0,0,0.25); padding: 20px; border-radius: 8px; font-size: 18px; line-height: 1.5; border-left: 4px solid #F8FAFC;">
+                            "Entendemos sua preocupação, Sr(a). [Nome]. Por isso, trabalhamos respaldados por um Termo de Responsabilidade que assegura o sigilo total das suas informações, protegendo o seu direito.
+"
+                        </p>
+                    </div>
+                    <div class="card-metallic">
+                        <h3>2. Uso Restrito</h3>
+                        <p style="margin-bottom: 20px; font-size: 16px; color: #CBD5E1;">Deixe claro que o acesso não será retido.</p>
+                        <p style="font-style: italic; background: rgba(0,0,0,0.25); padding: 20px; border-radius: 8px; font-size: 18px; line-height: 1.5; border-left: 4px solid #F8FAFC;">
+                            "Fique tranquilo(a), o acesso é estritamente administrativo e temporário. Após o advogado realizar o protocolo, o sistema é deslogado e a senha não fica salva em nossa base de dados.
+"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="slide-container" id="slide-6">
+            <h2 class="slide-title">Argumento Final: A Lei de Dados</h2>
+            <div class="content-area" style="justify-content: center;">
+                <div class="card-metallic" style="padding: 50px;">
+                    <div style="display: flex; gap: 40px; align-items: center;">
+                        <i class="fa-solid fa-scale-balanced" style="font-size: 100px; color: #FFFFFF; opacity: 0.9;"></i>
+                        <div>
+                            <h3 style="font-size: 34px; border: none; padding: 0; margin-bottom: 15px;">Conformidade LGPD</h3>
+                            <p style="font-size: 20px; line-height: 1.5; margin-bottom: 25px; color: #E2E8F0;">
+                                Utilize a lei federal como seu argumento de autoridade. Isso mostra ao cliente que a empresa opera em alto nivel de seguranca.
+                            </p>
+                            <p style="font-style: italic; background: rgba(0,0,0,0.25); padding: 25px; border-left: 5px solid #10B981; border-radius: 4px; font-size: 20px; line-height: 1.6;">
+                                "Como garantido por lei quanto à privacidade de dados de clientes, nós seguimos e mantemos a LGPD como prioridade para todos os nossos clientes, e para todos os dados e documentos fornecidos para as tratativas."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-controls">
+            <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled>
+                <i class="fa-solid fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-nav" id="btn-next" onclick="nextSlide()">
+                Proximo <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function updateSlides() {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlideIndex].classList.add('active');
+            btnPrev.disabled = currentSlideIndex === 0;
+            btnNext.disabled = currentSlideIndex === slides.length - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                updateSlides();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateSlides();
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') nextSlide();
+            if (event.key === 'ArrowLeft') prevSlide();
+        });
+
+        function showToast() {
+            const toast = document.getElementById('toast-msg');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function copiarTexto(idElemento) {
+            const copyText = document.getElementById(idElemento);
+            copyText.style.position = 'static';
+            copyText.style.opacity = '1';
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            copyText.style.position = 'absolute';
+            copyText.style.left = '-9999px';
+            showToast();
+        }
+
+        function gerarRespostaIA() {
+            const clientMessage = document.getElementById('ai-client-message').value.trim();
+            const outputBubble = document.getElementById('ai-output-bubble');
+            const copyArea = document.getElementById('msg-ai');
+            const copyBtn = document.getElementById('ai-copy-btn');
+
+            if (!clientMessage) {
+                alert('Por favor, digite a mensagem ou objecao do cliente.');
+                return;
+            }
+
+            const resposta = `Entendo sua preocupacao, [Nome]. Esse cuidado e muito importante. A Platino trabalha com procedimento administrativo, sigilo das informacoes e responsabilidade no tratamento dos dados. O acesso solicitado e temporario e utilizado somente para dar andamento ao protocolo da sua revisao. Assim que a etapa for concluida, avisamos voce aqui no grupo.`;
+            outputBubble.innerHTML = resposta.replace(/\n/g, '<br>');
+            copyArea.value = resposta;
+            copyBtn.style.display = 'inline-flex';
+        }
+    </script>
+</body>
+</html>
