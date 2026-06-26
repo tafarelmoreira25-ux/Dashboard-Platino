@@ -145,6 +145,7 @@
             transition: all 0.2s ease;
             border: 1px solid transparent;
             background: transparent;
+            cursor: pointer;
         }
 
         .nav-btn i {
@@ -654,6 +655,8 @@
         #section-avisos .metal-button {
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            isolation: isolate;
             color: #07111f !important;
             background:
                 linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
@@ -668,6 +671,8 @@
         .metal-button {
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            isolation: isolate;
             color: #ffffff !important;
             -webkit-text-fill-color: #ffffff !important;
             background:
@@ -724,6 +729,28 @@
             background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.75) 42%, transparent 58%);
             transform: translateX(-120%);
             transition: transform 0.7s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .metal-login-button > *,
+        .metal-button > * {
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        a,
+        button,
+        [role="button"],
+        .dot {
+            cursor: pointer;
+        }
+
+        .content-section :is(.absolute, .fixed)[class*="blur"],
+        .content-section :is(.ph-fill, .ph)[class*="absolute"],
+        .training-card::before {
+            pointer-events: none;
         }
 
         .metal-login-button:hover::before,
@@ -790,6 +817,25 @@
             }
         }
 
+        .security-footer {
+            color: #dbeafe;
+        }
+
+        .security-footer span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid rgba(147, 197, 253, 0.18);
+            background: rgba(15, 23, 42, 0.42);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 24px rgba(15, 23, 42, 0.14);
+            backdrop-filter: blur(12px);
+            color: #bfdbfe;
+        }
+
+        .security-footer i {
+            color: #93c5fd;
+        }
+
         :root {
             --platino-ocean: #092b55;
             --platino-ocean-soft: #0d3c74;
@@ -805,6 +851,24 @@
             background:
                 radial-gradient(circle at 10% 0%, rgba(203, 213, 225, 0.52), transparent 30%),
                 linear-gradient(135deg, #ffffff 0%, #f8fafc 46%, #e5e7eb 100%) !important;
+        }
+
+        #app-container {
+            align-items: stretch;
+        }
+
+        #sidebar {
+            min-height: 100vh;
+            background:
+                linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%) !important;
+        }
+
+        @media (min-width: 768px) {
+            #sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
         }
 
         .app-topbar {
@@ -1146,10 +1210,10 @@
             width: 100%;
             height: 100%;
             display: block;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
-            border-radius: 9999px;
-            background: #020617;
+            border-radius: 0.45rem;
+            background: transparent;
         }
 
         .text-reveal {
@@ -1225,7 +1289,7 @@
 
    <button class="dev-badge-container" type="button" aria-label="Developed by Tafarel Moreira">
     <div class="icon-circle">
-        <img src="assets/tafarel-moreira-logo-badge.png" alt="Logo Tafarel Moreira">
+        <img src="assets/dev-badge-inteligente.png" alt="Ícone inteligente">
     </div>
 
     <div class="text-reveal">
@@ -1580,6 +1644,7 @@
                         <div class="relative flex flex-col items-center justify-center gap-3 mb-6 text-center">
                             <div>
                                 <h3 class="metallic-title mt-1 text-2xl font-black flex items-center justify-center gap-2"><i class="text-2xl"></i> Ranking</h3>
+                                <p id="ranking-sync-status" class="mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100/70">Aguardando sincronização da planilha</p>
                             </div>
                             <button onclick="openRankingEditor()" class="gestor-only metal-button hidden items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
@@ -1605,11 +1670,11 @@
                                             <div id="metal-comercial-fill" class="metal-level-fill emerald" style="--level-width: 36%"></div>
                                         </div>
                                         <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-emerald-100/80">
-                                            <span id="metal-comercial-label" class="font-bold uppercase tracking-wider">Bronze mensal</span>
+                                            <span id="metal-comercial-label" class="font-bold uppercase tracking-wider">Status do mês: Aquecendo</span>
                                             <span id="metal-comercial-total" class="money-value">R$ 53.499,65 / R$ 150.000,00</span>
                                         </div>
                                         <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider money-value">
-                                            <span id="metal-comercial-gap">Gap: R$ 96.500,35</span>
+                                            <span id="metal-comercial-gap">Total: R$ 53.499,65</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1628,11 +1693,11 @@
                                             <div id="metal-juridico-fill" class="metal-level-fill indigo" style="--level-width: 61%"></div>
                                         </div>
                                         <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-indigo-100/80">
-                                            <span id="metal-juridico-label" class="font-bold uppercase tracking-wider">Prata mensal</span>
+                                            <span id="metal-juridico-label" class="font-bold uppercase tracking-wider">Status do mês: Em alta</span>
                                             <span id="metal-juridico-total" class="money-value">R$ 188.207,80 / R$ 310.000,00</span>
                                         </div>
                                         <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider money-value">
-                                            <span id="metal-juridico-gap">Gap: R$ 121.792,20</span>
+                                            <span id="metal-juridico-gap">Total: R$ 188.207,80</span>
                                         </div>
                                     </div>
                                 </div>
@@ -2297,10 +2362,10 @@
                 </div>
             </section>
             
-        <div class="flex justify-center gap-6 text-xs text-slate-500 mt-5 mb-4">
-            <span>Ambiente Seguro</span>
-            <span>Acesso Restrito</span>
-            <span>Dados Protegidos</span>
+        <div class="security-footer flex flex-wrap justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.16em] mt-5 mb-4">
+            <span class="rounded-full px-3 py-2"><i class="ph ph-shield-check"></i> Ambiente Seguro</span>
+            <span class="rounded-full px-3 py-2"><i class="ph ph-lock-key"></i> Acesso Restrito</span>
+            <span class="rounded-full px-3 py-2"><i class="ph ph-database"></i> Dados Protegidos</span>
         </div>
         </div>
     </main>
@@ -2348,6 +2413,8 @@
                                 <i class="ph ph-plus"></i> Adicionar
                             </button>
                         </div>
+                        <label class="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-500">Meta da equipe</label>
+                        <input id="editor-ranking-comercial-team-goal" data-ranking-team-goal="comercial" type="text" class="mb-4 w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="R$ 150.000,00" />
                         <div id="editor-ranking-comercial-list" class="space-y-3"></div>
                     </div>
 
@@ -2361,6 +2428,8 @@
                                 <i class="ph ph-plus"></i> Adicionar
                             </button>
                         </div>
+                        <label class="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-500">Meta da equipe</label>
+                        <input id="editor-ranking-juridico-team-goal" data-ranking-team-goal="juridico" type="text" class="mb-4 w-full rounded-xl border border-indigo-100 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" placeholder="R$ 310.000,00" />
                         <div id="editor-ranking-juridico-list" class="space-y-3"></div>
                     </div>
                 </div>
@@ -3511,100 +3580,138 @@
         }
 
         const defaultRankingData = {
+            teamGoals: {
+                comercial: 150000,
+                juridico: 310000
+            },
+            teamTotals: {
+                comercial: 53499.65,
+                juridico: 188207.80
+            },
             comercial: [
-                { name: 'Geovana Xavier', value: 'R$ 5.865,22' },
-                { name: 'Mayara Cardoso', value: 'R$ 3.081,24' },
-                { name: 'Gabriel Paes', value: 'R$ 2.260,00' }
+                { name: 'Geovana Xavier', sold: 5865.22 },
+                { name: 'Mayara Cardoso', sold: 3081.24 },
+                { name: 'Gabriel Paes', sold: 2260 }
             ],
             juridico: [
-                { name: 'Tabata.', value: 'R$14.197,19' },
-                { name: 'Nicole.', value: 'R$8.769,35' },
-                { name: 'Elaine', value: 'R$2.000,00' }
+                { name: 'Tabata.', sold: 14197.19 },
+                { name: 'Nicole.', sold: 8769.35 },
+                { name: 'Elaine', sold: 2000 }
             ]
         };
 
-        const monthlyMetalGoals = {
-            comercial: {
-                goal: 150000,
-                realized: 53499.65
-            },
-            juridico: {
-                goal: 310000,
-                realized: 188207.80
-            }
+        const rankingSectors = ['comercial', 'juridico'];
+        const RANKING_SHEET_SYNC_INTERVAL_MS = 60000;
+        let rankingData = normalizeRankingData(defaultRankingData, { useFallback: true });
+        let rankingExpanded = {
+            comercial: false,
+            juridico: false
         };
-
-        let rankingData = normalizeRankingData(defaultRankingData);
-        let monthlyMetalProgress = loadMonthlyMetalProgress();
+        let rankingSheetSyncTimer = null;
+        let rankingSheetLastSignature = '';
         let chatOpen = false;
 
-        function normalizeRankingData(value = {}) {
+        function normalizeRankingData(value = {}, options = {}) {
+            const useFallback = options.useFallback === true;
             const normalizeList = (items, fallback) => {
-                const source = Array.isArray(items) && items.length
+                const source = Array.isArray(items)
                     ? items
-                    : fallback;
+                    : useFallback
+                    ? fallback
+                    : [];
 
                 return source
                     .map(item => ({
                         name: String(item?.name || '').trim(),
+                        sold: getRankingSold(item),
+                        goal: getRankingGoal(item),
+                        teamGoal: parseRankingValue(item?.teamGoal ?? item?.metaEquipe ?? ''),
+                        teamGap: parseRankingValue(item?.teamGap ?? item?.gapEquipe ?? ''),
                         value: String(item?.value || '').trim()
                     }))
-                    .filter(item => item.name || item.value);
+                    .filter(item => item.name || item.sold || item.goal);
             };
 
-            return {
-                comercial: normalizeList(value.comercial, defaultRankingData.comercial),
-                juridico: normalizeList(value.juridico, defaultRankingData.juridico),
+            const comercial = normalizeList(value.comercial, defaultRankingData.comercial);
+            const juridico = normalizeList(value.juridico, defaultRankingData.juridico);
+            const normalized = {
+                comercial,
+                juridico,
+                teamGoals: {},
+                teamTotals: {},
+                source: value.source || 'manual',
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
+
+            rankingSectors.forEach(sector => {
+                const items = normalized[sector] || [];
+                const defaultGoal = defaultRankingData.teamGoals?.[sector] || 0;
+                const explicitGoal = parseRankingValue(value.teamGoals?.[sector] ?? value[`${sector}TeamGoal`] ?? '');
+                const rowGoal = Math.max(0, ...items.map(item => Number(item.teamGoal) || 0));
+                const teamGoal = explicitGoal || rowGoal || defaultGoal;
+                const explicitTotal = parseRankingValue(value.teamTotals?.[sector] ?? value[`${sector}TeamTotal`] ?? '');
+                const rowTeamGaps = items
+                    .map(item => Number(item.teamGap) || 0)
+                    .filter(item => item > 0);
+                const gapBasedTotal = teamGoal && rowTeamGaps.length
+                    ? Math.max(teamGoal - Math.min(...rowTeamGaps), 0)
+                    : 0;
+                const fallbackTotal = useFallback ? (defaultRankingData.teamTotals?.[sector] || 0) : 0;
+                const summedTotal = items.reduce((sum, item) => sum + getRankingSold(item), 0);
+
+                normalized.teamGoals[sector] = teamGoal;
+                normalized.teamTotals[sector] = explicitTotal || gapBasedTotal || summedTotal || fallbackTotal;
+            });
+
+            return normalized;
         }
 
         function parseRankingValue(value) {
-            const normalized = String(value || '')
-                .replace(/[^\d,.-]/g, '')
-                .replace(/\./g, '')
-                .replace(',', '.');
+            if (typeof value === 'number') {
+                return Number.isFinite(value) ? value : 0;
+            }
+            const raw = String(value || '').trim();
+            const currencyLike = raw.includes(',');
+            const normalized = currencyLike
+                ? raw.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.')
+                : raw.replace(/[^\d.-]/g, '');
             const number = Number.parseFloat(normalized);
             return Number.isFinite(number) ? number : 0;
         }
 
+        function getRankingSold(item) {
+            const numericSold = Number(item?.sold ?? item?.vendido);
+            return Number.isFinite(numericSold) && numericSold > 0
+                ? numericSold
+                : parseRankingValue(item?.sold ?? item?.vendido ?? item?.value ?? '');
+        }
+
+        function getRankingGoal(item) {
+            const numericGoal = Number(item?.goal ?? item?.meta);
+            return Number.isFinite(numericGoal) && numericGoal > 0
+                ? numericGoal
+                : parseRankingValue(item?.goal ?? item?.meta ?? '');
+        }
+
+        function getRankingGap(item) {
+            return Math.max(getRankingGoal(item) - getRankingSold(item), 0);
+        }
+
         function getSortedRankingList(items) {
-            return [...items].sort((a, b) => parseRankingValue(b.value) - parseRankingValue(a.value));
+            return [...items].sort((a, b) => getRankingSold(b) - getRankingSold(a));
         }
 
         function getRankingDepartmentTotal(sector) {
-            return (rankingData[sector] || []).reduce((sum, item) => sum + parseRankingValue(item.value), 0);
+            const explicitTotal = Number(rankingData.teamTotals?.[sector]);
+            if (Number.isFinite(explicitTotal) && explicitTotal > 0) return explicitTotal;
+            return (rankingData[sector] || []).reduce((sum, item) => sum + getRankingSold(item), 0);
         }
 
-        function loadMonthlyMetalProgress() {
-            const fallback = {
-                comercial: monthlyMetalGoals.comercial.realized,
-                juridico: monthlyMetalGoals.juridico.realized
-            };
-            const saved = localStorage.getItem('platinoMonthlyMetalProgress');
-            if (!saved) return fallback;
-
-            try {
-                const parsed = JSON.parse(saved);
-                return {
-                    comercial: Math.max(Number(parsed.comercial) || 0, fallback.comercial),
-                    juridico: Math.max(Number(parsed.juridico) || 0, fallback.juridico)
-                };
-            } catch (error) {
-                console.warn('Erro ao carregar progresso mensal das metas:', error);
-                return fallback;
-            }
-        }
-
-        function syncMonthlyMetalProgressFromRanking() {
-            ['comercial', 'juridico'].forEach(sector => {
-                const baseline = monthlyMetalGoals[sector]?.realized || 0;
-                const rankingTotal = getRankingDepartmentTotal(sector);
-                const currentProgress = monthlyMetalProgress[sector] || baseline;
-                monthlyMetalProgress[sector] = Math.max(baseline, currentProgress, rankingTotal);
-            });
-            localStorage.setItem('platinoMonthlyMetalProgress', JSON.stringify(monthlyMetalProgress));
+        function getRankingTeamGoal(sector) {
+            const configuredGoal = Number(rankingData.teamGoals?.[sector]);
+            if (Number.isFinite(configuredGoal) && configuredGoal > 0) return configuredGoal;
+            return defaultRankingData.teamGoals?.[sector] || 1;
         }
 
         function formatCurrency(value) {
@@ -3614,21 +3721,19 @@
             }).format(value || 0);
         }
 
-        function getMetalLevelName(percent) {
-            if (percent >= 100) return 'Platina mensal';
-            if (percent >= 75) return 'Ouro mensal';
-            if (percent >= 50) return 'Prata mensal';
-            return 'Bronze mensal';
+        function getMonthlyStatusName(percent) {
+            if (percent >= 100) return 'Meta batida';
+            if (percent >= 85) return 'Na reta final';
+            if (percent >= 70) return 'Em alta';
+            if (percent >= 50) return 'Ganhando ritmo';
+            if (percent >= 25) return 'Em movimento';
+            return 'Aquecendo';
         }
 
         function renderMonthlyMetalLevels() {
-            syncMonthlyMetalProgressFromRanking();
-
-            ['comercial', 'juridico'].forEach(sector => {
-                const data = monthlyMetalGoals[sector] || {};
-                const goal = data.goal || 1;
-                const realized = monthlyMetalProgress[sector] || data.realized || 0;
-                const gap = Math.max(goal - realized, 0);
+            rankingSectors.forEach(sector => {
+                const goal = getRankingTeamGoal(sector);
+                const realized = getRankingDepartmentTotal(sector);
                 const percent = Math.min(Math.round((realized / goal) * 100), 100);
 
                 const fill = document.getElementById(`metal-${sector}-fill`);
@@ -3639,9 +3744,9 @@
 
                 if (fill) fill.style.setProperty('--level-width', `${percent}%`);
                 if (percentEl) percentEl.innerText = `${percent}%`;
-                if (labelEl) labelEl.innerText = getMetalLevelName(percent);
+                if (labelEl) labelEl.innerText = `Status do mês: ${getMonthlyStatusName(percent)}`;
                 if (totalEl) totalEl.innerText = `${formatCurrency(realized)} / ${formatCurrency(goal)}`;
-                if (gapEl) gapEl.innerText = `Gap: ${formatCurrency(gap)}`;
+                if (gapEl) gapEl.innerText = `Total: ${formatCurrency(realized)}`;
             });
         }
 
@@ -3672,6 +3777,30 @@
                 label: 'Resultados'
             });
             renderMonthlyMetalLevels();
+            updateRankingSyncStatus();
+        }
+
+        function updateRankingSyncStatus(message = '') {
+            const statusEl = document.getElementById('ranking-sync-status');
+            if (!statusEl) return;
+
+            if (message) {
+                statusEl.innerText = message;
+                statusEl.className = 'mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-100/80';
+                return;
+            }
+
+            if (rankingData?.source === 'googleSheets') {
+                const updated = rankingData.updatedAt
+                    ? new Date(rankingData.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                    : '';
+                statusEl.innerText = `Google Sheets sincronizado${updated ? ` às ${updated}` : ''}`;
+                statusEl.className = 'mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-100/80';
+                return;
+            }
+
+            statusEl.innerText = 'Usando ranking salvo/manual';
+            statusEl.className = 'mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100/70';
         }
 
         function renderRankingDepartment(sector, items, config) {
@@ -3693,11 +3822,25 @@
                 return;
             }
 
-            listEl.innerHTML = sorted.map((item, index) => {
+            const isExpanded = rankingExpanded[sector] === true;
+            const visibleItems = isExpanded ? sorted : sorted.slice(0, 5);
+            const hiddenCount = Math.max(sorted.length - visibleItems.length, 0);
+            const buttonLabel = isExpanded
+                ? 'Ver menos'
+                : `Ver mais ${hiddenCount ? `(${hiddenCount})` : ''}`;
+
+            listEl.innerHTML = visibleItems.map((item, index) => {
                 const position = index + 1;
                 const isLeader = index === 0;
-                const badgeSrc = position <= 4 ? `assets/ranking-position-${position}.png` : 'assets/ranking-position-4.png';
-                const positionBadge = `<img src="${badgeSrc}" alt="${position}ª posição" class="ranking-position-img">`;
+                const positionBadge = position <= 4
+                    ? `<img src="assets/ranking-position-${position}.png" alt="${position}ª posição" class="ranking-position-img">`
+                    : `<span class="ranking-position-img flex items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-black text-white">#${position}</span>`;
+                const sold = getRankingSold(item);
+                const goal = getRankingGoal(item);
+                const gap = getRankingGap(item);
+                const goalLine = goal
+                    ? `<p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100/70">Meta: ${formatCurrency(goal)} • Falta: ${formatCurrency(gap)}</p>`
+                    : '';
                 const motionIcon = isLeader
                     ? '<i class="ph-fill ph-fire text-orange-400 text-2xl animate-pulse"></i>'
                     : '<i class="ph ph-arrow-up-right text-blue-200/70 text-xl"></i>';
@@ -3707,7 +3850,8 @@
                         ${positionBadge}
                         <div class="min-w-0 flex-1">
                             <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Sem nome')}</p>
-                            <p class="mt-1 text-sm font-black money-value">${escapeHtml(item.value || 'R$ 0,00')}</p>
+                            <p class="mt-1 text-sm font-black money-value">${formatCurrency(sold)}</p>
+                            ${goalLine}
                         </div>
                         <div class="flex flex-col items-end gap-1">
                             ${motionIcon}
@@ -3716,6 +3860,19 @@
                     </div>
                 `;
             }).join('');
+
+            if (sorted.length > 5) {
+                listEl.innerHTML += `
+                    <button type="button" onclick="toggleRankingList('${sector}')" class="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-blue-100 transition hover:bg-white/10">
+                        ${buttonLabel}
+                    </button>
+                `;
+            }
+        }
+
+        function toggleRankingList(sector) {
+            rankingExpanded[sector] = !rankingExpanded[sector];
+            renderRanking();
         }
 
         function openRankingEditor() {
@@ -3733,6 +3890,9 @@
             const listEl = document.getElementById(`editor-ranking-${sector}-list`);
             if (!listEl) return;
 
+            const teamGoalInput = document.getElementById(`editor-ranking-${sector}-team-goal`);
+            if (teamGoalInput) teamGoalInput.value = formatCurrency(getRankingTeamGoal(sector));
+
             const items = rankingData[sector] || [];
             listEl.innerHTML = items.map((item, index) => `
                 <div class="ranking-editor-row rounded-2xl p-3" data-ranking-row data-sector="${sector}">
@@ -3742,23 +3902,32 @@
                             <i class="ph ph-trash"></i> Remover
                         </button>
                     </div>
-                    <div class="grid gap-2 sm:grid-cols-[1fr_160px]">
+                    <div class="grid gap-2 sm:grid-cols-[1fr_150px_150px]">
                         <input data-ranking-name type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Nome do membro" value="${escapeHtml(item.name)}" />
-                        <input data-ranking-value type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Valor vendido" value="${escapeHtml(item.value)}" />
+                        <input data-ranking-value type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Vendido" value="${escapeHtml(formatCurrency(getRankingSold(item)))}" />
+                        <input data-ranking-goal type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Meta individual" value="${getRankingGoal(item) ? escapeHtml(formatCurrency(getRankingGoal(item))) : ''}" />
                     </div>
                 </div>
             `).join('');
         }
 
         function syncRankingEditorState() {
-            ['comercial', 'juridico'].forEach(sector => {
+            rankingData.teamGoals = rankingData.teamGoals || {};
+            rankingData.teamTotals = rankingData.teamTotals || {};
+
+            rankingSectors.forEach(sector => {
+                const teamGoalInput = document.getElementById(`editor-ranking-${sector}-team-goal`);
+                rankingData.teamGoals[sector] = parseRankingValue(teamGoalInput?.value || rankingData.teamGoals?.[sector] || defaultRankingData.teamGoals?.[sector]);
+
                 const rows = document.querySelectorAll(`#editor-ranking-${sector}-list [data-ranking-row]`);
                 rankingData[sector] = Array.from(rows)
                     .map(row => ({
                         name: row.querySelector('[data-ranking-name]')?.value.trim() || '',
-                        value: row.querySelector('[data-ranking-value]')?.value.trim() || ''
+                        sold: parseRankingValue(row.querySelector('[data-ranking-value]')?.value || ''),
+                        goal: parseRankingValue(row.querySelector('[data-ranking-goal]')?.value || '')
                     }))
-                    .filter(item => item.name || item.value);
+                    .filter(item => item.name || item.sold || item.goal);
+                rankingData.teamTotals[sector] = rankingData[sector].reduce((sum, item) => sum + getRankingSold(item), 0);
             });
         }
 
@@ -3789,8 +3958,11 @@
             const status = document.getElementById('ranking-save-status');
             syncRankingEditorState();
             rankingData = normalizeRankingData({
-                comercial: rankingData.comercial.length ? rankingData.comercial : defaultRankingData.comercial,
-                juridico: rankingData.juridico.length ? rankingData.juridico : defaultRankingData.juridico,
+                comercial: rankingData.comercial,
+                juridico: rankingData.juridico,
+                teamGoals: rankingData.teamGoals,
+                teamTotals: rankingData.teamTotals,
+                source: 'manual',
                 updatedAt: new Date().toISOString(),
                 updatedBy: window.firebaseAuthUser?.email || 'Supervisão'
             });
@@ -3820,10 +3992,61 @@
 
         window.applyRemoteRanking = function (remoteData) {
             if (!remoteData?.comercial || !remoteData?.juridico) return;
+            if (rankingData?.source === 'googleSheets' && remoteData.source !== 'googleSheets') return;
             rankingData = normalizeRankingData(remoteData);
             localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
             renderRanking();
         };
+
+        async function refreshRankingFromSheets() {
+            if (window.location.protocol === 'file:') return;
+
+            try {
+                const response = await fetch('/api/ranking-sheet', { cache: 'no-store' });
+                if (response.status === 204 || response.status === 404) return;
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const sheetData = await response.json();
+                if (sheetData?.enabled === false) return;
+
+                const normalized = normalizeRankingData({
+                    ...sheetData,
+                    source: 'googleSheets',
+                    updatedAt: sheetData.updatedAt || new Date().toISOString(),
+                    updatedBy: 'Google Sheets'
+                });
+                if (!normalized.comercial.length && !normalized.juridico.length) return;
+
+                const signature = JSON.stringify({
+                    comercial: normalized.comercial,
+                    juridico: normalized.juridico,
+                    teamGoals: normalized.teamGoals,
+                    teamTotals: normalized.teamTotals
+                });
+                if (signature === rankingSheetLastSignature) return;
+
+                rankingSheetLastSignature = signature;
+                rankingData = normalized;
+                localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
+                renderRanking();
+            } catch (error) {
+                console.warn('Não foi possível sincronizar o ranking com a planilha.', error);
+                updateRankingSyncStatus('Planilha não sincronizada; usando dado salvo/manual');
+            }
+        }
+
+        function startRankingSheetSync() {
+            if (rankingSheetSyncTimer) return;
+            refreshRankingFromSheets();
+            rankingSheetSyncTimer = setInterval(refreshRankingFromSheets, RANKING_SHEET_SYNC_INTERVAL_MS);
+        }
+
+        function stopRankingSheetSync() {
+            if (!rankingSheetSyncTimer) return;
+            clearInterval(rankingSheetSyncTimer);
+            rankingSheetSyncTimer = null;
+            rankingSheetLastSignature = '';
+        }
 
       const defaultAvisosData = {
             main: {
@@ -4600,6 +4823,7 @@
           updateUserAccess(user);
           window.platinoNoticeStore.subscribe();
           window.platinoRankingStore.subscribe();
+          startRankingSheetSync();
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
           }
@@ -4617,6 +4841,7 @@
             stopRankingSubscription();
             stopRankingSubscription = null;
           }
+          stopRankingSheetSync();
           if (stopFeedbackSubscription) {
             stopFeedbackSubscription();
             stopFeedbackSubscription = null;
