@@ -356,6 +356,25 @@
             filter: drop-shadow(0 10px 18px rgba(2, 6, 23, 0.32));
         }
 
+        .ranking-position-fallback {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #dbeafe;
+            font-size: 1.15rem;
+            font-weight: 950;
+            background:
+                radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.5), transparent 18%),
+                radial-gradient(circle at 50% 50%, #1d4ed8 0%, #0f2f75 56%, #071a45 100%);
+            border: 2px solid rgba(191, 219, 254, 0.72);
+            box-shadow:
+                inset 0 0 0 3px rgba(15, 23, 42, 0.72),
+                inset 0 0 16px rgba(96, 165, 250, 0.34),
+                0 0 0 1px rgba(250, 204, 21, 0.28),
+                0 10px 18px rgba(2, 6, 23, 0.32);
+        }
+
         .ranking-editor-row {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -3721,6 +3740,13 @@
             }).format(value || 0);
         }
 
+        function formatNumberBR(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value || 0);
+        }
+
         function getMonthlyStatusName(percent) {
             if (percent >= 100) return 'Meta batida';
             if (percent >= 85) return 'Na reta final';
@@ -3803,6 +3829,27 @@
             statusEl.className = 'mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100/70';
         }
 
+        function syncWeeklyResultsFromSheets(sheetData) {
+            const contracts = Number(sheetData?.metrics?.comercialContracts) || 0;
+            const companyTotal = Number(sheetData?.metrics?.companyTotal)
+                || ((Number(sheetData?.teamTotals?.comercial) || 0) + (Number(sheetData?.teamTotals?.juridico) || 0));
+
+            if (!contracts && !companyTotal) return;
+
+            avisosData = normalizeAvisosData({
+                ...avisosData,
+                week: {
+                    ...avisosData.week,
+                    contracts: contracts ? String(contracts) : avisosData.week.contracts,
+                    revenue: companyTotal ? formatNumberBR(companyTotal) : avisosData.week.revenue
+                },
+                updatedAt: avisosData.updatedAt,
+                updatedBy: avisosData.updatedBy
+            });
+            localStorage.setItem('platinoAvisos', JSON.stringify(avisosData));
+            renderAvisos();
+        }
+
         function renderRankingDepartment(sector, items, config) {
             const listEl = document.getElementById(`ranking-${sector}-list`);
             const countEl = document.getElementById(`ranking-${sector}-count`);
@@ -3834,13 +3881,8 @@
                 const isLeader = index === 0;
                 const positionBadge = position <= 4
                     ? `<img src="assets/ranking-position-${position}.png" alt="${position}ª posição" class="ranking-position-img">`
-                    : `<span class="ranking-position-img flex items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-black text-white">#${position}</span>`;
+                    : `<span class="ranking-position-img ranking-position-fallback" aria-label="${position}ª posição">${position}</span>`;
                 const sold = getRankingSold(item);
-                const goal = getRankingGoal(item);
-                const gap = getRankingGap(item);
-                const goalLine = goal
-                    ? `<p class="mt-1 text-[11px] font-bold uppercase tracking-wider text-blue-100/70">Meta: ${formatCurrency(goal)} • Falta: ${formatCurrency(gap)}</p>`
-                    : '';
                 const motionIcon = isLeader
                     ? '<i class="ph-fill ph-fire text-orange-400 text-2xl animate-pulse"></i>'
                     : '<i class="ph ph-arrow-up-right text-blue-200/70 text-xl"></i>';
@@ -3851,7 +3893,6 @@
                         <div class="min-w-0 flex-1">
                             <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Sem nome')}</p>
                             <p class="mt-1 text-sm font-black money-value">${formatCurrency(sold)}</p>
-                            ${goalLine}
                         </div>
                         <div class="flex flex-col items-end gap-1">
                             ${motionIcon}
@@ -4028,6 +4069,7 @@
                 rankingSheetLastSignature = signature;
                 rankingData = normalized;
                 localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
+                syncWeeklyResultsFromSheets(sheetData);
                 renderRanking();
             } catch (error) {
                 console.warn('Não foi possível sincronizar o ranking com a planilha.', error);

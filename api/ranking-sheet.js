@@ -343,6 +343,9 @@ function rowsFromPlatinoSideBySideCsv(text) {
   const rows = [];
   const teamGoals = {};
   const teamTotals = {};
+  const metrics = {
+    comercialContracts: 0
+  };
 
   for (const section of sections) {
     const grouped = new Map();
@@ -359,6 +362,7 @@ function rowsFromPlatinoSideBySideCsv(text) {
       const name = normalizeConsultantName(row[section.consultantIndex]);
       const sold = getNetSoldValue(row, section);
       if (!name || !sold) continue;
+      if (section.sector === "comercial") metrics.comercialContracts += 1;
 
       const key = normalizeNameKey(name);
       const current = grouped.get(key) || {
@@ -386,15 +390,19 @@ function rowsFromPlatinoSideBySideCsv(text) {
     });
   }
 
-  return { rows, teamGoals, teamTotals };
+  return { rows, teamGoals, teamTotals, metrics };
 }
 
-function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}) {
+function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, metrics = {}) {
   const ranking = {
     comercial: [],
     juridico: [],
     teamGoals: {},
     teamTotals: {},
+    metrics: {
+      comercialContracts: Number(metrics.comercialContracts) || 0,
+      companyTotal: 0
+    },
     updatedAt: new Date().toISOString()
   };
 
@@ -421,6 +429,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}) {
       : soldTotal);
   }
 
+  ranking.metrics.companyTotal = (ranking.teamTotals.comercial || 0) + (ranking.teamTotals.juridico || 0);
   return ranking;
 }
 
@@ -438,6 +447,7 @@ export default async function handler(request, response) {
     const rows = [];
     const explicitTeamGoals = {};
     const explicitTeamTotals = {};
+    const metrics = {};
 
     if (sharedUrl || (!comercialUrl && !juridicoUrl)) {
       const csv = await fetchCsv(sharedUrl || getDefaultSheetCsvUrl());
@@ -446,6 +456,7 @@ export default async function handler(request, response) {
         rows.push(...platinoData.rows);
         Object.assign(explicitTeamGoals, platinoData.teamGoals);
         Object.assign(explicitTeamTotals, platinoData.teamTotals);
+        Object.assign(metrics, platinoData.metrics);
       } else {
         rows.push(...rowsFromCsv(csv));
       }
@@ -458,7 +469,7 @@ export default async function handler(request, response) {
     }
 
     response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json(buildRanking(rows, explicitTeamGoals, explicitTeamTotals));
+    return response.status(200).json(buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics));
   } catch (error) {
     return response.status(502).json({
       error: "Nao foi possivel sincronizar a planilha de ranking.",
