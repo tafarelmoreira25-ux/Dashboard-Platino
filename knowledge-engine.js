@@ -226,7 +226,7 @@
 
     function formatText(value) {
         return escapeHtml(value)
-            .replace(/\r?\n[•*-]\s*/g, '</p><p class="mt-2">• ')
+            .replace(/\r?\n[\u2022*-]\s*/g, "</p><p class=\"mt-2\">\u2022 ")
             .replace(/\r?\n/g, '<br>');
     }
 
