@@ -8,6 +8,23 @@ const REQUIRED_HEADERS = {
   sector: ["SETOR", "EQUIPE", "TIME"]
 };
 
+const SUPPLEMENTAL_HEADERS = {
+  month: ["MES", "MÊS", "COMPETENCIA", "COMPETÊNCIA"],
+  companyTotal: ["TOTAL EMPRESA", "RESULTADO EMPRESA", "TOTAL GERAL", "FATURAMENTO TOTAL"],
+  comercialTotal: ["TOTAL COMERCIAL", "COMERCIAL"],
+  juridicoTotal: ["TOTAL JURIDICO", "TOTAL JURÍDICO", "JURIDICO", "JURÍDICO"],
+  goal: ["META", "META EMPRESA", "META GERAL"],
+  hunter: ["HUNTER", "CAPTADOR", "INDICADOR", "ORIGEM"],
+  hunterClients: ["CLIENTES", "CLIENTES POTENCIAIS", "LEADS", "QTD CLIENTES"],
+  hunterPaid: ["PAGOS", "PAGAMENTOS", "CLIENTES PAGOS", "QTD PAGOS"],
+  hunterValue: ["VALOR", "VALOR PAGO", "TOTAL PAGO", "RESULTADO"],
+  client: ["CLIENTE", "CLIENTE POTENCIAL", "NOME CLIENTE"],
+  paidBy: ["CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL", "VENDEDOR"],
+  paidDate: ["DATA", "DATA PAGAMENTO", "DATA DO PAGAMENTO"],
+  paidValue: ["VALOR PAGO", "PAGAMENTO", "VALOR", "TOTAL PAGO"],
+  paidStatus: ["STATUS", "SITUACAO", "SITUAÇÃO"]
+};
+
 const DEFAULT_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
 const DEFAULT_TEAM_GOALS = {
   comercial: 150000,
@@ -19,6 +36,12 @@ function getCurrentPortugueseMonthName() {
     month: "long",
     timeZone: "America/Sao_Paulo"
   }).format(new Date()).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+function getCurrentMonthAliases() {
+  const month = getCurrentPortugueseMonthName();
+  const lower = month.toLowerCase();
+  return [month, lower, lower.charAt(0).toUpperCase() + lower.slice(1)];
 }
 
 function getDefaultSheetCsvUrl() {
@@ -83,8 +106,19 @@ function parseMoney(value) {
 }
 
 function getColumn(row, headerMap, key) {
-  const aliases = REQUIRED_HEADERS[key] || [];
+  const aliases = [
+    ...(REQUIRED_HEADERS[key] || []),
+    ...(key === "sold" ? getCurrentMonthAliases() : [])
+  ];
   for (const alias of aliases) {
+    const index = headerMap.get(normalizeHeader(alias));
+    if (index !== undefined) return row[index] || "";
+  }
+  return "";
+}
+
+function getColumnByAliases(row, headerMap, aliases) {
+  for (const alias of aliases || []) {
     const index = headerMap.get(normalizeHeader(alias));
     if (index !== undefined) return row[index] || "";
   }
@@ -178,6 +212,62 @@ function rowsFromCsv(text, forcedSector = "") {
       teamGap: parseMoney(getColumn(row, headerMap, "teamGap"))
     };
   }).filter(item => item.sector && (item.name || item.sold || item.goal));
+}
+
+function extractSupplementalDataFromCsv(text) {
+  const csvRows = parseCsv(text);
+  if (csvRows.length < 2) {
+    return { history: [], hunters: [], paidClients: [] };
+  }
+
+  const headers = csvRows[0].map(normalizeHeader);
+  const headerMap = new Map(headers.map((header, index) => [header, index]));
+  const history = [];
+  const hunters = [];
+  const paidClients = [];
+
+  for (const row of csvRows.slice(1)) {
+    const month = normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.month));
+    const companyTotal = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.companyTotal));
+    const comercial = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.comercialTotal));
+    const juridico = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.juridicoTotal));
+    const goal = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.goal));
+
+    if (month && (companyTotal || comercial || juridico || goal)) {
+      history.push({ month, companyTotal, comercial, juridico, goal });
+    }
+
+    const hunter = normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.hunter));
+    const hunterClients = Number.parseInt(String(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.hunterClients) || "0").replace(/\D/g, ""), 10) || 0;
+    const hunterPaid = Number.parseInt(String(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.hunterPaid) || "0").replace(/\D/g, ""), 10) || 0;
+    const hunterValue = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.hunterValue));
+
+    if (hunter && (hunterClients || hunterPaid || hunterValue)) {
+      hunters.push({
+        name: hunter,
+        potentialClients: hunterClients,
+        paidClients: hunterPaid,
+        value: hunterValue
+      });
+    }
+
+    const client = normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.client));
+    const paidValue = parseMoney(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.paidValue));
+    const status = normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.paidStatus));
+    const isPaid = paidValue > 0 || normalizeHeader(status).includes("PAGO");
+
+    if (client && isPaid) {
+      paidClients.push({
+        name: client,
+        value: paidValue,
+        date: normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.paidDate)),
+        responsible: normalizeConsultantName(getColumnByAliases(row, headerMap, SUPPLEMENTAL_HEADERS.paidBy)),
+        status: status || "Pago"
+      });
+    }
+  }
+
+  return { history, hunters, paidClients };
 }
 
 function detectSideBySideSections(headers) {
@@ -393,12 +483,15 @@ function rowsFromPlatinoSideBySideCsv(text) {
   return { rows, teamGoals, teamTotals, metrics };
 }
 
-function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, metrics = {}) {
+function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, metrics = {}, supplemental = {}) {
   const ranking = {
     comercial: [],
     juridico: [],
     teamGoals: {},
     teamTotals: {},
+    history: Array.isArray(supplemental.history) ? supplemental.history : [],
+    hunters: Array.isArray(supplemental.hunters) ? supplemental.hunters : [],
+    paidClients: Array.isArray(supplemental.paidClients) ? supplemental.paidClients : [],
     metrics: {
       comercialContracts: Number(metrics.comercialContracts) || 0,
       companyTotal: 0
@@ -448,9 +541,18 @@ export default async function handler(request, response) {
     const explicitTeamGoals = {};
     const explicitTeamTotals = {};
     const metrics = {};
+    const supplemental = {
+      history: [],
+      hunters: [],
+      paidClients: []
+    };
 
     if (sharedUrl || (!comercialUrl && !juridicoUrl)) {
       const csv = await fetchCsv(sharedUrl || getDefaultSheetCsvUrl());
+      const extraData = extractSupplementalDataFromCsv(csv);
+      supplemental.history.push(...extraData.history);
+      supplemental.hunters.push(...extraData.hunters);
+      supplemental.paidClients.push(...extraData.paidClients);
       const platinoData = rowsFromPlatinoSideBySideCsv(csv);
       if (platinoData) {
         rows.push(...platinoData.rows);
@@ -462,14 +564,24 @@ export default async function handler(request, response) {
       }
     }
     if (comercialUrl) {
-      rows.push(...rowsFromCsv(await fetchCsv(comercialUrl), "comercial"));
+      const csv = await fetchCsv(comercialUrl);
+      const extraData = extractSupplementalDataFromCsv(csv);
+      supplemental.history.push(...extraData.history);
+      supplemental.hunters.push(...extraData.hunters);
+      supplemental.paidClients.push(...extraData.paidClients);
+      rows.push(...rowsFromCsv(csv, "comercial"));
     }
     if (juridicoUrl) {
-      rows.push(...rowsFromCsv(await fetchCsv(juridicoUrl), "juridico"));
+      const csv = await fetchCsv(juridicoUrl);
+      const extraData = extractSupplementalDataFromCsv(csv);
+      supplemental.history.push(...extraData.history);
+      supplemental.hunters.push(...extraData.hunters);
+      supplemental.paidClients.push(...extraData.paidClients);
+      rows.push(...rowsFromCsv(csv, "juridico"));
     }
 
     response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json(buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics));
+    return response.status(200).json(buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics, supplemental));
   } catch (error) {
     return response.status(502).json({
       error: "Nao foi possivel sincronizar a planilha de ranking.",

@@ -465,27 +465,103 @@
 
         .team-carousel {
             overflow: hidden;
+            scroll-behavior: smooth;
             mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+        }
+
+        .team-carousel.manual-scroll {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .team-carousel.manual-scroll::-webkit-scrollbar {
+            display: none;
         }
 
         .team-track {
             display: flex;
             gap: 1rem;
             width: max-content;
-            animation: teamSlide 24s linear infinite;
+            animation: teamSlide 52s linear infinite;
         }
 
         .team-carousel:hover .team-track {
             animation-play-state: paused;
         }
 
+        .team-carousel.manual-scroll .team-track,
+        .team-carousel.is-manual .team-track {
+            animation-play-state: paused;
+        }
+
+        .team-nav-button {
+            position: absolute;
+            top: 50%;
+            z-index: 20;
+            display: inline-flex;
+            height: 2.5rem;
+            width: 2.5rem;
+            transform: translateY(-50%);
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid rgba(191, 219, 254, 0.32);
+            background: rgba(4, 22, 45, 0.82);
+            color: #eff6ff;
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.22);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .team-nav-button:hover {
+            background: rgba(15, 58, 122, 0.94);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .team-nav-button.prev {
+            left: 0.35rem;
+        }
+
+        .team-nav-button.next {
+            right: 0.35rem;
+        }
+
         .team-card {
             width: 220px;
+            min-height: 250px;
             flex: 0 0 auto;
+            position: relative;
             background:
                 linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98)) !important;
             border-color: rgba(203, 213, 225, 0.18) !important;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .team-card.birthday-month {
+            border-color: rgba(251, 191, 36, 0.72) !important;
+            box-shadow:
+                0 0 0 1px rgba(251, 191, 36, 0.25),
+                0 18px 42px rgba(251, 191, 36, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .birthday-ribbon {
+            position: absolute;
+            right: 0.75rem;
+            top: 0.75rem;
+            display: inline-flex;
+            height: 2rem;
+            width: 2rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #facc15, #f97316);
+            color: #111827;
+            box-shadow: 0 12px 24px rgba(251, 191, 36, 0.24);
+        }
+
+        .birthday-info {
+            min-height: 2.25rem;
         }
 
         .team-card:hover {
@@ -1397,7 +1473,7 @@
                     <i class="ph ph-house"></i> Início
                 </button>
                 <button id="nav-avisos" onclick="navigateTo('avisos')" class="nav-btn">
-                    <i class="ph ph-megaphone"></i> Arena de performance
+                    <i class="ph ph-megaphone"></i> Central de vendas
                 </button>
                 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pt-5 pb-2">Departamentos</div>
@@ -1571,8 +1647,16 @@
                                 <i class="ph ph-images-square text-lg"></i> Editar carrossel
                             </button>
                         </div>
-                        <div class="team-carousel">
-                            <div id="team-track" class="team-track"></div>
+                        <div class="relative">
+                            <button type="button" onclick="moveTeamCarousel(-1)" class="team-nav-button prev" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
+                                <i class="ph ph-caret-left text-lg"></i>
+                            </button>
+                            <div id="team-carousel" class="team-carousel manual-scroll">
+                                <div id="team-track" class="team-track"></div>
+                            </div>
+                            <button type="button" onclick="moveTeamCarousel(1)" class="team-nav-button next" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
+                                <i class="ph ph-caret-right text-lg"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1732,24 +1816,40 @@
                                 <div id="ranking-juridico-list" class="space-y-2"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="performance-arena rounded-3xl p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 relative overflow-hidden">
-                        <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-blue-400/20 blur-3xl"></div>
-                        <div class="absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-slate-100/10 blur-3xl"></div>
-                        <div class="relative flex flex-col items-center justify-center gap-5 mb-6 text-center">
-                            <div class="flex flex-col items-center gap-4">
-                                <div>
-                                    <h3 class="metallic-title mt-1 text-2xl font-black">Aniversariantes do Mês</h3>
-                                    <p class="mt-1 text-sm text-blue-100">Celebre as pessoas da operação Platino e mantenha a equipe conectada.</p>
+                        <div class="relative mt-5 grid grid-cols-1 xl:grid-cols-3 gap-4">
+                            <div class="ranking-board rounded-2xl p-4 xl:col-span-1">
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
+                                        <h4 class="metallic-title text-lg font-black">Resultado anterior</h4>
+                                    </div>
+                                    <i class="ph ph-clock-counter-clockwise text-2xl text-blue-200/70"></i>
                                 </div>
+                                <div id="ranking-history-panel" class="space-y-3"></div>
                             </div>
-                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors lg:absolute lg:right-0 lg:top-0" title="Editar aniversariantes">
-                                <i class="ph ph-pencil-simple"></i> Editar aniversariantes
-                            </button>
-                        </div>
-                        <div id="avisos-birthdays-list" class="relative grid gap-4 md:grid-cols-2">
-                            <div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-blue-100">Nenhum aniversariante cadastrado.</div>
+
+                            <div class="ranking-board rounded-2xl p-4">
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Origem dos clientes</p>
+                                        <h4 class="metallic-title text-lg font-black">Hunters</h4>
+                                    </div>
+                                    <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
+                                </div>
+                                <div id="ranking-hunters-list" class="space-y-2"></div>
+                            </div>
+
+                            <div class="ranking-board rounded-2xl p-4">
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Clientes potenciais</p>
+                                        <h4 class="metallic-title text-lg font-black">Pagamentos realizados</h4>
+                                    </div>
+                                    <i class="ph ph-hand-coins text-2xl text-blue-200/70"></i>
+                                </div>
+                                <div id="ranking-paid-clients-list" class="space-y-2"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2452,6 +2552,23 @@
                         <div id="editor-ranking-juridico-list" class="space-y-3"></div>
                     </div>
                 </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <div class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-clock-counter-clockwise text-blue-700"></i> Histórico mensal</h4>
+                        <p class="mt-1 text-xs text-slate-500">Formato: Mês | Comercial | Jurídico | Total empresa | Meta</p>
+                        <textarea id="editor-ranking-history" rows="5" class="mt-3 w-full rounded-xl border border-blue-100 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" placeholder="Junho | 53499,65 | 188207,80 | 241707,45 | 460000"></textarea>
+                    </div>
+                    <div class="rounded-2xl border border-amber-100 bg-amber-50/50 p-4">
+                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-binoculars text-amber-700"></i> Hunters</h4>
+                        <p class="mt-1 text-xs text-slate-500">Formato: Hunter | Potenciais | Pagos | Valor</p>
+                        <textarea id="editor-ranking-hunters" rows="5" class="mt-3 w-full rounded-xl border border-amber-100 bg-white px-4 py-3 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" placeholder="João | 12 | 4 | 8500"></textarea>
+                    </div>
+                    <div class="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
+                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-hand-coins text-emerald-700"></i> Clientes pagos</h4>
+                        <p class="mt-1 text-xs text-slate-500">Formato: Cliente | Valor | Data | Responsável | Status</p>
+                        <textarea id="editor-ranking-paid-clients" rows="5" class="mt-3 w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Cliente A | 2500 | 01/07/2026 | Mayara | Pago"></textarea>
+                    </div>
+                </div>
             </div>
             <div class="editor-modal-footer p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
                 <div>
@@ -2470,7 +2587,7 @@
             <div class="flex items-center justify-between p-5 border-b border-slate-200">
                 <div>
                     <h3 class="text-xl font-bold text-slate-900">Editar InfoHub</h3>
-                    <p class="text-sm text-slate-500">Atualize resultados, destaque, comunicado e aniversariantes.</p>
+                    <p class="text-sm text-slate-500">Atualize resultados, destaque, comunicado e perfis do carrossel.</p>
                 </div>
                 <button onclick="closeAvisosEditor()" class="text-slate-400 hover:text-slate-700 rounded-full p-2">
                     <i class="ph ph-x text-2xl"></i>
@@ -2520,15 +2637,15 @@
                         <span class="h-8 w-8 rounded-lg overflow-hidden border border-blue-200 bg-slate-950 flex-shrink-0">
                             <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                         </span>
-                        <h4 class="font-semibold text-slate-800">Aniversariantes do Mês</h4>
+                        <h4 class="font-semibold text-slate-800">Aniversários do carrossel</h4>
                     </div>
-                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês</p>
-                    <textarea id="editor-avisos-birthdays" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Ana Souza | 08/06&#10;Carlos Lima | 21/06"></textarea>
+                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês/Ano. O destaque aparece automaticamente no mês do aniversário.</p>
+                    <textarea id="editor-avisos-birthdays" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Ana Souza | 08/06/2000&#10;Carlos Lima | 21/06/1998"></textarea>
                 </div>
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <h4 class="font-semibold text-slate-800 mb-2">Carrossel Pessoas que movem a Platino</h4>
-                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Cargo | Detalhes | URL ou caminho da foto</p>
-                    <textarea id="editor-team-carousel" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Giovana Santos | Supervisora Administrativa | Administrativo - ramal 201 - giovana@platino.com | assets/foto.png"></textarea>
+                    <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Cargo | Detalhes | URL ou caminho da foto | Aniversário</p>
+                    <textarea id="editor-team-carousel" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Giovana Santos | Supervisora Administrativa | Administrativo - ramal 201 - giovana@platino.com | assets/foto.png | 08/06/2000"></textarea>
                 </div>
             </div>
             <div class="editor-modal-footer p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
@@ -3616,7 +3733,12 @@
                 { name: 'Tabata.', sold: 14197.19 },
                 { name: 'Nicole.', sold: 8769.35 },
                 { name: 'Elaine', sold: 2000 }
-            ]
+            ],
+            history: [
+                { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
+            ],
+            hunters: [],
+            paidClients: []
         };
 
         const rankingSectors = ['comercial', 'juridico'];
@@ -3653,11 +3775,40 @@
 
             const comercial = normalizeList(value.comercial, defaultRankingData.comercial);
             const juridico = normalizeList(value.juridico, defaultRankingData.juridico);
+            const normalizeHistory = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.history : [])
+                .map(item => ({
+                    month: String(item?.month || item?.mes || '').trim(),
+                    comercial: parseRankingValue(item?.comercial ?? item?.comercialTotal ?? ''),
+                    juridico: parseRankingValue(item?.juridico ?? item?.juridicoTotal ?? ''),
+                    companyTotal: parseRankingValue(item?.companyTotal ?? item?.total ?? item?.totalEmpresa ?? ''),
+                    goal: parseRankingValue(item?.goal ?? item?.meta ?? '')
+                }))
+                .filter(item => item.month || item.comercial || item.juridico || item.companyTotal || item.goal);
+            const normalizeHunters = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.hunters : [])
+                .map(item => ({
+                    name: String(item?.name || item?.hunter || '').trim(),
+                    potentialClients: Number(item?.potentialClients ?? item?.potenciais ?? item?.clients ?? 0) || 0,
+                    paidClients: Number(item?.paidClients ?? item?.pagos ?? item?.payments ?? 0) || 0,
+                    value: parseRankingValue(item?.value ?? item?.valor ?? '')
+                }))
+                .filter(item => item.name || item.potentialClients || item.paidClients || item.value);
+            const normalizePaidClients = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.paidClients : [])
+                .map(item => ({
+                    name: String(item?.name || item?.client || item?.cliente || '').trim(),
+                    value: parseRankingValue(item?.value ?? item?.valor ?? ''),
+                    date: String(item?.date || item?.data || '').trim(),
+                    responsible: String(item?.responsible || item?.responsavel || '').trim(),
+                    status: String(item?.status || 'Pago').trim()
+                }))
+                .filter(item => item.name || item.value || item.date || item.responsible);
             const normalized = {
                 comercial,
                 juridico,
                 teamGoals: {},
                 teamTotals: {},
+                history: normalizeHistory(value.history),
+                hunters: normalizeHunters(value.hunters),
+                paidClients: normalizePaidClients(value.paidClients),
                 source: value.source || 'manual',
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
@@ -3803,7 +3954,97 @@
                 label: 'Resultados'
             });
             renderMonthlyMetalLevels();
+            renderRankingHistory();
+            renderRankingHunters();
+            renderRankingPaidClients();
             updateRankingSyncStatus();
+        }
+
+        function getCompanyTotal() {
+            return getRankingDepartmentTotal('comercial') + getRankingDepartmentTotal('juridico');
+        }
+
+        function getLatestHistoryItem() {
+            const items = rankingData.history || [];
+            return items[items.length - 1] || null;
+        }
+
+        function renderRankingHistory() {
+            const container = document.getElementById('ranking-history-panel');
+            if (!container) return;
+
+            const previous = getLatestHistoryItem();
+            const currentTotal = getCompanyTotal();
+
+            if (!previous) {
+                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-blue-100/70">Nenhum histórico retroativo sincronizado ainda.</div>';
+                return;
+            }
+
+            const previousTotal = parseRankingValue(previous.companyTotal) || ((parseRankingValue(previous.comercial) || 0) + (parseRankingValue(previous.juridico) || 0));
+            const goalToBeat = previousTotal;
+            const missing = Math.max(goalToBeat - currentTotal, 0);
+            const percent = goalToBeat ? Math.min(Math.round((currentTotal / goalToBeat) * 100), 100) : 0;
+
+            container.innerHTML = `
+                <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-100/70">${escapeHtml(previous.month || 'Mês anterior')}</span>
+                        <span class="money-value text-sm font-black">${formatCurrency(previousTotal)}</span>
+                    </div>
+                    <div class="mt-3 metal-level-track">
+                        <div class="metal-level-fill emerald" style="--level-width: ${percent}%"></div>
+                    </div>
+                    <div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-blue-100/75">
+                        <div>Atual<br><strong class="money-value text-white">${formatCurrency(currentTotal)}</strong></div>
+                        <div>Para superar<br><strong class="money-value text-white">${missing ? formatCurrency(missing) : 'Superado'}</strong></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRankingHunters() {
+            const container = document.getElementById('ranking-hunters-list');
+            if (!container) return;
+
+            const items = [...(rankingData.hunters || [])].sort((a, b) => (b.paidClients || 0) - (a.paidClients || 0) || (b.value || 0) - (a.value || 0));
+            if (!items.length) {
+                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-blue-100/70">Nenhum Hunter sincronizado ainda.</div>';
+                return;
+            }
+
+            container.innerHTML = items.slice(0, 5).map(item => `
+                <div class="ranking-row flex items-center justify-between gap-3 rounded-xl p-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Hunter')}</p>
+                        <p class="text-[11px] text-blue-100/65">${Number(item.potentialClients) || 0} potenciais • ${Number(item.paidClients) || 0} pagos</p>
+                    </div>
+                    <p class="money-value text-sm font-black">${formatCurrency(item.value || 0)}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderRankingPaidClients() {
+            const container = document.getElementById('ranking-paid-clients-list');
+            if (!container) return;
+
+            const items = [...(rankingData.paidClients || [])].sort((a, b) => (b.value || 0) - (a.value || 0));
+            if (!items.length) {
+                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-blue-100/70">Nenhum cliente pago sincronizado ainda.</div>';
+                return;
+            }
+
+            container.innerHTML = items.slice(0, 5).map(item => `
+                <div class="ranking-row rounded-xl p-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Cliente')}</p>
+                            <p class="text-[11px] text-blue-100/65">${escapeHtml(item.responsible || 'Responsável a confirmar')}${item.date ? ` • ${escapeHtml(item.date)}` : ''}</p>
+                        </div>
+                        <p class="money-value text-sm font-black">${formatCurrency(item.value || 0)}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function updateRankingSyncStatus(message = '') {
@@ -3874,7 +4115,7 @@
             const hiddenCount = Math.max(sorted.length - visibleItems.length, 0);
             const buttonLabel = isExpanded
                 ? 'Ver menos'
-                : `Ver mais ${hiddenCount ? `(${hiddenCount})` : ''}`;
+                : `Ver mais da equipe ${hiddenCount ? `(${hiddenCount})` : ''}`;
 
             listEl.innerHTML = visibleItems.map((item, index) => {
                 const position = index + 1;
@@ -3905,7 +4146,7 @@
             if (sorted.length > 5) {
                 listEl.innerHTML += `
                     <button type="button" onclick="toggleRankingList('${sector}')" class="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-blue-100 transition hover:bg-white/10">
-                        ${buttonLabel}
+                        <i class="ph ${isExpanded ? 'ph-caret-up' : 'ph-users-three'} mr-1"></i>${buttonLabel}
                     </button>
                 `;
             }
@@ -3920,6 +4161,9 @@
             if (!requireGestor('editar o ranking')) return;
             renderRankingEditorList('comercial');
             renderRankingEditorList('juridico');
+            document.getElementById('editor-ranking-history').value = serializeRankingHistory(rankingData.history);
+            document.getElementById('editor-ranking-hunters').value = serializeRankingHunters(rankingData.hunters);
+            document.getElementById('editor-ranking-paid-clients').value = serializeRankingPaidClients(rankingData.paidClients);
             document.getElementById('ranking-save-status').innerText = '';
 
             const modal = document.getElementById('ranking-modal');
@@ -3952,9 +4196,77 @@
             `).join('');
         }
 
+        function serializeRankingHistory(items) {
+            return (items || [])
+                .map(item => `${item.month || ''} | ${formatNumberBR(item.comercial || 0)} | ${formatNumberBR(item.juridico || 0)} | ${formatNumberBR(item.companyTotal || 0)} | ${formatNumberBR(item.goal || 0)}`)
+                .join('\n');
+        }
+
+        function parseRankingHistory(value) {
+            return String(value || '')
+                .split('\n')
+                .map(line => {
+                    const [month, comercial, juridico, companyTotal, goal] = line.split('|');
+                    return {
+                        month: (month || '').trim(),
+                        comercial: parseRankingValue(comercial || ''),
+                        juridico: parseRankingValue(juridico || ''),
+                        companyTotal: parseRankingValue(companyTotal || ''),
+                        goal: parseRankingValue(goal || '')
+                    };
+                })
+                .filter(item => item.month || item.comercial || item.juridico || item.companyTotal || item.goal);
+        }
+
+        function serializeRankingHunters(items) {
+            return (items || [])
+                .map(item => `${item.name || ''} | ${item.potentialClients || 0} | ${item.paidClients || 0} | ${formatNumberBR(item.value || 0)}`)
+                .join('\n');
+        }
+
+        function parseRankingHunters(value) {
+            return String(value || '')
+                .split('\n')
+                .map(line => {
+                    const [name, potentialClients, paidClients, value] = line.split('|');
+                    return {
+                        name: (name || '').trim(),
+                        potentialClients: Number(String(potentialClients || '').replace(/\D/g, '')) || 0,
+                        paidClients: Number(String(paidClients || '').replace(/\D/g, '')) || 0,
+                        value: parseRankingValue(value || '')
+                    };
+                })
+                .filter(item => item.name || item.potentialClients || item.paidClients || item.value);
+        }
+
+        function serializeRankingPaidClients(items) {
+            return (items || [])
+                .map(item => `${item.name || ''} | ${formatNumberBR(item.value || 0)} | ${item.date || ''} | ${item.responsible || ''} | ${item.status || 'Pago'}`)
+                .join('\n');
+        }
+
+        function parseRankingPaidClients(value) {
+            return String(value || '')
+                .split('\n')
+                .map(line => {
+                    const [name, value, date, responsible, status] = line.split('|');
+                    return {
+                        name: (name || '').trim(),
+                        value: parseRankingValue(value || ''),
+                        date: (date || '').trim(),
+                        responsible: (responsible || '').trim(),
+                        status: (status || 'Pago').trim()
+                    };
+                })
+                .filter(item => item.name || item.value || item.date || item.responsible);
+        }
+
         function syncRankingEditorState() {
             rankingData.teamGoals = rankingData.teamGoals || {};
             rankingData.teamTotals = rankingData.teamTotals || {};
+            rankingData.history = parseRankingHistory(document.getElementById('editor-ranking-history')?.value || '');
+            rankingData.hunters = parseRankingHunters(document.getElementById('editor-ranking-hunters')?.value || '');
+            rankingData.paidClients = parseRankingPaidClients(document.getElementById('editor-ranking-paid-clients')?.value || '');
 
             rankingSectors.forEach(sector => {
                 const teamGoalInput = document.getElementById(`editor-ranking-${sector}-team-goal`);
@@ -4003,6 +4315,9 @@
                 juridico: rankingData.juridico,
                 teamGoals: rankingData.teamGoals,
                 teamTotals: rankingData.teamTotals,
+                history: rankingData.history,
+                hunters: rankingData.hunters,
+                paidClients: rankingData.paidClients,
                 source: 'manual',
                 updatedAt: new Date().toISOString(),
                 updatedBy: window.firebaseAuthUser?.email || 'Supervisão'
@@ -4062,7 +4377,10 @@
                     comercial: normalized.comercial,
                     juridico: normalized.juridico,
                     teamGoals: normalized.teamGoals,
-                    teamTotals: normalized.teamTotals
+                    teamTotals: normalized.teamTotals,
+                    history: normalized.history,
+                    hunters: normalized.hunters,
+                    paidClients: normalized.paidClients
                 });
                 if (signature === rankingSheetLastSignature) return;
 
@@ -4090,6 +4408,83 @@
             rankingSheetLastSignature = '';
         }
 
+        const platinoBirthdays = [
+            { name: 'GIULLIAN GABRIELLEN OLIVEIRA PAULINO', date: '11/01/2000' },
+            { name: 'NICOLAS PERES ISSO', date: '03/01/2006' },
+            { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005' },
+            { name: 'NICOLE MONTEIRO DE MORAES FARIA', date: '18/02/2006' },
+            { name: 'ROBERTA INÊS DOS REIS BRANDÃO', date: '25/02/1992' },
+            { name: 'JOÃO VICTOR NUNES DE SOUZA', date: '14/03/2007' },
+            { name: 'GABRIEL NUNES PAES', date: '25/03/1997' },
+            { name: 'JANAINA RODRIGUES PAIVA SALES DE ALMEIDA', date: '03/04/1987' },
+            { name: 'RAFAELA MARCELINO', date: '03/04/1994' },
+            { name: 'FERNANDA RAMOS MARTINS', date: '13/04/2007' },
+            { name: 'SONIA REGINA LEANDRO DA SILVA', date: '30/05/1964' },
+            { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991' },
+            { name: 'MONIQUE CRISTINA DA SILVA DE CARVALHO', date: '31/05/1993' },
+            { name: 'GIOVANA DILENA ROCHA', date: '28/06/1999', photo: 'assets/aniversariante-giovana-dilena.png' },
+            { name: 'TAFAREL MOREIRA', date: '30/06/1998', photo: 'assets/aniversariante-tafarel-moreira.png' },
+            { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003' },
+            { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004' },
+            { name: 'ISABELA LIMA DE SOUZA', date: '13/08/2000' },
+            { name: 'ANNA GRAZIELLY FERREIRA AGUILAR', date: '31/08/2003' },
+            { name: 'VANESSA ILANA DE SOUZA', date: '09/10/1974' },
+            { name: 'ELAINE APARECIDA DOS SANTOS', date: '13/10/1999' },
+            { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995' },
+            { name: 'YASMIM BERNARDO NOGUEIRA', date: '29/11/2005' }
+        ];
+
+        const monthNamesPt = [
+            'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+            'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+        ];
+
+        function normalizePersonKey(value) {
+            return String(value || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-zA-Z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .toLowerCase();
+        }
+
+        function isSamePersonName(a, b) {
+            const left = normalizePersonKey(a);
+            const right = normalizePersonKey(b);
+            if (!left || !right) return false;
+            if (left === right || left.includes(right) || right.includes(left)) return true;
+
+            const leftTokens = left.split(' ').filter(token => token.length > 2);
+            const rightTokens = right.split(' ').filter(token => token.length > 2);
+            const smaller = leftTokens.length <= rightTokens.length ? leftTokens : rightTokens;
+            const larger = leftTokens.length <= rightTokens.length ? rightTokens : leftTokens;
+
+            return smaller.length > 0 && smaller.every(token => larger.includes(token));
+        }
+
+        function getBirthdayMonth(date) {
+            const match = String(date || '').match(/\d{1,2}\/(\d{1,2})(?:\/\d{2,4})?/);
+            return match ? Number(match[1]) : null;
+        }
+
+        function formatBirthdayDate(date) {
+            const match = String(date || '').match(/(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/);
+            if (!match) return String(date || '').trim();
+            const day = String(match[1]).padStart(2, '0');
+            const month = Number(match[2]);
+            const year = match[3] ? `/${match[3]}` : '';
+            return `${day}/${String(month).padStart(2, '0')}${year}`;
+        }
+
+        function getCurrentBirthdayMonth() {
+            return new Date().getMonth() + 1;
+        }
+
+        function findBirthdayForName(name, birthdays = platinoBirthdays) {
+            return birthdays.find(person => isSamePersonName(person.name, name));
+        }
+
       const defaultAvisosData = {
             main: {
                 title: 'Atualização no Fluxo do GOV.BR',
@@ -4115,10 +4510,7 @@
                 distratos: '2',
                 revenue: '36.505,73'
             },
-            birthdays: [
-                { name: 'Giovana Dilena', date: '28 de junho', photo: 'assets/aniversariante-giovana-dilena.png' },
-                { name: 'Tafarel Moreira', date: '30 de junho', photo: 'assets/aniversariante-tafarel-moreira.png' }
-            ],
+            birthdays: platinoBirthdays,
             team: [
                 { name: 'Roberta Brandão', role: 'Supervisora Comercial', details: 'Contato - Roberta@platino.com', photo: 'logo.carrocel.png' },
                 { name: 'Tafarel Moreira', role: 'Supervisor  Administrativo', details: 'Contato - Tafarel@platino.com', photo: 'logo.carrocel.png' },
@@ -4127,9 +4519,23 @@
                 { name: 'Vanessa Ilana', role: 'Gerente', details: 'Contato - Vanessa@platino.com', photo: 'logo.carrocel.png' },
                 { name: 'Isabela Lima', role: 'CEO', details: 'Contato - Isabela@platino.com', photo: 'logo.carrocel.png' },
                 { name: 'Emily', role: 'Departamento Pessoal', details: 'Contato - Emily@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Grazielly Aguilar', role: 'Recrutamento e Seleção', details: 'Contato - Grazielly@platino.com', photo: 'logo.carrocel.png' }
-
-
+                { name: 'Grazielly Aguilar', role: 'Recrutamento e Seleção', details: 'Contato - Grazielly@platino.com', photo: 'logo.carrocel.png' },
+                { name: 'Giullian Gabriellen Oliveira Paulino', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Nicole Monteiro de Moraes Faria', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'João Victor Nunes de Souza', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Gabriel Nunes Paes', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Janaina Rodrigues Paiva Sales de Almeida', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Rafaela Marcelino', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Fernanda Ramos Martins', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Sonia Regina Leandro da Silva', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Tabata Rangel de Lima', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Monique Cristina da Silva de Carvalho', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Giovana Dilena Rocha', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'assets/aniversariante-giovana-dilena.png' },
+                { name: 'Geovanna Alves Xavier', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Jonatas Silva Ferraz', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Elaine Aparecida dos Santos', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Mayara Cardoso Pereira', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
+                { name: 'Yasmim Bernardo Nogueira', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' }
             ],
             updatedAt: null,
             updatedBy: 'Supervisão'
@@ -4137,23 +4543,59 @@
         let avisosData = normalizeAvisosData(defaultAvisosData);
 
  function normalizeAvisosData(value = {}) {
-            const birthdayPhotoByName = {
-                'giovana dilena': 'assets/aniversariante-giovana-dilena.png',
-                'tafarel moreira': 'assets/aniversariante-tafarel-moreira.png'
-            };
-            const birthdayOrderByName = {
-                'giovana dilena': 1,
-                'tafarel moreira': 2
-            };
             const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length ? value.birthdays : defaultAvisosData.birthdays;
-            const mergedBirthdays = birthdaySource.filter(person => String(person.name || '').trim().toLowerCase() !== 'giovana dilena rocha');
+            const mergedBirthdays = birthdaySource
+                .map(person => ({
+                    name: String(person?.name || '').trim(),
+                    date: formatBirthdayDate(person?.date),
+                    photo: String(person?.photo || '').trim()
+                }))
+                .filter(person => person.name);
 
             defaultAvisosData.birthdays.forEach(defaultPerson => {
-                const exists = mergedBirthdays.some(person => String(person.name || '').trim().toLowerCase() === defaultPerson.name.toLowerCase());
+                const exists = mergedBirthdays.some(person => isSamePersonName(person.name, defaultPerson.name));
                 if (!exists) mergedBirthdays.push({ ...defaultPerson });
             });
 
             const normalizeList = (items, fallback) => Array.isArray(items) && items.length ? items : fallback;
+            const normalizedBirthdays = mergedBirthdays
+                .map(person => ({
+                    ...person,
+                    date: formatBirthdayDate(person.date),
+                    month: getBirthdayMonth(person.date)
+                }))
+                .sort((a, b) => (a.month || 99) - (b.month || 99) || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR'))
+                .map(({ month, ...person }) => person);
+
+            const sourceTeam = normalizeList(value.team, defaultAvisosData.team).map(item => ({
+                name: String(item?.name || '').trim(),
+                role: String(item?.role || '').trim(),
+                details: String(item?.details || '').trim(),
+                photo: String(item?.photo || '').trim(),
+                birthday: formatBirthdayDate(item?.birthday || '')
+            })).filter(item => item.name || item.role || item.details || item.photo || item.birthday);
+
+            defaultAvisosData.team.forEach(defaultPerson => {
+                const exists = sourceTeam.some(person => isSamePersonName(person.name, defaultPerson.name));
+                if (!exists) sourceTeam.push({ ...defaultPerson });
+            });
+
+            normalizedBirthdays.forEach(birthday => {
+                const teamPerson = sourceTeam.find(person => isSamePersonName(person.name, birthday.name));
+
+                if (teamPerson) {
+                    teamPerson.birthday = formatBirthdayDate(teamPerson.birthday || birthday.date);
+                    if (!teamPerson.photo && birthday.photo) teamPerson.photo = birthday.photo;
+                } else {
+                    sourceTeam.push({
+                        name: formatPersonName(birthday.name),
+                        role: 'Equipe Platino',
+                        details: 'Perfil da operação Platino',
+                        photo: birthday.photo || 'logo.carrocel.png',
+                        birthday: formatBirthdayDate(birthday.date)
+                    });
+                }
+            });
 
             return {
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
@@ -4164,20 +4606,8 @@
                 })).filter(item => item.category || item.title || item.text),
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
                 week: { ...defaultAvisosData.week, ...(value.week || {}) },
-                birthdays: mergedBirthdays.map(person => {
-                    const normalizedName = String(person.name || '').trim().toLowerCase();
-                    return {
-                        ...person,
-                        photo: person.photo || birthdayPhotoByName[normalizedName] || '',
-                        order: birthdayOrderByName[normalizedName] || 99
-                    };
-                }).sort((a, b) => a.order - b.order || String(a.name || '').localeCompare(String(b.name || ''), 'pt-BR')).map(({ order, ...person }) => person),
-                team: normalizeList(value.team, defaultAvisosData.team).map(item => ({
-                    name: String(item?.name || '').trim(),
-                    role: String(item?.role || '').trim(),
-                    details: String(item?.details || '').trim(),
-                    photo: String(item?.photo || '').trim()
-                })).filter(item => item.name || item.role || item.details || item.photo),
+                birthdays: normalizedBirthdays,
+                team: sourceTeam,
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -4216,8 +4646,6 @@
             document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
             
-            // FUNÇÕES QUE ESTAVAM FALTANDO NO SEU CÓDIGO E FORAM RESTAURADAS AQUI:
-            renderBirthdays();
             renderInicioNotices();
             renderTeamCarousel();
 
@@ -4264,8 +4692,17 @@
 
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
             const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
-            container.innerHTML = doubled.map((person, index) => `
-                <div class="team-card rounded-2xl p-4 text-center" ${index >= team.length ? 'aria-hidden="true"' : ''}>
+            const currentMonth = getCurrentBirthdayMonth();
+
+            container.innerHTML = doubled.map((person, index) => {
+                const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
+                const birthdayMonth = getBirthdayMonth(birthday);
+                const isBirthdayMonth = birthdayMonth === currentMonth;
+                const monthLabel = birthdayMonth ? monthNamesPt[birthdayMonth - 1] : '';
+
+                return `
+                <div class="team-card ${isBirthdayMonth ? 'birthday-month' : ''} rounded-2xl p-4 text-center" ${index >= team.length ? 'aria-hidden="true"' : ''}>
+                    ${isBirthdayMonth ? `<span class="birthday-ribbon" title="Aniversariante de ${escapeHtml(monthLabel)}"><i class="ph-fill ph-cake text-lg"></i></span>` : ''}
                     <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-2xl font-black">
                         ${person.photo
                             ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(formatPersonName(person.name))}" class="h-full w-full object-cover">`
@@ -4274,9 +4711,44 @@
                     </div>
                     <h4 class="employee-name font-black text-white">${escapeHtml(formatPersonName(person.name) || 'Nome da equipe')}</h4>
                     <p class="text-sm font-semibold text-blue-300">${escapeHtml(person.role || 'Função')}</p>
+                    <p class="birthday-info mt-2 inline-flex items-center justify-center gap-1 rounded-full border ${isBirthdayMonth ? 'border-yellow-300/60 bg-yellow-300/15 text-yellow-100' : 'border-white/10 bg-white/5 text-blue-100/80'} px-2.5 py-1 text-[11px] font-semibold">
+                        <i class="ph ${isBirthdayMonth ? 'ph-fill ph-cake' : 'ph-calendar-blank'}"></i>
+                        ${birthday ? `Aniversário: ${escapeHtml(birthday)}` : 'Aniversário a confirmar'}
+                    </p>
                     <p class="team-extra mt-2 text-xs text-blue-100/70">${escapeHtml(person.details || 'Detalhes de contato')}</p>
                 </div>
-            `).join('');
+            `;
+            }).join('');
+        }
+
+        let teamCarouselManualTimer = null;
+
+        function moveTeamCarousel(direction) {
+            const carousel = document.getElementById('team-carousel');
+            const track = document.getElementById('team-track');
+            if (!carousel || !track) return;
+
+            const card = track.querySelector('.team-card');
+            const gap = 16;
+            const cardWidth = card ? card.getBoundingClientRect().width + gap : 236;
+            const step = Math.max(cardWidth, Math.round(carousel.clientWidth * 0.8));
+            const maxScrollBeforeLoop = Math.max((track.scrollWidth / 2) - carousel.clientWidth, 0);
+
+            carousel.classList.add('is-manual');
+            carousel.scrollBy({
+                left: direction * step,
+                behavior: 'smooth'
+            });
+
+            window.setTimeout(() => {
+                if (carousel.scrollLeft > maxScrollBeforeLoop) carousel.scrollLeft = 0;
+                if (carousel.scrollLeft < 0) carousel.scrollLeft = maxScrollBeforeLoop;
+            }, 380);
+
+            window.clearTimeout(teamCarouselManualTimer);
+            teamCarouselManualTimer = window.setTimeout(() => {
+                carousel.classList.remove('is-manual');
+            }, 6000);
         }
 
         function serializeNoticesForEditor(notices) {
@@ -4301,7 +4773,7 @@
 
         function serializeTeamForEditor(team) {
             return (team || [])
-                .map(item => `${item.name || ''} | ${item.role || ''} | ${item.details || ''} | ${item.photo || ''}`)
+                .map(item => `${item.name || ''} | ${item.role || ''} | ${item.details || ''} | ${item.photo || ''} | ${item.birthday || ''}`)
                 .join('\n');
         }
 
@@ -4309,52 +4781,16 @@
             return String(value || '')
                 .split('\n')
                 .map(line => {
-                    const [name, role, details, ...photoParts] = line.split('|');
+                    const [name, role, details, photo, ...birthdayParts] = line.split('|');
                     return {
                         name: (name || '').trim(),
                         role: (role || '').trim(),
                         details: (details || '').trim(),
-                        photo: photoParts.join('|').trim()
+                        photo: (photo || '').trim(),
+                        birthday: formatBirthdayDate(birthdayParts.join('|').trim())
                     };
                 })
-                .filter(item => item.name || item.role || item.details || item.photo);
-        }
-
-        function renderBirthdays() {
-            const container = document.getElementById('avisos-birthdays-list');
-            if (!avisosData.birthdays.length) {
-                container.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-blue-100">Nenhum aniversariante cadastrado neste mês.</div>';
-                return;
-            }
-
-            container.innerHTML = avisosData.birthdays.map(person => {
-                const initials = person.name
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .map(part => part.charAt(0))
-                    .join('')
-                    .toUpperCase();
-
-                return `
-                    <div class="ranking-row flex flex-col items-center gap-4 rounded-2xl p-5 text-center">
-                        <div class="h-36 w-36 rounded-full p-[4px] bg-[conic-gradient(from_180deg,#ffffff,#94a3b8,#334155,#f8fafc,#64748b,#ffffff)] shadow-[0_0_28px_rgba(37,99,235,0.55),0_18px_42px_rgba(15,23,42,0.38)] flex-shrink-0">
-    <div class="h-full w-full rounded-full bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center text-xs font-black text-slate-100 overflow-hidden ring-2 ring-blue-500/60">
-        ${person.photo
-            ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" class="h-full w-full object-cover rounded-full">`
-            : escapeHtml(initials || 'PL')
-        }
-    </div>
-</div>
-                        <div class="min-w-0 flex-1">
-                            <p class="font-black text-white text-lg">${escapeHtml(person.name)}</p>
-                            <p class="mt-1 text-sm text-blue-200 font-semibold">${escapeHtml(person.date || 'Data a confirmar')}</p>
-                            <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-blue-100/60">Day off de aniversário
-</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                .filter(item => item.name || item.role || item.details || item.photo || item.birthday);
         }
 
         function openAvisosEditor() {
