@@ -572,10 +572,11 @@
             height: 7rem;
             width: 7rem;
             padding: 4px;
-            overflow: visible;
+            overflow: hidden;
             background:
                 conic-gradient(from 150deg, #f8fafc, #93c5fd, #1d4ed8, #dbeafe, #64748b, #f8fafc);
             color: #eff6ff;
+            box-sizing: border-box;
             box-shadow:
                 0 18px 36px rgba(15, 23, 42, 0.3),
                 0 0 0 1px rgba(226, 232, 240, 0.2),
@@ -589,6 +590,7 @@
             border-radius: 999px;
             border: 2px solid rgba(255, 255, 255, 0.78);
             background: #061535;
+            box-sizing: border-box;
             object-fit: cover;
             object-position: center 22%;
             image-rendering: auto;
@@ -604,6 +606,7 @@
             align-items: center;
             justify-content: center;
             border: 2px solid rgba(255, 255, 255, 0.72);
+            box-sizing: border-box;
         }
 
         .team-extra {
@@ -1939,6 +1942,7 @@
                                     </div>
                                     <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
                                 </div>
+                                <div id="ranking-hunters-stats" class="mb-3 grid grid-cols-2 gap-2"></div>
                                 <div id="ranking-hunters-list" class="space-y-2"></div>
                             </div>
 
@@ -2041,12 +2045,45 @@
                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-400">Mural da semana</p>
                             <textarea id="rh-weekly-notes" rows="4" class="mt-3 w-full resize-none rounded-xl border border-white/20 bg-white/5 p-3 text-sm leading-relaxed text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20" placeholder="Adicione lembretes rápidos para a equipe..."></textarea>
                             <div class="mt-3 flex items-center justify-between gap-3">
-                                <span id="rh-notes-status" class="text-[11px] text-amber-400/80">Visível neste navegador</span>
+                                <span id="rh-notes-status" class="text-[11px] text-amber-400/80">Aguardando sincronização</span>
                                 <div class="flex flex-wrap items-center justify-end gap-2">
                                     <button type="button" onclick="openRhPanel('mural')" class="rounded-lg px-3 py-1.5 text-xs font-bold transition hover:bg-white/10">Abrir central</button>
                                     <button type="button" onclick="saveRhNotes()" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-600">Salvar mural</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+                        <div class="rh-editor-only hidden portal-card rounded-2xl p-5">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">Publicar no RH</p>
+                            <div class="mt-4 grid gap-3">
+                                <select id="rh-mini-type" class="rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300">
+                                    <option value="Comunicado">Comunicado</option>
+                                    <option value="DP">DP</option>
+                                    <option value="Treinamento">Treinamento</option>
+                                    <option value="Contabilidade">Contabilidade</option>
+                                </select>
+                                <input id="rh-mini-title" class="rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Título da informação">
+                                <textarea id="rh-mini-message" rows="4" class="resize-none rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Detalhes para a equipe"></textarea>
+                                <div class="flex items-center justify-between gap-3">
+                                    <span id="rh-mini-status" class="text-[11px] text-emerald-200/70"></span>
+                                    <button type="button" onclick="saveRhMiniNotice()" class="rounded-lg bg-emerald-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600">
+                                        <i class="ph ph-paper-plane-right"></i> Publicar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portal-card rounded-2xl p-5">
+                            <div class="mb-3 flex items-center justify-between gap-3">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">Mini mural</p>
+                                    <h4 class="mt-1 font-bold text-white">Informações do RH</h4>
+                                </div>
+                                <i class="ph ph-megaphone text-2xl text-blue-200/70"></i>
+                            </div>
+                            <div id="rh-mini-mural-list" class="grid gap-2"></div>
                         </div>
                     </div>
 
@@ -2109,16 +2146,16 @@
                             </div>
                         </button>
 
-                        <button type="button" onclick="openRhPanel('desligamento')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-red-400 hover:shadow-lg">
+                        <button type="button" onclick="openRhPanel('jornada')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-sky-400 hover:shadow-lg">
                             <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-500/20 text-red-300"><i class="ph ph-user-minus text-2xl"></i></span>
+                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-300"><i class="ph ph-sparkle text-2xl"></i></span>
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-red-400">Atenção</p>
-                                        <i class="ph ph-warning text-lg text-red-400"></i>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-sky-400">Interativo</p>
+                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-sky-300"></i>
                                     </div>
-                                    <h4 class="mt-1 font-bold text-white">Desligamento e Rescisão</h4>
-                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Inicie o processo de saída e acompanhe o checklist de desligamento.</p>
+                                    <h4 class="mt-1 font-bold text-white">Jornada e Check-ins</h4>
+                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Acompanhe clima, alinhamentos rápidos e próximos passos da equipe.</p>
                                 </div>
                             </div>
                         </button>
@@ -3183,6 +3220,26 @@
                     { type: 'Dinâmica', title: 'Integração comercial e jurídico', text: 'Atividade rápida na sexta-feira para alinhamento de tratativas.' },
                     { type: 'Solicitação', title: 'Atualização cadastral', text: 'Colaboradores devem revisar telefone e endereço no RH.' }
                 ]
+            },
+            contabilidade: {
+                title: 'Central da Contabilidade',
+                description: 'Solicite informações sobre folha, holerites, benefícios, documentos mensais e dúvidas contábeis.',
+                items: [
+                    'Solicitar informações sobre a Central de Contabilidade',
+                    'Tirar dúvidas sobre folha e holerites',
+                    'Consultar benefícios e documentos mensais',
+                    'Enviar pendências contábeis para análise do DP'
+                ]
+            },
+            jornada: {
+                title: 'Jornada e Check-ins',
+                description: 'Painel leve para registrar clima, combinar próximos passos e acompanhar alinhamentos da equipe.',
+                pulses: [
+                    { label: 'Clima do dia', value: 'Equipe estável', icon: 'ph-smiley' },
+                    { label: 'Ponto de apoio', value: 'Priorizar dúvidas de folha', icon: 'ph-chat-circle-dots' },
+                    { label: 'Próximo passo', value: 'Atualizar comunicados do mini mural', icon: 'ph-arrow-circle-right' }
+                ],
+                actions: ['Check-in rápido com a equipe', 'Registrar dúvida recorrente', 'Criar lembrete de acompanhamento', 'Publicar orientação no mini mural']
             }
         };
 
@@ -3238,13 +3295,75 @@
 
         window.platinoUserRole = window.platinoUserRole || 'equipe';
 
+        const managementSharedDefaults = {
+            rhWeeklyNotes: '• Conferir ajustes de ponto pendentes\n• Atualizar andamento das vagas abertas\n• Enviar documentos mensais à contabilidade',
+            rhMiniNotices: [],
+            quickEditorRecords: {},
+            flowOverrides: {},
+            financeiroRegistros: []
+        };
+
+        let managementSharedData = {
+            ...managementSharedDefaults,
+            quickEditorRecords: JSON.parse(localStorage.getItem('platinoQuickEditorRecords') || '{}'),
+            flowOverrides: JSON.parse(localStorage.getItem('platinoFlowOverrides') || '{}'),
+            financeiroRegistros: JSON.parse(localStorage.getItem('platinoFinanceiroRegistros') || '[]'),
+            rhMiniNotices: JSON.parse(localStorage.getItem('platinoRhMiniNotices') || '[]'),
+            rhWeeklyNotes: localStorage.getItem('platinoRhWeeklyNotes') || managementSharedDefaults.rhWeeklyNotes
+        };
+
+        function persistManagementSharedLocally() {
+            localStorage.setItem('platinoRhWeeklyNotes', managementSharedData.rhWeeklyNotes || managementSharedDefaults.rhWeeklyNotes);
+            localStorage.setItem('platinoQuickEditorRecords', JSON.stringify(managementSharedData.quickEditorRecords || {}));
+            localStorage.setItem('platinoFlowOverrides', JSON.stringify(managementSharedData.flowOverrides || {}));
+            localStorage.setItem('platinoFinanceiroRegistros', JSON.stringify((managementSharedData.financeiroRegistros || []).slice(0, 50)));
+            localStorage.setItem('platinoRhMiniNotices', JSON.stringify((managementSharedData.rhMiniNotices || []).slice(0, 20)));
+        }
+
+        async function publishManagementShared(statusEl, successMessage) {
+            persistManagementSharedLocally();
+            try {
+                if (!window.platinoManagementStore) throw new Error('Sincronização ainda não conectada');
+                await window.platinoManagementStore.save({
+                    ...managementSharedData,
+                    updatedAt: new Date().toISOString(),
+                    updatedBy: window.firebaseAuthUser?.email || 'Gestão'
+                });
+                if (statusEl) {
+                    statusEl.className = statusEl.className.includes('text-[')
+                        ? 'text-[11px] font-semibold text-emerald-400'
+                        : 'text-xs font-semibold text-green-600';
+                    statusEl.innerText = successMessage || 'Publicado para todos os logins.';
+                }
+            } catch (error) {
+                console.warn('Registro salvo localmente, mas não publicado para a equipe:', error);
+                if (statusEl) {
+                    statusEl.className = statusEl.className.includes('text-[')
+                        ? 'text-[11px] font-semibold text-amber-400'
+                        : 'text-xs font-semibold text-amber-600';
+                    statusEl.innerText = 'Salvo neste navegador. Verifique a sincronização do Firebase.';
+                }
+            }
+        }
+
         function isGestorUser() {
             return window.platinoUserRole === 'gestor';
+        }
+
+        function isRhEditorUser() {
+            const email = window.firebaseAuthUser?.email?.toLowerCase() || '';
+            return isGestorUser() || window.platinoUserCanEditRh === true || ['anna@platino.com', 'emily@platino.com', 'emilly@platino.com'].includes(email);
         }
 
         function requireGestor(action = 'editar o sistema') {
             if (isGestorUser()) return true;
             alert(`Acesso restrito: apenas o gestor pode ${action}.`);
+            return false;
+        }
+
+        function requireRhEditor(action = 'publicar informações do RH') {
+            if (isRhEditorUser()) return true;
+            alert(`Acesso restrito: apenas RH/Gestão pode ${action}.`);
             return false;
         }
 
@@ -3255,6 +3374,13 @@
                 el.classList.toggle('flex', canEdit);
                 el.setAttribute('aria-hidden', canEdit ? 'false' : 'true');
                 if ('disabled' in el) el.disabled = !canEdit;
+            });
+            const canEditRh = isRhEditorUser();
+            document.querySelectorAll('.rh-editor-only').forEach(el => {
+                el.classList.toggle('hidden', !canEditRh);
+                el.classList.toggle('block', canEditRh);
+                el.setAttribute('aria-hidden', canEditRh ? 'false' : 'true');
+                if ('disabled' in el) el.disabled = !canEditRh;
             });
         }
 
@@ -3365,6 +3491,55 @@
                 `;
             }
 
+            if (panelId === 'contabilidade') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+                        ${rhInfoCard('O que pode ser solicitado', data.items.map(item => `
+                            <div class="mb-2 flex items-start gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
+                                <i class="ph ph-check-circle mt-0.5 text-emerald-300"></i>
+                                <span>${escapeHtml(item)}</span>
+                            </div>
+                        `).join(''), 'ph-calculator')}
+                        <div class="rh-module-card rounded-2xl p-4">
+                            <h4 class="font-bold text-white">Solicitar informações à contabilidade</h4>
+                            <p class="mt-2 text-sm text-blue-100/75">Abra uma solicitação para a Gestão/RH com seu assunto e detalhes da dúvida contábil.</p>
+                            <div class="mt-4 grid gap-3">
+                                <input id="rh-accounting-subject" class="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Assunto da solicitação">
+                                <textarea id="rh-accounting-message" rows="5" class="rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Descreva a informação que você precisa"></textarea>
+                                <button type="button" onclick="requestAccountingInfo()" class="w-fit rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-600">
+                                    <i class="ph ph-paper-plane-right"></i> Solicitar informações
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (panelId === 'jornada') {
+                return `
+                    <div class="grid gap-4 lg:grid-cols-3">
+                        ${data.pulses.map(item => `
+                            <button type="button" class="rh-module-card rounded-2xl p-4 text-left transition hover:bg-white/12">
+                                <span class="icon-pill flex h-10 w-10 items-center justify-center rounded-xl"><i class="ph ${escapeHtml(item.icon)}"></i></span>
+                                <p class="mt-4 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">${escapeHtml(item.label)}</p>
+                                <h4 class="mt-1 font-bold text-white">${escapeHtml(item.value)}</h4>
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="rh-module-card mt-4 rounded-2xl p-4">
+                        <div class="mb-3 flex items-center justify-between gap-3">
+                            <h4 class="font-bold text-white">Ações rápidas de acompanhamento</h4>
+                            <button type="button" onclick="openQuickEditor('Check-in de RH', 'Registre clima, alinhamento ou próximo passo da equipe.', 'rh-checkin')" class="rh-editor-only hidden rounded-xl bg-white/10 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/20">
+                                <i class="ph ph-plus-circle"></i> Registrar
+                            </button>
+                        </div>
+                        <div class="grid gap-2 sm:grid-cols-2">
+                            ${data.actions.map(item => `<label class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-sm"><input type="checkbox" class="h-4 w-4 rounded"> ${escapeHtml(item)}</label>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
             return `
                 <div class="grid gap-2 sm:grid-cols-2">
                     ${(data.items || []).map(item => `<div class="rh-module-card rounded-xl p-3 text-sm text-blue-100"><i class="ph ph-check-circle"></i> ${escapeHtml(item)}</div>`).join('')}
@@ -3373,7 +3548,8 @@
         }
 
         function openRhPanel(panelId) {
-            if (!requireGestor('abrir módulos de edição do RH')) return;
+            const publicPanels = ['contabilidade'];
+            if (!publicPanels.includes(panelId) && !requireRhEditor('abrir módulos do RH')) return;
             const data = rhMockData[panelId] || {
                 title: 'Módulo em estruturação',
                 description: 'Este painel segue preparado para receber os dados oficiais do RH.',
@@ -3386,6 +3562,7 @@
             document.getElementById('rh-module-title').innerText = data.title;
             document.getElementById('rh-module-description').innerText = data.description;
             document.getElementById('rh-module-body').innerHTML = renderRhModule(panelId, data);
+            applyGestorVisibility();
 
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -3432,12 +3609,12 @@
             document.getElementById('financeiro-action-panel')?.classList.add('hidden');
         }
 
-        function saveFinanceiroPanel() {
+        async function saveFinanceiroPanel() {
             if (!requireGestor('salvar registros financeiros')) return;
             const title = document.getElementById('financeiro-action-title')?.innerText || 'Registro financeiro';
             const description = document.getElementById('financeiro-action-description')?.innerText || '';
             const items = Array.from(document.querySelectorAll('#financeiro-action-checklist span')).map(item => item.innerText);
-            const records = JSON.parse(localStorage.getItem('platinoFinanceiroRegistros') || '[]');
+            const records = managementSharedData.financeiroRegistros || [];
             records.unshift({
                 title,
                 description,
@@ -3445,12 +3622,13 @@
                 savedAt: new Date().toISOString(),
                 savedBy: window.firebaseAuthUser?.email || 'Gestão'
             });
-            localStorage.setItem('platinoFinanceiroRegistros', JSON.stringify(records.slice(0, 50)));
+            managementSharedData.financeiroRegistros = records.slice(0, 50);
             const status = document.getElementById('financeiro-action-status');
             if (status) {
-                status.className = 'text-xs font-semibold text-green-600';
-                status.innerText = 'Registro salvo neste navegador.';
+                status.className = 'text-xs font-semibold text-blue-600';
+                status.innerText = 'Publicando registro para a equipe...';
             }
+            await publishManagementShared(status, 'Registro financeiro publicado para todos os logins.');
         }
 
         function getFlowCollections() {
@@ -3470,7 +3648,7 @@
         }
 
         function loadFlowOverrides() {
-            const overrides = JSON.parse(localStorage.getItem('platinoFlowOverrides') || '{}');
+            const overrides = managementSharedData.flowOverrides || JSON.parse(localStorage.getItem('platinoFlowOverrides') || '{}');
             getFlowCollections().forEach(collection => {
                 collection.data.forEach(item => {
                     if (overrides[item.id]) {
@@ -3488,6 +3666,7 @@
                     overrides[item.id] = { title: item.title, tasks: item.tasks };
                 });
             });
+            managementSharedData.flowOverrides = overrides;
             localStorage.setItem('platinoFlowOverrides', JSON.stringify(overrides));
         }
 
@@ -3510,8 +3689,9 @@
         }
 
         function openQuickEditor(title, description, key) {
-            if (!requireGestor('abrir editores')) return;
-            const saved = JSON.parse(localStorage.getItem('platinoQuickEditorRecords') || '{}')[key] || {};
+            const isRhRecord = String(key || '').startsWith('rh-');
+            if (isRhRecord ? !requireRhEditor('abrir registros do RH') : !requireGestor('abrir editores')) return;
+            const saved = (managementSharedData.quickEditorRecords || JSON.parse(localStorage.getItem('platinoQuickEditorRecords') || '{}'))[key] || {};
             document.getElementById('quick-editor-mode').value = 'quick';
             document.getElementById('quick-editor-key').value = key;
             document.getElementById('quick-editor-kicker').innerText = 'Registro rápido';
@@ -3520,13 +3700,12 @@
             document.getElementById('quick-editor-subject').value = saved.subject || title;
             document.getElementById('quick-editor-notes-label').innerText = 'Detalhes';
             document.getElementById('quick-editor-notes').value = saved.notes || '';
-            document.getElementById('quick-editor-help').innerText = 'Estas informações ficam salvas neste navegador para a gestão consultar e complementar.';
+            document.getElementById('quick-editor-help').innerText = 'Estas informações serão publicadas para os outros logins após salvar.';
             document.getElementById('quick-editor-status').innerText = '';
             showQuickEditor();
         }
 
         function showQuickEditor() {
-            if (!requireGestor('abrir editores')) return;
             const modal = document.getElementById('quick-editor-modal');
             const content = document.getElementById('quick-editor-content');
             modal.classList.remove('hidden');
@@ -3544,10 +3723,11 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
-        function saveQuickEditor() {
-            if (!requireGestor('salvar alterações')) return;
+        async function saveQuickEditor() {
             const mode = document.getElementById('quick-editor-mode').value;
             const key = document.getElementById('quick-editor-key').value;
+            const isRhRecord = String(key || '').startsWith('rh-');
+            if (isRhRecord ? !requireRhEditor('salvar registros do RH') : !requireGestor('salvar alterações')) return;
             const subject = document.getElementById('quick-editor-subject').value.trim();
             const notes = document.getElementById('quick-editor-notes').value.trim();
             const status = document.getElementById('quick-editor-status');
@@ -3559,40 +3739,115 @@
                 match.item.tasks = notes.split('\n').map(line => line.trim()).filter(Boolean);
                 saveFlowOverrides();
                 getFlowCollections().forEach(collection => renderAccordions(collection.containerId, collection.data));
-                status.className = 'text-xs font-semibold text-green-600';
-                status.innerText = 'Fluxo atualizado neste navegador.';
+                status.className = 'text-xs font-semibold text-blue-600';
+                status.innerText = 'Publicando fluxo para a equipe...';
+                await publishManagementShared(status, 'Fluxo publicado para todos os logins.');
                 return;
             }
 
-            const records = JSON.parse(localStorage.getItem('platinoQuickEditorRecords') || '{}');
+            const records = managementSharedData.quickEditorRecords || {};
             records[key] = {
                 subject,
                 notes,
                 savedAt: new Date().toISOString(),
                 savedBy: window.firebaseAuthUser?.email || 'Gestão'
             };
-            localStorage.setItem('platinoQuickEditorRecords', JSON.stringify(records));
-            status.className = 'text-xs font-semibold text-green-600';
-            status.innerText = 'Registro salvo neste navegador.';
+            managementSharedData.quickEditorRecords = records;
+            status.className = 'text-xs font-semibold text-blue-600';
+            status.innerText = 'Publicando registro para a equipe...';
+            await publishManagementShared(status, 'Registro publicado para todos os logins.');
         }
 
         function loadRhNotes() {
             const notes = document.getElementById('rh-weekly-notes');
             if (!notes) return;
-            notes.value = localStorage.getItem('platinoRhWeeklyNotes') || '• Conferir ajustes de ponto pendentes\n• Atualizar andamento das vagas abertas\n• Enviar documentos mensais à contabilidade';
+            notes.value = managementSharedData.rhWeeklyNotes || localStorage.getItem('platinoRhWeeklyNotes') || managementSharedDefaults.rhWeeklyNotes;
         }
 
-        function saveRhNotes() {
-            if (!requireGestor('salvar o mural do RH')) return;
+        function renderRhMiniMural() {
+            const list = document.getElementById('rh-mini-mural-list');
+            if (!list) return;
+
+            const notices = Array.isArray(managementSharedData.rhMiniNotices)
+                ? managementSharedData.rhMiniNotices.slice(0, 6)
+                : [];
+
+            if (!notices.length) {
+                list.innerHTML = `
+                    <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-blue-100/75">
+                        Nenhuma informação publicada ainda.
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = notices.map(item => `
+                <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">${escapeHtml(item.type || 'Comunicado')}</p>
+                            <h5 class="mt-1 truncate font-black text-white">${escapeHtml(item.title || 'Informação do RH')}</h5>
+                        </div>
+                        <span class="whitespace-nowrap text-[10px] font-semibold text-blue-100/60">${escapeHtml(item.date || '')}</span>
+                    </div>
+                    <p class="mt-2 text-sm leading-relaxed text-blue-100/75">${escapeHtml(item.message || '')}</p>
+                    <p class="mt-2 text-[10px] font-semibold text-blue-100/50">${escapeHtml(item.savedBy || 'RH')}</p>
+                </div>
+            `).join('');
+        }
+
+        async function saveRhMiniNotice() {
+            if (!requireRhEditor('publicar no mini mural do RH')) return;
+
+            const type = document.getElementById('rh-mini-type');
+            const title = document.getElementById('rh-mini-title');
+            const message = document.getElementById('rh-mini-message');
+            const status = document.getElementById('rh-mini-status');
+            if (!type || !title || !message || !status) return;
+
+            const cleanTitle = title.value.trim();
+            const cleanMessage = message.value.trim();
+            if (!cleanTitle || !cleanMessage) {
+                status.className = 'text-[11px] font-semibold text-amber-300';
+                status.innerText = 'Preencha título e detalhes.';
+                return;
+            }
+
+            const currentUser = window.firebaseAuthUser?.email || 'RH';
+            const notice = {
+                type: type.value,
+                title: cleanTitle,
+                message: cleanMessage,
+                date: new Date().toLocaleDateString('pt-BR'),
+                savedAt: new Date().toISOString(),
+                savedBy: currentUser
+            };
+
+            managementSharedData.rhMiniNotices = [
+                notice,
+                ...(managementSharedData.rhMiniNotices || [])
+            ].slice(0, 20);
+
+            title.value = '';
+            message.value = '';
+            status.className = 'text-[11px] font-semibold text-blue-300';
+            status.innerText = 'Publicando para todos...';
+            renderRhMiniMural();
+            await publishManagementShared(status, 'Publicado no mini mural.');
+        }
+
+        async function saveRhNotes() {
+            if (!requireRhEditor('salvar o mural do RH')) return;
             const notes = document.getElementById('rh-weekly-notes');
             const status = document.getElementById('rh-notes-status');
             if (!notes || !status) return;
 
-            localStorage.setItem('platinoRhWeeklyNotes', notes.value);
-            status.innerText = 'Mural salvo agora';
-            status.className = 'text-[11px] font-semibold text-emerald-400';
+            managementSharedData.rhWeeklyNotes = notes.value;
+            status.innerText = 'Publicando mural para a equipe...';
+            status.className = 'text-[11px] font-semibold text-blue-300';
+            await publishManagementShared(status, 'Mural publicado para todos os logins.');
             setTimeout(() => {
-                status.innerText = 'Visível neste navegador';
+                status.innerText = 'Sincronizado para todos os logins';
                 status.className = 'text-[11px] text-amber-400/80';
             }, 1800);
  
@@ -3810,6 +4065,25 @@
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
             }
+        }
+
+        function requestAccountingInfo() {
+            const subject = document.getElementById('rh-accounting-subject')?.value.trim() || 'Solicitação sobre Central da Contabilidade';
+            const message = document.getElementById('rh-accounting-message')?.value.trim() || 'Solicito informações sobre a Central da Contabilidade.';
+
+            closeRhPanel();
+            navigateTo('ideias');
+
+            const type = document.getElementById('feedback-type');
+            const sector = document.getElementById('feedback-sector');
+            const feedbackSubject = document.getElementById('feedback-subject');
+            const feedbackMessage = document.getElementById('feedback-message');
+
+            if (type) type.value = 'outro';
+            if (sector) sector.value = 'rh';
+            if (feedbackSubject) feedbackSubject.value = subject;
+            if (feedbackMessage) feedbackMessage.value = `[Central da Contabilidade]\n${message}`;
+            feedbackSubject?.focus();
         }
 
         // RECUPERAÇÃO DA BASE + IA GENERATIVA OPCIONAL
@@ -4371,9 +4645,50 @@
 
         function renderRankingHunters() {
             const container = document.getElementById('ranking-hunters-list');
+            const statsContainer = document.getElementById('ranking-hunters-stats');
             if (!container) return;
 
             const items = [...(rankingData.hunters || [])].sort((a, b) => (b.paidClients || 0) - (a.paidClients || 0) || (b.value || 0) - (a.value || 0));
+            const totals = items.reduce((acc, item) => {
+                acc.convertedClients += Number(item.convertedClients) || 0;
+                acc.paidClients += Number(item.paidClients) || 0;
+                acc.notPaidClients += Number(item.notPaidClients) || 0;
+                acc.projections += Number(item.projections) || 0;
+                acc.value += Number(item.value) || 0;
+                return acc;
+            }, {
+                convertedClients: 0,
+                paidClients: 0,
+                notPaidClients: 0,
+                projections: 0,
+                value: 0
+            });
+
+            if (statsContainer) {
+                statsContainer.innerHTML = `
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Convertidos</p>
+                        <p class="mt-1 text-2xl font-black money-value">${totals.convertedClients}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Pagos</p>
+                        <p class="mt-1 text-2xl font-black money-value">${totals.paidClients}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Não pagos</p>
+                        <p class="mt-1 text-2xl font-black money-value">${totals.notPaidClients}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Projeções</p>
+                        <p class="mt-1 text-2xl font-black money-value">${totals.projections}</p>
+                    </div>
+                    <div class="col-span-2 rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Valor total</p>
+                        <p class="mt-1 text-2xl font-black money-value">${formatCurrency(totals.value)}</p>
+                    </div>
+                `;
+            }
+
             if (!items.length) {
                 container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-blue-100/70">Nenhum Hunter sincronizado ainda.</div>';
                 return;
@@ -5406,6 +5721,34 @@
             }
         };
 
+        window.applyRemoteManagementEdits = function (remoteData = {}) {
+            managementSharedData = {
+                ...managementSharedDefaults,
+                ...managementSharedData,
+                ...remoteData,
+                quickEditorRecords: remoteData.quickEditorRecords || managementSharedData.quickEditorRecords || {},
+                flowOverrides: remoteData.flowOverrides || managementSharedData.flowOverrides || {},
+                rhMiniNotices: Array.isArray(remoteData.rhMiniNotices)
+                    ? remoteData.rhMiniNotices
+                    : (managementSharedData.rhMiniNotices || []),
+                financeiroRegistros: Array.isArray(remoteData.financeiroRegistros)
+                    ? remoteData.financeiroRegistros
+                    : (managementSharedData.financeiroRegistros || []),
+                rhWeeklyNotes: remoteData.rhWeeklyNotes || managementSharedData.rhWeeklyNotes || managementSharedDefaults.rhWeeklyNotes
+            };
+            persistManagementSharedLocally();
+            loadFlowOverrides();
+            getFlowCollections().forEach(collection => renderAccordions(collection.containerId, collection.data));
+            loadRhNotes();
+            renderRhMiniMural();
+
+            const rhStatus = document.getElementById('rh-notes-status');
+            if (rhStatus) {
+                rhStatus.innerText = 'Sincronizado para todos os logins';
+                rhStatus.className = 'text-[11px] text-amber-400/80';
+            }
+        };
+
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)
@@ -5499,6 +5842,7 @@
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
             loadRhNotes();
+            renderRhMiniMural();
             
             // Carregar ranking e avisos salvos localmente e inicializar o carousel
             loadRankingData();
@@ -5573,14 +5917,21 @@
       let db = null;
       let avisosRef = null;
       let rankingRef = null;
+      let managementRef = null;
       let feedbacksRef = null;
       let stopAvisosSubscription = null;
       let stopRankingSubscription = null;
+      let stopManagementSubscription = null;
       let stopFeedbackSubscription = null;
 
       function assertGestorWrite(action) {
         if (window.platinoUserRole === "gestor") return;
         throw new Error(`Acesso restrito: apenas o gestor pode ${action}.`);
+      }
+
+      function assertManagementSharedWrite(action) {
+        if (window.platinoUserRole === "gestor" || window.platinoUserCanEditRh === true) return;
+        throw new Error(`Acesso restrito: apenas Gestão/RH pode ${action}.`);
       }
 
       window.platinoNoticeStore = {
@@ -5619,6 +5970,26 @@
               if (snapshot.exists()) window.applyRemoteRanking?.(snapshot.data());
             },
             error => console.warn("Não foi possível sincronizar o ranking.", error)
+          );
+        }
+      };
+
+      window.platinoManagementStore = {
+        save: async (data) => {
+          assertManagementSharedWrite("publicar informações compartilhadas");
+          return setDoc(managementRef, {
+            ...data,
+            serverUpdatedAt: serverTimestamp()
+          }, { merge: true });
+        },
+        subscribe: () => {
+          if (stopManagementSubscription) return;
+          stopManagementSubscription = onSnapshot(
+            managementRef,
+            snapshot => {
+              if (snapshot.exists()) window.applyRemoteManagementEdits?.(snapshot.data());
+            },
+            error => console.warn("Não foi possível sincronizar as edições da gestão.", error)
           );
         }
       };
@@ -5887,6 +6258,7 @@
         const email = user?.email?.toLowerCase() || "";
         const employeeAccess = employeeAccessMap.get(email);
         const mappedUser = employeeAccess || nomeMap[email] || null;
+        const rhEditorEmails = new Set(["anna@platino.com", "emily@platino.com", "emilly@platino.com"]);
         const isManagement = user?.uid === managementUid || managementEmails.has(email) || employeeAccess?.gestor === true;
         const role = isManagement ? "gestor" : "equipe";
         const displayName = mappedUser?.name || email || "Usuário";
@@ -5894,6 +6266,7 @@
         window.firebaseAuthUser = user;
         window.platinoUserRole = role;
         window.platinoUserSector = displaySector;
+        window.platinoUserCanEditRh = rhEditorEmails.has(email) || isManagement;
 
         document.getElementById("user-name").innerText = displayName;
         document.getElementById("user-role").innerText = role === "gestor" ? `Gestor - ${displaySector}` : displaySector;
@@ -5909,6 +6282,7 @@
           db = getFirestore(app);
           avisosRef = doc(db, "appContent", "centralAvisos");
           rankingRef = doc(db, "appContent", "ranking");
+          managementRef = doc(db, "appContent", "managementEdits");
           feedbacksRef = collection(db, "feedbacks");
 
           onAuthStateChanged(auth, (user) => {
@@ -5918,6 +6292,7 @@
           updateUserAccess(user);
           window.platinoNoticeStore.subscribe();
           window.platinoRankingStore.subscribe();
+          window.platinoManagementStore.subscribe();
           // startRankingSheetSync(); // Desativado para evitar sobrescrever o ranking manual publicado no Firebase.
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
@@ -5927,6 +6302,7 @@
           appContent.classList.add("hidden");
           window.firebaseAuthUser = null;
           window.platinoUserRole = "equipe";
+          window.platinoUserCanEditRh = false;
           window.applyGestorVisibility?.();
           if (stopAvisosSubscription) {
             stopAvisosSubscription();
@@ -5935,6 +6311,10 @@
           if (stopRankingSubscription) {
             stopRankingSubscription();
             stopRankingSubscription = null;
+          }
+          if (stopManagementSubscription) {
+            stopManagementSubscription();
+            stopManagementSubscription = null;
           }
           stopRankingSheetSync();
           if (stopFeedbackSubscription) {

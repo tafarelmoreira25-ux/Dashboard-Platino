@@ -17,6 +17,20 @@ service cloud.firestore {
           || request.auth.token.email == 'supervisao@platino.com'
           || request.auth.token.email == 'diretoria@platino.com'
           || request.auth.token.email == 'admin@platino.com'
+          || request.auth.token.email == 'isabela@platino.com'
+          || request.auth.token.email == 'vanessa@platino.com'
+        );
+    }
+
+    function isRhEditor() {
+      return isManagement()
+        || (
+          signedIn()
+          && (
+            request.auth.token.email == 'anna@platino.com'
+            || request.auth.token.email == 'emily@platino.com'
+            || request.auth.token.email == 'emilly@platino.com'
+          )
         );
     }
 
@@ -62,6 +76,12 @@ service cloud.firestore {
     match /appContent/{document} {
       allow read: if signedIn();
       allow create, update: if isManagement();
+      allow delete: if false;
+    }
+
+    match /appContent/managementEdits {
+      allow read: if signedIn();
+      allow create, update: if isRhEditor();
       allow delete: if false;
     }
 
