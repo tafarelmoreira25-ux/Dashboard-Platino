@@ -26,6 +26,10 @@ const SUPPLEMENTAL_HEADERS = {
 };
 
 const DEFAULT_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
+const DEFAULT_HUNTER_SPREADSHEET_ID = "1CfFR1wjF74xXea4bYrjkea8qaQxsjwoQ13KsiWh2cIE";
+const DEFAULT_HUNTER_SHEET_NAME = "HUNTER";
+const DEFAULT_INDICATORS_SHEET_NAME = "INDICADORES";
+const DEFAULT_HUNTER_NAME = "Giullian Gabriellen";
 const DEFAULT_TEAM_GOALS = {
   comercial: 150000,
   juridico: 310000
@@ -47,6 +51,22 @@ function getCurrentMonthAliases() {
 function getDefaultSheetCsvUrl() {
   const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const sheetName = process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName();
+  const encodedSheet = encodeURIComponent(sheetName);
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
+}
+
+function getHunterSheetCsvUrl() {
+  if (process.env.HUNTER_SHEET_CSV_URL) return process.env.HUNTER_SHEET_CSV_URL;
+  const spreadsheetId = process.env.HUNTER_SPREADSHEET_ID || DEFAULT_HUNTER_SPREADSHEET_ID;
+  const sheetName = process.env.HUNTER_SHEET_NAME || DEFAULT_HUNTER_SHEET_NAME;
+  const encodedSheet = encodeURIComponent(sheetName);
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
+}
+
+function getIndicatorsSheetCsvUrl() {
+  if (process.env.HUNTER_INDICATORS_SHEET_CSV_URL) return process.env.HUNTER_INDICATORS_SHEET_CSV_URL;
+  const spreadsheetId = process.env.HUNTER_SPREADSHEET_ID || DEFAULT_HUNTER_SPREADSHEET_ID;
+  const sheetName = process.env.HUNTER_INDICATORS_SHEET_NAME || DEFAULT_INDICATORS_SHEET_NAME;
   const encodedSheet = encodeURIComponent(sheetName);
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
 }
@@ -107,8 +127,8 @@ function parseMoney(value) {
 
 function getColumn(row, headerMap, key) {
   const aliases = [
-    ...(REQUIRED_HEADERS[key] || []),
-    ...(key === "sold" ? getCurrentMonthAliases() : [])
+    ...(key === "sold" ? getCurrentMonthAliases() : []),
+    ...(REQUIRED_HEADERS[key] || [])
   ];
   for (const alias of aliases) {
     const index = headerMap.get(normalizeHeader(alias));
@@ -268,6 +288,147 @@ function extractSupplementalDataFromCsv(text) {
   }
 
   return { history, hunters, paidClients };
+}
+
+function parseFirstMoneyFromText(value) {
+  const match = String(value || "").match(/R\$\s*[\d.]+,\d{2}|[\d.]+,\d{2}/);
+  return match ? parseMoney(match[0]) : 0;
+}
+
+function classifyHunterSituation(value) {
+  const situation = normalizeHeader(value);
+  if (
+    situation.includes("NAO PAGOU") ||
+    situation.includes("NÃO PAGOU") ||
+    situation.includes("NAO PAGO") ||
+    situation.includes("NÃO PAGO") ||
+    situation.includes("NAO VAI PAGAR") ||
+    situation.includes("NÃO VAI PAGAR") ||
+    situation.includes("RECUSOU") ||
+    situation.includes("PERDIDO") ||
+    situation.includes("CANCELADO") ||
+    situation.includes("SEM PAGAMENTO")
+  ) {
+    return "notPaid";
+  }
+  if (situation.includes("PAGOU") || situation.includes("PAGO")) return "paid";
+  if (situation.includes("PROJECAO") || situation.includes("PROJEÇÃO")) return "projection";
+  if (
+    situation.includes("CONVERTIDO") ||
+    situation.includes("CONVERTEU") ||
+    situation.includes("POTENCIAL") ||
+    situation.includes("PARA PAGAR") ||
+    situation.includes("VAI PAGAR") ||
+    situation.includes("PENDENTE") ||
+    situation.includes("AGUARDANDO") ||
+    situation.includes("NEGOCIACAO") ||
+    situation.includes("NEGOCIAÇÃO")
+  ) {
+    return "potential";
+  }
+  return situation ? "potential" : "";
+}
+
+function extractHunterDataFromCsv(text) {
+  const csvRows = parseCsv(text);
+  if (csvRows.length < 2) {
+    return { hunters: [], paidClients: [] };
+  }
+
+  const headers = csvRows[0].map(normalizeHeader);
+  const headerMap = new Map(headers.map((header, index) => [header, index]));
+  const hunterTotals = new Map();
+  const paidClients = [];
+
+  for (const row of csvRows.slice(1)) {
+    const client = normalizeConsultantName(getColumnByAliases(row, headerMap, ["CLIENTE", "CLIENTE POTENCIAL", "NOME CLIENTE"]));
+    const explicitHunter = normalizeConsultantName(getColumnByAliases(row, headerMap, ["HUNTER", "CAPTADOR", "ORIGEM", "INDICADOR"]));
+    const consultant = normalizeConsultantName(getColumnByAliases(row, headerMap, ["CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL", "VENDEDOR"]));
+    const hunter = explicitHunter || DEFAULT_HUNTER_NAME;
+    const situation = normalizeConsultantName(getColumnByAliases(row, headerMap, ["SITUAÇÃO", "SITUACAO", "STATUS"]));
+    const product = normalizeConsultantName(getColumnByAliases(row, headerMap, ["PRODUTO"]));
+    const date = normalizeConsultantName(getColumnByAliases(row, headerMap, ["DATA", "DATA PAGAMENTO", "DATA DO PAGAMENTO"]));
+    const observation = normalizeConsultantName(getColumnByAliases(row, headerMap, ["OBSERVAÇÃO", "OBSERVACAO", "OBS"]));
+    const category = classifyHunterSituation(situation);
+
+    if (!client && !explicitHunter && !consultant && !situation && !product && !date && !observation) continue;
+
+    const key = hunter || "Sem hunter";
+    const current = hunterTotals.get(key) || {
+      name: key,
+      convertedClients: 0,
+      potentialClients: 0,
+      paidClients: 0,
+      notPaidClients: 0,
+      projections: 0,
+      value: 0
+    };
+
+    if (client || situation) current.convertedClients += 1;
+    if (category === "paid") current.paidClients += 1;
+    else if (category === "notPaid") current.notPaidClients += 1;
+    else if (category === "projection") current.projections += 1;
+    else if (category === "potential") current.potentialClients += 1;
+
+    const value = parseFirstMoneyFromText(observation);
+    current.value += value;
+    hunterTotals.set(key, current);
+
+    if (category === "paid" && client) {
+      paidClients.push({
+        name: client,
+        value,
+        date,
+        responsible: consultant || hunter,
+        hunter,
+        status: situation || "Pagou",
+        product,
+        observation
+      });
+    }
+  }
+
+  return {
+    hunters: Array.from(hunterTotals.values()).filter(item =>
+      item.name || item.convertedClients || item.potentialClients || item.paidClients || item.notPaidClients || item.projections || item.value
+    ),
+    paidClients
+  };
+}
+
+function mergeHunterData(datasets) {
+  const hunterTotals = new Map();
+  const paidClients = [];
+
+  for (const data of datasets) {
+    for (const item of data.hunters || []) {
+      const key = item.name || DEFAULT_HUNTER_NAME;
+      const current = hunterTotals.get(key) || {
+        name: key,
+        convertedClients: 0,
+        potentialClients: 0,
+        paidClients: 0,
+        notPaidClients: 0,
+        projections: 0,
+        value: 0
+      };
+
+      current.convertedClients += Number(item.convertedClients) || 0;
+      current.potentialClients += Number(item.potentialClients) || 0;
+      current.paidClients += Number(item.paidClients) || 0;
+      current.notPaidClients += Number(item.notPaidClients) || 0;
+      current.projections += Number(item.projections) || 0;
+      current.value += Number(item.value) || 0;
+      hunterTotals.set(key, current);
+    }
+
+    paidClients.push(...(data.paidClients || []));
+  }
+
+  return {
+    hunters: Array.from(hunterTotals.values()),
+    paidClients
+  };
 }
 
 function detectSideBySideSections(headers) {
@@ -485,6 +646,7 @@ function rowsFromPlatinoSideBySideCsv(text) {
 
 function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, metrics = {}, supplemental = {}) {
   const ranking = {
+    monthKey: getCurrentPortugueseMonthName(),
     comercial: [],
     juridico: [],
     teamGoals: {},
@@ -578,6 +740,19 @@ export default async function handler(request, response) {
       supplemental.hunters.push(...extraData.hunters);
       supplemental.paidClients.push(...extraData.paidClients);
       rows.push(...rowsFromCsv(csv, "juridico"));
+    }
+
+    try {
+      const hunterDatasets = [];
+      const indicatorsCsv = await fetchCsv(getIndicatorsSheetCsvUrl());
+      hunterDatasets.push(extractHunterDataFromCsv(indicatorsCsv));
+      const hunterCsv = await fetchCsv(getHunterSheetCsvUrl());
+      hunterDatasets.push(extractHunterDataFromCsv(hunterCsv));
+      const hunterData = mergeHunterData(hunterDatasets);
+      if (hunterData.hunters.length) supplemental.hunters = hunterData.hunters;
+      if (hunterData.paidClients.length) supplemental.paidClients = hunterData.paidClients;
+    } catch (hunterError) {
+      console.warn("Nao foi possivel sincronizar a planilha de indicadores/Hunter.", hunterError);
     }
 
     response.setHeader("Cache-Control", "no-store");

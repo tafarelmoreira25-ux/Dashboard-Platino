@@ -527,7 +527,7 @@
 
         .team-card {
             width: 220px;
-            min-height: 250px;
+            min-height: 270px;
             flex: 0 0 auto;
             position: relative;
             background:
@@ -569,9 +569,41 @@
         }
 
         .team-avatar {
-            background: linear-gradient(135deg, #0f3a7a, #2563eb);
+            height: 7rem;
+            width: 7rem;
+            padding: 4px;
+            overflow: visible;
+            background:
+                conic-gradient(from 150deg, #f8fafc, #93c5fd, #1d4ed8, #dbeafe, #64748b, #f8fafc);
             color: #eff6ff;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 12px 26px rgba(37, 99, 235, 0.2);
+            box-shadow:
+                0 18px 36px rgba(15, 23, 42, 0.3),
+                0 0 0 1px rgba(226, 232, 240, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        .team-photo {
+            display: block;
+            height: 100%;
+            width: 100%;
+            border-radius: 999px;
+            border: 2px solid rgba(255, 255, 255, 0.78);
+            background: #061535;
+            object-fit: cover;
+            object-position: center 22%;
+            image-rendering: auto;
+            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.16);
+        }
+
+        .team-avatar-fallback {
+            height: 100%;
+            width: 100%;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #0f3a7a, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.72);
         }
 
         .team-extra {
@@ -711,6 +743,22 @@
 
         .training-card:hover::before {
             opacity: 1;
+        }
+
+        #section-treinamentos .training-card > a {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            background:
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
+            border: 1px solid rgba(147, 197, 253, 0.62) !important;
+            box-shadow:
+                0 14px 28px rgba(37, 99, 235, 0.26),
+                inset 0 1px 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
+        }
+
+        #section-treinamentos .training-card > a:hover {
+            filter: brightness(1.05);
         }
 
         .login-hero-bg {
@@ -949,19 +997,32 @@
 
         #app-container {
             align-items: stretch;
+            overflow: visible;
         }
 
         #sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 50;
             min-height: 100vh;
+            height: 100dvh;
             background:
                 linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%) !important;
         }
 
+        main {
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
         @media (min-width: 768px) {
             #sidebar {
-                position: sticky;
-                top: 0;
-                height: 100vh;
+                transform: none !important;
+            }
+
+            #app-container > main {
+                margin-left: 16rem;
+                width: calc(100% - 16rem);
             }
         }
 
@@ -1443,6 +1504,14 @@
               Entrar
             </button>
 
+            <button
+              id="login-reset-password"
+              type="button"
+              class="w-full rounded-xl px-3 py-2 text-sm font-semibold text-blue-200 transition hover:bg-white/10 hover:text-white"
+            >
+              Esqueci minha senha
+            </button>
+
             <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
           </div>
 
@@ -1495,6 +1564,9 @@
                 <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn">
                     <i class="ph ph-books"></i> Treinamentos
                 </button>
+                <button id="nav-drive" onclick="navigateTo('drive')" class="nav-btn">
+                    <i class="ph ph-folder-simple-lock"></i> Drive
+                </button>
                 <button id="nav-ideias" onclick="navigateTo('ideias')" class="nav-btn">
                     <i class="ph ph-lightbulb"></i> Hub de Sugestões
                 </button>
@@ -1509,6 +1581,9 @@
                         <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel</p>
                         <p id="user-role" class="text-[10px] text-[#8B9CB6] font-semibold uppercase tracking-wider truncate">Gestão Platino</p>
                     </div>
+                    <button id="change-password-open" type="button" class="text-[#8B9CB6] hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Alterar senha">
+                        <i class="ph ph-key text-xl"></i>
+                    </button>
                     <button onclick="logoutPlatino()" class="text-[#8B9CB6] hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Sair do Sistema">
                         <i class="ph ph-sign-out text-xl"></i>
                     </button>
@@ -1694,12 +1769,12 @@
                                     <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque do Mês de Maio - Comercial</h3>
                                     <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Líder do Mês</span>
                                 </div>
-                                <p id="avisos-highlight-name" class="font-black text-2xl">Fernanda Ramos</p>
-                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em Maio!</p>
+                                <p id="avisos-highlight-name" class="font-black text-2xl">Mayara Cardoso</p>
+                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em Junho!</p>
                             </div>
                             <div class="md:text-right">
                                     <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">R$29.355,50</p>
+                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">R$32.344,77</p>
                             </div>
                         </div>
                     </div>
@@ -1718,22 +1793,22 @@
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                                 <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-file-text text-blue-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Novos</span></div>
-                                    <p id="avisos-week-contracts" class="mt-2 text-3xl font-black">9</p>
+                                    <p id="avisos-week-contracts" class="mt-2 text-3xl font-black">0</p>
                                     <p class="text-xs text-blue-100">Contratos</p>
                                 </div>
                                 <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-check-circle text-indigo-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Concluídos</span></div>
-                                    <p id="avisos-week-laudos" class="mt-2 text-3xl font-black">7</p>
+                                    <p id="avisos-week-laudos" class="mt-2 text-3xl font-black">0</p>
                                     <p class="text-xs text-blue-100">Laudos fechados</p>
                                 </div>
                                 <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-x-circle text-red-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Período</span></div>
-                                    <p id="avisos-week-distratos" class="mt-2 text-3xl font-black">2</p>
+                                    <p id="avisos-week-distratos" class="mt-2 text-3xl font-black">0</p>
                                     <p class="text-xs text-blue-100">Distratos</p>
                                 </div>
                                 <div class="rounded-xl border border-purple-300/20 bg-purple-400/15 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-currency-circle-dollar text-purple-200 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-purple-100">Total</span></div>
-                                    <p id="avisos-week-revenue" class="mt-2 text-2xl md:text-3xl font-black">36.505,73</p>
+                                    <p id="avisos-week-revenue" class="mt-2 text-2xl md:text-3xl font-black">0,00</p>
                                     <p class="text-xs text-purple-100">Faturamento</p>
                                 </div>
                             </div>
@@ -1817,15 +1892,43 @@
                         </div>
 
                         <div class="relative mt-5 grid grid-cols-1 xl:grid-cols-3 gap-4">
-                            <div class="ranking-board rounded-2xl p-4 xl:col-span-1">
-                                <div class="mb-3 flex items-center justify-between gap-3">
-                                    <div>
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
-                                        <h4 class="metallic-title text-lg font-black">Resultado anterior</h4>
+                            <div class="space-y-4 xl:col-span-1">
+                                <div class="ranking-board rounded-2xl p-4">
+                                    <div class="mb-3 flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
+                                            <h4 class="metallic-title text-lg font-black">Resultado anterior</h4>
+                                        </div>
+                                        <i class="ph ph-clock-counter-clockwise text-2xl text-blue-200/70"></i>
                                     </div>
-                                    <i class="ph ph-clock-counter-clockwise text-2xl text-blue-200/70"></i>
+                                    <div id="ranking-history-panel" class="space-y-3"></div>
                                 </div>
-                                <div id="ranking-history-panel" class="space-y-3"></div>
+
+                                <div class="ranking-board rounded-2xl p-4 border-rose-300/20 bg-rose-950/20">
+                                    <div class="mb-3 flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-100/70">Chargebacks</p>
+                                            <h4 class="metallic-title text-lg font-black">Controle do mês</h4>
+                                        </div>
+                                        <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-white/15">
+                                            <i class="ph ph-pencil-simple"></i> Editar
+                                        </button>
+                                    </div>
+                                    <div class="mb-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <span class="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-100/60">Quantidade no mês</span>
+                                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/20 text-rose-100 border border-rose-300/30">
+                                                <i class="ph ph-credit-card text-xl"></i>
+                                            </span>
+                                        </div>
+                                        <p id="avisos-chargebacks-count" class="mt-2 text-4xl font-black money-value">0</p>
+                                        <p class="mt-1 text-xs text-rose-100/70">charges registrados</p>
+                                    </div>
+                                    <div>
+                                        <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-rose-100/60">Charges recentes</p>
+                                        <div id="avisos-chargebacks-list" class="grid gap-2"></div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="ranking-board rounded-2xl p-4">
@@ -2239,6 +2342,114 @@
                 </div>
             </section>
 
+            <section id="section-drive" class="content-section hidden animate-fade-in">
+                <div class="max-w-6xl mx-auto">
+                    <div class="mb-8 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
+                        <div class="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-sky-400/20 blur-3xl"></div>
+                        <div class="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                            <div>
+                                <p class="metallic-kicker text-[10px]">Gestão documental</p>
+                                <h2 class="metallic-title mt-1 text-3xl font-black">Drive Platino</h2>
+                                <p class="mt-2 max-w-3xl text-sm leading-relaxed text-blue-100">Padronize pastas, documentos, provas, registros e assinaturas para proteger a operação em cobranças, chargebacks, clientes ausentes, má-fé e processos.</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="https://sites.google.com/view/arquivo-platino/in%C3%ADcio" target="_blank" rel="noopener noreferrer" class="metal-button inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold text-white">
+                                    <i class="ph ph-folder-open"></i> Arquivo Platino
+                                </a>
+                                <button type="button" onclick="copyDriveTemplate('folder')" class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/15">
+                                    <i class="ph ph-copy"></i> Modelo da pasta
+                                </button>
+                                <button type="button" onclick="copyDriveTemplate('file')" class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/15">
+                                    <i class="ph ph-file-text"></i> Modelo de arquivo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
+                        <div class="portal-card rounded-2xl p-5 md:p-6">
+                            <div class="mb-4 flex items-start justify-between gap-4">
+                                <div>
+                                    <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">Pasta do cliente ativo</p>
+                                    <h3 class="mt-1 text-2xl font-black text-white">Modelo oficial de organização</h3>
+                                </div>
+                                <span class="rounded-full border border-blue-200/20 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-100">Drive</span>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                                <p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-200/70">Nome da pasta</p>
+                                <code id="drive-folder-template" class="mt-2 block rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm font-bold text-white">[ANO] - [NOME DO CLIENTE] - [STATUS]</code>
+                            </div>
+                            <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-blue-100"><strong class="text-white">Exemplo:</strong><br>2026 - JOAO SILVA - ATIVO</div>
+                                <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-blue-100"><strong class="text-white">Status:</strong><br>ATIVO, PENDENTE, PROCESSUAL, HOMOLOGAÇÃO ou ARQUIVADO</div>
+                            </div>
+                            <div id="drive-copy-status" class="mt-3 text-xs font-semibold text-blue-200/70"></div>
+                        </div>
+
+                        <div class="portal-card rounded-2xl p-5 md:p-6">
+                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">Por que arquivar tudo?</p>
+                            <h3 class="mt-1 text-2xl font-black text-white">Segurança operacional e prova documental</h3>
+                            <p class="mt-3 text-sm leading-relaxed text-blue-100/80">Cada contrato, termo, assinatura, protocolo, print, áudio, comprovante e registro de atendimento fortalece a defesa da empresa. A pasta bem organizada protege contra chargeback, contestação, cliente ausente, má-fé, falha de comunicação e discussão processual.</p>
+                            <div class="mt-5 grid gap-2 text-sm text-blue-100">
+                                <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="ph ph-shield-check text-emerald-300"></i> Comprova prestação de serviços.</div>
+                                <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="ph ph-signature text-sky-300"></i> Preserva assinaturas e ciência do cliente.</div>
+                                <div class="rounded-xl border border-white/10 bg-white/5 p-3"><i class="ph ph-chat-circle-text text-amber-300"></i> Registra tratativas e provas de comunicação.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 portal-card rounded-2xl p-5 md:p-6">
+                        <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">Subpastas padronizadas</p>
+                                <h3 class="mt-1 text-2xl font-black text-white">Estrutura recomendada</h3>
+                            </div>
+                            <button type="button" onclick="copyDriveTemplate('subfolders')" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/15">
+                                <i class="ph ph-copy"></i> Copiar subpastas
+                            </button>
+                        </div>
+                        <div class="grid gap-3 md:grid-cols-2">
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">01_CONTRATO_E_ASSINATURAS</p><p class="mt-1 text-xs text-blue-100/70">Contrato assinado, termos iniciais, comprovantes de assinatura e formalização.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">02_DOCUMENTOS_CLIENTE</p><p class="mt-1 text-xs text-blue-100/70">Documentos pessoais, obrigatórios e complementares enviados pelo cliente.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">03_NOTIFICACOES_E_TERMOS</p><p class="mt-1 text-xs text-blue-100/70">Notificação extrajudicial, termo de ciência, termos administrativos, distratos e declarações.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">04_GOV_E_PROTOCOLOS_ADMINISTRATIVOS</p><p class="mt-1 text-xs text-blue-100/70">Protocolos GOV, requerimentos de taxas, solicitações, prints e comprovantes de envio.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">05_PROVAS_SOCIAIS_E_TRATATIVAS</p><p class="mt-1 text-xs text-blue-100/70">Prints, áudios, ligações, diligências, provas de atendimento e comunicação.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">06_LAUDO_E_PARECER_TECNICO</p><p class="mt-1 text-xs text-blue-100/70">Laudo, parecer técnico, solicitações, e-mails e documentos relacionados.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">07_JURIDICO_PROCESSUAL</p><p class="mt-1 text-xs text-blue-100/70">Procurações, declarações, citações, protocolo judicial, movimentações e sentenças.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">08_FINANCEIRO_E_COMPROVANTES</p><p class="mt-1 text-xs text-blue-100/70">Comprovantes de pagamento, taxas, seguros, devoluções e documentos financeiros.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">09_AUDIENCIA_E_HOMOLOGACAO</p><p class="mt-1 text-xs text-blue-100/70">Solicitação, agendamento, ata, termo de homologação e documentos relacionados.</p></div>
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-4"><p class="font-bold text-white">10_ARQUIVO_COMPLEMENTAR</p><p class="mt-1 text-xs text-blue-100/70">Materiais adicionais relevantes para histórico e prova.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid gap-5 lg:grid-cols-2">
+                        <div class="portal-card rounded-2xl p-5 md:p-6">
+                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">Nome dos documentos</p>
+                            <h3 class="mt-1 text-2xl font-black text-white">Padrão recomendado</h3>
+                            <code id="drive-file-template" class="mt-4 block rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm font-bold text-white">DATA_CLIENTE_TIPO-DE-DOCUMENTO_STATUS_RESPONSAVEL</code>
+                            <div class="mt-4 space-y-2 text-xs text-blue-100/80">
+                                <p>2026-06-28_JOAO-SILVA_CONTRATO-ASSINADO_COMERCIAL.pdf</p>
+                                <p>2026-06-28_JOAO-SILVA_PROTOCOLO-GOV_ADMINISTRATIVO.pdf</p>
+                                <p>2026-06-28_JOAO-SILVA_PROCURACAO-JUDICIAL_ASSINADA.pdf</p>
+                                <p>2026-06-28_JOAO-SILVA_ATA-AUDIENCIA_JURIDICO.pdf</p>
+                            </div>
+                        </div>
+
+                        <div class="portal-card rounded-2xl p-5 md:p-6">
+                            <p class="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">Regras de nomeação</p>
+                            <h3 class="mt-1 text-2xl font-black text-white">O que nunca pode faltar</h3>
+                            <ul class="mt-4 space-y-2 text-sm text-blue-100/80">
+                                <li class="rounded-xl border border-white/10 bg-white/5 p-3">Usar data no início do arquivo.</li>
+                                <li class="rounded-xl border border-white/10 bg-white/5 p-3">Identificar tipo de documento e responsável.</li>
+                                <li class="rounded-xl border border-white/10 bg-white/5 p-3">Indicar status: assinado, final, pendente ou em análise.</li>
+                                <li class="rounded-xl border border-white/10 bg-white/5 p-3">Não usar nomes genéricos como documento, print, arquivo novo ou sem título.</li>
+                                <li class="rounded-xl border border-white/10 bg-white/5 p-3">Evitar duplicidade e manter o padrão em todas as pastas.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="section-treinamentos" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -2380,6 +2591,25 @@
                             </div>
                             <a href="abertura-de-grupos.html" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm">
                                 <i class="ph ph-play-circle text-lg"></i> Iniciar treinamento
+                            </a>
+                        </div>
+
+                        <div class="training-card flex flex-col justify-between rounded-2xl border border-sky-200 bg-gradient-to-br from-white to-sky-50/80 p-6 shadow-sm">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-700 text-white shadow-md shadow-sky-100"><i class="ph ph-folder-open text-xl"></i></span>
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">Manual operacional</p>
+                                            <h3 class="font-semibold text-lg">Tarefas e gerenciamento de arquivos</h3>
+                                        </div>
+                                    </div>
+                                    <span class="bg-sky-100 text-sky-700 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">DOCX</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-6">Manual da esteira de tratativas com orientações para organização de tarefas, controle e gestão de arquivos.</p>
+                            </div>
+                            <a href="materiais/manual-operacional-esteira-de-tratativas.docx" target="_blank" rel="noopener noreferrer" download class="w-full py-2.5 bg-sky-700 hover:bg-sky-800 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm">
+                                <i class="ph ph-download-simple text-lg"></i> Abrir material
                             </a>
                         </div>
                     </div>
@@ -2559,8 +2789,8 @@
                     </div>
                     <div class="rounded-2xl border border-amber-100 bg-amber-50/50 p-4">
                         <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-binoculars text-amber-700"></i> Hunters</h4>
-                        <p class="mt-1 text-xs text-slate-500">Formato: Hunter | Potenciais | Pagos | Valor</p>
-                        <textarea id="editor-ranking-hunters" rows="5" class="mt-3 w-full rounded-xl border border-amber-100 bg-white px-4 py-3 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" placeholder="João | 12 | 4 | 8500"></textarea>
+                        <p class="mt-1 text-xs text-slate-500">Formato: Hunter | Convertidos | Pagos | Não pagos | Projeções | Valor</p>
+                        <textarea id="editor-ranking-hunters" rows="5" class="mt-3 w-full rounded-xl border border-amber-100 bg-white px-4 py-3 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100" placeholder="João | 12 | 4 | 2 | 8500"></textarea>
                     </div>
                     <div class="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
                         <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-hand-coins text-emerald-700"></i> Clientes pagos</h4>
@@ -2629,6 +2859,20 @@
                     <div>
                         <h4 class="font-semibold text-slate-800 mb-2">Faturamento Total</h4>
                         <input id="editor-avisos-week-revenue" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="36.505,73" />
+                    </div>
+                </div>
+                <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
+                    <h4 class="font-semibold text-slate-800 flex items-center gap-2"><i class="ph ph-credit-card text-rose-700"></i> Chargebacks</h4>
+                    <div class="mt-3 grid gap-3 sm:grid-cols-[180px_1fr]">
+                        <div>
+                            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Quantidade no mês</label>
+                            <input id="editor-avisos-chargebacks-count" type="text" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="0" />
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">Charges recentes</label>
+                            <textarea id="editor-avisos-chargebacks-recent" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Nome do cliente | 01/07/2026"></textarea>
+                            <p class="mt-2 text-xs text-slate-500">Digite um cliente por linha no formato: Cliente | Data do charge.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
@@ -2730,6 +2974,43 @@
         </div>
     </div>
 
+    <div id="password-modal" class="fixed inset-0 z-[120] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity">
+        <div id="password-modal-content" class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform">
+            <div class="flex items-start justify-between gap-4 border-b border-slate-200 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 text-white">
+                <div>
+                    <p class="metallic-kicker text-[10px]">Segurança</p>
+                    <h3 class="metallic-title text-xl font-black">Alterar senha</h3>
+                    <p class="text-sm text-blue-100">Troque a senha padrão por uma senha pessoal.</p>
+                </div>
+                <button id="password-modal-close" type="button" class="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white" aria-label="Fechar alteração de senha">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4 p-6">
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700">Senha atual</label>
+                    <input id="password-current" type="password" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" autocomplete="current-password">
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700">Nova senha</label>
+                    <input id="password-new" type="password" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" autocomplete="new-password">
+                    <p class="mt-2 text-xs text-slate-500">Use pelo menos 6 caracteres.</p>
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700">Confirmar nova senha</label>
+                    <input id="password-confirm" type="password" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" autocomplete="new-password">
+                </div>
+                <p id="password-status" class="min-h-5 text-sm text-slate-500"></p>
+            </div>
+            <div class="flex flex-col gap-3 border-t border-slate-200 bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-end">
+                <button id="password-cancel" type="button" class="rounded-xl px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200">Cancelar</button>
+                <button id="password-save" type="button" class="metal-button justify-center rounded-xl px-5 py-3 text-sm font-semibold">
+                    <i class="ph ph-key text-lg"></i> Salvar nova senha
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
         <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
@@ -2739,7 +3020,7 @@
                         <span class="border-2 border-slate-900 rounded-full"></span>
                     </div>
                     <div>
-                        <h4 class="font-bold text-sm">Tafa, assistente interno</h4>
+                        <h4 class="font-bold text-sm">Olá Platininho</h4>
                         <p class="text-[10px] text-blue-200 opacity-90">Suporte Operacional Platino</p>
                     </div>
                 </div>
@@ -3325,9 +3606,53 @@
             juridico: 'Jurídico',
             rh: 'RH',
             financeiro: 'Financeiro',
+            drive: 'Drive',
             treinamentos: 'Treinamentos',
             ideias: 'Hub de Sugestões'
         };
+
+        const driveTemplates = {
+            folder: '[ANO] - [NOME DO CLIENTE] - [STATUS]',
+            file: 'DATA_CLIENTE_TIPO-DE-DOCUMENTO_STATUS_RESPONSAVEL',
+            subfolders: [
+                '01_CONTRATO_E_ASSINATURAS',
+                '02_DOCUMENTOS_CLIENTE',
+                '03_NOTIFICACOES_E_TERMOS',
+                '04_GOV_E_PROTOCOLOS_ADMINISTRATIVOS',
+                '05_PROVAS_SOCIAIS_E_TRATATIVAS',
+                '06_LAUDO_E_PARECER_TECNICO',
+                '07_JURIDICO_PROCESSUAL',
+                '08_FINANCEIRO_E_COMPROVANTES',
+                '09_AUDIENCIA_E_HOMOLOGACAO',
+                '10_ARQUIVO_COMPLEMENTAR'
+            ].join('\n')
+        };
+
+        async function copyDriveTemplate(type) {
+            const text = driveTemplates[type] || '';
+            const status = document.getElementById('drive-copy-status');
+            if (!text) return;
+
+            try {
+                if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const temp = document.createElement('textarea');
+                    temp.value = text;
+                    document.body.appendChild(temp);
+                    temp.select();
+                    document.execCommand('copy');
+                    temp.remove();
+                }
+                if (status) {
+                    status.innerText = 'Modelo copiado para a área de transferência.';
+                    setTimeout(() => { status.innerText = ''; }, 2200);
+                }
+            } catch (error) {
+                console.warn('Não foi possível copiar o modelo do Drive.', error);
+                if (status) status.innerText = 'Não foi possível copiar automaticamente. Selecione e copie manualmente.';
+            }
+        }
 
         function navigateTo(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => {
@@ -3679,6 +4004,25 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function runChatThinkingSteps(loadingDiv) {
+            const steps = [
+                'Consultando a base interna...',
+                'Cruzando com os procedimentos...',
+                'Organizando a resposta...'
+            ];
+            const label = loadingDiv.querySelector('[data-thinking-label]');
+
+            for (const step of steps) {
+                if (!document.body.contains(loadingDiv)) return;
+                if (label) label.textContent = step;
+                await wait(360);
+            }
+        }
+
         async function sendChatMessage() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
@@ -3695,16 +4039,22 @@
                     <div class="w-7 h-7 bg-blue-950 rounded-full flex-shrink-0 overflow-hidden mt-1 shadow-sm">
                         <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
                     </div>
-                <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex gap-1 items-center h-[46px]">
-                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                    <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                <div class="bg-white border border-slate-200 p-3 rounded-2xl chat-bubble-ai shadow-sm flex items-center gap-3 min-h-[48px]">
+                    <div class="flex gap-1 items-center">
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                    <span data-thinking-label class="text-xs font-semibold text-slate-500">Consultando a base interna...</span>
                 </div>
             `;
             container.appendChild(loadingDiv);
             container.scrollTop = container.scrollHeight;
 
-            const resposta = await fetchKnowledgeAnswer(text, false);
+            const [resposta] = await Promise.all([
+                fetchKnowledgeAnswer(text, false),
+                runChatThinkingSteps(loadingDiv)
+            ]);
             
             document.getElementById('chat-loading')?.remove();
             appendMessage(resposta, 'ai');
@@ -3714,24 +4064,39 @@
             if (event.key === 'Enter') sendChatMessage();
         }
 
+        function getCurrentOperationalMonthKey() {
+            return new Intl.DateTimeFormat('pt-BR', {
+                month: 'long',
+                timeZone: 'America/Sao_Paulo'
+            }).format(new Date()).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+        }
+
         const defaultRankingData = {
+            monthKey: getCurrentOperationalMonthKey(),
             teamGoals: {
                 comercial: 150000,
                 juridico: 310000
             },
             teamTotals: {
-                comercial: 53499.65,
-                juridico: 188207.80
+                comercial: 0,
+                juridico: 0
             },
             comercial: [
-                { name: 'Geovana Xavier', sold: 5865.22 },
-                { name: 'Mayara Cardoso', sold: 3081.24 },
-                { name: 'Gabriel Paes', sold: 2260 }
+                { name: 'Geovanna Alves Xavier', sold: 0 },
+                { name: 'Mayara Cardoso Pereira', sold: 0 },
+                { name: 'Gabriel Nunes Paes', sold: 0 },
+                { name: 'João Victor (TJ)', sold: 0 },
+                { name: 'Janaina Rodrigues Paiva', sold: 0 },
+                { name: 'Rafaela Marcelino', sold: 0 },
+                { name: 'Fernanda Ramos', sold: 0 },
+                { name: 'Monique Cristina da Silva', sold: 0 }
             ],
             juridico: [
-                { name: 'Tabata.', sold: 14197.19 },
-                { name: 'Nicole.', sold: 8769.35 },
-                { name: 'Elaine', sold: 2000 }
+                { name: 'Giullian Gabriellen', sold: 0 },
+                { name: 'Nicole Monteiro Faria', sold: 0 },
+                { name: 'Tabata Rangel de Lima', sold: 0 },
+                { name: 'Elaine Aparecida dos Santos', sold: 0 },
+                { name: 'Nicolas Peres Isso', sold: 0 }
             ],
             history: [
                 { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
@@ -3753,10 +4118,12 @@
 
         function normalizeRankingData(value = {}, options = {}) {
             const useFallback = options.useFallback === true;
+            const isCurrentMonthData = value.monthKey === defaultRankingData.monthKey || value.source === 'googleSheets';
+            const sourceValue = isCurrentMonthData || useFallback ? value : defaultRankingData;
             const normalizeList = (items, fallback) => {
-                const source = Array.isArray(items)
+                const source = Array.isArray(items) && items.length
                     ? items
-                    : useFallback
+                    : useFallback || isCurrentMonthData
                     ? fallback
                     : [];
 
@@ -3772,8 +4139,8 @@
                     .filter(item => item.name || item.sold || item.goal);
             };
 
-            const comercial = normalizeList(value.comercial, defaultRankingData.comercial);
-            const juridico = normalizeList(value.juridico, defaultRankingData.juridico);
+            const comercial = normalizeList(sourceValue.comercial, defaultRankingData.comercial);
+            const juridico = normalizeList(sourceValue.juridico, defaultRankingData.juridico);
             const normalizeHistory = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.history : [])
                 .map(item => ({
                     month: String(item?.month || item?.mes || '').trim(),
@@ -3786,11 +4153,14 @@
             const normalizeHunters = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.hunters : [])
                 .map(item => ({
                     name: String(item?.name || item?.hunter || '').trim(),
+                    convertedClients: Number(item?.convertedClients ?? item?.convertidos ?? item?.conversions ?? 0) || 0,
                     potentialClients: Number(item?.potentialClients ?? item?.potenciais ?? item?.clients ?? 0) || 0,
                     paidClients: Number(item?.paidClients ?? item?.pagos ?? item?.payments ?? 0) || 0,
+                    notPaidClients: Number(item?.notPaidClients ?? item?.naoPagos ?? item?.nãoPagos ?? item?.unpaidClients ?? 0) || 0,
+                    projections: Number(item?.projections ?? item?.projecoes ?? item?.projeções ?? 0) || 0,
                     value: parseRankingValue(item?.value ?? item?.valor ?? '')
                 }))
-                .filter(item => item.name || item.potentialClients || item.paidClients || item.value);
+                .filter(item => item.name || item.convertedClients || item.potentialClients || item.paidClients || item.notPaidClients || item.projections || item.value);
             const normalizePaidClients = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.paidClients : [])
                 .map(item => ({
                     name: String(item?.name || item?.client || item?.cliente || '').trim(),
@@ -3803,23 +4173,24 @@
             const normalized = {
                 comercial,
                 juridico,
+                monthKey: defaultRankingData.monthKey,
                 teamGoals: {},
                 teamTotals: {},
-                history: normalizeHistory(value.history),
-                hunters: normalizeHunters(value.hunters),
-                paidClients: normalizePaidClients(value.paidClients),
-                source: value.source || 'manual',
-                updatedAt: value.updatedAt || null,
-                updatedBy: value.updatedBy || 'Supervisão'
+                history: normalizeHistory(sourceValue.history),
+                hunters: normalizeHunters(sourceValue.hunters),
+                paidClients: normalizePaidClients(sourceValue.paidClients),
+                source: sourceValue.source || 'manual',
+                updatedAt: sourceValue.updatedAt || null,
+                updatedBy: sourceValue.updatedBy || 'Supervisão'
             };
 
             rankingSectors.forEach(sector => {
                 const items = normalized[sector] || [];
                 const defaultGoal = defaultRankingData.teamGoals?.[sector] || 0;
-                const explicitGoal = parseRankingValue(value.teamGoals?.[sector] ?? value[`${sector}TeamGoal`] ?? '');
+                const explicitGoal = parseRankingValue(sourceValue.teamGoals?.[sector] ?? sourceValue[`${sector}TeamGoal`] ?? '');
                 const rowGoal = Math.max(0, ...items.map(item => Number(item.teamGoal) || 0));
                 const teamGoal = explicitGoal || rowGoal || defaultGoal;
-                const explicitTotal = parseRankingValue(value.teamTotals?.[sector] ?? value[`${sector}TeamTotal`] ?? '');
+                const explicitTotal = parseRankingValue(sourceValue.teamTotals?.[sector] ?? sourceValue[`${sector}TeamTotal`] ?? '');
                 const rowTeamGaps = items
                     .map(item => Number(item.teamGap) || 0)
                     .filter(item => item > 0);
@@ -4014,7 +4385,7 @@
                 <div class="ranking-row flex items-center justify-between gap-3 rounded-xl p-3">
                     <div class="min-w-0">
                         <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Hunter')}</p>
-                        <p class="text-[11px] text-blue-100/65">${Number(item.potentialClients) || 0} potenciais • ${Number(item.paidClients) || 0} pagos</p>
+                        <p class="text-[11px] text-blue-100/65">${Number(item.convertedClients) || 0} convertidos • ${Number(item.paidClients) || 0} pagos • ${Number(item.notPaidClients) || 0} não pagos • ${Number(item.projections) || 0} projeções</p>
                     </div>
                     <p class="money-value text-sm font-black">${formatCurrency(item.value || 0)}</p>
                 </div>
@@ -4072,14 +4443,12 @@
             const companyTotal = Number(sheetData?.metrics?.companyTotal)
                 || ((Number(sheetData?.teamTotals?.comercial) || 0) + (Number(sheetData?.teamTotals?.juridico) || 0));
 
-            if (!contracts && !companyTotal) return;
-
             avisosData = normalizeAvisosData({
                 ...avisosData,
                 week: {
                     ...avisosData.week,
-                    contracts: contracts ? String(contracts) : avisosData.week.contracts,
-                    revenue: companyTotal ? formatNumberBR(companyTotal) : avisosData.week.revenue
+                    contracts: String(contracts),
+                    revenue: formatNumberBR(companyTotal)
                 },
                 updatedAt: avisosData.updatedAt,
                 updatedBy: avisosData.updatedBy
@@ -4217,7 +4586,7 @@
 
         function serializeRankingHunters(items) {
             return (items || [])
-                .map(item => `${item.name || ''} | ${item.potentialClients || 0} | ${item.paidClients || 0} | ${formatNumberBR(item.value || 0)}`)
+                .map(item => `${item.name || ''} | ${item.convertedClients || 0} | ${item.paidClients || 0} | ${item.notPaidClients || 0} | ${item.projections || 0} | ${formatNumberBR(item.value || 0)}`)
                 .join('\n');
         }
 
@@ -4225,15 +4594,18 @@
             return String(value || '')
                 .split('\n')
                 .map(line => {
-                    const [name, potentialClients, paidClients, value] = line.split('|');
+                    const [name, convertedClients, paidClients, notPaidClients, projections, value] = line.split('|');
                     return {
                         name: (name || '').trim(),
-                        potentialClients: Number(String(potentialClients || '').replace(/\D/g, '')) || 0,
+                        convertedClients: Number(String(convertedClients || '').replace(/\D/g, '')) || 0,
+                        potentialClients: 0,
                         paidClients: Number(String(paidClients || '').replace(/\D/g, '')) || 0,
+                        notPaidClients: Number(String(notPaidClients || '').replace(/\D/g, '')) || 0,
+                        projections: Number(String(projections || '').replace(/\D/g, '')) || 0,
                         value: parseRankingValue(value || '')
                     };
                 })
-                .filter(item => item.name || item.potentialClients || item.paidClients || item.value);
+                .filter(item => item.name || item.convertedClients || item.paidClients || item.notPaidClients || item.projections || item.value);
         }
 
         function serializeRankingPaidClients(items) {
@@ -4308,6 +4680,7 @@
             const status = document.getElementById('ranking-save-status');
             syncRankingEditorState();
             rankingData = normalizeRankingData({
+                monthKey: defaultRankingData.monthKey,
                 comercial: rankingData.comercial,
                 juridico: rankingData.juridico,
                 teamGoals: rankingData.teamGoals,
@@ -4405,31 +4778,47 @@
             rankingSheetLastSignature = '';
         }
 
-        const platinoBirthdays = [
-            { name: 'GIULLIAN GABRIELLEN OLIVEIRA PAULINO', date: '11/01/2000' },
-            { name: 'NICOLAS PERES ISSO', date: '03/01/2006' },
-            { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005' },
-            { name: 'NICOLE MONTEIRO DE MORAES FARIA', date: '18/02/2006' },
-            { name: 'ROBERTA INÊS DOS REIS BRANDÃO', date: '25/02/1992' },
-            { name: 'JOÃO VICTOR NUNES DE SOUZA', date: '14/03/2007' },
-            { name: 'GABRIEL NUNES PAES', date: '25/03/1997' },
-            { name: 'JANAINA RODRIGUES PAIVA SALES DE ALMEIDA', date: '03/04/1987' },
-            { name: 'RAFAELA MARCELINO', date: '03/04/1994' },
-            { name: 'FERNANDA RAMOS MARTINS', date: '13/04/2007' },
-            { name: 'SONIA REGINA LEANDRO DA SILVA', date: '30/05/1964' },
-            { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991' },
-            { name: 'MONIQUE CRISTINA DA SILVA DE CARVALHO', date: '31/05/1993' },
-            { name: 'GIOVANA DILENA ROCHA', date: '28/06/1999', photo: 'assets/aniversariante-giovana-dilena.png' },
-            { name: 'TAFAREL MOREIRA', date: '30/06/1998', photo: 'assets/aniversariante-tafarel-moreira.png' },
-            { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003' },
-            { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004' },
-            { name: 'ISABELA LIMA DE SOUZA', date: '13/08/2000' },
-            { name: 'ANNA GRAZIELLY FERREIRA AGUILAR', date: '31/08/2003' },
-            { name: 'VANESSA ILANA DE SOUZA', date: '09/10/1974' },
-            { name: 'ELAINE APARECIDA DOS SANTOS', date: '13/10/1999' },
-            { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995' },
-            { name: 'YASMIM BERNARDO NOGUEIRA', date: '29/11/2005' }
+        const platinoPeople = [
+            { name: 'GIULLIAN GABRIELLEN', date: '11/01/2000', role: 'Hunter Jurídico', photo: 'assets/equipe/giullian-gabriellen.png' },
+            { name: 'NICOLAS PERES ISSO', date: '03/01/2006', role: 'Supervisor Jurídico', photo: 'assets/equipe/nicolas-peres-isso.png', aliases: ['Nicolas Peres'] },
+            { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
+            { name: 'NICOLE MONTEIRO FARIA', date: '18/02/2006', role: 'Consultora Jurídica', photo: 'assets/equipe/nicole-monteiro-faria.png', photoPosition: 'center center' },
+            { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', aliases: ['Roberta Brandão'] },
+            { name: 'JOÃO VICTOR (TJ)', date: '14/03/2007', role: 'Consultor financeiro', photo: 'assets/equipe/joao-victor-tj.png' },
+            { name: 'GABRIEL NUNES PAES', date: '25/03/1997', role: 'Consultor financeiro - Hunter', photo: 'assets/equipe/gabriel-nunes-paes.png' },
+            { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
+            { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
+            { name: 'FERNANDA RAMOS', date: '13/04/2007', role: 'Consultora financeira', photo: 'assets/equipe/fernanda-ramos.png' },
+            { name: 'SONIA REGINA LEANDRO', date: '30/05/1964', role: 'Auxiliar de limpeza', photo: 'assets/equipe/sonia-regina-leandro.png' },
+            { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991', role: 'Consultora Jurídica', photo: 'assets/equipe/tabata-rangel-de-lima.png', photoPosition: 'center 18%' },
+            { name: 'MONIQUE CRISTINA DA SILVA', date: '31/05/1993', role: 'Consultora financeira', photo: 'assets/equipe/monique-cristina-da-silva.png' },
+            { name: 'GIOVANA DILENA ROCHA', date: '28/06/1999', role: 'Departamento Processual', photo: 'assets/equipe/giovana-dilena-rocha.png' },
+            { name: 'TAFAREL MOREIRA', date: '30/06/1998', role: 'Supervisor Administrativo', photo: 'assets/equipe/tafarel-moreira.png' },
+            { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003', role: 'Consultora financeira', photo: 'assets/equipe/geovanna-alves-xavier.png' },
+            { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004', role: 'Marketing', photo: 'assets/equipe/jonatas-silva-ferraz.png', photoPosition: 'center center', aliases: ['Jonathas Silva Ferraz'] },
+            { name: 'ISABELA LIMA DE SOUZA', date: '13/08/2000', role: 'CEO', photo: 'assets/equipe/isabela-lima-de-souza.png', aliases: ['Isabela Lima'] },
+            { name: 'ANNA GRAZIELLY FERREIRA', date: '31/08/2003', role: 'RH - Recrutamento e seleção', photo: 'assets/equipe/anna-grazielly-ferreira.png', photoPosition: 'center 14%', aliases: ['Grazielly Aguilar', 'Anna Grazielly Ferreira Aguilar'] },
+            { name: 'VANESSA ILANA DE SOUZA', date: '09/10/1974', role: 'Gerente', photo: 'assets/equipe/vanessa-ilana-de-souza.png', aliases: ['Vanessa Ilana'] },
+            { name: 'ELAINE APARECIDA DOS SANTOS', date: '13/10/1999', role: 'Consultora Jurídica' },
+            { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995', role: 'Consultora financeira', photo: 'assets/equipe/mayara-cardoso-pereira.png' },
+            { name: 'YASMIM NOGUEIRA', date: '29/11/2005', role: 'Departamento administrativo', photo: 'assets/equipe/yasmim-nogueira.png' }
         ];
+
+        const platinoBirthdays = platinoPeople.map(person => ({
+            name: person.name,
+            date: person.date,
+            photo: person.photo || ''
+        }));
+
+        const platinoTeamProfiles = platinoPeople.map(person => ({
+            name: person.name,
+            role: person.role,
+            details: 'Equipe Platino',
+            photo: person.photo || 'logo.carrocel.png',
+            birthday: person.date,
+            photoPosition: person.photoPosition || 'center 22%',
+            aliases: person.aliases || []
+        }));
 
         const monthNamesPt = [
             'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -4483,6 +4872,7 @@
         }
 
       const defaultAvisosData = {
+            monthKey: getCurrentOperationalMonthKey(),
             main: {
                 title: 'Atualização no Fluxo do GOV.BR',
                 text: 'Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.',
@@ -4496,50 +4886,31 @@
             ],
             highlight: {
                 title: 'Destaque do Mês de Maio - Comercial',
-                name: 'Fernanda Ramos',
+                name: 'Mayara Cardoso',
                 subtitle: 'Maior taxa de conversão em Maio!',
-                value: 'R$29.355,50',
+                value: 'R$R$ 32.344,77',
                 badge: 'Líder do mês'
             },
             week: {
-                contracts: '9',
-                laudos: '7',
-                distratos: '2',
-                revenue: '36.505,73'
+                contracts: '0',
+                laudos: '0',
+                distratos: '0',
+                revenue: '0,00'
+            },
+            chargebacks: {
+                count: '0',
+                recent: []
             },
             birthdays: platinoBirthdays,
-            team: [
-                { name: 'Roberta Brandão', role: 'Supervisora Comercial', details: 'Contato - Roberta@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Tafarel Moreira', role: 'Supervisor  Administrativo', details: 'Contato - Tafarel@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Nicolas Peres', role: 'Supervisor Jurídico', details: 'Contato - Nicolas@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Thamires Millena', role: 'Setor Financeiro', details: 'Contato - Thamires@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Vanessa Ilana', role: 'Gerente', details: 'Contato - Vanessa@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Isabela Lima', role: 'CEO', details: 'Contato - Isabela@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Emily', role: 'Departamento Pessoal', details: 'Contato - Emily@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Grazielly Aguilar', role: 'Recrutamento e Seleção', details: 'Contato - Grazielly@platino.com', photo: 'logo.carrocel.png' },
-                { name: 'Giullian Gabriellen Oliveira Paulino', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Nicole Monteiro de Moraes Faria', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'João Victor Nunes de Souza', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Gabriel Nunes Paes', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Janaina Rodrigues Paiva Sales de Almeida', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Rafaela Marcelino', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Fernanda Ramos Martins', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Sonia Regina Leandro da Silva', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Tabata Rangel de Lima', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Monique Cristina da Silva de Carvalho', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Giovana Dilena Rocha', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'assets/aniversariante-giovana-dilena.png' },
-                { name: 'Geovanna Alves Xavier', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Jonatas Silva Ferraz', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Elaine Aparecida dos Santos', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Mayara Cardoso Pereira', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' },
-                { name: 'Yasmim Bernardo Nogueira', role: 'Equipe Platino', details: 'Perfil da operação Platino', photo: 'logo.carrocel.png' }
-            ],
+            team: platinoTeamProfiles,
             updatedAt: null,
             updatedBy: 'Supervisão'
         };
         let avisosData = normalizeAvisosData(defaultAvisosData);
 
  function normalizeAvisosData(value = {}) {
+            const isCurrentMonthData = value.monthKey === defaultAvisosData.monthKey || value.source === 'googleSheets';
+            const monthlyValue = isCurrentMonthData ? value : defaultAvisosData;
             const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length ? value.birthdays : defaultAvisosData.birthdays;
             const mergedBirthdays = birthdaySource
                 .map(person => ({
@@ -4555,6 +4926,19 @@
             });
 
             const normalizeList = (items, fallback) => Array.isArray(items) && items.length ? items : fallback;
+            const recentChargebacks = Array.isArray(monthlyValue.chargebacks?.recent)
+                ? monthlyValue.chargebacks.recent
+                : defaultAvisosData.chargebacks.recent;
+            const normalizedChargebacks = {
+                count: String(monthlyValue.chargebacks?.count ?? defaultAvisosData.chargebacks.count).trim(),
+                recent: recentChargebacks
+                    .map(item => ({
+                        client: String(item?.client || item?.name || '').trim(),
+                        date: String(item?.date || '').trim()
+                    }))
+                    .filter(item => item.client || item.date)
+            };
+            if (!normalizedChargebacks.count) normalizedChargebacks.count = String(normalizedChargebacks.recent.length || 0);
             const normalizedBirthdays = mergedBirthdays
                 .map(person => ({
                     ...person,
@@ -4569,32 +4953,58 @@
                 role: String(item?.role || '').trim(),
                 details: String(item?.details || '').trim(),
                 photo: String(item?.photo || '').trim(),
-                birthday: formatBirthdayDate(item?.birthday || '')
+                photoPosition: String(item?.photoPosition || '').trim(),
+                birthday: formatBirthdayDate(item?.birthday || ''),
+                aliases: Array.isArray(item?.aliases) ? item.aliases : []
             })).filter(item => item.name || item.role || item.details || item.photo || item.birthday);
 
+            const matchesTeamProfile = (person, profile) => {
+                const names = [profile.name, ...(profile.aliases || [])];
+                return names.some(name => isSamePersonName(person.name, name));
+            };
+
             defaultAvisosData.team.forEach(defaultPerson => {
-                const exists = sourceTeam.some(person => isSamePersonName(person.name, defaultPerson.name));
-                if (!exists) sourceTeam.push({ ...defaultPerson });
+                const existing = sourceTeam.find(person => matchesTeamProfile(person, defaultPerson));
+                if (existing) {
+                    existing.name = defaultPerson.name;
+                    existing.role = defaultPerson.role;
+                    existing.details = defaultPerson.details;
+                    existing.birthday = formatBirthdayDate(defaultPerson.birthday);
+                    existing.photoPosition = defaultPerson.photoPosition || existing.photoPosition || 'center 22%';
+                    if (defaultPerson.photo && defaultPerson.photo.startsWith('assets/equipe/')) {
+                        existing.photo = defaultPerson.photo;
+                    } else if (!existing.photo || existing.photo === 'logo.carrocel.png') {
+                        existing.photo = defaultPerson.photo;
+                    }
+                } else {
+                    sourceTeam.push({ ...defaultPerson });
+                }
             });
 
+            const officialTeam = sourceTeam.filter(person =>
+                defaultAvisosData.team.some(defaultPerson => matchesTeamProfile(person, defaultPerson))
+            );
+
             normalizedBirthdays.forEach(birthday => {
-                const teamPerson = sourceTeam.find(person => isSamePersonName(person.name, birthday.name));
+                const teamPerson = officialTeam.find(person => isSamePersonName(person.name, birthday.name));
 
                 if (teamPerson) {
                     teamPerson.birthday = formatBirthdayDate(teamPerson.birthday || birthday.date);
                     if (!teamPerson.photo && birthday.photo) teamPerson.photo = birthday.photo;
                 } else {
-                    sourceTeam.push({
+                    officialTeam.push({
                         name: formatPersonName(birthday.name),
                         role: 'Equipe Platino',
                         details: 'Perfil da operação Platino',
                         photo: birthday.photo || 'logo.carrocel.png',
+                        photoPosition: 'center 22%',
                         birthday: formatBirthdayDate(birthday.date)
                     });
                 }
             });
 
             return {
+                monthKey: defaultAvisosData.monthKey,
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
                 notices: normalizeList(value.notices, defaultAvisosData.notices).map(item => ({
                     category: String(item?.category || '').trim(),
@@ -4602,9 +5012,10 @@
                     text: String(item?.text || '').trim()
                 })).filter(item => item.category || item.title || item.text),
                 highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
-                week: { ...defaultAvisosData.week, ...(value.week || {}) },
+                week: { ...defaultAvisosData.week, ...(monthlyValue.week || {}) },
+                chargebacks: normalizedChargebacks,
                 birthdays: normalizedBirthdays,
-                team: sourceTeam,
+                team: officialTeam,
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -4644,6 +5055,7 @@
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
             
             renderInicioNotices();
+            renderChargebacks();
             renderTeamCarousel();
 
             const updatedTag = document.getElementById('avisos-updated-tag');
@@ -4675,6 +5087,39 @@
             `).join('');
         }
 
+        function renderChargebacks() {
+            const chargebackData = avisosData.chargebacks || defaultAvisosData.chargebacks;
+            const countElement = document.getElementById('avisos-chargebacks-count');
+            const listElement = document.getElementById('avisos-chargebacks-list');
+
+            if (countElement) {
+                countElement.innerText = chargebackData.count || String(chargebackData.recent?.length || 0);
+            }
+
+            if (!listElement) return;
+
+            const recentCharges = Array.isArray(chargebackData.recent) ? chargebackData.recent : [];
+            if (!recentCharges.length) {
+                listElement.innerHTML = `
+                    <div class="sm:col-span-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-rose-100/75">
+                        Nenhum chargeback recente cadastrado.
+                    </div>
+                `;
+                return;
+            }
+
+            listElement.innerHTML = recentCharges.map(item => `
+                <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-100/60">Cliente</p>
+                    <h5 class="mt-1 text-sm font-black text-white">${escapeHtml(item.client || 'Cliente não informado')}</h5>
+                    <p class="mt-2 inline-flex items-center gap-1.5 rounded-full border border-rose-200/20 bg-rose-500/15 px-2.5 py-1 text-[11px] font-bold text-rose-100">
+                        <i class="ph ph-calendar-blank"></i>
+                        ${escapeHtml(item.date || 'Data a confirmar')}
+                    </p>
+                </div>
+            `).join('');
+        }
+
         function getInitials(name) {
             return String(name || 'PL').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part.charAt(0)).join('').toUpperCase() || 'PL';
         }
@@ -4696,14 +5141,15 @@
                 const birthdayMonth = getBirthdayMonth(birthday);
                 const isBirthdayMonth = birthdayMonth === currentMonth;
                 const monthLabel = birthdayMonth ? monthNamesPt[birthdayMonth - 1] : '';
+                const photoPosition = person.photoPosition || 'center 22%';
 
                 return `
                 <div class="team-card ${isBirthdayMonth ? 'birthday-month' : ''} rounded-2xl p-4 text-center" ${index >= team.length ? 'aria-hidden="true"' : ''}>
                     ${isBirthdayMonth ? `<span class="birthday-ribbon" title="Aniversariante de ${escapeHtml(monthLabel)}"><i class="ph-fill ph-cake text-lg"></i></span>` : ''}
                     <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-2xl font-black">
                         ${person.photo
-                            ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(formatPersonName(person.name))}" class="h-full w-full object-cover">`
-                            : escapeHtml(getInitials(person.name))
+                            ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(formatPersonName(person.name))}" class="team-photo" style="object-position: ${escapeHtml(photoPosition)};" loading="lazy" decoding="async">`
+                            : `<span class="team-avatar-fallback">${escapeHtml(getInitials(person.name))}</span>`
                         }
                     </div>
                     <h4 class="employee-name font-black text-white">${escapeHtml(formatPersonName(person.name) || 'Nome da equipe')}</h4>
@@ -4773,6 +5219,25 @@
                 .filter(item => item.category || item.title || item.text);
         }
 
+        function serializeChargebacksForEditor(items) {
+            return (items || [])
+                .map(item => `${item.client || ''} | ${item.date || ''}`)
+                .join('\n');
+        }
+
+        function parseChargebacksFromEditor(value) {
+            return String(value || '')
+                .split('\n')
+                .map(line => {
+                    const [client, ...dateParts] = line.split('|');
+                    return {
+                        client: (client || '').trim(),
+                        date: dateParts.join('|').trim()
+                    };
+                })
+                .filter(item => item.client || item.date);
+        }
+
         function serializeTeamForEditor(team) {
             return (team || [])
                 .map(item => `${item.name || ''} | ${item.role || ''} | ${item.details || ''} | ${item.photo || ''} | ${item.birthday || ''}`)
@@ -4811,6 +5276,8 @@
             document.getElementById('editor-avisos-week-laudos').value = avisosData.week.laudos;
             document.getElementById('editor-avisos-week-distratos').value = avisosData.week.distratos;
             document.getElementById('editor-avisos-week-revenue').value = avisosData.week.revenue;
+            document.getElementById('editor-avisos-chargebacks-count').value = avisosData.chargebacks?.count || '';
+            document.getElementById('editor-avisos-chargebacks-recent').value = serializeChargebacksForEditor(avisosData.chargebacks?.recent);
             document.getElementById('editor-avisos-birthdays').value = avisosData.birthdays
                 .map(person => `${person.name} | ${person.date}`)
                 .join('\n');
@@ -4948,6 +5415,7 @@
             const currentUser = window.firebaseAuthUser?.email || 'Supervisão';
 
             avisosData = {
+                monthKey: defaultAvisosData.monthKey,
                 main: {
                     title: document.getElementById('editor-avisos-main-title').value.trim() || defaultAvisosData.main.title,
                     text: document.getElementById('editor-avisos-main-text').value.trim() || defaultAvisosData.main.text,
@@ -4966,6 +5434,10 @@
                     laudos: document.getElementById('editor-avisos-week-laudos').value.trim() || defaultAvisosData.week.laudos,
                     distratos: document.getElementById('editor-avisos-week-distratos').value.trim() || defaultAvisosData.week.distratos,
                     revenue: document.getElementById('editor-avisos-week-revenue').value.trim() || defaultAvisosData.week.revenue
+                },
+                chargebacks: {
+                    count: document.getElementById('editor-avisos-chargebacks-count').value.trim(),
+                    recent: parseChargebacksFromEditor(document.getElementById('editor-avisos-chargebacks-recent').value)
                 },
                 birthdays: document.getElementById('editor-avisos-birthdays').value
                     .split('\n')
@@ -5032,10 +5504,13 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
       import {
+        EmailAuthProvider,
         getAuth,
-        signInWithEmailAndPassword,
         onAuthStateChanged,
-        signOut
+        reauthenticateWithCredential,
+        signInWithEmailAndPassword,
+        signOut,
+        updatePassword
       } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
       import {
         addDoc,
@@ -5176,12 +5651,25 @@
       const loginScreen = document.getElementById("login-screen");
       const appContent = document.getElementById("app-content");
       const loginButton = document.getElementById("login-button");
+      const loginResetPassword = document.getElementById("login-reset-password");
       const loginEmail = document.getElementById("login-email");
       const loginPassword = document.getElementById("login-password");
       const loginError = document.getElementById("login-error");
+      const changePasswordOpen = document.getElementById("change-password-open");
+      const passwordModal = document.getElementById("password-modal");
+      const passwordModalContent = document.getElementById("password-modal-content");
+      const passwordModalClose = document.getElementById("password-modal-close");
+      const passwordCancel = document.getElementById("password-cancel");
+      const passwordSave = document.getElementById("password-save");
+      const passwordCurrent = document.getElementById("password-current");
+      const passwordNew = document.getElementById("password-new");
+      const passwordConfirm = document.getElementById("password-confirm");
+      const passwordStatus = document.getElementById("password-status");
 
       function showLoginError(message) {
         loginError.textContent = message;
+        loginError.classList.remove("text-green-300");
+        loginError.classList.add("text-red-300");
         loginError.classList.remove("hidden");
       }
 
@@ -5202,6 +5690,10 @@
             return "Muitas tentativas. Aguarde alguns minutos e tente novamente.";
           case "auth/network-request-failed":
             return "Falha de conexão. Verifique a internet e tente novamente.";
+          case "auth/weak-password":
+            return "A nova senha precisa ter pelo menos 6 caracteres.";
+          case "auth/requires-recent-login":
+            return "Por segurança, saia e entre novamente antes de alterar a senha.";
           case "auth/invalid-api-key":
           case "auth/api-key-not-valid.-please-pass-a-valid-api-key.":
             return "A chave do Firebase está inválida. Confira as Environment Variables no Vercel.";
@@ -5249,8 +5741,119 @@
         }
       });
 
+      loginResetPassword.addEventListener("click", () => {
+        const email = loginEmail.value.trim();
+        loginError.classList.add("hidden");
+        loginError.textContent = "";
+        loginError.classList.remove("text-red-300", "text-green-300");
+        loginError.classList.add("text-blue-200");
+
+        if (!email) {
+          loginError.textContent = "Digite seu e-mail para a gestão identificar sua conta e redefinir a senha.";
+          loginError.classList.remove("hidden");
+          return;
+        }
+
+        loginError.textContent = `Solicite à gestão a redefinição da senha de ${email}. Como este e-mail é interno do sistema, ele não recebe link automático.`;
+        loginError.classList.remove("hidden");
+      });
+
+      function openPasswordModal() {
+        passwordCurrent.value = "";
+        passwordNew.value = "";
+        passwordConfirm.value = "";
+        passwordStatus.textContent = "";
+        passwordStatus.className = "min-h-5 text-sm text-slate-500";
+        passwordModal.classList.remove("hidden", "opacity-0");
+        passwordModalContent.classList.remove("scale-95");
+        setTimeout(() => passwordCurrent.focus(), 50);
+      }
+
+      function closePasswordModal() {
+        passwordModal.classList.add("opacity-0");
+        passwordModalContent.classList.add("scale-95");
+        setTimeout(() => passwordModal.classList.add("hidden"), 180);
+      }
+
+      async function saveNewPassword() {
+        const user = auth?.currentUser;
+        const currentPassword = passwordCurrent.value.trim();
+        const newPassword = passwordNew.value.trim();
+        const confirmPassword = passwordConfirm.value.trim();
+
+        passwordStatus.className = "min-h-5 text-sm text-red-600";
+        if (!user?.email) {
+          passwordStatus.textContent = "Entre novamente para alterar sua senha.";
+          return;
+        }
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          passwordStatus.textContent = "Preencha todos os campos.";
+          return;
+        }
+        if (newPassword.length < 6) {
+          passwordStatus.textContent = "A nova senha precisa ter pelo menos 6 caracteres.";
+          return;
+        }
+        if (newPassword !== confirmPassword) {
+          passwordStatus.textContent = "A confirmação não confere com a nova senha.";
+          return;
+        }
+
+        try {
+          passwordSave.disabled = true;
+          passwordSave.classList.add("opacity-70", "cursor-wait");
+          passwordStatus.className = "min-h-5 text-sm text-blue-600";
+          passwordStatus.textContent = "Validando senha atual...";
+          const credential = EmailAuthProvider.credential(user.email, currentPassword);
+          await reauthenticateWithCredential(user, credential);
+          await updatePassword(user, newPassword);
+          passwordStatus.className = "min-h-5 text-sm text-green-600";
+          passwordStatus.textContent = "Senha alterada com sucesso.";
+          setTimeout(closePasswordModal, 900);
+        } catch (error) {
+          passwordStatus.className = "min-h-5 text-sm text-red-600";
+          passwordStatus.textContent = getAuthErrorMessage(error);
+          console.error(error);
+        } finally {
+          passwordSave.disabled = false;
+          passwordSave.classList.remove("opacity-70", "cursor-wait");
+        }
+      }
+
+      changePasswordOpen.addEventListener("click", openPasswordModal);
+      passwordModalClose.addEventListener("click", closePasswordModal);
+      passwordCancel.addEventListener("click", closePasswordModal);
+      passwordSave.addEventListener("click", saveNewPassword);
+
+      const platinoEmployeeAccess = [
+        { email: "giullian@platino.com", name: "Giullian Gabriellen", sector: "Hunter Jurídico" },
+        { email: "nicolas@platino.com", name: "Nicolas Peres Isso", sector: "Supervisão Jurídica" },
+        { email: "emily@platino.com", name: "Emily do Val Fernandes", sector: "Departamento Pessoal" },
+        { email: "nicole@platino.com", name: "Nicole Monteiro Faria", sector: "Jurídico" },
+        { email: "roberta@platino.com", name: "Roberta Inês Brandão", sector: "Supervisão Comercial" },
+        { email: "joaovictor@platino.com", name: "João Victor (TJ)", sector: "Comercial" },
+        { email: "gabriel@platino.com", name: "Gabriel Nunes Paes", sector: "Comercial / Hunter" },
+        { email: "janaina@platino.com", name: "Janaina Rodrigues Paiva", sector: "Comercial" },
+        { email: "rafaela@platino.com", name: "Rafaela Marcelino", sector: "Comercial" },
+        { email: "fernanda@platino.com", name: "Fernanda Ramos", sector: "Comercial" },
+        { email: "sonia@platino.com", name: "Sonia Regina Leandro", sector: "Apoio Operacional" },
+        { email: "tabata@platino.com", name: "Tabata Rangel de Lima", sector: "Jurídico" },
+        { email: "monique@platino.com", name: "Monique Cristina da Silva", sector: "Comercial" },
+        { email: "giovana@platino.com", name: "Giovana Dilena Rocha", sector: "Departamento Processual" },
+        { email: "tafarel@platino.com", name: "Tafarel Moreira", sector: "Supervisão Administrativa", gestor: true },
+        { email: "geovanna@platino.com", name: "Geovanna Alves Xavier", sector: "Comercial" },
+        { email: "jonatas@platino.com", name: "Jonatas Silva Ferraz", sector: "Marketing" },
+        { email: "isabela@platino.com", name: "Isabela Lima de Souza", sector: "Diretoria", gestor: true },
+        { email: "anna@platino.com", name: "Anna Grazielly Ferreira", sector: "RH - Recrutamento e Seleção" },
+        { email: "vanessa@platino.com", name: "Vanessa Ilana de Souza", sector: "Gerência", gestor: true },
+        { email: "elaine@platino.com", name: "Elaine Aparecida dos Santos", sector: "Jurídico" },
+        { email: "mayara@platino.com", name: "Mayara Cardoso Pereira", sector: "Comercial" },
+        { email: "yasmim@platino.com", name: "Yasmim Nogueira", sector: "Administrativo" }
+      ];
+
       function updateUserAccess(user) {
         const managementUid = "yRW5stqXWZT7ovrQyn1Fd3WNuta2";
+        const employeeAccessMap = new Map(platinoEmployeeAccess.map(item => [item.email, item]));
         const managementEmails = new Set([
           "gestao@platino.com",
           "tafarel@platino.com",
@@ -5258,30 +5861,34 @@
           "tafarelmoreira@platino.com",
           "supervisao@platino.com",
           "diretoria@platino.com",
-          "admin@platino.com"
+          "admin@platino.com",
+          ...platinoEmployeeAccess.filter(item => item.gestor).map(item => item.email)
         ]);
         const nomeMap = {
-          "gestao@platino.com": "Gestão Platino",
-          "tafarel@platino.com": "Tafarel Moreira",
-          "tafarel.moreira@platino.com": "Tafarel Moreira",
-          "tafarelmoreira@platino.com": "Tafarel Moreira",
-          "supervisao@platino.com": "Supervisão Platino",
-          "diretoria@platino.com": "Diretoria Platino",
-          "admin@platino.com": "Admin Platino",
-          "comercial@platino.com": "Comercial",
-          "juridico@platino.com": "Jurídico",
-          "administrativo@platino.com": "Administrativo"
+          "gestao@platino.com": { name: "Gestão Platino", sector: "Gestão" },
+          "tafarel.moreira@platino.com": { name: "Tafarel Moreira", sector: "Supervisão Administrativa" },
+          "tafarelmoreira@platino.com": { name: "Tafarel Moreira", sector: "Supervisão Administrativa" },
+          "supervisao@platino.com": { name: "Supervisão Platino", sector: "Gestão" },
+          "diretoria@platino.com": { name: "Diretoria Platino", sector: "Diretoria" },
+          "admin@platino.com": { name: "Admin Platino", sector: "Administração" },
+          "comercial@platino.com": { name: "Comercial", sector: "Comercial" },
+          "juridico@platino.com": { name: "Jurídico", sector: "Jurídico" },
+          "administrativo@platino.com": { name: "Administrativo", sector: "Administrativo" }
         };
 
         const email = user?.email?.toLowerCase() || "";
-        const isManagement = user?.uid === managementUid || managementEmails.has(email);
+        const employeeAccess = employeeAccessMap.get(email);
+        const mappedUser = employeeAccess || nomeMap[email] || null;
+        const isManagement = user?.uid === managementUid || managementEmails.has(email) || employeeAccess?.gestor === true;
         const role = isManagement ? "gestor" : "equipe";
-        const displayName = nomeMap[email] || email || "Usuário";
+        const displayName = mappedUser?.name || email || "Usuário";
+        const displaySector = mappedUser?.sector || (role === "gestor" ? "Gestão" : "Equipe");
         window.firebaseAuthUser = user;
         window.platinoUserRole = role;
+        window.platinoUserSector = displaySector;
 
         document.getElementById("user-name").innerText = displayName;
-        document.getElementById("user-role").innerText = role === "gestor" ? "Gestor" : "Equipe";
+        document.getElementById("user-role").innerText = role === "gestor" ? `Gestor - ${displaySector}` : displaySector;
 
         window.applyGestorVisibility?.();
       }
