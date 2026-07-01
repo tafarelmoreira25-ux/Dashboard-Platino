@@ -4716,13 +4716,23 @@
 
         window.applyRemoteRanking = function (remoteData) {
             if (!remoteData?.comercial || !remoteData?.juridico) return;
-            if (rankingData?.source === 'googleSheets' && remoteData.source !== 'googleSheets') return;
-            rankingData = normalizeRankingData(remoteData);
+
+            // Firebase/Firestore deve ter prioridade sobre localStorage e planilha.
+            // Antes, quando o navegador estava com source = 'googleSheets', o sistema ignorava
+            // o ranking manual salvo no Firebase. Isso fazia a edição aparecer na hora e sumir depois.
+            rankingData = normalizeRankingData({
+                ...remoteData,
+                source: remoteData.source || 'manual'
+            });
+
             localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
             renderRanking();
         };
 
         async function refreshRankingFromSheets() {
+            // Mantido desativado por padrão para não sobrescrever o ranking manual salvo no Firebase.
+            // Para usar planilha no futuro, defina: window.ENABLE_RANKING_SHEET_SYNC = true;
+            if (window.ENABLE_RANKING_SHEET_SYNC !== true) return;
             if (window.location.protocol === 'file:') return;
 
             try {
@@ -5908,7 +5918,7 @@
           updateUserAccess(user);
           window.platinoNoticeStore.subscribe();
           window.platinoRankingStore.subscribe();
-          startRankingSheetSync();
+          // startRankingSheetSync(); // Desativado para evitar sobrescrever o ranking manual publicado no Firebase.
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
           }
