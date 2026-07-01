@@ -5884,6 +5884,7 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app-check.js";
       import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-ai.js";
       import {
         EmailAuthProvider,
@@ -5915,6 +5916,7 @@
         storageBucket: "platino-hub.firebasestorage.app",
         messagingSenderId: "1043378575903"
       };
+      const recaptchaSiteKey = "6LeU_T8tAAAAADF3zkmK6I1LN7pJcaONjYcZZBDE";
 
       function isLocalStaticPreview() {
         return ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.protocol === "file:";
@@ -5965,6 +5967,20 @@
       function assertManagementSharedWrite(action) {
         if (window.platinoUserRole === "gestor" || window.platinoUserCanEditRh === true) return;
         throw new Error(`Acesso restrito: apenas Gestão/RH pode ${action}.`);
+      }
+
+      function startFirebaseAppCheck(app) {
+        if (!recaptchaSiteKey || window.location.protocol === "file:") return null;
+
+        try {
+          return initializeAppCheck(app, {
+            provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+            isTokenAutoRefreshEnabled: true
+          });
+        } catch (error) {
+          console.warn("Firebase App Check não foi inicializado.", error);
+          return null;
+        }
       }
 
       function startFirebaseAi(app) {
@@ -6332,6 +6348,7 @@
         try {
           const firebaseConfig = await loadFirebaseConfig();
           const app = initializeApp(firebaseConfig);
+          startFirebaseAppCheck(app);
           startFirebaseAi(app);
           auth = getAuth(app);
           db = getFirestore(app);
