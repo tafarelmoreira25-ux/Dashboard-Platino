@@ -32,7 +32,22 @@ const DEFAULT_INDICATORS_SHEET_NAME = "INDICADORES";
 const DEFAULT_HUNTER_NAME = "Giullian Gabriellen";
 const DEFAULT_TEAM_GOALS = {
   comercial: 150000,
-  juridico: 310000
+  juridico: 480000
+};
+const DEFAULT_INDIVIDUAL_GOALS = {
+  comercial: [
+    { name: "Mayara Cardoso Pereira", goal: 30000 },
+    { name: "Rafaela Marcelino", goal: 30000 },
+    { name: "Fernanda Ramos", goal: 30000 },
+    { name: "Geovanna Alves Xavier", goal: 30000 },
+    { name: "Monique Cristina da Silva", goal: 30000 }
+  ],
+  juridico: [
+    { name: "Tabata Rangel de Lima", goal: 150000 },
+    { name: "Elaine Aparecida dos Santos", goal: 80000 },
+    { name: "Nicole Monteiro Faria", goal: 100000 },
+    { name: "Janaina Rodrigues Paiva", goal: 150000 }
+  ]
 };
 
 function getCurrentPortugueseMonthName() {
@@ -169,6 +184,27 @@ function isSameConsultantName(a, b) {
   return Boolean(first && second && (first === second || first.includes(second) || second.includes(first)));
 }
 
+function getDefaultIndividualGoal(name, sector) {
+  const goals = DEFAULT_INDIVIDUAL_GOALS[sector] || [];
+  const match = goals.find(item => isSameConsultantName(item.name, name));
+  return match?.goal || 0;
+}
+
+function applyDefaultIndividualGoal(item, sector) {
+  const defaultGoal = getDefaultIndividualGoal(item.name, sector);
+  if (!item.goal && defaultGoal) item.goal = defaultGoal;
+  item.gap = Math.max((item.goal || 0) - (item.sold || 0), 0);
+  return item;
+}
+
+function getTeamGoalFromEntries(entries, sector) {
+  const total = entries.reduce((sum, item) => {
+    const goal = item.goal || getDefaultIndividualGoal(item.name, sector);
+    return sum + (goal || 0);
+  }, 0);
+  return total || DEFAULT_TEAM_GOALS[sector] || 0;
+}
+
 function getNetSoldValue(row, section) {
   const netValue = parseMoney(row[section.netValueIndex]);
   return netValue || parseMoney(row[section.valueIndex]);
@@ -226,7 +262,8 @@ function rowsFromCsv(text, forcedSector = "") {
     const sector = forcedSector || normalizeSector(getColumn(row, headerMap, "sector"));
     const name = String(getColumn(row, headerMap, "name")).trim();
     const sold = parseMoney(getColumn(row, headerMap, "sold"));
-    const goal = parseMoney(getColumn(row, headerMap, "goal"));
+    const parsedGoal = parseMoney(getColumn(row, headerMap, "goal"));
+    const goal = parsedGoal || getDefaultIndividualGoal(name, sector);
 
     return {
       sector,
@@ -663,6 +700,9 @@ function rowsFromPlatinoSideBySideCsv(text) {
         if (!appearsInSummary) grouped.delete(key);
       }
     }
+
+    grouped.forEach(item => applyDefaultIndividualGoal(item, section.sector));
+    teamGoals[section.sector] = getTeamGoalFromEntries(Array.from(grouped.values()), section.sector) || teamGoals[section.sector];
 
     grouped.forEach(item => {
       rows.push({

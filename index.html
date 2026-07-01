@@ -1874,7 +1874,7 @@
                                         </div>
                                         <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-indigo-100/80">
                                             <span id="metal-juridico-label" class="font-bold uppercase tracking-wider">Status do mês: Em alta</span>
-                                            <span id="metal-juridico-total" class="money-value">R$ 188.207,80 / R$ 310.000,00</span>
+                                            <span id="metal-juridico-total" class="money-value">R$ 188.207,80 / R$ 480.000,00</span>
                                         </div>
                                         <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-[10px] font-bold uppercase tracking-wider money-value">
                                             <span id="metal-juridico-gap">Total: R$ 188.207,80</span>
@@ -2814,7 +2814,7 @@
                             </button>
                         </div>
                         <label class="mb-3 block text-xs font-bold uppercase tracking-wider text-slate-500">Meta da equipe</label>
-                        <input id="editor-ranking-juridico-team-goal" data-ranking-team-goal="juridico" type="text" class="mb-4 w-full rounded-xl border border-indigo-100 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" placeholder="R$ 310.000,00" />
+                        <input id="editor-ranking-juridico-team-goal" data-ranking-team-goal="juridico" type="text" class="mb-4 w-full rounded-xl border border-indigo-100 bg-white px-4 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100" placeholder="R$ 480.000,00" />
                         <div id="editor-ranking-juridico-list" class="space-y-3"></div>
                     </div>
                 </div>
@@ -4091,6 +4091,26 @@
             const local = window.PlatinoKnowledge.localAnswer(prompt, { limit: isSearch ? 5 : 4 });
             const context = window.PlatinoKnowledge.buildContext(prompt, 6);
 
+            if (window.platinoGenerateAI && context) {
+                try {
+                    const aiPrompt = [
+                        "Você é o assistente interno da Platino.",
+                        "Responda em português do Brasil, com clareza, objetividade e tom profissional.",
+                        "Use somente as informações da base abaixo. Se a base não tiver a resposta, diga isso e sugira abrir uma solicitação para o setor responsável.",
+                        "",
+                        `Modo: ${isSearch ? "busca" : "chat"}`,
+                        `Pergunta: ${prompt}`,
+                        "",
+                        "Base de conhecimento:",
+                        context
+                    ].join("\n");
+                    const generatedAnswer = await window.platinoGenerateAI(aiPrompt);
+                    if (generatedAnswer) return markdownToSafeHtml(generatedAnswer);
+                } catch (error) {
+                    console.warn('Firebase AI indisponível; tentando outros canais.', error);
+                }
+            }
+
             if (!platinoAiEndpoint || !context) return local.html;
 
             try {
@@ -4349,24 +4369,24 @@
             monthKey: getCurrentOperationalMonthKey(),
             teamGoals: {
                 comercial: 150000,
-                juridico: 310000
+                juridico: 480000
             },
             teamTotals: {
                 comercial: 0,
                 juridico: 0
             },
             comercial: [
-                { name: 'Mayara Cardoso Pereira', sold: 0 },
-                { name: 'Rafaela Marcelino', sold: 0 },
-                { name: 'Fernanda Ramos', sold: 0 },
-                { name: 'Geovanna Alves Xavier', sold: 0 },
-                { name: 'Monique Cristina da Silva', sold: 0 }
+                { name: 'Mayara Cardoso Pereira', sold: 0, goal: 30000 },
+                { name: 'Rafaela Marcelino', sold: 0, goal: 30000 },
+                { name: 'Fernanda Ramos', sold: 0, goal: 30000 },
+                { name: 'Geovanna Alves Xavier', sold: 0, goal: 30000 },
+                { name: 'Monique Cristina da Silva', sold: 0, goal: 30000 }
             ],
             juridico: [
-                { name: 'Nicole Monteiro Faria', sold: 0 },
-                { name: 'Tabata Rangel de Lima', sold: 0 },
-                { name: 'Elaine Aparecida dos Santos', sold: 0 },
-                { name: 'Janaina Rodrigues Paiva', sold: 0 }
+                { name: 'Tabata Rangel de Lima', sold: 0, goal: 150000 },
+                { name: 'Elaine Aparecida dos Santos', sold: 0, goal: 80000 },
+                { name: 'Nicole Monteiro Faria', sold: 0, goal: 100000 },
+                { name: 'Janaina Rodrigues Paiva', sold: 0, goal: 150000 }
             ],
             history: [
                 { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
@@ -4390,7 +4410,7 @@
             const useFallback = options.useFallback === true;
             const isCurrentMonthData = value.monthKey === defaultRankingData.monthKey || value.source === 'googleSheets';
             const sourceValue = isCurrentMonthData || useFallback ? value : defaultRankingData;
-            const normalizeList = (items, fallback) => {
+            const normalizeList = (items, fallback, sector) => {
                 const source = Array.isArray(items) && items.length
                     ? items
                     : useFallback || isCurrentMonthData
@@ -4398,19 +4418,23 @@
                     : [];
 
                 return source
-                    .map(item => ({
-                        name: String(item?.name || '').trim(),
-                        sold: getRankingSold(item),
-                        goal: getRankingGoal(item),
-                        teamGoal: parseRankingValue(item?.teamGoal ?? item?.metaEquipe ?? ''),
-                        teamGap: parseRankingValue(item?.teamGap ?? item?.gapEquipe ?? ''),
-                        value: String(item?.value || '').trim()
-                    }))
+                    .map(item => {
+                        const name = String(item?.name || '').trim();
+                        const goal = getRankingGoal(item) || getDefaultRankingGoal(name, sector);
+                        return {
+                            name,
+                            sold: getRankingSold(item),
+                            goal,
+                            teamGoal: parseRankingValue(item?.teamGoal ?? item?.metaEquipe ?? ''),
+                            teamGap: parseRankingValue(item?.teamGap ?? item?.gapEquipe ?? ''),
+                            value: String(item?.value || '').trim()
+                        };
+                    })
                     .filter(item => item.name || item.sold || item.goal);
             };
 
-            const comercial = normalizeList(sourceValue.comercial, defaultRankingData.comercial);
-            const juridico = normalizeList(sourceValue.juridico, defaultRankingData.juridico);
+            const comercial = normalizeList(sourceValue.comercial, defaultRankingData.comercial, 'comercial');
+            const juridico = normalizeList(sourceValue.juridico, defaultRankingData.juridico, 'juridico');
             const normalizeHistory = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.history : [])
                 .map(item => ({
                     month: String(item?.month || item?.mes || '').trim(),
@@ -4502,6 +4526,15 @@
             return Number.isFinite(numericGoal) && numericGoal > 0
                 ? numericGoal
                 : parseRankingValue(item?.goal ?? item?.meta ?? '');
+        }
+
+        function getDefaultRankingGoal(name, sector = '') {
+            const sectors = sector ? [sector] : rankingSectors;
+            for (const currentSector of sectors) {
+                const match = (defaultRankingData[currentSector] || []).find(item => isSamePersonName(item.name, name));
+                if (match?.goal) return Number(match.goal) || 0;
+            }
+            return 0;
         }
 
         function getRankingGap(item) {
@@ -5102,7 +5135,7 @@
             { name: 'NICOLAS PERES ISSO', date: '03/01/2006', role: 'Supervisor Jurídico', photo: 'assets/equipe/nicolas-peres-isso.png', aliases: ['Nicolas Peres'] },
             { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
             { name: 'NICOLE MONTEIRO FARIA', date: '18/02/2006', role: 'Consultora Jurídica', photo: 'assets/equipe/nicole-monteiro-faria.png', photoPosition: 'center center' },
-            { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', aliases: ['Roberta Brandão'] },
+            { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', photo: 'assets/equipe/roberta-ines-brandao.png', photoPosition: 'center center', aliases: ['Roberta Brandão'] },
             { name: 'GABRIEL NUNES PAES', date: '25/03/1997', role: 'Consultor financeiro - Hunter', photo: 'assets/equipe/gabriel-nunes-paes.png' },
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
             { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
@@ -5116,7 +5149,7 @@
             { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004', role: 'Marketing', photo: 'assets/equipe/jonatas-silva-ferraz.png', photoPosition: 'center center', aliases: ['Jonathas Silva Ferraz'] },
             { name: 'ISABELA LIMA DE SOUZA', date: '13/08/2000', role: 'CEO', photo: 'assets/equipe/isabela-lima-de-souza.png', aliases: ['Isabela Lima'] },
             { name: 'ANNA GRAZIELLY FERREIRA', date: '31/08/2003', role: 'RH - Recrutamento e seleção', photo: 'assets/equipe/anna-grazielly-ferreira.png', photoPosition: 'center 14%', aliases: ['Grazielly Aguilar', 'Anna Grazielly Ferreira Aguilar'] },
-            { name: 'THAMIRES MILLENA', date: '', role: 'Setor Financeiro', photo: 'assets/equipe/thamires-millena.png', photoPosition: 'center 18%' },
+            { name: 'THAMIRES MILLENA', date: '02/05/2001', role: 'Setor Financeiro', photo: 'assets/equipe/thamires-millena.png', photoPosition: 'center 18%' },
             { name: 'VANESSA ILANA DE SOUZA', date: '09/10/1974', role: 'Gerente', photo: 'assets/equipe/vanessa-ilana-de-souza.png', aliases: ['Vanessa Ilana'] },
             { name: 'ELAINE APARECIDA DOS SANTOS', date: '13/10/1999', role: 'Consultora Jurídica' },
             { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995', role: 'Consultora financeira', photo: 'assets/equipe/mayara-cardoso-pereira.png' },
@@ -5850,7 +5883,8 @@
     </script>
 
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-ai.js";
       import {
         EmailAuthProvider,
         getAuth,
@@ -5859,7 +5893,7 @@
         signInWithEmailAndPassword,
         signOut,
         updatePassword
-      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
       import {
         addDoc,
         collection,
@@ -5872,12 +5906,14 @@
         serverTimestamp,
         setDoc,
         updateDoc
-      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
       const localFirebaseConfig = {
         apiKey: "AIzaSyAHy9YPTluXfSFqpJ3lFB7lTO555gmeCKA",
         authDomain: "platino-hub.firebaseapp.com",
-        projectId: "platino-hub"
+        projectId: "platino-hub",
+        storageBucket: "platino-hub.firebasestorage.app",
+        messagingSenderId: "1043378575903"
       };
 
       function isLocalStaticPreview() {
@@ -5911,6 +5947,7 @@
 
       let auth = null;
       let db = null;
+      let aiModel = null;
       let avisosRef = null;
       let rankingRef = null;
       let managementRef = null;
@@ -5928,6 +5965,26 @@
       function assertManagementSharedWrite(action) {
         if (window.platinoUserRole === "gestor" || window.platinoUserCanEditRh === true) return;
         throw new Error(`Acesso restrito: apenas Gestão/RH pode ${action}.`);
+      }
+
+      function startFirebaseAi(app) {
+        try {
+          const ai = getAI(app, {
+            backend: new GoogleAIBackend()
+          });
+          aiModel = getGenerativeModel(ai, {
+            model: "gemini-3.5-flash"
+          });
+          window.platinoGenerateAI = async (prompt) => {
+            if (!aiModel || !prompt) return "";
+            const result = await aiModel.generateContent(prompt);
+            return result?.response?.text?.() || "";
+          };
+        } catch (error) {
+          aiModel = null;
+          window.platinoGenerateAI = null;
+          console.warn("Firebase AI Logic não foi inicializado.", error);
+        }
       }
 
       window.platinoNoticeStore = {
@@ -6220,6 +6277,7 @@
         { email: "jonatas@platino.com", name: "Jonatas Silva Ferraz", sector: "Marketing" },
         { email: "isabela@platino.com", name: "Isabela Lima de Souza", sector: "Diretoria", gestor: true },
         { email: "anna@platino.com", name: "Anna Grazielly Ferreira", sector: "RH - Recrutamento e Seleção" },
+        { email: "thamires@platino.com", name: "Thamires Millena", sector: "Financeiro" },
         { email: "vanessa@platino.com", name: "Vanessa Ilana de Souza", sector: "Gerência", gestor: true },
         { email: "elaine@platino.com", name: "Elaine Aparecida dos Santos", sector: "Jurídico" },
         { email: "mayara@platino.com", name: "Mayara Cardoso Pereira", sector: "Comercial" },
@@ -6274,6 +6332,7 @@
         try {
           const firebaseConfig = await loadFirebaseConfig();
           const app = initializeApp(firebaseConfig);
+          startFirebaseAi(app);
           auth = getAuth(app);
           db = getFirestore(app);
           avisosRef = doc(db, "appContent", "centralAvisos");
