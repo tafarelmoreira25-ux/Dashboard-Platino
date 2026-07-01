@@ -163,6 +163,12 @@ function normalizeNameKey(value) {
     .toUpperCase();
 }
 
+function isSameConsultantName(a, b) {
+  const first = normalizeNameKey(a);
+  const second = normalizeNameKey(b);
+  return Boolean(first && second && (first === second || first.includes(second) || second.includes(first)));
+}
+
 function getNetSoldValue(row, section) {
   const netValue = parseMoney(row[section.netValueIndex]);
   return netValue || parseMoney(row[section.valueIndex]);
@@ -461,6 +467,14 @@ function detectSideBySideSections(headers) {
   return sections;
 }
 
+function findSideBySideHeaderRow(rows) {
+  for (let index = 0; index < rows.length; index += 1) {
+    const sections = detectSideBySideSections(rows[index]);
+    if (sections.length) return { index, sections };
+  }
+  return { index: -1, sections: [] };
+}
+
 function extractTeamGoal(rows, section) {
   const envKey = section.sector === "comercial"
     ? "RANKING_COMERCIAL_TEAM_GOAL"
@@ -499,6 +513,7 @@ function extractSummaryData(rows, section) {
 
   for (const row of rows.slice(1)) {
     const hasDate = isDateLike(row[section.dateIndex]);
+    const dateLabel = normalizeHeader(row[section.dateIndex]);
     const name = normalizeConsultantName(row[section.dateIndex]) || normalizeConsultantName(row[section.consultantIndex]);
     const sold = parseMoney(row[section.valueIndex]);
     const goal = parseMoney(row[section.metaIndex]);
@@ -507,7 +522,7 @@ function extractSummaryData(rows, section) {
     const metaLabel = normalizeHeader(row[section.metaIndex]);
     const gapLabel = normalizeHeader(row[section.gapIndex]);
 
-    if (metaLabel.includes("META") || gapLabel.includes("GAP")) {
+    if (dateLabel.includes("RANKING") || metaLabel.includes("META") || gapLabel.includes("GAP")) {
       summaryStarted = true;
       continue;
     }
@@ -516,7 +531,14 @@ function extractSummaryData(rows, section) {
       team.total = explicitTeamTotal;
     }
 
-    if (hasDate || !sold) continue;
+    if (hasDate) continue;
+    if (!name && !sold && !goal && !gap && !explicitTeamTotal) continue;
+
+    if (normalizeNameKey(name) === "TOTAL") {
+      team.total = Math.max(team.total, sold || explicitTeamTotal || 0);
+      if (goal) team.goal = goal;
+      continue;
+    }
 
     if (summaryStarted) {
       if (isTeamSummaryRow(sold, goal, entries, section)) {
@@ -551,7 +573,7 @@ function applySummaryData(grouped, summaryEntries) {
   for (const item of items) {
     const itemKey = normalizeNameKey(item.name);
     let entryIndex = summaryEntries.findIndex((entry, index) =>
-      !usedEntries.has(index) && entry.name && normalizeNameKey(entry.name) === itemKey
+      !usedEntries.has(index) && entry.name && isSameConsultantName(entry.name, item.name)
     );
 
     if (entryIndex === -1) {
@@ -564,6 +586,7 @@ function applySummaryData(grouped, summaryEntries) {
 
     const entry = summaryEntries[entryIndex];
     usedEntries.add(entryIndex);
+    item.name = entry.name || item.name;
     item.sold = entry.sold || item.sold;
     item.goal = entry.goal || item.goal || 0;
     item.gap = entry.gap || Math.max((item.goal || 0) - (item.sold || 0), 0);
@@ -587,8 +610,11 @@ function rowsFromPlatinoSideBySideCsv(text) {
   const csvRows = parseCsv(text);
   if (csvRows.length < 2) return null;
 
-  const headers = csvRows[0];
-  const sections = detectSideBySideSections(headers);
+  const header = findSideBySideHeaderRow(csvRows);
+  if (header.index === -1) return null;
+
+  const tableRows = csvRows.slice(header.index);
+  const sections = header.sections;
   if (!sections.length) return null;
 
   const rows = [];
@@ -600,11 +626,11 @@ function rowsFromPlatinoSideBySideCsv(text) {
 
   for (const section of sections) {
     const grouped = new Map();
-    const summary = extractSummaryData(csvRows, section);
+    const summary = extractSummaryData(tableRows, section);
     teamGoals[section.sector] = summary.team.goal || DEFAULT_TEAM_GOALS[section.sector] || 0;
     teamTotals[section.sector] = summary.team.total || 0;
 
-    for (const row of csvRows.slice(1)) {
+    for (const row of tableRows.slice(1)) {
       const isValidEntryDate = summary.entries.length
         ? isDateLike(row[section.dateIndex])
         : isCurrentMonthDate(row[section.dateIndex]);
@@ -627,6 +653,16 @@ function rowsFromPlatinoSideBySideCsv(text) {
     }
 
     applySummaryData(grouped, summary.entries);
+
+    const summaryNameKeys = new Set(summary.entries.map(entry => normalizeNameKey(entry.name)).filter(Boolean));
+    if (summaryNameKeys.size) {
+      for (const key of Array.from(grouped.keys())) {
+        const appearsInSummary = Array.from(summaryNameKeys).some(summaryKey =>
+          key === summaryKey || key.includes(summaryKey) || summaryKey.includes(key)
+        );
+        if (!appearsInSummary) grouped.delete(key);
+      }
+    }
 
     grouped.forEach(item => {
       rows.push({

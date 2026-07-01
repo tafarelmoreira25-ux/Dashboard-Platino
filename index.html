@@ -4356,12 +4356,10 @@
                 juridico: 0
             },
             comercial: [
-                { name: 'Geovanna Alves Xavier', sold: 0 },
                 { name: 'Mayara Cardoso Pereira', sold: 0 },
-                { name: 'Gabriel Nunes Paes', sold: 0 },
-                { name: 'João Victor (TJ)', sold: 0 },
                 { name: 'Rafaela Marcelino', sold: 0 },
                 { name: 'Fernanda Ramos', sold: 0 },
+                { name: 'Geovanna Alves Xavier', sold: 0 },
                 { name: 'Monique Cristina da Silva', sold: 0 }
             ],
             juridico: [
@@ -5044,9 +5042,8 @@
         };
 
         async function refreshRankingFromSheets() {
-            // Mantido desativado por padrão para não sobrescrever o ranking manual salvo no Firebase.
-            // Para usar planilha no futuro, defina: window.ENABLE_RANKING_SHEET_SYNC = true;
-            if (window.ENABLE_RANKING_SHEET_SYNC !== true) return;
+            // A planilha é a fonte do ranking mensal; defina window.ENABLE_RANKING_SHEET_SYNC = false para pausar.
+            if (window.ENABLE_RANKING_SHEET_SYNC === false) return;
             if (window.location.protocol === 'file:') return;
 
             try {
@@ -5106,7 +5103,6 @@
             { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
             { name: 'NICOLE MONTEIRO FARIA', date: '18/02/2006', role: 'Consultora Jurídica', photo: 'assets/equipe/nicole-monteiro-faria.png', photoPosition: 'center center' },
             { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', aliases: ['Roberta Brandão'] },
-            { name: 'JOÃO VICTOR (TJ)', date: '14/03/2007', role: 'Consultor financeiro', photo: 'assets/equipe/joao-victor-tj.png' },
             { name: 'GABRIEL NUNES PAES', date: '25/03/1997', role: 'Consultor financeiro - Hunter', photo: 'assets/equipe/gabriel-nunes-paes.png' },
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
             { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
@@ -6293,7 +6289,7 @@
           window.platinoNoticeStore.subscribe();
           window.platinoRankingStore.subscribe();
           window.platinoManagementStore.subscribe();
-          // startRankingSheetSync(); // Desativado para evitar sobrescrever o ranking manual publicado no Firebase.
+          startRankingSheetSync();
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
           }
