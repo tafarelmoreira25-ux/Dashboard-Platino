@@ -490,7 +490,6 @@
             animation-play-state: paused;
         }
 
-        .team-carousel.manual-scroll .team-track,
         .team-carousel.is-manual .team-track {
             animation-play-state: paused;
         }
@@ -4720,6 +4719,7 @@
         }
 
         let teamCarouselManualTimer = null;
+        let teamCarouselManualIndex = 0;
 
         function moveTeamCarousel(direction) {
             const carousel = document.getElementById('team-carousel');
@@ -4729,23 +4729,27 @@
             const card = track.querySelector('.team-card');
             const gap = 16;
             const cardWidth = card ? card.getBoundingClientRect().width + gap : 236;
-            const step = Math.max(cardWidth, Math.round(carousel.clientWidth * 0.8));
-            const maxScrollBeforeLoop = Math.max((track.scrollWidth / 2) - carousel.clientWidth, 0);
+            const originalCards = Math.max(Math.floor(track.children.length / 2), 1);
+            const visibleCards = Math.max(Math.floor(carousel.clientWidth / cardWidth), 1);
+            const maxIndex = Math.max(originalCards - visibleCards, 0);
 
             carousel.classList.add('is-manual');
-            carousel.scrollBy({
-                left: direction * step,
-                behavior: 'smooth'
-            });
+            track.style.animation = 'none';
 
-            window.setTimeout(() => {
-                if (carousel.scrollLeft > maxScrollBeforeLoop) carousel.scrollLeft = 0;
-                if (carousel.scrollLeft < 0) carousel.scrollLeft = maxScrollBeforeLoop;
-            }, 380);
+            teamCarouselManualIndex += direction;
+            if (teamCarouselManualIndex > maxIndex) teamCarouselManualIndex = 0;
+            if (teamCarouselManualIndex < 0) teamCarouselManualIndex = maxIndex;
+
+            track.style.transition = 'transform 0.35s ease';
+            track.style.transform = `translateX(-${teamCarouselManualIndex * cardWidth}px)`;
 
             window.clearTimeout(teamCarouselManualTimer);
             teamCarouselManualTimer = window.setTimeout(() => {
                 carousel.classList.remove('is-manual');
+                track.style.transition = '';
+                track.style.transform = '';
+                track.style.animation = '';
+                teamCarouselManualIndex = 0;
             }, 6000);
         }
 
