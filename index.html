@@ -6473,7 +6473,7 @@
                     admPdfGeneratorReady = false;
                     if (status) {
                         status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                        status.innerText = payload.message || 'Gerador fiel indisponível: a API de documentos não está pronta neste servidor.';
+                        status.innerText = payload.message || 'Gerador fiel indisponível: a API de documentos não está pronta neste servidor. O documento será gerado localmente.';
                     }
                     return false;
                 }
@@ -6487,7 +6487,7 @@
                 admPdfGeneratorReady = false;
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'Gerador fiel indisponível: abra o sistema pelo servidor da aplicação com API ativa.';
+                    status.innerText = 'Gerador fiel indisponível: usando geração local no navegador.';
                 }
                 return false;
             }
@@ -6550,7 +6550,19 @@
 
             if (admPdfGeneratorReady !== true) {
                 const ready = await checkAdmPdfGeneratorAvailability();
-                if (!ready) return;
+                if (!ready) {
+                    if (status) {
+                        status.className = 'min-h-5 text-xs font-semibold text-blue-200';
+                        status.innerText = 'Gerando PDF localmente no navegador...';
+                    }
+                    const doc = createAdmPdfDocument(template, data);
+                    downloadAdmPdfBlob(doc.output('blob'), getAdmPdfFileName(template, data));
+                    if (status) {
+                        status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                        status.innerText = 'PDF gerado localmente no navegador.';
+                    }
+                    return;
+                }
             }
 
             if (status) {
