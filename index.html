@@ -6,6 +6,7 @@
     <title>Platino Assessoria | Central Operacional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -1255,6 +1256,74 @@
             -webkit-text-fill-color: #ffffff !important;
         }
 
+        .adm-pdf-panel {
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.82)),
+                radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.18), transparent 34%);
+        }
+
+        .adm-pdf-control {
+            width: 100%;
+            min-height: 3.1rem;
+            border: 1px solid rgba(148, 163, 184, 0.32) !important;
+            background: #f8fafc !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+            border-radius: 0.9rem;
+            box-shadow: 0 10px 24px rgba(2, 6, 23, 0.18);
+        }
+
+        .adm-pdf-control::placeholder {
+            color: #64748b !important;
+            -webkit-text-fill-color: #64748b !important;
+        }
+
+        .adm-pdf-control:focus {
+            border-color: rgba(96, 165, 250, 0.82) !important;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18), 0 12px 28px rgba(2, 6, 23, 0.2);
+            outline: none;
+        }
+
+        .adm-pdf-select {
+            appearance: auto;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+        }
+
+        .adm-pdf-select option {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .adm-pdf-fields {
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .adm-pdf-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        @media (min-width: 640px) {
+            .adm-pdf-actions {
+                display: flex;
+                justify-content: flex-end;
+                width: auto;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .adm-pdf-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
         :is(
             .portal-card,
             .notice-card,
@@ -1977,10 +2046,66 @@
             </section>
 
             <section id="section-adm" class="content-section hidden animate-fade-in">
-                <div class="max-w-3xl mx-auto">
+                <div class="max-w-4xl mx-auto">
                     <div class="mb-8">
                         <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-folders text-blue-500"></i> Setor Administrativo</h2>
                         <p class="text-slate-500 mt-1">Clique nas etapas abaixo para expandir e visualizar as tarefas.</p>
+                    </div>
+                    <div class="adm-pdf-panel mb-6 dark-panel rounded-2xl border border-white/10 p-5 shadow-sm">
+                        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div>
+                                <p class="metallic-kicker text-[10px]">Central de documentos</p>
+                                <h3 class="mt-1 flex items-center gap-2 text-xl font-black text-white"><i class="ph ph-file-pdf text-red-400"></i> Gerador inteligente de PDF</h3>
+                                <p class="mt-1 text-sm text-blue-100/70">Preencha os dados e acompanhe a composição do documento em tempo real.</p>
+                            </div>
+                            <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold text-emerald-200">
+                                <i class="ph ph-lock-key"></i> Geração local
+                            </span>
+                        </div>
+
+                        <form id="adm-pdf-form" class="grid gap-4" onsubmit="generateAdmPdf(event)">
+                            <div class="grid gap-3 lg:grid-cols-[1.4fr_0.6fr_0.75fr]">
+                                <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
+                                    Modelo
+                                    <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="adm-pdf-control adm-pdf-select px-4 py-3 text-sm font-semibold normal-case tracking-normal">
+                                        <option value="chargeback">Chargeback</option>
+                                        <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
+                                        <option value="citacao-judicial">Citação Judicial</option>
+                                        <option value="contestacao-taxas-email">Contestação de Taxas por E-mail</option>
+                                        <option value="declaracao-ausencia-carteira-trabalho">Declaração de Ausência de Carteira de Trabalho</option>
+                                        <option value="declaracao-hipossuficiencia">Declaração de Hipossuficiência</option>
+                                        <option value="declaracao-isencao-irpf">Declaração de Isenção de IRPF</option>
+                                        <option value="notificacao-extrajudicial-platino">Notificação Extrajudicial Platino</option>
+                                        <option value="procuracao-dra-juliane">Procuração Dra. Juliane</option>
+                                        <option value="termo-ciencia-autorizacao-seguranca">Termo de Ciência e Autorização de Segurança</option>
+                                        <option value="termo-compromisso-pagamento">Termo de Compromisso de Pagamento</option>
+                                        <option value="modelo-termo-compromisso-pagamento">Modelo - Termo de Compromisso de Pagamento</option>
+                                    </select>
+                                </label>
+                                <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
+                                    Data do documento
+                                    <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal">
+                                </label>
+                                <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
+                                    Número do documento
+                                    <input id="adm-pdf-number" type="text" readonly class="adm-pdf-control px-4 py-3 text-sm font-black normal-case tracking-normal">
+                                </label>
+                            </div>
+
+                            <div id="adm-pdf-fields" class="adm-pdf-fields grid gap-3 sm:grid-cols-2"></div>
+
+                            <div class="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+                                <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
+                                <div class="adm-pdf-actions">
+                                    <button type="button" onclick="resetAdmPdfForm()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/10">
+                                        <i class="ph ph-arrow-counter-clockwise"></i> Limpar
+                                    </button>
+                                    <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700">
+                                        <i class="ph ph-download-simple"></i> Gerar PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="space-y-4" id="adm-accordions"></div>
                 </div>
@@ -5788,6 +5913,676 @@
                 .replace(/'/g, '&#039;');
         }
 
+        const admPdfFieldLabels = {
+            cliente: 'Nome do cliente',
+            cpf: 'CPF',
+            banco: 'Nome do banco',
+            cnpjBanco: 'CNPJ do banco',
+            enderecoBanco: 'Endereço completo do banco',
+            dataContrato: 'Data do contrato com o banco',
+            valor: 'Valor',
+            valorExtenso: 'Valor por extenso',
+            valorParcela: 'Valor da parcela',
+            valorParcelaExtenso: 'Valor da parcela por extenso',
+            quantidadeParcelas: 'Quantidade de parcelas',
+            dataRepresentacao: 'Data de início da representação',
+            numeroProcesso: 'Número do processo / protocolo',
+            parcelaCorrigida: 'Valor da parcela corrigido',
+            reducaoParcela: 'Redução da parcela',
+            estorno: 'Estorno',
+            reducaoTotal: 'Redução total',
+            seguro: 'Seguro',
+            registroContrato: 'Registro de contrato',
+            tarifaAvaliacao: 'Tarifa de avaliação',
+            tarifaCadastro: 'Tarifa de cadastro',
+            iof: 'IOF',
+            iofAdicional: 'IOF adicional',
+            demaisTarifas: 'Demais Tarifas',
+            nacionalidade: 'Nacionalidade',
+            estadoCivil: 'Estado civil',
+            profissao: 'Profissão',
+            rg: 'RG',
+            email: 'E-mail',
+            endereco: 'Endereço completo',
+            cep: 'CEP',
+            estado: 'Estado / UF da assinatura',
+            protocolo: 'Número de protocolo',
+            dataReclamacao: 'Data da abertura da reclamação',
+            contrato: 'Número do contrato',
+            servico: 'Serviço / custo',
+            produto: 'Produto / custo',
+            dataPagamento: 'Data do pagamento',
+            responsavel: 'Responsável pelo documento'
+        };
+
+        const admPdfTemplates = {
+            chargeback: {
+                title: 'Contestação de Chargeback',
+                source: 'chargeback.docx',
+                fields: ['cliente', 'cpf', 'dataPagamento', 'valor', 'responsavel', 'estado'],
+                customLabels: { dataPagamento: 'Data do pagamento' },
+                blocks: [
+                    { type: 'kv', rows: [['Cliente', '{{cliente}}'], ['CPF', '{{cpf}}'], ['Data do pagamento', '{{dataPagamento}}'], ['Valor', 'R$ {{valor}}']] },
+                    'Prezados, em atenção ao pedido de estorno/chargeback apresentado pelo cliente acima identificado, a Platino Soluções Financeiras vem, por meio desta, apresentar sua contestação formal, requerendo o indeferimento do estorno, tendo em vista a legitimidade da contratação e da cobrança realizada.',
+                    'O valor questionado decorre de contrato de prestação de serviços de assessoria para revisão contratual, regularmente firmado entre as partes. O cliente, na qualidade de contratante, teve ciência prévia das condições do serviço, valores, etapas do atendimento e obrigações assumidas, manifestando sua concordância por meio de contrato, termo de consentimento e demais documentos de aceite.',
+                    'A transação foi realizada de forma voluntária, autorizada e rastreável, por meio regular de pagamento, não havendo qualquer elemento que caracterize fraude, uso indevido do cartão, contratação por terceiro não autorizado ou desconhecimento da operação pelo titular.',
+                    'Também não há fundamento para alegação de desacordo comercial, uma vez que a empresa iniciou a prestação dos serviços contratados, realizando atos técnicos e administrativos relacionados ao procedimento, tais como análise inicial, atendimento, conferência documental, orientações ao cliente, cálculos, tratativas judiciais ou movimentações internas vinculadas à revisão contratual, conforme documentos comprobatórios disponíveis.',
+                    'Ressalta-se que a continuidade do serviço depende também da colaboração do contratante, especialmente quanto ao fornecimento de documentos, informações e autorizações necessárias. No presente caso, o pedido de cancelamento/chargeback ocorreu de forma unilateral, sem demonstração de falha na prestação do serviço e após o início da execução contratual.',
+                    'Dessa forma, o estorno integral dos valores pagos, após a contratação formal e início da prestação dos serviços, configuraria prejuízo indevido à contratada e vantagem injustificada ao contratante, contrariando a boa-fé objetiva e a vedação ao enriquecimento sem causa.',
+                    'Para comprovação da regularidade da cobrança, poderão ser apresentados: contrato assinado, termo de consentimento, comprovante da transação, registros de atendimento, comunicações com o cliente, protocolos, relatórios, cálculos, documentos internos de movimentação e demais evidências da execução do serviço.',
+                    'Diante do exposto, requer-se o indeferimento do chargeback, com a manutenção da cobrança, tendo em vista que:',
+                    { type: 'list', items: ['I. houve contratação válida e documentada;', 'II. o pagamento foi autorizado e rastreável;', 'III. não há indícios de fraude;', 'IV. o serviço foi iniciado e efetivamente prestado;', 'V. não houve falha ou vício por parte da contratada;', 'VI. o cancelamento decorreu de ato unilateral do próprio cliente.'] },
+                    'Cordialmente,'
+                ],
+                signature: ['{{responsavel}} - Representante autorizado', '{{estado}}, {{dia}} de {{mes}} de {{ano}}.', 'PLATINO SOLUÇÕES FINANCEIRAS', 'CNPJ nº 52.807.405/0001-30']
+            },
+            'citacao-intimacao-extrajudicial': {
+                title: 'Citação / Intimação Extrajudicial',
+                source: 'citacao-intimacao-extrajudicial.docx',
+                fields: ['banco', 'cnpjBanco', 'enderecoBanco', 'dataContrato', 'parcelaCorrigida', 'reducaoParcela', 'estorno', 'reducaoTotal', 'cliente'],
+                blocks: [
+                    'A',
+                    '{{banco}}',
+                    'CNPJ: {{cnpjBanco}}',
+                    '{{enderecoBanco}}',
+                    'Reportando ao meu contrato de financiamento junto a V.Sa, celebrado em ({{dataContrato}}), nos termos das cláusulas contratuais nele contidas, faço uso da presente para lhe NOTIFICAR da abusividade contratual quanto ao cumprimento do referido contrato.',
+                    'Assim, no prazo de até 5 (cinco) dias úteis do recebimento desta, seja avaliada a possível redução da taxa de juros remuneratórios contratuais, expurgo de tarifas ou seguros embutidos, se o caso, bem como um possível acordo.',
+                    'O pedido em epígrafe tem como discussão matéria atinente à revisão contratual em razão das cobranças abusivas, onde se verificou:',
+                    { type: 'list', items: ['Valor da parcela corrigido: R$ {{parcelaCorrigida}}', 'Redução da Parcela: R$ {{reducaoParcela}}', 'Estorno: R$ {{estorno}}', 'Redução Total: R$ {{reducaoTotal}}'] },
+                    'São Paulo, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['{{cliente}}']
+            },
+            'citacao-judicial': {
+                title: 'Citação Judicial',
+                source: 'citacao-judicial.docx',
+                fields: ['numeroProcesso', 'cliente', 'banco'],
+                blocks: [
+                    'Protocolo nº: {{numeroProcesso}}',
+                    '{{cliente}}, já devidamente qualificado(a) nos autos da AÇÃO REVISIONAL DE CONTRATO DE FINANCIAMENTO que move em face de {{banco}}, por intermédio de seu procurador infra-assinado, vem, respeitosamente, requerer a nova citação da parte ré, com a finalidade de impulsionar o regular andamento processual.',
+                    'O processo em epígrafe versa sobre matéria de natureza eminentemente jurídica, inexistindo, portanto, necessidade de dilação probatória. Verifica-se que, tanto na petição inicial quanto na contestação, não houve indicação de necessidade de produção de outras provas pelas partes, circunstância que autoriza o julgamento antecipado do mérito.',
+                    'Nesse sentido, dispõe o artigo 355 do Código de Processo Civil:',
+                    'Art. 355. O juiz julgará antecipadamente o pedido, proferindo sentença com resolução de mérito, quando:',
+                    'I - Não houver necessidade de produção de outras provas;',
+                    'No caso em tela, os pedidos formulados estão amparados em matéria essencialmente jurídica e documental, sendo desnecessária a abertura de fase instrutória ou a produção de novas provas.',
+                    'Diante disso, requer-se o julgamento antecipado do mérito, nos termos do artigo 355, inciso I, do Código de Processo Civil.',
+                    'Termos em que,',
+                    'Pede deferimento.',
+                    'São Paulo, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['{{cliente}}']
+            },
+            'contestacao-taxas-email': {
+                title: 'Contestação de Taxas por E-mail',
+                source: 'contestacao-taxas-email.docx',
+                fields: ['banco', 'cliente', 'cpf', 'seguro', 'registroContrato', 'tarifaAvaliacao', 'tarifaCadastro', 'iof', 'iofAdicional', 'demaisTarifas'],
+                requiredFields: ['banco', 'cliente', 'cpf', 'seguro', 'registroContrato', 'tarifaAvaliacao', 'tarifaCadastro', 'iof', 'iofAdicional', 'demaisTarifas'],
+                customLabels: {
+                    banco: 'Nome do banco',
+                    cliente: 'Nome completo do cliente',
+                    cpf: 'CPF do cliente',
+                    seguro: 'Seguro (R$)',
+                    registroContrato: 'Registro de contrato (R$)',
+                    tarifaAvaliacao: 'Tarifa de avaliação (R$)',
+                    tarifaCadastro: 'Tarifa de cadastro (R$)',
+                    iof: 'IOF (R$)',
+                    iofAdicional: 'IOF adicional (R$)',
+                    demaisTarifas: 'Demais Tarifas (R$)'
+                },
+                placeholders: {
+                    seguro: 'Ex.: 1.234,56',
+                    registroContrato: 'Ex.: 1.234,56',
+                    tarifaAvaliacao: 'Ex.: 1.234,56',
+                    tarifaCadastro: 'Ex.: 1.234,56',
+                    iof: 'Ex.: 1.234,56',
+                    iofAdicional: 'Ex.: 1.234,56',
+                    demaisTarifas: 'Ex.: 1.234,56'
+                },
+                blocks: [
+                    'À',
+                    'BANCO {{banco}}',
+                    'Prezados Senhores,',
+                    'A Platino Soluções Financeiras Ltda., pessoa jurídica de direito privado, inscrita no CNPJ sob o nº 52.807.405/0001-30, com sede na Rua Fontoura Xavier, nº 1308, Itaquera, São Paulo/SP, na qualidade de representante do(a) Sr(a). {{cliente}}, inscrito no CPF nº {{cpf}}, vem, por meio da presente, apresentar NOTIFICAÇÃO EXTRAJUDICIAL, com fundamento nos princípios da boa-fé objetiva, da transparência contratual e da proteção ao consumidor, previstos no Código de Defesa do Consumidor.',
+                    'Após análise do contrato de financiamento celebrado entre o consumidor e essa instituição financeira, foram identificados encargos cuja legalidade e razoabilidade demandam revisão, especialmente no que se refere à cobrança do seguinte valor:',
+                    { type: 'list', items: ['Seguro: R$ {{seguro}}', 'Registro de contrato: R$ {{registroContrato}}', 'Tarifa de avaliação: R$ {{tarifaAvaliacao}}', 'Tarifa de cadastro: R$ {{tarifaCadastro}}', 'IOF: R$ {{iof}}', 'IOF adicional: R$ {{iofAdicional}}', 'Demais Tarifas: R$ {{demaisTarifas}}'] },
+                    'Diante disso, requer-se a revisão do referido contrato, com a suspensão da exigibilidade dos valores contestados até a conclusão da análise administrativa, bem como a reavaliação dos encargos financeiros e das taxas de juros aplicadas, visando à exclusão de eventuais cobranças abusivas ou excessivamente onerosas.',
+                    'Requer-se, ainda, a apuração e restituição dos valores eventualmente pagos de forma indevida pelo consumidor, nos termos da legislação aplicável, especialmente do artigo 42 do Código de Defesa do Consumidor (Lei nº 8.078/1990), sem prejuízo de outros direitos que possam ser reconhecidos após análise detalhada da relação contratual.',
+                    'A presente notificação tem por finalidade buscar uma solução consensual e extrajudicial para a controvérsia, evitando a adoção de medidas administrativas e judiciais cabíveis, preservando-se, assim, os princípios da cooperação e da boa-fé entre as partes.',
+                    'Solicitamos manifestação formal dessa instituição financeira no prazo de 10 (dez) dias úteis, contados do recebimento desta notificação, informando as providências adotadas e eventual proposta para composição amigável da demanda.',
+                    'Permanecemos à disposição para o envio de documentos complementares e para quaisquer esclarecimentos que se façam necessários.',
+                    'São Paulo, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['PLATINO SOLUÇÕES FINANCEIRAS', 'CNPJ nº 52.807.405/0001-30']
+            },
+            'declaracao-ausencia-carteira-trabalho': {
+                title: 'Declaração de Ausência de Carteira de Trabalho',
+                source: 'declaracao-ausencia-carteira-trabalho.docx',
+                fields: ['cliente', 'nacionalidade', 'estadoCivil', 'profissao', 'rg', 'cpf', 'email', 'endereco', 'estado'],
+                blocks: [
+                    'Eu, {{cliente}}, {{nacionalidade}}, {{estadoCivil}}, {{profissao}}, portador(a) da Cédula de Identidade RG nº {{rg}}, inscrito(a) no CPF/MF sob o nº {{cpf}}, endereço eletrônico {{email}}, residente e domiciliado(a) à {{endereco}}, declaro, para os devidos fins, sob as penas da lei, que não possuo Carteira de Trabalho e Previdência Social - CTPS, seja em meio físico ou digital.',
+                    'Declaro, ainda, que as informações aqui prestadas são verdadeiras e assumo inteira responsabilidade civil e criminal por eventual falsidade ou omissão.',
+                    'Por ser expressão da verdade, firmo a presente declaração para que produza seus devidos efeitos legais.',
+                    '{{estado}}, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['{{cliente}}']
+            },
+            'declaracao-hipossuficiencia': {
+                title: 'Declaração de Hipossuficiência',
+                source: 'declaracao-hipossuficiencia.docx',
+                fields: ['cliente', 'nacionalidade', 'estadoCivil', 'profissao', 'rg', 'cpf', 'email', 'endereco', 'estado'],
+                subtitle: 'NOS TERMOS DA LEI 1.060/50',
+                blocks: [
+                    'Eu, {{cliente}}, {{nacionalidade}}, {{estadoCivil}}, {{profissao}}, portador(a) da Cédula de Identidade RG n.º {{rg}}, inscrito(a) no CPF/MF sob n.° {{cpf}}, com endereço eletrônico: {{email}}. Residente e domiciliado(a) na: {{endereco}}. Vem respeitosamente perante Vossa Excelência por meio deste instrumento declarar que não tem condições financeiras para custear os encargos atinentes a qualquer processo judicial, sem prejuízo da manutenção do seu próprio sustento, requerendo, por meio tais razões, os BENEFÍCIOS DA JUSTIÇA GRATUITA, conforme o art. 4º da Lei 1.060/50 c/c o art. 98 do Código de Processo Civil (CPC).',
+                    'Essa declaração presume-se verdadeira, sob as penas da Lei.',
+                    '{{estado}}, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['{{cliente}}']
+            },
+            'declaracao-isencao-irpf': {
+                title: 'Declaração de Isenção do Imposto de Renda Pessoa Física (IRPF)',
+                source: 'declaracao-isencao-irpf.docx',
+                fields: ['cliente', 'nacionalidade', 'estadoCivil', 'profissao', 'rg', 'cpf', 'email', 'endereco', 'estado'],
+                blocks: [
+                    'Eu, {{cliente}}, {{nacionalidade}}, {{estadoCivil}}, {{profissao}}, portadora da Cédula de Identidade R.G. nº {{rg}} inscrito(a) no C.P.F./M.F. sob nº {{cpf}}, com endereço eletrônico: {{email}}, residente e domiciliado na {{endereco}}. Declara ser isento da apresentação da Declaração do Imposto de Renda Pessoa Física (DIRPF) no(s) exercício(s) de 2023, 2024 e 2025 por não incorrer em nenhuma das hipóteses de obrigatoriedade estabelecidas pelas Instruções Normativas (IN) da Receita Federal do Brasil (RFB). Esta declaração está em conformidade com a IN RFB nº 1548/2015 e a Lei nº 7.115/83*. Declaro ainda, sob as penas da lei, serem verdadeiras todas as informações acima prestadas.',
+                    '{{estado}} {{dia}} DE {{mesMaiusculo}} DE {{ano}}.'
+                ],
+                signature: ['{{cliente}}'],
+                appendix: [
+                    '* Esclarecemos que a Receita Federal do Brasil não emite declaração de que o(a) cidadão(ã) está isento(a) de apresentar a Declaração do Imposto de Renda da Pessoa Física (DIRPF), pois a Instrução Normativa RFB nº 1548, de 25 de fevereiro de 2015, regula que, a partir do ano de 2008, deixa de existir a Declaração Anual de Isento.',
+                    'A Lei nº 7.115/83 assegura que a isenção poderá ser comprovada mediante declaração escrita e assinada pelo próprio interessado.'
+                ]
+            },
+            'notificacao-extrajudicial-platino': {
+                title: 'Notificação Extrajudicial Platino',
+                source: 'notificacao-extrajudicial-platino.docx',
+                fields: ['banco', 'cnpjBanco', 'enderecoBanco', 'cliente', 'cpf', 'valor', 'valorExtenso', 'quantidadeParcelas', 'valorParcela', 'valorParcelaExtenso', 'dataRepresentacao'],
+                blocks: [
+                    'São Paulo/SP, {{dia}} de {{mes}} de {{ano}}.',
+                    'À {{banco}}\nCNPJ nº {{cnpjBanco}}\n{{enderecoBanco}}',
+                    { type: 'heading', text: 'Comunicação de Representação para Tratativas de Revisão Contratual' },
+                    { type: 'kv', rows: [['Cliente/Notificante', '{{cliente}}'], ['CPF', '{{cpf}}'], ['Representante Extrajudicial/Intermediadora', 'Platino Assessoria Financeira'], ['CNPJ', '52.807.405/0001-30'], ['Instituição Financeira Notificada', '{{banco}}'], ['CNPJ', '{{cnpjBanco}}']] },
+                    'A PLATINO ASSESSORIA FINANCEIRA, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº 52.807.405/0001-30, neste ato atuando por meio de representante devidamente autorizado, conforme instrumento de procuração anexo, em nome de {{cliente}}, inscrito no CPF sob o nº {{cpf}}, vem, respeitosamente, apresentar a presente NOTIFICAÇÃO EXTRAJUDICIAL, com a finalidade de comunicar a esta instituição financeira sua atuação como representante/intermediadora nas tratativas administrativas e extrajudiciais relacionadas à revisão contratual do cliente acima qualificado.',
+                    'A presente comunicação refere-se ao contrato de financiamento firmado entre o cliente e esta instituição financeira, relacionado ao financiamento de veículo no valor de R$ {{valor}} ({{valorExtenso}}), pactuado em {{quantidadeParcelas}} parcelas mensais de R$ {{valorParcela}} ({{valorParcelaExtenso}}), ou conforme demais condições constantes no respectivo instrumento contratual.',
+                    'Por meio desta, fica formalmente comunicado que, a partir de {{dataRepresentacao}}, a Platino Assessoria Financeira passará a ser responsável por todas as intermediações administrativas e extrajudiciais decorrentes da relação contratual originada do contrato firmado entre as partes.',
+                    'Dessa forma, todas as tratativas, comunicações, solicitações, documentos, esclarecimentos e demais informações referentes ao processo de análise e revisão contratual deverão ser direcionados à Platino Assessoria Financeira, que atuará como responsável extrajudicial pelo acompanhamento, intermediação e representação do referido cliente perante esta instituição financeira.',
+                    'Para fins de análise técnica, conferência das condições pactuadas e regular acompanhamento da demanda, solicita-se, desde já, o envio de cópia integral do contrato de financiamento, incluindo eventuais anexos, aditivos, demonstrativos, proposta de crédito, condições gerais, planilha de evolução contratual e demais documentos vinculados à contratação.',
+                    'O documento solicitado deverá ser encaminhado, preferencialmente em formato eletrônico, para o seguinte endereço de e-mail:',
+                    'platinoassessoriafinanceira@gmail.com',
+                    'Alternativamente, poderá ser encaminhado por correspondência física ao seguinte endereço:',
+                    'Rua Fontoura Xavier, nº 1308 - Itaquera - São Paulo/SP - CEP: 08295-300.',
+                    'Caso o fornecimento da cópia contratual dependa do pagamento de eventual taxa administrativa, solicita-se que a instituição financeira informe, por escrito, através do e-mail acima indicado: I. o valor a ser pago; II. a forma de pagamento disponível; III. a cláusula contratual ou fundamento que autorize a cobrança.',
+                    'O não envio da documentação solicitada no prazo de 7 (sete) dias úteis, contados do recebimento desta notificação, poderá ser interpretado como recusa tácita de fornecimento, autorizando a adoção das medidas administrativas e/ou judiciais cabíveis para obtenção dos documentos necessários à análise contratual, sem prejuízo de eventual apuração de danos decorrentes da não disponibilização de documento essencial à verificação dos direitos do consumidor.',
+                    'Por fim, requer-se que toda e qualquer comunicação relacionada ao contrato, à revisão contratual, às tratativas administrativas ou à documentação solicitada seja direcionada exclusivamente aos canais oficiais da Platino Assessoria Financeira, enquanto vigente a autorização conferida pelo cliente.',
+                    'Sem mais para o momento, renovamos nossos votos de elevada consideração e permanecemos à disposição para o regular prosseguimento das tratativas.',
+                    'Cordialmente,'
+                ],
+                signature: ['PLATINO ASSESSORIA FINANCEIRA', 'CNPJ nº 52.807.405/0001-30', 'Representante autorizado']
+            },
+            'procuracao-dra-juliane': {
+                title: 'Procuração Ad Judicia',
+                source: 'procuracao-dra-juliane.docx',
+                fields: ['cliente', 'nacionalidade', 'estadoCivil', 'profissao', 'rg', 'cpf', 'email', 'endereco', 'cep', 'banco', 'contrato', 'estado'],
+                blocks: [
+                    'OUTORGANTE: {{cliente}}, {{nacionalidade}}, {{estadoCivil}}, {{profissao}}, portadora da Cédula de Identidade R.G. n° {{rg}}, inscrito(a) no C.P.F./M.F. sob n° {{cpf}}, com endereço eletrônico: {{email}}, residente e domiciliado na Rua {{endereco}} - CEP: {{cep}}.',
+                    'OUTORGADO: Juliana Cristina Galzo, brasileira, divorciada, advogada inscrita na OAB/SP 336.677, com endereço eletrônico: adv.mkmello@gmail.com, com escritório profissional situado na Av. Cachoeira Paulista, nº 131, sala 3, Cidade Patriarca, São Paulo - SP, CEP: 03551-000, onde recebe intimações e notificações.',
+                    'PODERES: Por este instrumento particular de procuração, o(a) OUTORGANTE confere ao(à) OUTORGADO(a) os mais amplos, gerais e ilimitados poderes para o foro em geral, em qualquer juízo, instância ou tribunal, podendo propor quaisquer ações, defesas, recursos, contrapor, aditar, desistir, confessar, transigir, firmar compromissos ou acordos, requerer e retirar alvarás, receber valores, dar e quitar recibos, requerer falências, concordatas ou recuperações judiciais, assim como praticar todos e quaisquer atos necessários e convenientes ao bom e fiel cumprimento do presente mandato.',
+                    'OBJETIVO: Os poderes ora concedidos destinam-se exclusivamente ao ingresso de Ação de Revisão de Contrato, contra o {{banco}}, e n° de contrato {{contrato}}, bem como na defesa de seus interesses.',
+                    '{{estado}}, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['CLIENTE {{cliente}}']
+            },
+            'termo-ciencia-autorizacao-seguranca': {
+                title: 'Termo de Ciência e Autorização de Segurança',
+                source: 'termo-ciencia-autorizacao-seguranca.docx',
+                fields: ['cliente', 'cpf', 'dataReclamacao', 'banco', 'protocolo'],
+                blocks: [
+                    'São Paulo/SP, {{dia}} de {{mes}} de {{ano}}.',
+                    { type: 'heading', text: 'Abertura de Reclamação Administrativa via GOV.BR' },
+                    { type: 'kv', rows: [['Cliente', '{{cliente}}'], ['CPF', '{{cpf}}'], ['Data da abertura da reclamação', '{{dataReclamacao}}'], ['Plataforma utilizada', 'GOV.BR / Consumidor.gov.br'], ['Instituição reclamada', '{{banco}}'], ['Número de protocolo', '{{protocolo}}']] },
+                    'Eu, {{cliente}}, inscrito(a) no CPF sob o nº {{cpf}}, declaro, para os devidos fins, que estou ciente e autorizo a Platino Assessoria Financeira a realizar, mediante minha autorização e com base nas informações por mim fornecidas, a abertura de reclamação administrativa na plataforma GOV.BR / Consumidor.gov.br, com o objetivo de contestar taxas, valores, encargos, juros ou demais condições relacionadas a revisão do meu contrato.',
+                    'Declaro que fui previamente informado(a) sobre a natureza do serviço prestado, estando ciente de que a atuação da empresa se limita à abertura e registro da reclamação administrativa, bem como ao repasse do respectivo número de protocolo para meu acompanhamento.',
+                    'Confirmo que autorizei o uso do acesso GOV.BR exclusivamente para a finalidade específica de registrar a reclamação administrativa mencionada neste termo, não autorizando qualquer outra utilização diversa da finalidade aqui descrita.',
+                    'Após a conclusão do procedimento, declaro que recebi o número de protocolo da reclamação, por meio do qual poderei acompanhar diretamente os próximos passos, respostas, manifestações e atualizações junto à plataforma competente.',
+                    'Declaro, ainda, que fui informado(a) de que, após a finalização da abertura da reclamação, a empresa realizou o encerramento da sessão utilizada, deslogando o acesso e não mantendo salvo qualquer dado de login, senha, código de verificação, token, autenticação, print, arquivo ou registro que permita novo acesso à minha conta pessoal GOV.BR.',
+                    'A Platino Soluções Financeiras informa que adota medidas de segurança e confidencialidade para preservação dos dados pessoais do cliente, utilizando as informações fornecidas apenas para a finalidade autorizada neste termo, em observância às boas práticas de proteção de dados e à Lei Geral de Proteção de Dados - LGPD.'
+                ],
+                signature: ['{{cliente}}', 'PLATINO SOLUÇÕES FINANCEIRAS', 'CNPJ nº 52.807.405/0001-30']
+            },
+            'termo-compromisso-pagamento': {
+                title: 'Termo de Compromisso de Pagamento',
+                source: 'termo-compromisso-pagamento.docx',
+                fields: ['cliente', 'cpf', 'valor', 'valorExtenso', 'servico', 'estado'],
+                blocks: [
+                    'Pelo presente instrumento particular, de um lado: PLATINO SOLUÇÕES FINANCEIRAS, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº 52.807.405/0001-30, doravante denominada simplesmente ASSESSORIA. E, de outro lado: {{cliente}}, inscrito no CPF sob o nº {{cpf}}, doravante denominado simplesmente CLIENTE. Têm entre si, justo e acordado, o presente Termo de Compromisso de Pagamento, que será regido pelas cláusulas e condições abaixo.',
+                    { type: 'heading', text: 'CLÁUSULA PRIMEIRA - DO OBJETO' },
+                    '1.1. O presente termo tem por objeto o reconhecimento, pelo CLIENTE, da responsabilidade pelo pagamento do valor total de R$ {{valor}} ({{valorExtenso}}), referente aos custos de {{servico}}, relacionados ao procedimento de revisão do contrato de financiamento.',
+                    '1.2. O CLIENTE declara estar ciente da natureza do serviço, dos valores envolvidos e da obrigação de pagamento assumida perante a ASSESSORIA.',
+                    { type: 'heading', text: 'CLÁUSULA SEGUNDA - DA RESPONSABILIDADE PELO PAGAMENTO' },
+                    '2.1. O CLIENTE compromete-se a efetuar o pagamento integral do valor descrito na Cláusula Primeira no momento em que houver a restituição, recebimento ou disponibilização de valores decorrentes da revisão do contrato de financiamento.',
+                    '2.2. O pagamento deverá ser realizado diretamente à ASSESSORIA, por meio de chave PIX, transferência bancária, boleto ou outra forma de pagamento previamente indicada pela empresa.',
+                    '2.3. O presente compromisso permanece válido ainda que a restituição dos valores ocorra por acordo, negociação administrativa, decisão judicial, compensação, abatimento, quitação ou qualquer outra forma de benefício econômico obtido pelo CLIENTE em razão do procedimento realizado.',
+                    { type: 'heading', text: 'CLÁUSULA TERCEIRA - DO INADIMPLEMENTO' },
+                    '3.1. O não pagamento do valor assumido neste termo, após a restituição ou disponibilização dos valores ao CLIENTE, poderá acarretar a cobrança administrativa do débito, sem prejuízo da adoção das medidas judiciais cabíveis para ressarcimento dos valores devidos.',
+                    '3.2. Em caso de atraso no pagamento, poderão incidir atualização monetária, juros, multa e demais encargos legais aplicáveis, além de eventuais despesas de cobrança.',
+                    { type: 'heading', text: 'CLÁUSULA QUARTA - DAS DISPOSIÇÕES FINAIS' },
+                    '4.1. O CLIENTE declara que leu, compreendeu e concorda com todas as cláusulas do presente termo, assumindo de forma livre e consciente a obrigação de pagamento aqui estabelecida.',
+                    '4.2. O presente termo é firmado em caráter irrevogável e irretratável, obrigando as partes e seus sucessores ao fiel cumprimento das condições pactuadas.',
+                    'E, por estarem assim justas e acordadas, as partes assinam o presente termo para que produza seus devidos efeitos legais.',
+                    '{{estado}}, {{dia}} de {{mes}} de {{ano}}.'
+                ],
+                signature: ['{{cliente}}']
+            },
+            'modelo-termo-compromisso-pagamento': {
+                title: 'Modelo - Termo de Compromisso de Pagamento',
+                source: 'modelo-termo-compromisso-pagamento.docx',
+                fields: ['cliente', 'cpf', 'produto', 'valor', 'valorExtenso', 'dataPagamento'],
+                requiredFields: ['cliente', 'cpf', 'produto', 'valor', 'valorExtenso', 'dataPagamento'],
+                customLabels: {
+                    cliente: 'Nome completo do cliente',
+                    cpf: 'CPF do cliente',
+                    produto: 'Produto',
+                    valor: 'Valor (R$)',
+                    valorExtenso: 'Valor por escrito',
+                    dataPagamento: 'Data do pagamento'
+                },
+                placeholders: {
+                    valor: 'Ex.: 1.234,56',
+                    valorExtenso: 'Ex.: mil duzentos e trinta e quatro reais e cinquenta e seis centavos'
+                },
+                blocks: [
+                    'Eu, {{cliente}}, portadora do CPF nº {{cpf}}, declaro para os devidos fins que estou ciente da necessidade de pagamento dos custos referentes à {{produto}}, necessário para a finalização do meu processo.',
+                    'Declaro que me comprometo a realizar o pagamento do valor de R$ {{valor}} ({{valorExtenso}}.) à vista, na data {{dataPagamento}}.'
+                ],
+                signature: ['{{cliente}}', 'CPF: {{cpf}}']
+            }
+        };
+
+        function getAdmPdfField(key) {
+            return document.getElementById(`adm-field-${key}`)?.value.trim() || '';
+        }
+
+        function getAdmPdfDateParts(value) {
+            const months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+            const fallback = new Date();
+            if (!value) {
+                return {
+                    dia: String(fallback.getDate()).padStart(2, '0'),
+                    mes: months[fallback.getMonth()],
+                    mesMaiusculo: months[fallback.getMonth()].toUpperCase(),
+                    ano: String(fallback.getFullYear()),
+                    data: fallback.toLocaleDateString('pt-BR')
+                };
+            }
+            const [year, month, day] = value.split('-');
+            const monthName = months[Math.max(0, Number(month) - 1)] || months[0];
+            return {
+                dia: day,
+                mes: monthName,
+                mesMaiusculo: monthName.toUpperCase(),
+                ano: year,
+                data: `${day}/${month}/${year}`
+            };
+        }
+
+        function createAdmPdfNumber(date = new Date()) {
+            const stamp = [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, '0'),
+                String(date.getDate()).padStart(2, '0')
+            ].join('');
+            const suffix = String(Math.floor(10000 + Math.random() * 90000));
+            return `${stamp}-${suffix}`;
+        }
+
+        function ensureAdmPdfNumber(forceNew = false) {
+            const input = document.getElementById('adm-pdf-number');
+            if (!input) return '';
+            if (forceNew || !input.value.trim()) {
+                input.value = createAdmPdfNumber();
+            }
+            return input.value.trim();
+        }
+
+        function slugifyAdmPdf(value) {
+            return String(value || 'documento')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-zA-Z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .toLowerCase() || 'documento';
+        }
+
+        function getAdmPdfTemplate() {
+            const templateKey = document.getElementById('adm-pdf-template')?.value || 'notificacao';
+            return admPdfTemplates[templateKey] || admPdfTemplates.chargeback;
+        }
+
+        function getAdmPdfFieldLabel(template, field) {
+            return template.customLabels?.[field] || admPdfFieldLabels[field] || field;
+        }
+
+        function getAdmPdfInputType(field) {
+            if (field.toLowerCase().includes('data')) return 'date';
+            if (field === 'email') return 'email';
+            return 'text';
+        }
+
+        function renderAdmPdfFields() {
+            const template = getAdmPdfTemplate();
+            const fieldsContainer = document.getElementById('adm-pdf-fields');
+            const status = document.getElementById('adm-pdf-status');
+            if (!fieldsContainer) return;
+
+            fieldsContainer.innerHTML = template.fields.map((field, index) => {
+                const label = getAdmPdfFieldLabel(template, field);
+                const required = Array.isArray(template.requiredFields)
+                    ? template.requiredFields.includes(field)
+                    : index === 0 || ['cliente', 'cpf', 'banco'].includes(field);
+                const type = getAdmPdfInputType(field);
+                const span = ['endereco', 'enderecoBanco'].includes(field) ? 'sm:col-span-2' : '';
+                const placeholder = template.placeholders?.[field] || label;
+                return `
+                    <label class="${span} grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
+                        ${escapeHtml(label)}${required ? ' *' : ''}
+                        <input id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} type="${type}" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}">
+                    </label>
+                `;
+            }).join('');
+
+            if (status) {
+                status.className = 'min-h-5 text-xs font-semibold text-blue-100/60';
+                status.innerText = 'Modelo carregado. Preencha os campos destacados do documento original.';
+            }
+        }
+
+        function resetAdmPdfForm() {
+            const form = document.getElementById('adm-pdf-form');
+            if (form) form.reset();
+            const date = document.getElementById('adm-pdf-date');
+            if (date) date.valueAsDate = new Date();
+            ensureAdmPdfNumber(true);
+            renderAdmPdfFields();
+        }
+
+        function buildAdmPdfData(template) {
+            const dateParts = getAdmPdfDateParts(document.getElementById('adm-pdf-date')?.value || '');
+            const data = { ...dateParts, numeroDocumento: ensureAdmPdfNumber() };
+            template.fields.forEach(field => {
+                const rawValue = getAdmPdfField(field);
+                data[field] = getAdmPdfInputType(field) === 'date' && rawValue
+                    ? getAdmPdfDateParts(rawValue).data
+                    : rawValue;
+            });
+            return data;
+        }
+
+        function fillAdmPdfText(value, data) {
+            return String(value || '').replace(/\{\{([^}]+)\}\}/g, (_, key) => data[key.trim()] || '');
+        }
+
+        function addAdmPdfFooter(doc, pageNumber) {
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            doc.setDrawColor(205, 214, 226);
+            doc.line(18, pageHeight - 18, pageWidth - 18, pageHeight - 18);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text('Platino Assessoria | Documento administrativo gerado pelo sistema interno', 18, pageHeight - 12);
+            doc.text(`Página ${pageNumber}`, pageWidth - 18, pageHeight - 12, { align: 'right' });
+        }
+
+        function addAdmPdfPage(doc, state) {
+            addAdmPdfFooter(doc, state.pageNumber);
+            doc.addPage();
+            state.pageNumber += 1;
+            state.y = 22;
+        }
+
+        function ensureAdmPdfSpace(doc, state, requiredHeight) {
+            const pageHeight = doc.internal.pageSize.getHeight();
+            if (state.y + requiredHeight > pageHeight - 24) {
+                addAdmPdfPage(doc, state);
+            }
+        }
+
+        function drawAdmPdfText(doc, state, text, options = {}) {
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const marginX = 20;
+            const fontSize = options.fontSize || 10.5;
+            const lineHeight = options.lineHeight || 5.8;
+            const maxWidth = pageWidth - marginX * 2;
+            doc.setFont('helvetica', options.bold ? 'bold' : 'normal');
+            doc.setFontSize(fontSize);
+            doc.setTextColor(options.color?.[0] ?? 30, options.color?.[1] ?? 41, options.color?.[2] ?? 59);
+
+            const paragraphs = String(text || '').split('\n');
+            paragraphs.forEach(paragraph => {
+                const lines = doc.splitTextToSize(paragraph, maxWidth);
+                ensureAdmPdfSpace(doc, state, Math.max(lines.length, 1) * lineHeight + (options.after || 3));
+                lines.forEach(line => {
+                    doc.text(line, options.align === 'center' ? pageWidth / 2 : marginX, state.y, { align: options.align || 'left' });
+                    state.y += lineHeight;
+                });
+                state.y += options.after ?? 3;
+            });
+        }
+
+        function drawAdmPdfKv(doc, state, rows, data) {
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const marginX = 20;
+            ensureAdmPdfSpace(doc, state, rows.length * 7 + 8);
+            doc.setDrawColor(220, 226, 235);
+            doc.setFillColor(248, 250, 252);
+            rows.forEach(([label, value]) => {
+                const y = state.y - 4.3;
+                doc.rect(marginX, y, pageWidth - marginX * 2, 7, 'S');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8.5);
+                doc.setTextColor(71, 85, 105);
+                doc.text(`${label}:`, marginX + 2, state.y);
+                doc.setFont('helvetica', 'normal');
+                doc.text(fillAdmPdfText(value, data) || ' ', marginX + 52, state.y);
+                state.y += 7;
+            });
+            state.y += 6;
+        }
+
+        function drawAdmPdfBlock(doc, state, block, data) {
+            if (typeof block === 'string') {
+                drawAdmPdfText(doc, state, fillAdmPdfText(block, data));
+                return;
+            }
+            if (block.type === 'heading') {
+                drawAdmPdfText(doc, state, fillAdmPdfText(block.text, data), { bold: true, fontSize: 11.5, after: 5 });
+                return;
+            }
+            if (block.type === 'kv') {
+                drawAdmPdfKv(doc, state, block.rows, data);
+                return;
+            }
+            if (block.type === 'list') {
+                block.items.forEach(item => drawAdmPdfText(doc, state, fillAdmPdfText(item, data), { after: 1.5 }));
+                state.y += 3;
+            }
+        }
+
+        function drawAdmPdfSignature(doc, state, signature, data) {
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const marginX = 20;
+            ensureAdmPdfSpace(doc, state, 42);
+            state.y += 10;
+            doc.setDrawColor(100, 116, 139);
+            doc.line(marginX + 18, state.y, pageWidth - marginX - 18, state.y);
+            state.y += 7;
+            (signature || []).forEach((line, index) => {
+                drawAdmPdfText(doc, state, fillAdmPdfText(line, data), {
+                    align: 'center',
+                    bold: index === 0,
+                    fontSize: index > 1 ? 9 : 10,
+                    lineHeight: 4.8,
+                    after: 0.8
+                });
+            });
+        }
+
+        function createAdmPdfDocument(template, data) {
+            const jsPdf = window.jspdf?.jsPDF;
+            const doc = new jsPdf({ unit: 'mm', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const state = { y: 22, pageNumber: 1 };
+
+            doc.setFillColor(15, 25, 44);
+            doc.rect(0, 0, pageWidth, 33, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255);
+            doc.text(template.title.toUpperCase(), 20, 17);
+
+            state.y = 42;
+            if (template.subtitle) {
+                drawAdmPdfText(doc, state, template.subtitle, { align: 'center', bold: true, fontSize: 11, after: 8 });
+            }
+
+            template.blocks.forEach(block => drawAdmPdfBlock(doc, state, block, data));
+            drawAdmPdfSignature(doc, state, template.signature, data);
+
+            if (Array.isArray(template.appendix)) {
+                state.y += 6;
+                template.appendix.forEach(block => drawAdmPdfText(doc, state, fillAdmPdfText(block, data), { fontSize: 8.5, lineHeight: 4.5 }));
+            }
+
+            addAdmPdfFooter(doc, state.pageNumber);
+            return doc;
+        }
+
+        function getAdmPdfFileName(template, data) {
+            const mainName = data.cliente || data.banco || 'documento';
+            const documentNumber = data.numeroDocumento || ensureAdmPdfNumber();
+            return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
+        }
+
+        let admPdfGeneratorReady = null;
+
+        async function checkAdmPdfGeneratorAvailability() {
+            const status = document.getElementById('adm-pdf-status');
+            try {
+                const response = await fetch('/api/generate-document', { cache: 'no-store' });
+                if (!response.ok) {
+                    const payload = await response.json().catch(() => ({}));
+                    admPdfGeneratorReady = false;
+                    if (status) {
+                        status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                        status.innerText = payload.message || 'Gerador fiel indisponível: a API de documentos não está pronta neste servidor.';
+                    }
+                    return false;
+                }
+                admPdfGeneratorReady = true;
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                    status.innerText = 'Gerador pronto: os PDFs serão exportados pelo modelo Word original.';
+                }
+                return true;
+            } catch (error) {
+                admPdfGeneratorReady = false;
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                    status.innerText = 'Gerador fiel indisponível: abra o sistema pelo servidor da aplicação com API ativa.';
+                }
+                return false;
+            }
+        }
+
+        function downloadAdmPdfBlob(blob, fileName) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        async function requestAdmPdf(templateKey, data) {
+            const template = admPdfTemplates[templateKey];
+            let response;
+            try {
+                response = await fetch('/api/generate-document', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ templateKey, data })
+                });
+            } catch (error) {
+                throw new Error('A API de geração não respondeu. Abra o sistema pelo servidor da aplicação, não direto pelo arquivo HTML.');
+            }
+
+            if (!response.ok) {
+                let message = `Não foi possível gerar o PDF com o modelo Word. Código ${response.status}.`;
+                if (response.status === 404) {
+                    message = 'A rota /api/generate-document não foi encontrada. O gerador fiel precisa rodar em um servidor com a API ativa.';
+                }
+                try {
+                    const payload = await response.json();
+                    message = payload.detail
+                        ? `${payload.error || message} ${payload.detail}`
+                        : payload.error || message;
+                } catch (error) {
+                    console.warn('Falha ao ler erro do gerador:', error);
+                }
+                throw new Error(message);
+            }
+
+            const blob = await response.blob();
+            downloadAdmPdfBlob(blob, getAdmPdfFileName(template, data));
+        }
+
+        async function generateAdmPdf(event) {
+            event.preventDefault();
+            const status = document.getElementById('adm-pdf-status');
+            const template = getAdmPdfTemplate();
+            const data = buildAdmPdfData(template);
+            const templateKey = document.getElementById('adm-pdf-template')?.value || 'chargeback';
+            if (!document.getElementById('adm-pdf-form')?.checkValidity()) {
+                document.getElementById('adm-pdf-form')?.reportValidity();
+                return;
+            }
+
+            if (admPdfGeneratorReady !== true) {
+                const ready = await checkAdmPdfGeneratorAvailability();
+                if (!ready) return;
+            }
+
+            if (status) {
+                status.className = 'min-h-5 text-xs font-semibold text-blue-200';
+                status.innerText = 'Gerando PDF com a formatação original do Word...';
+            }
+
+            try {
+                await requestAdmPdf(templateKey, data);
+
+                if (templateKey === 'procuracao-dra-juliane') {
+                    await requestAdmPdf('declaracao-hipossuficiencia', data);
+                    if (status) {
+                        status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                        status.innerText = 'Procuração e Declaração de Hipossuficiência geradas com os modelos Word.';
+                    }
+                    return;
+                }
+
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                    status.innerText = 'PDF gerado com a formatação original do modelo Word.';
+                }
+            } catch (error) {
+                console.error(error);
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
+                    status.innerText = error.message || 'Não foi possível gerar o PDF.';
+                }
+            }
+        }
+
         async function saveAvisosEditor() {
             if (!requireGestor('salvar a Central de Informações')) return;
             const saveButton = document.getElementById('avisos-save-button');
@@ -5870,6 +6665,8 @@
             renderAccordions('com-accordions', fluxosComercial);
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
+            resetAdmPdfForm();
+            checkAdmPdfGeneratorAvailability();
             loadRhNotes();
             renderRhMiniMural();
             
