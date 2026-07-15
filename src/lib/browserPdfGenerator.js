@@ -61,15 +61,25 @@ async function asset(nome) {
 
 export function extrairResumoProcessual(resumo) {
   const conteudo = texto(resumo);
-  const campo = (rotulos) => {
-    const padrao = new RegExp(`(?:${rotulos})\\s*[:\\-]\\s*([^\\n\\r]+)`, "i");
-    return texto(conteudo.match(padrao)?.[1]);
+  const normalizar = (valor) => texto(valor).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const limparParte = (valor) => texto(valor)
+    .replace(/\s+(?:advogad[oa]s?|adv\.?|patrono|procurador)[\s\S]*$/i, "")
+    .trim();
+  const campo = (rotulos, opcoes = {}) => {
+    const padrao = new RegExp(`(?:^|[\\n\\r])\\s*(?:[-*•]\\s*)?(${rotulos})\\s*[:\\-]\\s*([^\\n\\r]+)`, "ig");
+    let match;
+    while ((match = padrao.exec(conteudo))) {
+      const rotulo = normalizar(match[1]);
+      if (opcoes.ignorarRotulo?.test(rotulo)) continue;
+      return texto(match[2]);
+    }
+    return "";
   };
   const secao = (inicio, fins) => {
-    const padrao = new RegExp(`(?:${inicio})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:${fins})\\s*[:\\-]|$)`, "i");
+    const padrao = new RegExp(`(?:^|[\\n\\r])\\s*(?:[-*•]\\s*)?(?:${inicio})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:[-*•]\\s*)?(?:${fins})\\s*[:\\-]|$)`, "i");
     return texto(conteudo.match(padrao)?.[1]);
   };
-  const normalizado = conteudo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const normalizado = normalizar(conteudo);
   const interpretarJusticaGratuita = () => {
     const mencoes = normalizado.match(/[^.!?\n]*(?:justica gratuita|assistencia judiciaria|gratuidade da justica)[^.!?\n]*/g) || [];
     const contexto = mencoes.join(" ");
@@ -90,8 +100,8 @@ export function extrairResumoProcessual(resumo) {
     sigilo: campo("segredo ou sigilo|sigilo"),
     justicaGratuita: interpretarJusticaGratuita(),
     dataDistribuicao: campo("data da distribui(?:ç|c)(?:ã|a)o|distribui(?:ç|c)(?:ã|a)o"),
-    cliente: campo("polo ativo|autor(?:a)?|cliente"),
-    banco: campo("polo passivo|r(?:é|e)u|institui(?:ç|c)(?:ã|a)o financeira|banco"),
+    cliente: limparParte(campo("polo ativo|autor(?:a)?|cliente|parte autora|requerente", { ignorarRotulo: /advogad|adv\.|patrono|procurador/ })),
+    banco: limparParte(campo("polo passivo|r(?:é|e)u|parte r(?:é|e)|institui(?:ç|c)(?:ã|a)o financeira|banco|requerido", { ignorarRotulo: /advogad|adv\.|patrono|procurador/ })),
     advogadoCliente: identificarAdvogado(true),
     advogadoBanco: identificarAdvogado(false),
     assunto: campo("assunto|classe|natureza"),
@@ -103,7 +113,8 @@ export function extrairResumoProcessual(resumo) {
     anexosProcesso: campo("link (?:dos |de )?anexos|anexos(?: em processo)?|documentos anexos")
       || texto(secao("anexos(?: em processo)?|documentos anexos", "representante respons(?:á|a)vel|respons(?:á|a)vel pelo acompanhamento|advogado respons(?:á|a)vel|link|fim").match(/https?:\/\/[^\s]+/i)?.[0]),
     advogadoResponsavel: campo("representante respons(?:á|a)vel(?: pelo acompanhamento)?|respons(?:á|a)vel (?:pela consulta|pelo acompanhamento)|assistente jur(?:í|i)dico|advogado respons(?:á|a)vel"),
-    linkProcesso: campo("link (?:para )?(?:consulta das movimenta(?:ç|c)(?:õ|o)es|do processo|da consulta)|consulta do processo"),
+    linkProcesso: campo("link (?:para )?(?:consulta das movimenta(?:ç|c)(?:õ|o)es|do processo|da consulta)|consulta do processo")
+      || texto(conteudo.match(/https?:\/\/[^\s]+/i)?.[0]),
   };
 }
 
@@ -186,8 +197,6 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
         dataConsulta: texto(data.dataConsulta) || comum.dataEmissao,
         horaConsulta: texto(data.horaConsulta),
         imagemProcesso: data.imagemProcesso,
-      }, {
-        assinaturaBytes: await asset("relatorio-processual-assinatura.png"),
       }),
     "laudo-pericial-contabil": async () => gerarLaudoPericialContabilPdf({
       ...data,

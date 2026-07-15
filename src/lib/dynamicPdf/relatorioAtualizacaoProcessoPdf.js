@@ -16,10 +16,28 @@ const LARGURA = A4[0] - MARGEM * 2;
 const AZUL = rgb(23 / 255, 54 / 255, 93 / 255);
 const AZUL_LINK = rgb(0, 82 / 255, 180 / 255);
 const CINZA = rgb(95 / 255, 105 / 255, 120 / 255);
+const CINZA_CLARO = rgb(0.65, 0.68, 0.72);
 const PRETO = rgb(0, 0, 0);
 
 function texto(valor) {
   return String(valor ?? "").trim();
+}
+
+function quebrarTokenLongo(token, fonte, tamanho, largura) {
+  if (fonte.widthOfTextAtSize(token, tamanho) <= largura) return [token];
+  const partes = [];
+  let atual = "";
+  for (const caractere of token) {
+    const tentativa = `${atual}${caractere}`;
+    if (atual && fonte.widthOfTextAtSize(tentativa, tamanho) > largura) {
+      partes.push(atual);
+      atual = caractere;
+    } else {
+      atual = tentativa;
+    }
+  }
+  if (atual) partes.push(atual);
+  return partes;
 }
 
 function tokens(segmentos, fontes, tamanho, largura) {
@@ -42,13 +60,15 @@ function tokens(segmentos, fontes, tamanho, largura) {
         continue;
       }
       if (!parte.trim()) continue;
-      const medidaPalavra = fonte.widthOfTextAtSize(parte, tamanho);
-      const medidaEspaco = linha.length
-        ? linha.at(-1).fonte.widthOfTextAtSize(" ", tamanho)
-        : 0;
-      if (linha.length && medida + medidaEspaco + medidaPalavra > largura) concluir();
-      linha.push({ texto: parte, fonte });
-      medida += (linha.length > 1 ? medidaEspaco : 0) + medidaPalavra;
+      for (const subparte of quebrarTokenLongo(parte, fonte, tamanho, largura)) {
+        const medidaPalavra = fonte.widthOfTextAtSize(subparte, tamanho);
+        const medidaEspaco = linha.length
+          ? linha.at(-1).fonte.widthOfTextAtSize(" ", tamanho)
+          : 0;
+        if (linha.length && medida + medidaEspaco + medidaPalavra > largura) concluir();
+        linha.push({ texto: subparte, fonte });
+        medida += (linha.length > 1 ? medidaEspaco : 0) + medidaPalavra;
+      }
     }
   }
   if (linha.length || !resultado.length) concluir();
@@ -85,6 +105,16 @@ function cabecalhoRodape(contexto, pagina) {
   pagina.drawLine({ start: { x: MARGEM, y: 795 }, end: { x: A4[0] - MARGEM, y: 795 }, thickness: 1.2, color: AZUL });
 
   pagina.drawLine({ start: { x: MARGEM, y: 45 }, end: { x: A4[0] - MARGEM, y: 45 }, thickness: 0.6, color: rgb(0.75, 0.78, 0.82) });
+  if (contexto.assinaturaEletronica) {
+    const larguraAssinatura = fontes.negrito.widthOfTextAtSize(contexto.assinaturaEletronica, 7.2);
+    pagina.drawText(contexto.assinaturaEletronica, {
+      x: (A4[0] - larguraAssinatura) / 2,
+      y: 49,
+      size: 7.2,
+      font: fontes.negrito,
+      color: AZUL,
+    });
+  }
   const rodape1 = "Rua Fontoura Xavier, nº 1308 - Itaquera - São Paulo/SP - CEP: 08295-300";
   const rodape2 = "E-mail: platinoassessoriafinanceira@gmail.com";
   [rodape1, rodape2].forEach((linha, indice) => {
@@ -139,6 +169,18 @@ function paragrafo(contexto, segmentos, opcoes = {}) {
   contexto.y -= depois;
 }
 
+function textoCentralizado(pagina, fonte, conteudo, x, y, largura, tamanho, cor = PRETO) {
+  const valor = texto(conteudo);
+  const larguraTexto = fonte.widthOfTextAtSize(valor, tamanho);
+  pagina.drawText(valor, {
+    x: x + (largura - larguraTexto) / 2,
+    y,
+    size: tamanho,
+    font: fonte,
+    color: cor,
+  });
+}
+
 function secao(contexto, titulo) {
   garantir(contexto, 26);
   contexto.y -= 6;
@@ -165,13 +207,31 @@ function dadosDaImagem(valor) {
   };
 }
 
-export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBytes } = {}) {
+function formatarDataHoraAssinatura(data = new Date()) {
+  const formatador = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return formatador.format(data).replace(",", " às");
+}
+
+export async function gerarRelatorioAtualizacaoProcessoPdf(dados) {
   const pdf = await PDFDocument.create();
   const fontes = {
     normal: await pdf.embedFont(StandardFonts.Helvetica),
     negrito: await pdf.embedFont(StandardFonts.HelveticaBold),
   };
-  const contexto = { pdf, fontes, pagina: null, y: TOPO };
+  const contexto = {
+    pdf,
+    fontes,
+    pagina: null,
+    y: TOPO,
+    assinaturaEletronica: `Documento assinado digitalmente por RAFAEL MOREIRA em ${formatarDataHoraAssinatura()}`,
+  };
   novaPagina(contexto);
 
   linhaCampo(contexto, "Número do Processo", dados.numeroProcesso, { tamanho: 11, depois: 5 });
@@ -183,26 +243,23 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
   garantir(contexto, 76);
   const coluna = (LARGURA - 12) / 2;
   const yTabela = contexto.y;
-  contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - 60, width: LARGURA, height: 60, borderWidth: 0.8, borderColor: rgb(0.65, 0.68, 0.72) });
-  contexto.pagina.drawLine({ start: { x: MARGEM + coluna + 12, y: yTabela }, end: { x: MARGEM + coluna + 12, y: yTabela - 60 }, thickness: 0.8, color: rgb(0.65, 0.68, 0.72) });
+  contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - 60, width: LARGURA, height: 60, borderWidth: 0.8, borderColor: CINZA_CLARO });
+  contexto.pagina.drawLine({ start: { x: MARGEM + coluna + 12, y: yTabela }, end: { x: MARGEM + coluna + 12, y: yTabela - 60 }, thickness: 0.8, color: CINZA_CLARO });
   contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - 19, width: LARGURA, height: 19, color: rgb(0.94, 0.96, 0.98) });
-  paragrafo(contexto, [{ texto: "POLO ATIVO", negrito: true }], { x: MARGEM + 5, largura: coluna, tamanho: 9, alinhamento: "center", antes: 4, depois: 0 });
-  contexto.y = yTabela - 14;
-  paragrafo(contexto, [{ texto: "POLO PASSIVO", negrito: true }], { x: MARGEM + coluna + 17, largura: coluna, tamanho: 9, alinhamento: "center", antes: 0, depois: 0 });
+  textoCentralizado(contexto.pagina, fontes.negrito, "POLO ATIVO", MARGEM, yTabela - 13, coluna + 12, 9, AZUL);
+  textoCentralizado(contexto.pagina, fontes.negrito, "POLO PASSIVO", MARGEM + coluna + 12, yTabela - 13, coluna, 9, AZUL);
   contexto.y = yTabela - 27;
-  paragrafo(contexto, [{ texto: texto(dados.cliente) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoCliente) || "Não informado"}` }], { x: MARGEM + 7, largura: coluna - 10, tamanho: 8.7, alturaLinha: 11, antes: 0, depois: 0 });
+  paragrafo(contexto, [{ texto: texto(dados.cliente) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoCliente) || "Não informado"}` }], { x: MARGEM + 7, largura: coluna - 2, tamanho: 8.7, alturaLinha: 11, alinhamento: "center", antes: 0, depois: 0 });
   contexto.y = yTabela - 27;
-  paragrafo(contexto, [{ texto: texto(dados.banco) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoBanco) || "Não informado"}` }], { x: MARGEM + coluna + 19, largura: coluna - 10, tamanho: 8.7, alturaLinha: 11, antes: 0, depois: 0 });
+  paragrafo(contexto, [{ texto: texto(dados.banco) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoBanco) || "Não informado"}` }], { x: MARGEM + coluna + 19, largura: coluna - 14, tamanho: 8.7, alturaLinha: 11, alinhamento: "center", antes: 0, depois: 0 });
   contexto.y = yTabela - 69;
 
   linhaCampo(contexto, "Assunto", dados.assunto, { depois: 7 });
   secao(contexto, "Status atual");
   paragrafo(contexto, [{ texto: dados.statusAtual }], { alinhamento: "justify", antes: 0, depois: 7 });
   secao(contexto, "Última movimentação");
-  paragrafo(contexto, [
-    { texto: texto(dados.dataUltimaMovimentacao), negrito: true },
-    { texto: dados.descricaoUltimaMovimentacao },
-  ], { alinhamento: "justify", antes: 0, depois: 7 });
+  linhaCampo(contexto, "Data", dados.dataUltimaMovimentacao, { depois: 2 });
+  paragrafo(contexto, [{ texto: dados.descricaoUltimaMovimentacao || "Não informado" }], { alinhamento: "justify", antes: 0, depois: 7 });
 
   secao(contexto, "Consulta do processo");
   linhaCampo(contexto, "Data da consulta", `${texto(dados.dataConsulta)}${dados.horaConsulta ? ` - Hora: ${texto(dados.horaConsulta)}` : ""}`);
@@ -210,11 +267,12 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
   if (url) {
     garantir(contexto, 28);
     const chamada = "CLIQUE AQUI PARA CONSULTAR AS MOVIMENTAÇÕES DO PROCESSO";
-    const larguraChamada = fontes.negrito.widthOfTextAtSize(chamada, 9.5);
+    const tamanhoLink = 8;
+    const larguraChamada = fontes.negrito.widthOfTextAtSize(chamada, tamanhoLink);
     const x = (A4[0] - larguraChamada) / 2;
-    contexto.pagina.drawText(chamada, { x, y: contexto.y, size: 9.5, font: fontes.negrito, color: AZUL_LINK });
+    contexto.pagina.drawText(chamada, { x, y: contexto.y, size: tamanhoLink, font: fontes.negrito, color: AZUL_LINK });
     contexto.pagina.drawLine({ start: { x, y: contexto.y - 2 }, end: { x: x + larguraChamada, y: contexto.y - 2 }, thickness: 0.6, color: AZUL_LINK });
-    adicionarLink(pdf, contexto.pagina, url, x, contexto.y - 4, larguraChamada, 14);
+    adicionarLink(pdf, contexto.pagina, url, x, contexto.y - 4, larguraChamada, 12);
     contexto.y -= 22;
   }
 
@@ -237,26 +295,29 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
   paragrafo(contexto, [{ texto: dados.proximosPassos }], { alinhamento: "justify", antes: 0, depois: 7 });
   secao(contexto, "Anexos e documentos do processo");
   const linkAnexos = texto(dados.anexosProcesso);
-  paragrafo(contexto, [{ texto: linkAnexos || "Nenhum link de anexo informado." }], { alinhamento: "justify", antes: 0, depois: 8 });
+  if (/^https?:\/\//i.test(linkAnexos)) {
+    garantir(contexto, 28);
+    const chamada = "CLIQUE AQUI PARA ACESSAR OS ANEXOS DO PROCESSO";
+    const tamanhoLink = 8;
+    const larguraChamada = fontes.negrito.widthOfTextAtSize(chamada, tamanhoLink);
+    const x = (A4[0] - larguraChamada) / 2;
+    contexto.pagina.drawText(chamada, { x, y: contexto.y, size: tamanhoLink, font: fontes.negrito, color: AZUL_LINK });
+    contexto.pagina.drawLine({ start: { x, y: contexto.y - 2 }, end: { x: x + larguraChamada, y: contexto.y - 2 }, thickness: 0.6, color: AZUL_LINK });
+    adicionarLink(pdf, contexto.pagina, linkAnexos, x, contexto.y - 4, larguraChamada, 12);
+    contexto.y -= 22;
+  } else {
+    paragrafo(contexto, [{ texto: linkAnexos || "Nenhum link de anexo informado." }], { alinhamento: "justify", antes: 0, depois: 8 });
+  }
 
   paragrafo(contexto, [
     { texto: "Nossa equipe jurídica, juntamente com " },
-    { texto: texto(dados.advogadoResponsavel) || "o(a) representante responsável pelo acompanhamento", negrito: true },
+    { texto: texto(dados.advogadoResponsavel) || "o(a) representante responsável pelo acompanhamento" },
     { texto: ", está acompanhando atentamente todas as movimentações processuais e adotará as medidas cabíveis dentro dos prazos estabelecidos pelo Juízo." },
   ], { alinhamento: "justify", manterJunto: true, antes: 5, depois: 10 });
 
-  garantir(contexto, assinaturaBytes ? 120 : 55);
+  garantir(contexto, 55);
   paragrafo(contexto, [{ texto: "Cordialmente," }], { antes: 0, depois: 6 });
-  if (assinaturaBytes) {
-    const assinatura = await pdf.embedPng(assinaturaBytes);
-    const escala = Math.min(1, 330 / assinatura.width, 105 / assinatura.height);
-    const largura = assinatura.width * escala;
-    const altura = assinatura.height * escala;
-    contexto.pagina.drawImage(assinatura, { x: MARGEM, y: contexto.y - altura, width: largura, height: altura });
-    contexto.y -= altura + 4;
-  } else {
-    paragrafo(contexto, [{ texto: "Rafael Moreira - Departamento Processual", negrito: true }, { texto: "\nPLATINO SOLUÇÕES FINANCEIRAS" }], { antes: 0, depois: 0 });
-  }
+  paragrafo(contexto, [{ texto: "Rafael Moreira - Departamento Processual", negrito: true }, { texto: "\nPLATINO SOLUÇÕES FINANCEIRAS" }], { antes: 0, depois: 0 });
 
   return pdf.save();
 }
