@@ -3221,9 +3221,13 @@
 
     <script src="config.js"></script>
     <script>
-        // Se estiver testando com ngrok, substitua a URL abaixo pela URL pública do túnel.
-        // Exemplo: window.ADM_PDF_API_BASE = 'https://abcd1234.ngrok.io';
-        window.ADM_PDF_API_BASE = window.ADM_PDF_API_BASE || 'http://localhost:3000';
+        // Em desenvolvimento, o gerador roda em localhost:3000. Em produção,
+        // usa a mesma origem do Dashboard, salvo configuração explícita.
+        window.ADM_PDF_API_BASE = window.ADM_PDF_API_BASE || (
+            location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname)
+                ? 'http://localhost:3000'
+                : location.origin
+        );
     </script>
     <script src="cerebro-platino-organizado.js"></script>
     <script src="knowledge-engine.js"></script>
@@ -6609,7 +6613,7 @@
             return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
         }
 
-        const admPdfApiBaseUrl = window.ADM_PDF_API_BASE || 'http://localhost:3000';
+        const admPdfApiBaseUrl = window.ADM_PDF_API_BASE;
         let admPdfGeneratorReady = null;
 
         async function checkAdmPdfGeneratorAvailability() {
@@ -6700,7 +6704,7 @@
             if (!ready) {
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-red-300';
-                    status.innerText = `Gerador fiel indisponível. Verifique se o servidor ${admPdfApiBaseUrl} está ativo e acessível.`;
+                    status.innerText = `Gerador dinâmico indisponível. Inicie o sistema com “npm start” e acesse ${admPdfApiBaseUrl}.`;
                 }
                 return;
             }
