@@ -6592,18 +6592,29 @@
             const cleanPartyValue = value => String(value || '')
                 .replace(/\s+(?:advogad[oa]s?|adv\.?|patrono|procurador)[\s\S]*$/i, '')
                 .trim();
+            const summaryLines = summary.split(/\r?\n/);
+            const nextSummaryLine = index => {
+                for (let next = index + 1; next < summaryLines.length; next += 1) {
+                    const value = String(summaryLines[next] || '').trim();
+                    if (value) return value;
+                }
+                return '';
+            };
             const line = (labels, options = {}) => {
-                const regex = new RegExp(`(?:^|[\\n\\r])\\s*(?:[-*•]\\s*)?(${labels})\\s*[:\\-]\\s*([^\\n\\r]+)`, 'ig');
-                let match;
-                while ((match = regex.exec(summary))) {
+                const regex = new RegExp(`^\\s*(?:[-*•]\\s*)?(${labels})(.*)$`, 'i');
+                for (let index = 0; index < summaryLines.length; index += 1) {
+                    const match = String(summaryLines[index] || '').trim().match(regex);
+                    if (!match) continue;
                     const label = normalizeLabel(match[1]);
                     if (options.ignoreLabel?.test(label)) continue;
-                    return match[2]?.trim() || '';
+                    const rest = String(match[2] || '').trim();
+                    if (/^[:\-–—]\s*\S/.test(rest)) return rest.replace(/^[:\-–—]\s*/, '').trim();
+                    if (!rest || rest.startsWith('/') || /^[:\-–—]\s*$/.test(rest)) return nextSummaryLine(index);
                 }
                 return '';
             };
             const section = (start, ends) => {
-                const match = summary.match(new RegExp(`(?:^|[\\n\\r])\\s*(?:[-*•]\\s*)?(?:${start})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:[-*•]\\s*)?(?:${ends})\\s*[:\\-]|$)`, 'i'));
+                const match = summary.match(new RegExp(`(?:^|[\\n\\r])\\s*(?:[-*•]\\s*)?(?:${start})(?:\\s*[:\\-–—]\\s*)?([\\s\\S]*?)(?=\\n\\s*(?:[-*•]\\s*)?(?:${ends})(?:\\s*[:\\-–—]|\\s*(?:\\n|$))|$)`, 'i'));
                 return match?.[1]?.trim() || '';
             };
             const normalizedSummary = normalizeLabel(summary);
@@ -6623,20 +6634,22 @@
                 return line(`advogad[oa]s?(?:\\(a\\))? d[oa] ${sideLabels}|advogad[oa]s?(?:\\(a\\))? ${sideLabels}|adv\\.? ${sideLabels}|patrono(?:\\(a\\))? d[oa] ${sideLabels}|procurador(?:a)? d[oa] ${sideLabels}`);
             };
             const values = {
-                numeroProcesso: line('número do processo|processo') || summary.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0] || '',
+                numeroProcesso: line('número do processo(?:\\s*/\\s*protocolo)?|processo(?:\\s*/\\s*protocolo)?') || summary.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0] || '',
                 origem: line('origem|tribunal|vara'),
                 sigilo: line('segredo ou sigilo|sigilo'),
                 justicaGratuita: extractJusticeGratuita(),
                 dataDistribuicao: normalizeAdmProcessDate(line('data da distribuição|distribuição')),
-                cliente: cleanPartyValue(line('polo ativo|autor(?:a)?|cliente|parte autora|requerente', { ignoreLabel: /advogad|adv\.|patrono|procurador/ })),
+                cliente: cleanPartyValue(line('nome do cliente|polo ativo|autor(?:a)?|cliente|parte autora|requerente', { ignoreLabel: /advogad|adv\.|patrono|procurador/ })),
                 banco: cleanPartyValue(line('polo passivo|réu|parte ré|instituição financeira|banco|requerido', { ignoreLabel: /advogad|adv\.|patrono|procurador/ })),
                 advogadoCliente: lawyer('author'),
                 advogadoBanco: lawyer('bank'),
-                assunto: line('assunto|classe|natureza'),
-                statusAtual: section('status atual|situação atual', 'atualização processual|resumo processual|última movimentação|próximos passos|anexos')
+                assunto: line('assunto(?:\\s*/\\s*natureza da ação)?|classe|natureza'),
+                statusAtual: section('status atual|situação atual', 'atualização processual|resumo processual|data da última movimentação|última movimentação|próximos passos|anexos')
                     || section('atualização processual|resumo processual', 'última movimentação|próximos passos|anexos'),
                 dataUltimaMovimentacao: normalizeAdmProcessDate(line('data da última movimentação|última movimentação em')),
-                descricaoUltimaMovimentacao: section('descrição da última movimentação|última movimentação', 'próximos passos|anexos|data da consulta'),
+                descricaoUltimaMovimentacao: section('descrição da última movimentação|última movimentação', 'próximos passos|anexos|data da última consulta|data da consulta|hora da consulta'),
+                dataConsulta: normalizeAdmProcessDate(line('data da última consulta|data da consulta')),
+                horaConsulta: line('hora da consulta').match(/^\d{1,2}:\d{2}$/)?.[0] || '',
                 proximosPassos: section('próximos passos', 'anexos|advogado responsável|link'),
                 anexosProcesso: line('link (?:dos |de )?anexos|anexos(?: em processo)?|documentos anexos')
                     || section('anexos(?: em processo)?|documentos anexos', 'representante responsável|responsável pelo acompanhamento|advogado responsável|link|fim').match(/https?:\/\/[^\s]+/i)?.[0] || '',
