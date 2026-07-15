@@ -2127,12 +2127,22 @@
                                     <button type="button" onclick="resetAdmPdfForm()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/10">
                                         <i class="ph ph-arrow-counter-clockwise"></i> Limpar
                                     </button>
+                                    <button id="laudo-save-draft-button" type="button" onclick="saveLaudoForReview()" class="hidden min-h-11 items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-2 text-sm font-black text-slate-950 shadow-lg transition hover:bg-amber-400">
+                                        <i class="ph ph-paper-plane-tilt"></i> Enviar para validação
+                                    </button>
                                     <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700 active:scale-[0.98]">
                                         <i class="ph ph-download-simple"></i> <span>Gerar PDF</span>
                                     </button>
                                 </div>
                             </div>
                         </form>
+                        <div id="laudo-review-queue" class="hidden mt-6 rounded-2xl border border-amber-300/20 bg-amber-400/10 p-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div><p class="text-[10px] font-black uppercase tracking-[0.18em] text-amber-200">Área do perito</p><h4 class="mt-1 font-black text-white">Laudos aguardando validação</h4></div>
+                                <span id="laudo-pending-count" class="rounded-full bg-amber-300 px-2.5 py-1 text-xs font-black text-slate-950">0</span>
+                            </div>
+                            <div id="laudo-pending-list" class="mt-4 grid gap-3"></div>
+                        </div>
                     </div>
                     <div class="space-y-4" id="adm-accordions"></div>
                 </div>
@@ -6683,6 +6693,7 @@
             if (validationCode && !validationCode.value) validationCode.value = `DENIS-${ensureAdmPdfNumber()}`;
             document.getElementById('adm-field-validacaoPerito')?.addEventListener('change', updateLaudoValidationControls);
             updateLaudoValidationControls();
+            updateLaudoWorkflowVisibility();
 
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-100/60';
@@ -6691,6 +6702,7 @@
         }
 
         function resetAdmPdfForm() {
+            currentLaudoReviewId = '';
             const form = document.getElementById('adm-pdf-form');
             if (form) form.reset();
             const date = document.getElementById('adm-pdf-date');
@@ -6734,6 +6746,103 @@
                 status.innerText = 'Validação bloqueada: somente administrativo@platino.com pode aprovar e assinar o laudo.';
             }
         }
+
+        let laudoReviewItems = [];
+        let currentLaudoReviewId = '';
+
+        function updateLaudoWorkflowVisibility() {
+            const isLaudo = document.getElementById('adm-pdf-template')?.value === 'laudo-pericial-contabil';
+            const peritoLogged = window.firebaseAuthUser?.email?.toLowerCase() === 'administrativo@platino.com';
+            const draftButton = document.getElementById('laudo-save-draft-button');
+            const generateButton = document.getElementById('adm-pdf-generate-button');
+            const queue = document.getElementById('laudo-review-queue');
+            draftButton?.classList.toggle('hidden', !isLaudo || peritoLogged);
+            draftButton?.classList.toggle('inline-flex', isLaudo && !peritoLogged);
+            generateButton?.classList.toggle('hidden', isLaudo && !peritoLogged);
+            generateButton?.classList.toggle('inline-flex', !isLaudo || peritoLogged);
+            queue?.classList.toggle('hidden', !peritoLogged);
+        }
+
+        async function saveLaudoForReview() {
+            const form = document.getElementById('adm-pdf-form');
+            const status = document.getElementById('adm-pdf-status');
+            const button = document.getElementById('laudo-save-draft-button');
+            if (!form?.checkValidity()) {
+                form?.reportValidity();
+                if (status) status.innerText = 'Preencha os campos obrigatórios antes de enviar ao perito.';
+                return;
+            }
+            try {
+                button.disabled = true;
+                button.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> Enviando...';
+                const data = await buildAdmPdfData(getAdmPdfTemplate());
+                data.validacaoPerito = 'Pendente';
+                data.incluirAssinatura = 'Não';
+                if (!window.platinoLaudoStore) throw new Error('A sincronização com o Firebase ainda não está conectada.');
+                const saved = await window.platinoLaudoStore.savePending(data);
+                currentLaudoReviewId = saved.id;
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                    status.innerText = 'Laudo enviado ao perito. Ele já aparece na fila de validação do login administrativo@platino.com.';
+                }
+            } catch (error) {
+                console.error(error);
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
+                    status.innerText = error.message || 'Não foi possível enviar o laudo para validação.';
+                }
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Enviar para validação';
+            }
+        }
+
+        function renderLaudoReviewQueue() {
+            const list = document.getElementById('laudo-pending-list');
+            const count = document.getElementById('laudo-pending-count');
+            if (!list || !count) return;
+            const pending = laudoReviewItems.filter(item => item.status === 'Pendente');
+            count.innerText = String(pending.length);
+            if (!pending.length) {
+                list.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-amber-100/75">Nenhum laudo aguardando validação.</div>';
+                return;
+            }
+            list.innerHTML = pending.map(item => `
+                <button type="button" onclick="openLaudoForReview('${item.id}')" class="rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-amber-300/40 hover:bg-white/10">
+                    <div class="flex items-start justify-between gap-3"><div><strong class="text-white">${escapeHtml(item.data?.cliente || 'Cliente não informado')}</strong><p class="mt-1 text-xs text-amber-100/70">${escapeHtml(item.data?.banco || 'Instituição não informada')} • Contrato ${escapeHtml(item.data?.contrato || 'não informado')}</p></div><span class="rounded-full bg-amber-300/15 px-2 py-1 text-[10px] font-black uppercase text-amber-200">Pendente</span></div>
+                    <p class="mt-2 text-[11px] text-blue-100/60">Enviado por ${escapeHtml(item.createdBy || 'usuário')} • Clique para analisar</p>
+                </button>`).join('');
+        }
+
+        function openLaudoForReview(id) {
+            const item = laudoReviewItems.find(entry => entry.id === id);
+            if (!item?.data) return;
+            currentLaudoReviewId = id;
+            const templateSelect = document.getElementById('adm-pdf-template');
+            templateSelect.value = 'laudo-pericial-contabil';
+            renderAdmPdfFields();
+            Object.entries(item.data).forEach(([field, value]) => {
+                const input = document.getElementById(`adm-field-${field}`);
+                if (!input || value == null) return;
+                const type = getAdmPdfInputType(field, getAdmPdfTemplate());
+                input.value = type === 'date' ? normalizeAdmProcessDate(value) : String(value);
+            });
+            const validation = document.getElementById('adm-field-validacaoPerito');
+            if (validation) validation.value = 'Pendente';
+            updateLaudoValidationControls();
+            updateLaudoWorkflowVisibility();
+            const status = document.getElementById('adm-pdf-status');
+            if (status) {
+                status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                status.innerText = 'Laudo pendente carregado. Revise os dados, escolha a validação e gere o PDF final.';
+            }
+            document.getElementById('adm-pdf-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        window.applyRemoteLaudos = function (items) {
+            laudoReviewItems = Array.isArray(items) ? items : [];
+            renderLaudoReviewQueue();
+        };
 
         async function buildAdmPdfData(template) {
             const dateParts = getAdmPdfDateParts(document.getElementById('adm-pdf-date')?.value || '');
@@ -6970,6 +7079,13 @@
                 }
                 return;
             }
+            if (selectedTemplateKey === 'laudo-pericial-contabil' && !currentLaudoReviewId) {
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                    status.innerText = 'Abra um laudo pendente na fila de validação antes de gerar o PDF final.';
+                }
+                return;
+            }
             if (selectedTemplateKey === 'laudo-pericial-contabil' && getAdmPdfField('validacaoPerito') !== 'Aprovado') {
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-amber-300';
@@ -6998,6 +7114,16 @@
 
                 if (status) status.innerText = 'Gerando PDF com o layout fiel do modelo...';
                 await requestAdmPdf(templateKey, data);
+
+                if (templateKey === 'laudo-pericial-contabil' && currentLaudoReviewId) {
+                    await window.platinoLaudoStore?.markReviewed?.(currentLaudoReviewId, {
+                        status: 'Aprovado',
+                        validationCode: data.codigoValidacao,
+                        validationDate: data.dataValidacao,
+                        signed: data.incluirAssinatura === 'Sim'
+                    });
+                    currentLaudoReviewId = '';
+                }
 
                 if (templateKey === 'procuracao-dra-juliane') {
                     await requestAdmPdf('declaracao-hipossuficiencia', data);
@@ -7187,10 +7313,12 @@
       let rankingRef = null;
       let managementRef = null;
       let feedbacksRef = null;
+      let laudosRef = null;
       let stopAvisosSubscription = null;
       let stopRankingSubscription = null;
       let stopManagementSubscription = null;
       let stopFeedbackSubscription = null;
+      let stopLaudosSubscription = null;
 
       function assertGestorWrite(action) {
         if (window.platinoUserRole === "gestor") return;
@@ -7325,6 +7453,39 @@
               window.applyRemoteFeedbacks?.(items);
             },
             error => console.warn("Não foi possível carregar os feedbacks.", error)
+          );
+        }
+      };
+
+      window.platinoLaudoStore = {
+        savePending: async (data) => {
+          if (!auth?.currentUser) throw new Error("Faça login antes de enviar o laudo.");
+          const reference = await addDoc(laudosRef, {
+            status: "Pendente",
+            data,
+            createdBy: auth.currentUser.email || "Usuário",
+            createdAt: new Date().toISOString(),
+            createdAtServer: serverTimestamp()
+          });
+          return { id: reference.id };
+        },
+        markReviewed: async (id, review) => {
+          if ((auth.currentUser?.email || "").toLowerCase() !== "administrativo@platino.com") {
+            throw new Error("Somente o perito pode concluir a validação.");
+          }
+          return updateDoc(doc(db, "laudosPericiais", id), {
+            ...review,
+            reviewedBy: auth.currentUser.email,
+            reviewedAt: serverTimestamp()
+          });
+        },
+        subscribe: () => {
+          if (stopLaudosSubscription) return;
+          const laudosQuery = query(laudosRef, orderBy("createdAtServer", "desc"), limit(200));
+          stopLaudosSubscription = onSnapshot(
+            laudosQuery,
+            snapshot => window.applyRemoteLaudos?.(snapshot.docs.map(item => ({ id: item.id, ...item.data() }))),
+            error => console.warn("Não foi possível carregar os laudos pendentes.", error)
           );
         }
       };
@@ -7573,6 +7734,7 @@
 
         window.applyGestorVisibility?.();
         window.updateLaudoValidationControls?.();
+        window.updateLaudoWorkflowVisibility?.();
       }
 
       async function startFirebase() {
@@ -7587,6 +7749,7 @@
           rankingRef = doc(db, "appContent", "ranking");
           managementRef = doc(db, "appContent", "managementEdits");
           feedbacksRef = collection(db, "feedbacks");
+          laudosRef = collection(db, "laudosPericiais");
 
           onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -7599,6 +7762,9 @@
           startRankingSheetSync();
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
+          }
+          if ((user.email || "").toLowerCase() === "administrativo@platino.com") {
+            window.platinoLaudoStore.subscribe();
           }
         } else {
           loginScreen.classList.remove("hidden");
@@ -7623,6 +7789,10 @@
           if (stopFeedbackSubscription) {
             stopFeedbackSubscription();
             stopFeedbackSubscription = null;
+          }
+          if (stopLaudosSubscription) {
+            stopLaudosSubscription();
+            stopLaudosSubscription = null;
           }
         }
           });

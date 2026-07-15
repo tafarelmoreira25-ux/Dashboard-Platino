@@ -1,12 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
-const A4 = [595.28, 841.89];
-const A4_LANDSCAPE = [841.89, 595.28];
-const AZUL = rgb(0.07, 0.20, 0.43);
-const AZUL_CLARO = rgb(0.90, 0.94, 0.98);
-const CINZA = rgb(0.35, 0.39, 0.45);
-const BORDA = rgb(0.72, 0.76, 0.82);
-
 function numero(value) {
   if (typeof value === "number") return Number.isFinite(value) ? value : 0;
   const raw = String(value || "").trim();
@@ -42,8 +35,7 @@ function calcularCenarios(dados) {
   const pmtPrice = i === 0 ? pv / n : pv * ((i * ((1 + i) ** n)) / (((1 + i) ** n) - 1));
   const amortMajs = pv / n;
   const jurosMajs = pv * i;
-  const pmtMajs = amortMajs + jurosMajs;
-  const pmt = metodo === "MAJS" ? pmtMajs : pmtPrice;
+  const pmt = metodo === "MAJS" ? amortMajs + jurosMajs : pmtPrice;
   const contratual = numero(dados.valorPrestacaoContratual);
   const diferencaMensal = contratual - pmt;
   const estornoPagas = diferencaMensal * pagas;
@@ -67,169 +59,130 @@ function calcularCenarios(dados) {
   return { bruto, tarifas, pv, n, pagas, i, metodo, pmt, contratual, diferencaMensal, estornoPagas, tarifasDobro, proveito, taxaAnual, memoria };
 }
 
-function quebrar(text, font, size, width) {
-  const words = String(text || "").split(/\s+/);
-  const lines = [];
-  let line = "";
-  for (const word of words) {
-    const candidate = line ? `${line} ${word}` : word;
-    if (font.widthOfTextAtSize(candidate, size) <= width || !line) line = candidate;
-    else { lines.push(line); line = word; }
-  }
-  if (line) lines.push(line);
-  return lines;
+async function carregarModelo() {
+  const baseUrl = new URL("../../../modelos-originais/laudo-pericial-contabil-layout.pdf", import.meta.url);
+  const camposUrl = new URL("./laudoPericialContabilCampos.json", import.meta.url);
+  const [baseResponse, camposResponse] = await Promise.all([fetch(baseUrl), fetch(camposUrl)]);
+  if (!baseResponse.ok || !camposResponse.ok) throw new Error("O modelo fiel do laudo não pôde ser carregado.");
+  return { bytes: await baseResponse.arrayBuffer(), campos: await camposResponse.json() };
 }
 
-function cabecalho(ctx, titulo = "LAUDO PERICIAL CONTÁBIL") {
-  const { page, fonts } = ctx;
-  page.drawRectangle({ x: 0, y: page.getHeight() - 48, width: page.getWidth(), height: 48, color: AZUL });
-  page.drawText(titulo, { x: 36, y: page.getHeight() - 30, size: 12, font: fonts.bold, color: rgb(1, 1, 1) });
-  page.drawText("PERÍCIAS & PARECERES", { x: page.getWidth() - 170, y: page.getHeight() - 30, size: 8, font: fonts.bold, color: rgb(1, 1, 1) });
-  ctx.y = page.getHeight() - 75;
+function valoresDoModelo(dados, calc) {
+  const taxaMensal = numero(dados.taxaJurosMensal);
+  const sistema = calc.metodo === "MAJS" ? "Método MAJS - juros simples" : "Tabela Price - expurgo de tarifas";
+  const conclusao = `A prestação recalculada é de R$ ${moeda(calc.pmt)}, com diferença mensal de R$ ${moeda(calc.diferencaMensal)} e proveito econômico estimado de R$ ${moeda(calc.proveito)}.`;
+  const naoIdentificado = "Não identificado";
+  return {
+    NUMERO_DOCUMENTO_PERICIAL: texto(dados.numeroDocumento), VERSAO_DOCUMENTO: "1.0",
+    DATA_EMISSAO: texto(dados.dataEmissao), CIDADE_UF_EMISSAO: texto(dados.cidadeEstado, "São Paulo/SP"),
+    NOME_CLIENTE: texto(dados.cliente), CPF_CNPJ_CLIENTE: texto(dados.cpf),
+    INSTITUICAO_FINANCEIRA: texto(dados.banco), CNPJ_INSTITUICAO: texto(dados.cnpjBanco),
+    NUMERO_CONTRATO: texto(dados.contrato), DATA_CONTRATO: texto(dados.dataContrato),
+    DATA_BASE_CALCULO: texto(dados.dataBaseCalculo), STATUS_DOCUMENTO: "APROVADO PELO PERITO",
+    NOME_PROFISSIONAL: "Denis Henrique da Silva", TITULO_PROFISSIONAL: "Perito Contador",
+    CONSELHO_UF_NUMERO: "CRC SP 298257/O-2", ESPECIALIDADE_PROFISSIONAL: "Perícia contábil e contratos bancários",
+    DOCUMENTO_PROFISSIONAL: texto(dados.documentoProfissional, naoIdentificado), DATA_ASSINATURA: texto(dados.dataValidacao),
+    VALOR_FINANCIADO_CONSIDERADO: moeda(calc.pv), TAXA_JUROS_MENSAL: percentual(taxaMensal),
+    TAXA_JUROS_ANUAL: percentual(calc.taxaAnual), CET_MENSAL: texto(dados.cetMensal, naoIdentificado),
+    CET_ANUAL: texto(dados.cetAnual, naoIdentificado), SISTEMA_AMORTIZACAO: sistema,
+    VALOR_PRESTACAO_CONTRATUAL: moeda(calc.contratual), VALOR_PRESTACAO_RECALCULADA: moeda(calc.pmt),
+    DIFERENCA_ECONOMICA_TOTAL: moeda(calc.proveito), RESUMO_CONCLUSAO_TECNICA: conclusao,
+    QUESITO_01: "Qual o valor financiado líquido após o expurgo das tarifas?", RESPOSTA_QUESITO_01: `R$ ${moeda(calc.pv)}.`,
+    QUESITO_02: "Qual o valor da prestação recalculada?", RESPOSTA_QUESITO_02: `R$ ${moeda(calc.pmt)} pelo critério ${sistema}.`,
+    QUESITO_03: "Qual o proveito econômico técnico estimado?", RESPOSTA_QUESITO_03: `R$ ${moeda(calc.proveito)}.`,
+    IDENTIFICACAO_CONTRATO: texto(dados.contrato), STATUS_CONTRATO: "Documento informado",
+    IDENTIFICACAO_CET: texto(dados.identificacaoCet, naoIdentificado), STATUS_CET: texto(dados.statusCet, "Não informado"),
+    IDENTIFICACAO_PARCELAS: `${calc.n} parcelas`, STATUS_PARCELAS: "Informado",
+    PERIODO_COMPROVANTES: `${calc.pagas} parcelas pagas`, STATUS_COMPROVANTES: calc.pagas ? "Informado" : "Não informado",
+    DATA_EXTRATO_SALDO: texto(dados.dataBaseCalculo), STATUS_EXTRATO_SALDO: texto(dados.statusExtrato, "Não informado"),
+    OUTROS_DOCUMENTOS: texto(dados.outrosDocumentos, "Não aplicável"), STATUS_OUTROS_DOCUMENTOS: texto(dados.statusOutrosDocumentos, "Não aplicável"),
+    LIMITACOES_E_RESSALVAS: "Resultados vinculados aos dados e documentos fornecidos para elaboração do laudo.",
+    TIPO_OPERACAO: "Financiamento de veículo", DESCRICAO_BEM: texto(dados.descricaoBem), VALOR_BEM: moeda(dados.valorBem),
+    VALOR_ENTRADA: moeda(dados.valorEntrada), VALOR_FINANCIADO_BRUTO: moeda(calc.bruto), VALOR_FINANCIADO_LIQUIDO: moeda(calc.pv),
+    DATA_PRIMEIRO_VENCIMENTO: texto(dados.dataPrimeiroVencimento), QUANTIDADE_PARCELAS: String(calc.n),
+    PERIODICIDADE_PARCELAS: "Mensal", TOTAL_CONTRATUAL_PROJETADO: moeda(calc.contratual * calc.n),
+    CRITERIO_IOF: texto(dados.criterioIof, "Conforme contrato"), VALOR_IOF: moeda(dados.valorIof),
+    CRITERIO_TARIFA_CADASTRO: "Expurgo", VALOR_TARIFA_CADASTRO: moeda(dados.valorTarifaCadastro),
+    CRITERIO_REGISTRO: "Expurgo", VALOR_REGISTRO_CONTRATO: moeda(dados.valorRegistroContrato),
+    CRITERIO_AVALIACAO: "Expurgo", VALOR_AVALIACAO_BEM: moeda(dados.valorAvaliacaoBem),
+    CRITERIO_SEGURO_PRESTAMISTA: "Expurgo", VALOR_SEGURO_PRESTAMISTA: moeda(dados.valorSeguroPrestamista),
+    CRITERIO_SEGURO_BEM: "Expurgo", VALOR_SEGURO_BEM: moeda(dados.valorSeguroBem),
+    CRITERIO_OUTROS_ENCARGOS: "Não aplicável", VALOR_OUTROS_ENCARGOS: "0,00", TOTAL_TARIFAS_E_SERVICOS: moeda(calc.tarifas),
+    DESCRICAO_CENARIO_RECALCULO: sistema, PRINCIPAL_CONSIDERADO: moeda(calc.pv),
+    TAXA_CENARIO_CONTRATADO: `${percentual(taxaMensal)}% a.m.`, TAXA_CENARIO_RECALCULADO: `${percentual(taxaMensal)}% a.m.`,
+    SISTEMA_AMORTIZACAO_CONTRATADO: "Tabela Price", SISTEMA_AMORTIZACAO_RECALCULADO: sistema,
+    CONVENCAO_PERIODOS: "Períodos mensais", CRITERIO_ARREDONDAMENTO: "Precisão interna e apresentação em 2 casas",
+    TRATAMENTO_TARIFAS: "Expurgo das tarifas e seguros informados", TRATAMENTO_PAGAMENTOS: `${calc.pagas} parcelas consideradas`,
+    FORMULA_CENARIO_CONTRATADO: "PMT = PV x [i x (1+i)^n] / [(1+i)^n - 1]",
+    FORMULA_CENARIO_RECALCULADO: calc.metodo === "MAJS" ? "PM = PV/n + (PV x i)" : "PMT sobre o valor líquido financiado",
+    TAXA_REFERENCIA_MENSAL: percentual(taxaMensal), TAXA_REFERENCIA_ANUAL: percentual(calc.taxaAnual),
+    CET_REFERENCIA_MENSAL: naoIdentificado, CET_REFERENCIA_ANUAL: naoIdentificado,
+    TOTAL_RECALCULADO_PROJETADO: moeda(calc.pmt * calc.n), DIFERENCA_MENSAL: moeda(calc.diferencaMensal),
+    DIFERENCA_ACUMULADA_DATA_BASE: moeda(calc.estornoPagas), DIFERENCA_PROJETADA_TOTAL: moeda(calc.diferencaMensal * calc.n),
+    TOTAL_TARIFAS_QUESTIONADAS: moeda(calc.tarifasDobro), ATUALIZACAO_MONETARIA: "0,00", PROVEITO_ECONOMICO_ESTIMADO: moeda(calc.proveito),
+    ACHADO_TECNICO_01: `Tarifas e seguros apurados em R$ ${moeda(calc.tarifas)}.`,
+    ACHADO_TECNICO_02: `Prestação recalculada em R$ ${moeda(calc.pmt)}.`,
+    ACHADO_TECNICO_03: `Diferença mensal estimada em R$ ${moeda(calc.diferencaMensal)}.`,
+    INTERPRETACAO_RESULTADOS: conclusao, CONCLUSAO_TECNICA_COMPLETA: conclusao,
+    RESULTADO_DO_EXAME: calc.diferencaMensal > 0 ? "Diferença econômica identificada" : "Sem diferença econômica positiva",
+    SALDO_RECALCULADO_DATA_BASE: moeda(calc.memoria[Math.min(calc.pagas, calc.n) - 1]?.finalRecalculo ?? calc.pv),
+    IMPACTO_ESTIMADO_PRESTACAO: moeda(calc.diferencaMensal), GRAU_SUFICIENCIA_DOCUMENTAL: "Conforme documentos informados",
+    NECESSIDADE_COMPLEMENTACAO: "Mediante ausência de documento essencial", REFERENCIAS_TECNICAS_E_NORMATIVAS: "Decreto-Lei nº 9.295/46 e normas profissionais aplicáveis.",
+    DESCRICAO_DA_REVISAO: "Emissão inicial", CODIGO_VALIDACAO_DOCUMENTO: texto(dados.codigoValidacao),
+    URL_VALIDACAO_DOCUMENTO: "Validação interna no sistema Platino", PARCELA_E_VENCIMENTO: `${calc.n} parcelas mensais`,
+    SALDO_INICIAL_CONTRATO: moeda(calc.bruto), SALDO_INICIAL_RECALCULO: moeda(calc.pv),
+    JUROS_CONTRATO: moeda(calc.memoria[0]?.jurosContrato), JUROS_RECALCULO: moeda(calc.memoria[0]?.jurosRecalculo),
+    AMORTIZACAO_CONTRATO: moeda(calc.memoria[0]?.amortContrato), AMORTIZACAO_RECALCULO: moeda(calc.memoria[0]?.amortRecalculo),
+    PRESTACAO_CONTRATO: moeda(calc.contratual), PRESTACAO_RECALCULO: moeda(calc.pmt),
+    SALDO_FINAL_CONTRATO: moeda(calc.memoria.at(-1)?.finalContrato), SALDO_FINAL_RECALCULO: moeda(calc.memoria.at(-1)?.finalRecalculo),
+  };
 }
 
-function rodape(ctx) {
-  const { page, fonts, pageNumber } = ctx;
-  page.drawLine({ start: { x: 36, y: 28 }, end: { x: page.getWidth() - 36, y: 28 }, thickness: 0.5, color: BORDA });
-  page.drawText("Documento técnico de uso restrito", { x: 36, y: 16, size: 7, font: fonts.normal, color: CINZA });
-  page.drawText(`Página ${pageNumber}`, { x: page.getWidth() - 70, y: 16, size: 7, font: fonts.normal, color: CINZA });
-}
-
-function novaPagina(ctx, landscape = false, title) {
-  if (ctx.page) rodape(ctx);
-  ctx.page = ctx.pdf.addPage(landscape ? A4_LANDSCAPE : A4);
-  ctx.pageNumber += 1;
-  cabecalho(ctx, title);
-}
-
-function garantir(ctx, needed, landscape = false, title) {
-  if (ctx.y - needed < 45) novaPagina(ctx, landscape, title);
-}
-
-function titulo(ctx, value) {
-  garantir(ctx, 42);
-  ctx.page.drawText(value, { x: 42, y: ctx.y, size: 17, font: ctx.fonts.bold, color: AZUL });
-  ctx.page.drawLine({ start: { x: 42, y: ctx.y - 8 }, end: { x: ctx.page.getWidth() - 42, y: ctx.y - 8 }, thickness: 1.2, color: AZUL });
-  ctx.y -= 34;
-}
-
-function paragrafo(ctx, value, options = {}) {
-  const size = options.size || 9.5;
-  const width = options.width || ctx.page.getWidth() - 84;
-  const lines = quebrar(value, options.bold ? ctx.fonts.bold : ctx.fonts.normal, size, width);
-  garantir(ctx, lines.length * (size + 3) + 10);
-  for (const line of lines) {
-    ctx.page.drawText(line, { x: options.x || 42, y: ctx.y, size, font: options.bold ? ctx.fonts.bold : ctx.fonts.normal, color: options.color || rgb(0.08, 0.10, 0.14) });
-    ctx.y -= size + 3;
-  }
-  ctx.y -= options.after ?? 8;
-}
-
-function tabela(ctx, rows, widths, options = {}) {
-  const x = options.x || 42;
-  const size = options.size || 8;
-  const rowHeight = options.rowHeight || 22;
-  rows.forEach((row, rowIndex) => {
-    garantir(ctx, rowHeight + 5, options.landscape, options.title);
-    let cx = x;
-    row.forEach((cell, colIndex) => {
-      const width = widths[colIndex];
-      ctx.page.drawRectangle({ x: cx, y: ctx.y - rowHeight + 5, width, height: rowHeight, borderWidth: 0.55, borderColor: BORDA, color: rowIndex === 0 ? AZUL_CLARO : rgb(1, 1, 1) });
-      const font = rowIndex === 0 ? ctx.fonts.bold : ctx.fonts.normal;
-      const lines = quebrar(String(cell ?? ""), font, size, width - 8).slice(0, 2);
-      lines.forEach((line, li) => ctx.page.drawText(line, { x: cx + 4, y: ctx.y - 7 - (li * (size + 1)), size, font, color: rowIndex === 0 ? AZUL : rgb(0.08, 0.10, 0.14) }));
-      cx += width;
-    });
-    ctx.y -= rowHeight;
-  });
-  ctx.y -= 12;
+function desenharCampo(page, font, field, value) {
+  const content = texto(value);
+  const originalSize = Math.min(field.size || 10, 11);
+  const estimatedPlaceholderWidth = (String(field.key || "").replace(/\s+/g, "").length + 4) * originalSize * 0.58;
+  const availableWidth = Math.max(38, 612 - 62 - field.x);
+  const maxWidth = Math.min(availableWidth, Math.max(field.width + 5, estimatedPlaceholderWidth, 38));
+  let size = originalSize;
+  while (size > 6.2 && font.widthOfTextAtSize(content, size) > maxWidth) size -= 0.25;
+  const shown = content.length > 190 ? `${content.slice(0, 187)}...` : content;
+  page.drawRectangle({ x: field.x - 7, y: field.y - (originalSize * 2.15), width: maxWidth + 12, height: (originalSize * 3.05), color: rgb(1, 1, 1) });
+  page.drawText(shown, { x: field.x, y: field.y, size, font, color: rgb(0.08, 0.08, 0.09), maxWidth, lineHeight: size * 1.12 });
 }
 
 export async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
   const aprovado = String(dados.validacaoPerito || "").toUpperCase().includes("APROVADO");
   const loginValidador = String(dados.loginValidador || "").trim().toLowerCase();
-  if (loginValidador !== "administrativo@platino.com") {
-    throw new Error("Somente o login administrativo@platino.com pode validar e gerar o laudo final.");
-  }
-  if (!aprovado) {
-    throw new Error("O laudo precisa estar aprovado pelo perito antes da geração e do download do PDF final.");
-  }
+  if (loginValidador !== "administrativo@platino.com") throw new Error("Somente o login administrativo@platino.com pode validar e gerar o laudo final.");
+  if (!aprovado) throw new Error("O laudo precisa estar aprovado pelo perito antes da geração e do download do PDF final.");
+
   const calc = calcularCenarios(dados);
-  const pdf = await PDFDocument.create();
-  const fonts = { normal: await pdf.embedFont(StandardFonts.TimesRoman), bold: await pdf.embedFont(StandardFonts.TimesRomanBold) };
-  const ctx = { pdf, fonts, page: null, pageNumber: 0, y: 0 };
-
-  novaPagina(ctx);
-  ctx.y = 680;
-  paragrafo(ctx, "LAUDO PERICIAL CONTÁBIL", { size: 24, bold: true, color: AZUL, after: 4 });
-  paragrafo(ctx, "ANÁLISE DE CONTRATO BANCÁRIO", { size: 14, bold: true, after: 35 });
-  paragrafo(ctx, texto(dados.cliente), { size: 17, bold: true, after: 5 });
-  paragrafo(ctx, `${texto(dados.banco)}  •  Contrato nº ${texto(dados.contrato)}`, { size: 11, after: 35 });
-  tabela(ctx, [["CONTROLE", "INFORMAÇÃO"], ["Registro pericial", texto(dados.numeroDocumento)], ["Data de emissão", texto(dados.dataEmissao)], ["Local", texto(dados.cidadeEstado)], ["Status", "Documento técnico de uso restrito"]], [150, 360]);
-
-  novaPagina(ctx);
-  titulo(ctx, "FOLHA DE ROSTO");
-  tabela(ctx, [["CONTROLE", "INFORMAÇÃO"], ["Contratante / interessado", `${texto(dados.cliente)} — CPF/CNPJ ${texto(dados.cpf)}`], ["Objeto examinado", `Contrato de financiamento nº ${texto(dados.contrato)}`], ["Instituição financeira", `${texto(dados.banco)} — CNPJ ${texto(dados.cnpjBanco)}`], ["Período-base", `${texto(dados.dataContrato)} a ${texto(dados.dataBaseCalculo)}`], ["Natureza", "Laudo pericial contábil extrajudicial"]], [165, 345]);
-  titulo(ctx, "Profissional responsável");
-  tabela(ctx, [["Nome", "Denis Henrique da Silva"], ["Qualificação", "Perito Contador"], ["Registro", "CRC SP 298257/O-2"], ["Especialidade", "Perícia contábil e contratos bancários"]], [165, 345]);
-
-  novaPagina(ctx);
-  titulo(ctx, "VISÃO GERAL");
-  paragrafo(ctx, "O presente laudo reúne a identificação da operação, as premissas técnicas, os critérios de cálculo e a síntese dos resultados apurados no contrato indicado.");
-  tabela(ctx, [["INDICADOR", "RESULTADO"], ["Valor financiado bruto", `R$ ${moeda(calc.bruto)}`], ["Tarifas e seguros expurgados", `R$ ${moeda(calc.tarifas)}`], ["Valor financiado líquido (PV)", `R$ ${moeda(calc.pv)}`], ["Taxa contratual", `${percentual(numero(dados.taxaJurosMensal))}% a.m. | ${percentual(calc.taxaAnual)}% a.a.`], ["Sistema comparativo", calc.metodo === "MAJS" ? "Método MAJS — juros simples" : "Tabela Price — expurgo de tarifas"], ["Prestação contratual", `R$ ${moeda(calc.contratual)}`], ["Prestação recalculada", `R$ ${moeda(calc.pmt)}`], ["Proveito econômico estimado", `R$ ${moeda(calc.proveito)}`]], [240, 270]);
-
-  novaPagina(ctx);
-  titulo(ctx, "DADOS DO CONTRATO E COMPOSIÇÃO DA OPERAÇÃO");
-  tabela(ctx, [["DADO CONTRATUAL", "INFORMAÇÃO"], ["Bem financiado", texto(dados.descricaoBem)], ["Valor do bem", `R$ ${moeda(dados.valorBem)}`], ["Entrada", `R$ ${moeda(dados.valorEntrada)}`], ["Valor financiado bruto", `R$ ${moeda(calc.bruto)}`], ["Valor financiado líquido", `R$ ${moeda(calc.pv)}`], ["Data da contratação", texto(dados.dataContrato)], ["Quantidade de parcelas", calc.n], ["Parcelas pagas", calc.pagas], ["Prestação contratual", `R$ ${moeda(calc.contratual)}`]], [235, 275]);
-  titulo(ctx, "Encargos, tarifas e serviços");
-  tabela(ctx, [["RUBRICA", "VALOR"], ["Tarifa de cadastro", `R$ ${moeda(dados.valorTarifaCadastro)}`], ["Registro de contrato", `R$ ${moeda(dados.valorRegistroContrato)}`], ["Avaliação do bem", `R$ ${moeda(dados.valorAvaliacaoBem)}`], ["Seguro prestamista", `R$ ${moeda(dados.valorSeguroPrestamista)}`], ["Seguro do bem", `R$ ${moeda(dados.valorSeguroBem)}`], ["TOTAL", `R$ ${moeda(calc.tarifas)}`]], [300, 210]);
-
-  novaPagina(ctx);
-  titulo(ctx, "METODOLOGIA E PREMISSAS DE CÁLCULO");
-  paragrafo(ctx, `O valor financiado líquido foi apurado mediante o expurgo das tarifas e seguros informados: PV = valor financiado bruto - tarifas e seguros. O cenário selecionado foi ${calc.metodo === "MAJS" ? "o Método MAJS, com juros simples e amortização constante" : "a Tabela Price, mantendo juros compostos e recalculando a prestação sobre o valor líquido"}.`);
-  if (calc.metodo === "MAJS") paragrafo(ctx, "Fórmula: PM = PV / n + (PV × i). Amortização constante = PV / n. Juros simples = PV × i.", { bold: true });
-  else paragrafo(ctx, "Fórmula: PMT = PV × [i × (1+i)^n] / [(1+i)^n - 1]. Juros = saldo anterior × i. Amortização = PMT - juros.", { bold: true });
-  tabela(ctx, [["PREMISSA", "PARÂMETRO"], ["Data-base", texto(dados.dataBaseCalculo)], ["Principal considerado", `R$ ${moeda(calc.pv)}`], ["Taxa mensal", `${percentual(numero(dados.taxaJurosMensal))}%`], ["Quantidade de períodos", calc.n], ["Arredondamento", "Precisão interna; duas casas decimais apenas na apresentação"], ["Pagamentos realizados", `${calc.pagas} parcelas informadas`]], [240, 270]);
-
-  novaPagina(ctx);
-  titulo(ctx, "ANÁLISES COMPARATIVAS E RESULTADOS");
-  tabela(ctx, [["RESULTADO", "VALOR APURADO"], ["Diferença mensal", `R$ ${moeda(calc.diferencaMensal)}`], ["Estorno das parcelas pagas", `R$ ${moeda(calc.estornoPagas)}`], ["Tarifas a devolver em dobro", `R$ ${moeda(calc.tarifasDobro)}`], ["Diferença projetada até o final", `R$ ${moeda(calc.diferencaMensal * calc.n)}`], ["Proveito econômico total", `R$ ${moeda(calc.proveito)}`]], [300, 210]);
-  paragrafo(ctx, `A prestação recalculada é de R$ ${moeda(calc.pmt)}, comparada à prestação contratual de R$ ${moeda(calc.contratual)}, resultando em diferença mensal estimada de R$ ${moeda(calc.diferencaMensal)}.`, { size: 11, bold: true });
-
-  novaPagina(ctx);
-  titulo(ctx, "CONCLUSÃO TÉCNICA");
-  paragrafo(ctx, `Com base nos parâmetros informados e no cenário ${calc.metodo === "MAJS" ? "MAJS" : "Tabela Price"}, o valor financiado líquido considerado foi de R$ ${moeda(calc.pv)}. A prestação recalculada alcançou R$ ${moeda(calc.pmt)}, com proveito econômico técnico estimado em R$ ${moeda(calc.proveito)}.`);
-  paragrafo(ctx, "Os resultados estão vinculados aos dados fornecidos. Alterações de taxa, datas, pagamentos, encargos ou documentos produzem resultados distintos e exigem nova emissão do laudo.");
-  tabela(ctx, [["VALIDAÇÃO PERICIAL", "REGISTRO"], ["Status", "APROVADO PELO PERITO"], ["Perito responsável", "Denis Henrique da Silva — CRC SP 298257/O-2"], ["Login que realizou a validação", loginValidador], ["Data da validação", texto(dados.dataValidacao)], ["Código de validação", texto(dados.codigoValidacao)]], [190, 320]);
-  ctx.y -= 25;
-  const incluirAssinatura = String(dados.incluirAssinatura || "").toUpperCase().includes("SIM");
-  if (incluirAssinatura && assets.assinaturaBytes) {
-    const assinatura = await pdf.embedPng(assets.assinaturaBytes);
-    const scale = Math.min(1, 250 / assinatura.width, 92 / assinatura.height);
-    const width = assinatura.width * scale;
-    const height = assinatura.height * scale;
-    garantir(ctx, height + 32);
-    ctx.page.drawImage(assinatura, { x: 42, y: ctx.y - height, width, height });
-    ctx.y -= height + 8;
-    paragrafo(ctx, "Assinatura eletrônica visual incluída após aprovação do perito.", { size: 7.5, color: CINZA, after: 5 });
-  } else {
-    paragrafo(ctx, "DENIS HENRIQUE DA SILVA", { size: 13, bold: true, after: 2 });
-    paragrafo(ctx, "Perito Contador — CRC SP 298257/O-2", { size: 11, bold: true });
-  }
-  paragrafo(ctx, "O profissional está habilitado para prestar serviços contábeis de acordo com os arts. 25 e 26 do Decreto-Lei nº 9.295/46.", { size: 8 });
-
-  novaPagina(ctx, true, "ANEXO I — MEMÓRIA DE CÁLCULO ANALÍTICA");
-  const header = ["Nº", "Saldo inicial contrato", "Juros", "Amort.", "Prestação", "Saldo inicial recálculo", "Juros", "Amort.", "Prestação", "Saldo final recálculo"];
-  const widths = [28, 90, 58, 58, 68, 100, 58, 58, 68, 90];
-  const drawMemoryHeader = () => tabela(ctx, [header], widths, { x: 31, size: 6.6, rowHeight: 28, landscape: true, title: "ANEXO I — MEMÓRIA DE CÁLCULO ANALÍTICA" });
-  drawMemoryHeader();
-  for (const item of calc.memoria) {
-    if (ctx.y - 19 < 45) { novaPagina(ctx, true, "ANEXO I — MEMÓRIA DE CÁLCULO ANALÍTICA"); drawMemoryHeader(); }
-    tabela(ctx, [[item.parcela, moeda(item.saldoContrato), moeda(item.jurosContrato), moeda(item.amortContrato), moeda(item.contratual), moeda(item.saldoRecalculo), moeda(item.jurosRecalculo), moeda(item.amortRecalculo), moeda(item.pmt), moeda(item.finalRecalculo)]], widths, { x: 31, size: 6.5, rowHeight: 17, landscape: true, title: "ANEXO I — MEMÓRIA DE CÁLCULO ANALÍTICA" });
-    ctx.y += 12;
+  const modelo = await carregarModelo();
+  const pdf = await PDFDocument.load(modelo.bytes);
+  if (pdf.getPageCount() !== 12) throw new Error("O modelo do laudo deve possuir exatamente 12 páginas.");
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const values = valoresDoModelo(dados, calc);
+  const pages = pdf.getPages();
+  for (const field of modelo.campos) {
+    const normalizedKey = String(field.key || "").replace(/\s+/g, "");
+    const isSignatureIdentity = field.page === 11 && field.y < 350 && ["NOME_PROFISSIONAL", "TITULO_PROFISSIONAL", "CONSELHO_UF_NUMERO"].includes(normalizedKey);
+    if (isSignatureIdentity && String(dados.incluirAssinatura || "").toUpperCase().includes("SIM")) {
+      pages[field.page - 1].drawRectangle({ x: field.x - 2, y: field.y - 3, width: Math.max(field.width, 150) + 4, height: (field.size || 10) + 6, color: rgb(1, 1, 1) });
+      continue;
+    }
+    desenharCampo(pages[field.page - 1], field.bold ? fontBold : font, field, values[normalizedKey]);
   }
 
-  rodape(ctx);
+  if (String(dados.incluirAssinatura || "").toUpperCase().includes("SIM") && assets.assinaturaBytes) {
+    const image = await pdf.embedPng(assets.assinaturaBytes);
+    const width = 205;
+    const height = width * (image.height / image.width);
+    pages[10].drawImage(image, { x: (612 - width) / 2, y: 275, width, height });
+    const crc = "CRC SP 298257/O-2";
+    pages[10].drawText(crc, { x: (612 - fontBold.widthOfTextAtSize(crc, 9)) / 2, y: 266, size: 9, font: fontBold, color: rgb(0.08, 0.08, 0.09) });
+  }
   return pdf.save();
 }
 
