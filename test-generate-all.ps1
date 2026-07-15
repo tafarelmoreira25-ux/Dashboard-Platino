@@ -1,7 +1,8 @@
-<#
-Script de teste: envia POST para /api/generate-document para cada template
-Salva PDFs bem-sucedidos como <template>.pdf e produz um resumo em test-results.txt
-#>
+<# Gera uma amostra de cada modelo e salva o resumo em output/pdf. #>
+
+$ErrorActionPreference = 'Stop'
+$outputDir = Join-Path $PSScriptRoot 'output\pdf'
+New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
 
 $templates = @(
   'chargeback',
@@ -18,44 +19,68 @@ $templates = @(
   'modelo-termo-compromisso-pagamento'
 )
 
-$summary = @()
+$sampleData = @{
+  cliente = 'Maria Aparecida de Oliveira Albuquerque dos Santos'
+  cpf = '123.456.789-00'
+  genero = 'feminino'
+  nacionalidade = 'brasileira'
+  estadoCivil = 'casada'
+  profissao = 'analista administrativa'
+  rg = '12.345.678-9'
+  orgaoExpedidor = 'SSP/SP'
+  email = 'maria.aparecida@example.com'
+  endereco = 'Rua das Palmeiras, 1234, apartamento 56, Jardim das Flores, São Paulo/SP'
+  cep = '01234-567'
+  banco = 'Banco Financeiro Nacional S.A.'
+  cnpjBanco = '12.345.678/0001-90'
+  enderecoBanco = 'Avenida das Nações Unidas, 15000, São Paulo/SP, CEP 04578-000'
+  numeroProcesso = '1001234-56.2026.8.26.0100'
+  contrato = '987654321'
+  dataContrato = '10/01/2025'
+  parcelaCorrigida = '1.250,00'
+  reducaoParcela = '350,00'
+  estorno = '4.800,00'
+  reducaoTotal = '12.000,00'
+  dataPagamento = '15/08/2026'
+  valor = '3.500,00'
+  valorExtenso = 'três mil e quinhentos reais'
+  valorParcela = '1.250,00'
+  valorParcelaExtenso = 'mil duzentos e cinquenta reais'
+  quantidadeParcelas = '48'
+  dataRepresentacao = '15/07/2026'
+  seguro = '1.500,00'
+  registroContrato = '350,00'
+  tarifaAvaliacao = '780,00'
+  tarifaCadastro = '950,00'
+  demaisTarifas = '300,00'
+  iof = '1.250,00'
+  iofAdicional = '420,00'
+  responsavel = 'Fernanda Ramos'
+  servico = 'documentação e diligências necessárias à conclusão da revisão contratual'
+  produto = 'documentação técnica e emissão das certidões necessárias'
+  estado = 'São Paulo/SP'
+  cidade = 'São Paulo'
+  uf = 'SP'
+  dataReclamacao = '15/07/2026'
+  protocolo = '2026.0715.123456'
+  data = '15/07/2026'
+  dia = '15'
+  mes = 'julho'
+  ano = '2026'
+  numeroDocumento = 'TESTE-20260715'
+}
 
-foreach ($t in $templates) {
-  Write-Output "Testando template: $t"
-  $body = @{
-    templateKey = $t
-    data = @{
-      cliente = 'Teste Automático'
-      cpf = '000.000.000-00'
-      dia = '10'
-      mes = 'julho'
-      ano = '2026'
-      dataPagamento = '2026-07-10'
-      valor = 'R$ 0,00'
-      responsavel = 'Automação'
-    }
-  }
-
+$summary = foreach ($template in $templates) {
+  $body = @{ templateKey = $template; data = $sampleData } | ConvertTo-Json -Depth 10
+  $outFile = Join-Path $outputDir "$template.pdf"
   try {
-    $outFile = "${t}.pdf"
-    Invoke-WebRequest -Uri http://localhost:3000/api/generate-document -Method POST -ContentType 'application/json' -Body ($body | ConvertTo-Json -Depth 10) -OutFile $outFile -UseBasicParsing
-    Write-Output "  OK -> $outFile"
-    $summary += "$t: OK -> $outFile"
+    Invoke-WebRequest -Uri 'http://localhost:3000/api/generate-document' -Method Post -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) -OutFile $outFile -UseBasicParsing
+    $size = (Get-Item $outFile).Length
+    "$template`: OK ($size bytes)"
   } catch {
-    $errMsg = $_.Exception.Message
-    # Se houver resposta com corpo JSON, tente extrair
-    try {
-      $resp = $_.Exception.Response
-      if ($resp) {
-        $reader = New-Object System.IO.StreamReader($resp.GetResponseStream())
-        $text = $reader.ReadToEnd(); $reader.Close()
-        $errMsg = $text
-      }
-    } catch { }
-    Write-Output "  ERRO -> $errMsg"
-    $summary += "$t: ERRO -> $errMsg"
+    "$template`: ERRO - $($_.Exception.Message)"
   }
 }
 
-$summary | Out-File test-results.txt -Encoding utf8
-Write-Output "Testes concluídos. Veja test-results.txt e os arquivos *.pdf gerados na pasta atual."
+$summary | Set-Content (Join-Path $outputDir 'test-results.txt') -Encoding utf8
+$summary

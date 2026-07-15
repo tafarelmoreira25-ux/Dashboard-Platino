@@ -17,5 +17,5 @@ app.use(express.static(path.resolve(process.cwd())));
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
-  console.log('Use Ctrl+C to stop. Ensure Word is installed for faithful PDF generation.');
+  console.log('Use Ctrl+C to stop. Dynamic PDF generator is ready.');
 });

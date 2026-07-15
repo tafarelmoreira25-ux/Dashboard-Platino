@@ -3219,6 +3219,11 @@
     </div>
 
     <script src="config.js"></script>
+    <script>
+        // Se estiver testando com ngrok, substitua a URL abaixo pela URL pública do túnel.
+        // Exemplo: window.ADM_PDF_API_BASE = 'https://abcd1234.ngrok.io';
+        window.ADM_PDF_API_BASE = window.ADM_PDF_API_BASE || 'http://localhost:3000';
+    </script>
     <script src="cerebro-platino-organizado.js"></script>
     <script src="knowledge-engine.js"></script>
     <script>
@@ -6462,32 +6467,33 @@
             return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
         }
 
+        const admPdfApiBaseUrl = window.ADM_PDF_API_BASE || 'http://localhost:3000';
         let admPdfGeneratorReady = null;
 
         async function checkAdmPdfGeneratorAvailability() {
             const status = document.getElementById('adm-pdf-status');
             try {
-                const response = await fetch('/api/generate-document', { cache: 'no-store' });
+                const response = await fetch(`${admPdfApiBaseUrl}/api/generate-document`, { cache: 'no-store' });
                 if (!response.ok) {
                     const payload = await response.json().catch(() => ({}));
                     admPdfGeneratorReady = false;
                     if (status) {
                         status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                        status.innerText = payload.message || 'Gerador fiel indisponível: a API de documentos não está pronta neste servidor. O documento será gerado localmente.';
+                        status.innerText = payload.message || `Gerador dinâmico indisponível em ${admPdfApiBaseUrl}.`;
                     }
                     return false;
                 }
                 admPdfGeneratorReady = true;
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                    status.innerText = 'Gerador pronto: os PDFs serão exportados pelo modelo Word original.';
+                    status.innerText = 'Gerador pronto: os PDFs usarão o layout dinâmico dos modelos originais.';
                 }
                 return true;
             } catch (error) {
                 admPdfGeneratorReady = false;
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'Gerador fiel indisponível: usando geração local no navegador.';
+                    status.innerText = `Gerador dinâmico indisponível: não foi possível conectar a ${admPdfApiBaseUrl}.`;
                 }
                 return false;
             }
@@ -6508,19 +6514,19 @@
             const template = admPdfTemplates[templateKey];
             let response;
             try {
-                response = await fetch('/api/generate-document', {
+                response = await fetch(`${admPdfApiBaseUrl}/api/generate-document`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ templateKey, data })
                 });
             } catch (error) {
-                throw new Error('A API de geração não respondeu. Abra o sistema pelo servidor da aplicação, não direto pelo arquivo HTML.');
+                throw new Error(`A API de geração não respondeu em ${admPdfApiBaseUrl}. Abra o sistema pelo servidor da aplicação.`);
             }
 
             if (!response.ok) {
-                let message = `Não foi possível gerar o PDF com o modelo Word. Código ${response.status}.`;
+                let message = `Não foi possível gerar o PDF dinâmico. Código ${response.status}.`;
                 if (response.status === 404) {
-                    message = 'A rota /api/generate-document não foi encontrada. O gerador fiel precisa rodar em um servidor com a API ativa.';
+                    message = 'A rota /api/generate-document não foi encontrada. Inicie o servidor da aplicação.';
                 }
                 try {
                     const payload = await response.json();
@@ -6548,26 +6554,18 @@
                 return;
             }
 
-            if (admPdfGeneratorReady !== true) {
-                const ready = await checkAdmPdfGeneratorAvailability();
-                if (!ready) {
-                    if (status) {
-                        status.className = 'min-h-5 text-xs font-semibold text-blue-200';
-                        status.innerText = 'Gerando PDF localmente no navegador...';
-                    }
-                    const doc = createAdmPdfDocument(template, data);
-                    downloadAdmPdfBlob(doc.output('blob'), getAdmPdfFileName(template, data));
-                    if (status) {
-                        status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                        status.innerText = 'PDF gerado localmente no navegador.';
-                    }
-                    return;
+            const ready = await checkAdmPdfGeneratorAvailability();
+            if (!ready) {
+                if (status) {
+                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
+                    status.innerText = `Gerador fiel indisponível. Verifique se o servidor ${admPdfApiBaseUrl} está ativo e acessível.`;
                 }
+                return;
             }
 
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-200';
-                status.innerText = 'Gerando PDF com a formatação original do Word...';
+                    status.innerText = 'Gerando PDF com layout dinâmico...';
             }
 
             try {
@@ -6577,14 +6575,14 @@
                     await requestAdmPdf('declaracao-hipossuficiencia', data);
                     if (status) {
                         status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                        status.innerText = 'Procuração e Declaração de Hipossuficiência geradas com os modelos Word.';
+                        status.innerText = 'Procuração e Declaração de Hipossuficiência geradas.';
                     }
                     return;
                 }
 
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                    status.innerText = 'PDF gerado com a formatação original do modelo Word.';
+                    status.innerText = 'PDF gerado com o layout dinâmico do modelo.';
                 }
             } catch (error) {
                 console.error(error);
