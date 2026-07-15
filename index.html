@@ -7,6 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "pdf-lib": "./assets/vendor/pdf-lib.esm.min.js"
+        }
+    }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -1310,6 +1317,19 @@
             width: 100%;
         }
 
+        #adm-pdf-generate-button {
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        #adm-pdf-generate-button:disabled {
+            cursor: wait;
+            opacity: 0.72;
+        }
+
         @media (min-width: 640px) {
             .adm-pdf-actions {
                 display: flex;
@@ -2063,7 +2083,7 @@
                             </span>
                         </div>
 
-                        <form id="adm-pdf-form" class="grid gap-4" onsubmit="generateAdmPdf(event)">
+                        <form id="adm-pdf-form" class="grid gap-4" onsubmit="event.preventDefault(); generateAdmPdf(event)">
                             <div class="grid gap-3 lg:grid-cols-[1.4fr_0.6fr_0.75fr]">
                                 <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
                                     Modelo
@@ -2101,8 +2121,8 @@
                                     <button type="button" onclick="resetAdmPdfForm()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/10">
                                         <i class="ph ph-arrow-counter-clockwise"></i> Limpar
                                     </button>
-                                    <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700">
-                                        <i class="ph ph-download-simple"></i> Gerar PDF
+                                    <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700 active:scale-[0.98]">
+                                        <i class="ph ph-download-simple"></i> <span>Gerar PDF</span>
                                     </button>
                                 </div>
                             </div>
@@ -3220,15 +3240,6 @@
     </div>
 
     <script src="config.js"></script>
-    <script>
-        // Em desenvolvimento, o gerador roda em localhost:3000. Em produção,
-        // usa a mesma origem do Dashboard, salvo configuração explícita.
-        window.ADM_PDF_API_BASE = window.ADM_PDF_API_BASE || (
-            location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname)
-                ? 'http://localhost:3000'
-                : location.origin
-        );
-    </script>
     <script src="cerebro-platino-organizado.js"></script>
     <script src="knowledge-engine.js"></script>
     <script>
@@ -6613,33 +6624,25 @@
             return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
         }
 
-        const admPdfApiBaseUrl = window.ADM_PDF_API_BASE;
         let admPdfGeneratorReady = null;
+        let admPdfBrowserModule = null;
 
         async function checkAdmPdfGeneratorAvailability() {
             const status = document.getElementById('adm-pdf-status');
             try {
-                const response = await fetch(`${admPdfApiBaseUrl}/api/generate-document`, { cache: 'no-store' });
-                if (!response.ok) {
-                    const payload = await response.json().catch(() => ({}));
-                    admPdfGeneratorReady = false;
-                    if (status) {
-                        status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                        status.innerText = payload.message || `Gerador dinâmico indisponível em ${admPdfApiBaseUrl}.`;
-                    }
-                    return false;
-                }
+                admPdfBrowserModule ||= await import('./src/lib/browserPdfGenerator.js');
                 admPdfGeneratorReady = true;
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                    status.innerText = 'Gerador pronto: os PDFs usarão o layout dinâmico dos modelos originais.';
+                    status.innerText = 'Gerador pronto: o PDF será criado neste navegador.';
                 }
                 return true;
             } catch (error) {
+                console.error('Falha ao carregar o gerador local:', error);
                 admPdfGeneratorReady = false;
                 if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = `Gerador dinâmico indisponível: não foi possível conectar a ${admPdfApiBaseUrl}.`;
+                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
+                    status.innerText = 'Não foi possível carregar o gerador local. Atualize a página e tente novamente.';
                 }
                 return false;
             }
@@ -6658,63 +6661,46 @@
 
         async function requestAdmPdf(templateKey, data) {
             const template = admPdfTemplates[templateKey];
-            let response;
-            try {
-                response = await fetch(`${admPdfApiBaseUrl}/api/generate-document`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ templateKey, data })
-                });
-            } catch (error) {
-                throw new Error(`A API de geração não respondeu em ${admPdfApiBaseUrl}. Abra o sistema pelo servidor da aplicação.`);
-            }
-
-            if (!response.ok) {
-                let message = `Não foi possível gerar o PDF dinâmico. Código ${response.status}.`;
-                if (response.status === 404) {
-                    message = 'A rota /api/generate-document não foi encontrada. Inicie o servidor da aplicação.';
-                }
-                try {
-                    const payload = await response.json();
-                    message = payload.detail
-                        ? `${payload.error || message} ${payload.detail}`
-                        : payload.error || message;
-                } catch (error) {
-                    console.warn('Falha ao ler erro do gerador:', error);
-                }
-                throw new Error(message);
-            }
-
-            const blob = await response.blob();
+            admPdfBrowserModule ||= await import('./src/lib/browserPdfGenerator.js');
+            const bytes = await admPdfBrowserModule.gerarPdfDinamico(templateKey, data);
+            const blob = new Blob([bytes], { type: 'application/pdf' });
             downloadAdmPdfBlob(blob, getAdmPdfFileName(template, data));
         }
 
         async function generateAdmPdf(event) {
-            event.preventDefault();
+            event?.preventDefault();
             const status = document.getElementById('adm-pdf-status');
-            const template = getAdmPdfTemplate();
-            const data = await buildAdmPdfData(template);
-            const templateKey = document.getElementById('adm-pdf-template')?.value || 'chargeback';
-            if (!document.getElementById('adm-pdf-form')?.checkValidity()) {
-                document.getElementById('adm-pdf-form')?.reportValidity();
-                return;
-            }
+            const form = document.getElementById('adm-pdf-form');
+            const button = document.getElementById('adm-pdf-generate-button');
+            if (button?.disabled) return;
 
-            const ready = await checkAdmPdfGeneratorAvailability();
-            if (!ready) {
+            if (!form?.checkValidity()) {
+                form?.reportValidity();
                 if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
-                    status.innerText = `Gerador dinâmico indisponível. Inicie o sistema com “npm start” e acesse ${admPdfApiBaseUrl}.`;
+                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                    status.innerText = 'Preencha os campos obrigatórios destacados para gerar o PDF.';
                 }
                 return;
             }
 
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> <span>Gerando...</span>';
+            }
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-200';
-                    status.innerText = 'Gerando PDF com layout dinâmico...';
+                status.innerText = 'Preparando o documento neste navegador...';
             }
 
+            const template = getAdmPdfTemplate();
+            const templateKey = document.getElementById('adm-pdf-template')?.value || 'chargeback';
+
             try {
+                const data = await buildAdmPdfData(template);
+                const ready = await checkAdmPdfGeneratorAvailability();
+                if (!ready) return;
+
+                if (status) status.innerText = 'Gerando PDF com o layout fiel do modelo...';
                 await requestAdmPdf(templateKey, data);
 
                 if (templateKey === 'procuracao-dra-juliane') {
@@ -6735,6 +6721,11 @@
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-red-300';
                     status.innerText = error.message || 'Não foi possível gerar o PDF.';
+                }
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="ph ph-download-simple"></i> <span>Gerar PDF</span>';
                 }
             }
         }

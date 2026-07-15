@@ -158,7 +158,11 @@ function linhaCampo(contexto, rotulo, valor, opcoes = {}) {
 function dadosDaImagem(valor) {
   const match = texto(valor).match(/^data:(image\/(?:png|jpeg|jpg));base64,(.+)$/i);
   if (!match) return null;
-  return { mime: match[1].toLowerCase(), bytes: Uint8Array.from(Buffer.from(match[2], "base64")) };
+  const binario = atob(match[2]);
+  return {
+    mime: match[1].toLowerCase(),
+    bytes: Uint8Array.from(binario, (caractere) => caractere.charCodeAt(0)),
+  };
 }
 
 export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBytes } = {}) {
