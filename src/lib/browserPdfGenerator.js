@@ -11,6 +11,7 @@ import { gerarModeloTermoCompromissoPagamentoPdf } from "./dynamicPdf/modeloTerm
 import { gerarNotificacaoExtrajudicialPdf } from "./dynamicPdf/notificacaoExtrajudicialPdf.js";
 import { gerarProcuracaoPdf } from "./dynamicPdf/procuracaoPdf.js";
 import { gerarRelatorioAtualizacaoProcessoPdf } from "./dynamicPdf/relatorioAtualizacaoProcessoPdf.js";
+import { gerarLaudoPericialContabilPdf } from "./dynamicPdf/laudoPericialContabilPdf.js";
 import { gerarTermoCienciaSegurancaPdfComAssets } from "./dynamicPdf/termoCienciaSegurancaPdf.js";
 import { gerarTermoCompromissoPagamentoPdf } from "./dynamicPdf/termoCompromissoPagamentoPdf.js";
 
@@ -188,6 +189,14 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       }, {
         assinaturaBytes: await asset("relatorio-processual-assinatura.png"),
       }),
+    "laudo-pericial-contabil": async () => gerarLaudoPericialContabilPdf({
+      ...data,
+      numeroDocumento: texto(data.numeroDocumento),
+      dataEmissao: texto(data.data) || comum.dataEmissao,
+      cidadeEstado: texto(data.cidadeEstado) || "São Paulo/SP",
+    }, {
+      assinaturaBytes: await asset("perito-denis-assinatura.png"),
+    }),
   };
 
   const gerar = geradores[templateKey];
