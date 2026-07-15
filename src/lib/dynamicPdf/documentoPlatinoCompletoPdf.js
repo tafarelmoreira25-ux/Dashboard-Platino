@@ -114,8 +114,6 @@ function desenharIdentidadeVisual(pagina, fontes, titulo) {
     color: rgb(160 / 255, 160 / 255, 160 / 255),
   });
 
-  return linhasTitulo.length > 1 ? 690 : 704;
-
   [
     "Rua Fontoura Xavier, nº 1308 - Itaquera - São Paulo/SP - CEP: 08295-300",
     "E-mail: platinoassessoriafinanceira@gmail.com",
@@ -129,6 +127,8 @@ function desenharIdentidadeVisual(pagina, fontes, titulo) {
       color: PRETO,
     });
   });
+
+  return linhasTitulo.length > 1 ? 690 : 704;
 }
 
 export async function criarDocumentoPlatinoCompleto(titulo) {

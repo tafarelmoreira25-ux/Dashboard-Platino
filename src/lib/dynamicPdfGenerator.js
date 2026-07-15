@@ -12,6 +12,7 @@ import { gerarIntimacaoExtrajudicialPdf } from "./dynamicPdf/intimacaoExtrajudic
 import { gerarModeloTermoCompromissoPagamentoPdf } from "./dynamicPdf/modeloTermoCompromissoPagamentoPdf.js";
 import { gerarNotificacaoExtrajudicialPdf } from "./dynamicPdf/notificacaoExtrajudicialPdf.js";
 import { gerarProcuracaoPdf } from "./dynamicPdf/procuracaoPdf.js";
+import { gerarRelatorioAtualizacaoProcessoPdf } from "./dynamicPdf/relatorioAtualizacaoProcessoPdf.js";
 import { gerarTermoCienciaSegurancaPdfComAssets } from "./dynamicPdf/termoCienciaSegurancaPdf.js";
 import { gerarTermoCompromissoPagamentoPdf } from "./dynamicPdf/termoCompromissoPagamentoPdf.js";
 
@@ -55,7 +56,43 @@ function asset(nome) {
   return readFile(path.join(process.cwd(), "modelos", nome));
 }
 
+function extrairResumoProcessual(resumo) {
+  const conteudo = texto(resumo);
+  const campo = (rotulos) => {
+    const padrao = new RegExp(`(?:${rotulos})\\s*[:\\-]\\s*([^\\n\\r]+)`, "i");
+    return texto(conteudo.match(padrao)?.[1]);
+  };
+  const secao = (inicio, fins) => {
+    const padrao = new RegExp(`(?:${inicio})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:${fins})\\s*[:\\-]|$)`, "i");
+    return texto(conteudo.match(padrao)?.[1]);
+  };
+  return {
+    numeroProcesso: campo("n(?:ú|u)mero do processo|processo") || texto(conteudo.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0]),
+    origem: campo("origem|tribunal|vara"),
+    sigilo: campo("segredo ou sigilo|sigilo"),
+    justicaGratuita: campo("justi(?:ç|c)a gratuita|assist(?:ê|e)ncia judici(?:á|a)ria"),
+    dataDistribuicao: campo("data da distribui(?:ç|c)(?:ã|a)o|distribui(?:ç|c)(?:ã|a)o"),
+    cliente: campo("polo ativo|autor(?:a)?|cliente"),
+    banco: campo("polo passivo|r(?:é|e)u|institui(?:ç|c)(?:ã|a)o financeira|banco"),
+    advogadoCliente: campo("advogado do (?:cliente|autor)|adv\. polo ativo"),
+    advogadoBanco: campo("advogado do (?:banco|r(?:é|e)u)|adv\. polo passivo"),
+    assunto: campo("assunto|classe|natureza"),
+    statusAtual: secao("status atual|situa(?:ç|c)(?:ã|a)o atual", "atualiza(?:ç|c)(?:ã|a)o processual|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
+    atualizacaoProcessual: secao("atualiza(?:ç|c)(?:ã|a)o processual|resumo processual", "(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
+    dataUltimaMovimentacao: campo("data da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o em"),
+    descricaoUltimaMovimentacao: secao("descri(?:ç|c)(?:ã|a)o da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o", "pr(?:ó|o)ximos passos|anexos|data da consulta"),
+    proximosPassos: secao("pr(?:ó|o)ximos passos", "anexos|advogado respons(?:á|a)vel|link"),
+    anexosProcesso: secao("anexos(?: em processo)?|documentos anexos", "advogado respons(?:á|a)vel|link|fim"),
+    advogadoResponsavel: campo("advogado respons(?:á|a)vel"),
+    linkProcesso: campo("link(?: do processo)?|consulta(?: do processo)?") || texto(conteudo.match(/https?:\/\/[^\s]+/i)?.[0]),
+  };
+}
+
 export async function gerarPdfDinamico(templateKey, data = {}) {
+  const extraido = extrairResumoProcessual(data.resumoProcesso);
+  const dadosRelatorio = Object.fromEntries(
+    Object.keys({ ...extraido, ...data }).map((chave) => [chave, texto(data[chave]) || texto(extraido[chave])]),
+  );
   const comum = dadosComuns(data);
   const geradores = {
     chargeback: () => gerarChargebackPdf({
@@ -123,6 +160,15 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
         valorTotal: texto(data.valor),
         valorTotalExtenso: texto(data.valorExtenso),
         dataPagamento: texto(data.dataPagamento),
+      }),
+    "relatorio-atualizacao-processo-judicial": async () =>
+      gerarRelatorioAtualizacaoProcessoPdf({
+        ...dadosRelatorio,
+        dataConsulta: texto(data.dataConsulta) || comum.dataEmissao,
+        horaConsulta: texto(data.horaConsulta),
+        imagemProcesso: data.imagemProcesso,
+      }, {
+        assinaturaBytes: await asset("relatorio-processual-assinatura.png"),
       }),
   };
 

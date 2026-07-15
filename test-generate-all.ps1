@@ -16,8 +16,12 @@ $templates = @(
   'procuracao-dra-juliane',
   'termo-ciencia-autorizacao-seguranca',
   'termo-compromisso-pagamento',
-  'modelo-termo-compromisso-pagamento'
+  'modelo-termo-compromisso-pagamento',
+  'relatorio-atualizacao-processo-judicial'
 )
+
+$sampleImageBytes = [IO.File]::ReadAllBytes((Join-Path $PSScriptRoot 'modelos\contestacao-taxas-email-fundo.jpg'))
+$sampleImage = 'data:image/jpeg;base64,' + [Convert]::ToBase64String($sampleImageBytes)
 
 $sampleData = @{
   cliente = 'Maria Aparecida de Oliveira Albuquerque dos Santos'
@@ -68,6 +72,25 @@ $sampleData = @{
   mes = 'julho'
   ano = '2026'
   numeroDocumento = 'TESTE-20260715'
+  resumoProcesso = "Número do Processo: 1001234-56.2026.8.26.0100`nOrigem: TJSP - 10ª Vara Cível de São Paulo`nStatus atual: Processo em andamento, aguardando manifestação da parte requerida.`nAtualização processual: Foi expedida intimação eletrônica para apresentação de contestação.`nPróximos passos: Aguardar a abertura do prazo e analisar a contestação do banco.`nAnexos em processo: Decisão interlocutória e comprovante de intimação."
+  origem = 'TJSP - 10ª Vara Cível da Comarca de São Paulo'
+  sigilo = 'Não'
+  justicaGratuita = 'Concedida à parte autora'
+  dataDistribuicao = '12/12/2025'
+  advogadoCliente = 'Dra. Juliana Cristina Galzo - OAB/SP 524.585'
+  advogadoBanco = 'Dr. Paulo Henrique Martins - OAB/SP 123.456'
+  assunto = 'Contratos bancários, revisão contratual e obrigações de direito civil'
+  statusAtual = 'O processo encontra-se em andamento e aguarda manifestação da instituição financeira.'
+  atualizacaoProcessual = 'Em 15/07/2026, foi expedida intimação eletrônica para que a parte requerida apresente sua contestação. A decisão anterior não representa julgamento definitivo do mérito e o processo permanece em regular tramitação.'
+  dataUltimaMovimentacao = '15/07/2026'
+  descricaoUltimaMovimentacao = 'Expedição de intimação eletrônica e disponibilização do despacho no Diário da Justiça Eletrônico.'
+  dataConsulta = '15/07/2026'
+  horaConsulta = '14:35'
+  proximosPassos = 'Aguardar a abertura do prazo processual. Após a contestação do banco, a equipe jurídica analisará os documentos apresentados e adotará as medidas cabíveis.'
+  anexosProcesso = 'Decisão interlocutória assinada eletronicamente e comprovante de expedição da intimação.'
+  advogadoResponsavel = 'a Dra. Juliana Cristina Galzo'
+  linkProcesso = 'https://www.tjsp.jus.br/'
+  imagemProcesso = $sampleImage
 }
 
 $summary = foreach ($template in $templates) {

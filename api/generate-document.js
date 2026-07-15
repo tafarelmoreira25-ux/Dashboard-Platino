@@ -14,6 +14,7 @@ const TEMPLATE_TITLES = {
   "termo-ciencia-autorizacao-seguranca": "Termo de Ciência e Autorização de Segurança",
   "termo-compromisso-pagamento": "Termo de Compromisso de Pagamento",
   "modelo-termo-compromisso-pagamento": "Modelo - Termo de Compromisso de Pagamento",
+  "relatorio-atualizacao-processo-judicial": "Relatório de Atualização do Processo Judicial",
 };
 
 function slugify(value) {
