@@ -198,8 +198,6 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
   linhaCampo(contexto, "Assunto", dados.assunto, { depois: 7 });
   secao(contexto, "Status atual");
   paragrafo(contexto, [{ texto: dados.statusAtual }], { alinhamento: "justify", antes: 0, depois: 7 });
-  secao(contexto, "Atualização processual");
-  paragrafo(contexto, [{ texto: dados.atualizacaoProcessual }], { alinhamento: "justify", antes: 0, depois: 7 });
   secao(contexto, "Última movimentação");
   paragrafo(contexto, [
     { texto: texto(dados.dataUltimaMovimentacao), negrito: true },
@@ -237,13 +235,14 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
 
   secao(contexto, "Próximos passos");
   paragrafo(contexto, [{ texto: dados.proximosPassos }], { alinhamento: "justify", antes: 0, depois: 7 });
-  secao(contexto, "Anexos em processo");
-  paragrafo(contexto, [{ texto: dados.anexosProcesso || "Nenhum anexo informado." }], { alinhamento: "justify", antes: 0, depois: 8 });
+  secao(contexto, "Anexos e documentos do processo");
+  const linkAnexos = texto(dados.anexosProcesso);
+  paragrafo(contexto, [{ texto: linkAnexos || "Nenhum link de anexo informado." }], { alinhamento: "justify", antes: 0, depois: 8 });
 
   paragrafo(contexto, [
-    { texto: "Nossa equipe jurídica, juntamente com" },
-    { texto: texto(dados.advogadoResponsavel) || "o(a) advogado(a) responsável", negrito: true },
-    { texto: "está acompanhando atentamente todas as movimentações processuais e adotará as medidas cabíveis dentro dos prazos estabelecidos pelo Juízo." },
+    { texto: "Nossa equipe jurídica, juntamente com " },
+    { texto: texto(dados.advogadoResponsavel) || "o(a) representante responsável pelo acompanhamento", negrito: true },
+    { texto: ", está acompanhando atentamente todas as movimentações processuais e adotará as medidas cabíveis dentro dos prazos estabelecidos pelo Juízo." },
   ], { alinhamento: "justify", manterJunto: true, antes: 5, depois: 10 });
 
   garantir(contexto, assinaturaBytes ? 120 : 55);

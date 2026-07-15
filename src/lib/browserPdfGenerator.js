@@ -58,7 +58,7 @@ async function asset(nome) {
   return new Uint8Array(await resposta.arrayBuffer());
 }
 
-function extrairResumoProcessual(resumo) {
+export function extrairResumoProcessual(resumo) {
   const conteudo = texto(resumo);
   const campo = (rotulos) => {
     const padrao = new RegExp(`(?:${rotulos})\\s*[:\\-]\\s*([^\\n\\r]+)`, "i");
@@ -68,25 +68,41 @@ function extrairResumoProcessual(resumo) {
     const padrao = new RegExp(`(?:${inicio})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:${fins})\\s*[:\\-]|$)`, "i");
     return texto(conteudo.match(padrao)?.[1]);
   };
+  const normalizado = conteudo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const interpretarJusticaGratuita = () => {
+    const mencoes = normalizado.match(/[^.!?\n]*(?:justica gratuita|assistencia judiciaria|gratuidade da justica)[^.!?\n]*/g) || [];
+    const contexto = mencoes.join(" ");
+    if (!contexto) return "";
+    if (/(?:nao\s+(?:foi\s+)?(?:concedid[ao]|deferid[ao]|aceit[ao]|reconhecid[ao])|indeferid[ao]|negad[ao]|rejeitad[ao]|sem\s+(?:o\s+)?beneficio|beneficio\s+nao\s+concedido)/.test(contexto)) return "Não";
+    if (/(?:deferid[ao]|concedid[ao]|aceit[ao]|reconhecid[ao]|beneficio\s+concedido)/.test(contexto)) return "Sim";
+    return campo("justi(?:ç|c)a gratuita|assist(?:ê|e)ncia judici(?:á|a)ria|gratuidade da justi(?:ç|c)a");
+  };
+  const identificarAdvogado = (parteAutora) => {
+    const parte = parteAutora
+      ? "(?:cliente|autor(?:a)?|parte autora|polo ativo|requerente)"
+      : "(?:banco|r(?:é|e)u|r(?:é|e)|parte r(?:é|e)|polo passivo|requerido|institui(?:ç|c)(?:ã|a)o financeira)";
+    return campo(`advogad[oa]s?(?:\\(a\\))? d[oa] ${parte}|advogad[oa]s?(?:\\(a\\))? ${parte}|adv\\.? ${parte}|patrono(?:\\(a\\))? d[oa] ${parte}|procurador(?:a)? d[oa] ${parte}`);
+  };
   return {
     numeroProcesso: campo("n(?:ú|u)mero do processo|processo") || texto(conteudo.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0]),
     origem: campo("origem|tribunal|vara"),
     sigilo: campo("segredo ou sigilo|sigilo"),
-    justicaGratuita: campo("justi(?:ç|c)a gratuita|assist(?:ê|e)ncia judici(?:á|a)ria"),
+    justicaGratuita: interpretarJusticaGratuita(),
     dataDistribuicao: campo("data da distribui(?:ç|c)(?:ã|a)o|distribui(?:ç|c)(?:ã|a)o"),
     cliente: campo("polo ativo|autor(?:a)?|cliente"),
     banco: campo("polo passivo|r(?:é|e)u|institui(?:ç|c)(?:ã|a)o financeira|banco"),
-    advogadoCliente: campo("advogado do (?:cliente|autor)|adv\. polo ativo"),
-    advogadoBanco: campo("advogado do (?:banco|r(?:é|e)u)|adv\. polo passivo"),
+    advogadoCliente: identificarAdvogado(true),
+    advogadoBanco: identificarAdvogado(false),
     assunto: campo("assunto|classe|natureza"),
-    statusAtual: secao("status atual|situa(?:ç|c)(?:ã|a)o atual", "atualiza(?:ç|c)(?:ã|a)o processual|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
-    atualizacaoProcessual: secao("atualiza(?:ç|c)(?:ã|a)o processual|resumo processual", "(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
+    statusAtual: secao("status atual|situa(?:ç|c)(?:ã|a)o atual", "atualiza(?:ç|c)(?:ã|a)o processual|resumo processual|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos")
+      || secao("atualiza(?:ç|c)(?:ã|a)o processual|resumo processual", "(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
     dataUltimaMovimentacao: campo("data da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o em"),
     descricaoUltimaMovimentacao: secao("descri(?:ç|c)(?:ã|a)o da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o", "pr(?:ó|o)ximos passos|anexos|data da consulta"),
     proximosPassos: secao("pr(?:ó|o)ximos passos", "anexos|advogado respons(?:á|a)vel|link"),
-    anexosProcesso: secao("anexos(?: em processo)?|documentos anexos", "advogado respons(?:á|a)vel|link|fim"),
-    advogadoResponsavel: campo("advogado respons(?:á|a)vel"),
-    linkProcesso: campo("link(?: do processo)?|consulta(?: do processo)?") || texto(conteudo.match(/https?:\/\/[^\s]+/i)?.[0]),
+    anexosProcesso: campo("link (?:dos |de )?anexos|anexos(?: em processo)?|documentos anexos")
+      || texto(secao("anexos(?: em processo)?|documentos anexos", "representante respons(?:á|a)vel|respons(?:á|a)vel pelo acompanhamento|advogado respons(?:á|a)vel|link|fim").match(/https?:\/\/[^\s]+/i)?.[0]),
+    advogadoResponsavel: campo("representante respons(?:á|a)vel(?: pelo acompanhamento)?|respons(?:á|a)vel (?:pela consulta|pelo acompanhamento)|assistente jur(?:í|i)dico|advogado respons(?:á|a)vel"),
+    linkProcesso: campo("link (?:para )?(?:consulta das movimenta(?:ç|c)(?:õ|o)es|do processo|da consulta)|consulta do processo"),
   };
 }
 

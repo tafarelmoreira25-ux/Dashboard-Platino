@@ -45,7 +45,6 @@ const DEFAULT_INDIVIDUAL_GOALS = {
   juridico: [
     { name: "Tabata Rangel de Lima", goal: 150000 },
     { name: "Elaine Aparecida dos Santos", goal: 80000 },
-    { name: "Nicole Monteiro Faria", goal: 100000 },
     { name: "Janaina Rodrigues Paiva", goal: 150000 }
   ]
 };
@@ -55,6 +54,22 @@ function getCurrentPortugueseMonthName() {
     month: "long",
     timeZone: "America/Sao_Paulo"
   }).format(new Date()).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+function getPortugueseMonthName(date) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    month: "long",
+    timeZone: "America/Sao_Paulo"
+  }).format(date).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+function getPreviousOperationalMonth() {
+  const now = new Date();
+  const previous = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 15));
+  return {
+    sheet: getPortugueseMonthName(previous),
+    label: new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(previous)
+  };
 }
 
 function getCurrentMonthAliases() {
@@ -68,6 +83,11 @@ function getDefaultSheetCsvUrl() {
   const sheetName = process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName();
   const encodedSheet = encodeURIComponent(sheetName);
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
+}
+
+function getDefaultSheetCsvUrlFor(sheetName) {
+  const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 }
 
 function getHunterSheetCsvUrl() {
@@ -375,13 +395,14 @@ function classifyHunterSituation(value) {
 function extractHunterDataFromCsv(text) {
   const csvRows = parseCsv(text);
   if (csvRows.length < 2) {
-    return { hunters: [], paidClients: [] };
+    return { hunters: [], paidClients: [], potentialClients: [] };
   }
 
   const headers = csvRows[0].map(normalizeHeader);
   const headerMap = new Map(headers.map((header, index) => [header, index]));
   const hunterTotals = new Map();
   const paidClients = [];
+  const potentialClients = [];
 
   for (const row of csvRows.slice(1)) {
     const client = normalizeConsultantName(getColumnByAliases(row, headerMap, ["CLIENTE", "CLIENTE POTENCIAL", "NOME CLIENTE"]));
@@ -429,19 +450,32 @@ function extractHunterDataFromCsv(text) {
         observation
       });
     }
+    if ((category === "potential" || category === "projection") && client) {
+      potentialClients.push({
+        name: client,
+        date,
+        responsible: consultant || hunter,
+        hunter,
+        status: situation || (category === "projection" ? "Projeção" : "Potencial"),
+        product,
+        observation
+      });
+    }
   }
 
   return {
     hunters: Array.from(hunterTotals.values()).filter(item =>
       item.name || item.convertedClients || item.potentialClients || item.paidClients || item.notPaidClients || item.projections || item.value
     ),
-    paidClients
+    paidClients,
+    potentialClients
   };
 }
 
 function mergeHunterData(datasets) {
   const hunterTotals = new Map();
   const paidClients = [];
+  const potentialClients = [];
 
   for (const data of datasets) {
     for (const item of data.hunters || []) {
@@ -466,11 +500,13 @@ function mergeHunterData(datasets) {
     }
 
     paidClients.push(...(data.paidClients || []));
+    potentialClients.push(...(data.potentialClients || []));
   }
 
   return {
     hunters: Array.from(hunterTotals.values()),
-    paidClients
+    paidClients,
+    potentialClients
   };
 }
 
@@ -730,6 +766,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     history: Array.isArray(supplemental.history) ? supplemental.history : [],
     hunters: Array.isArray(supplemental.hunters) ? supplemental.hunters : [],
     paidClients: Array.isArray(supplemental.paidClients) ? supplemental.paidClients : [],
+    potentialClients: Array.isArray(supplemental.potentialClients) ? supplemental.potentialClients : [],
     metrics: {
       comercialContracts: Number(metrics.comercialContracts) || 0,
       companyTotal: 0
@@ -782,7 +819,8 @@ export default async function handler(request, response) {
     const supplemental = {
       history: [],
       hunters: [],
-      paidClients: []
+      paidClients: [],
+      potentialClients: []
     };
 
     if (sharedUrl || (!comercialUrl && !juridicoUrl)) {
@@ -818,6 +856,30 @@ export default async function handler(request, response) {
       rows.push(...rowsFromCsv(csv, "juridico"));
     }
 
+    if (!supplemental.history.length && !sharedUrl && !comercialUrl && !juridicoUrl) {
+      try {
+        const previousMonth = getPreviousOperationalMonth();
+        const previousCsv = await fetchCsv(getDefaultSheetCsvUrlFor(previousMonth.sheet));
+        const previousPlatinoData = rowsFromPlatinoSideBySideCsv(previousCsv);
+        const previousRows = previousPlatinoData?.rows || rowsFromCsv(previousCsv);
+        const comercial = previousPlatinoData?.teamTotals?.comercial
+          || previousRows.filter(item => item.sector === "comercial").reduce((sum, item) => sum + (item.sold || 0), 0);
+        const juridico = previousPlatinoData?.teamTotals?.juridico
+          || previousRows.filter(item => item.sector === "juridico").reduce((sum, item) => sum + (item.sold || 0), 0);
+        if (comercial || juridico) {
+          supplemental.history.push({
+            month: previousMonth.label.charAt(0).toUpperCase() + previousMonth.label.slice(1),
+            comercial,
+            juridico,
+            companyTotal: comercial + juridico,
+            goal: 0
+          });
+        }
+      } catch (historyError) {
+        console.warn("Nao foi possivel carregar o historico do mes anterior.", historyError);
+      }
+    }
+
     try {
       const hunterDatasets = [];
       const indicatorsCsv = await fetchCsv(getIndicatorsSheetCsvUrl());
@@ -827,6 +889,7 @@ export default async function handler(request, response) {
       const hunterData = mergeHunterData(hunterDatasets);
       if (hunterData.hunters.length) supplemental.hunters = hunterData.hunters;
       if (hunterData.paidClients.length) supplemental.paidClients = hunterData.paidClients;
+      if (hunterData.potentialClients.length) supplemental.potentialClients = hunterData.potentialClients;
     } catch (hunterError) {
       console.warn("Nao foi possivel sincronizar a planilha de indicadores/Hunter.", hunterError);
     }

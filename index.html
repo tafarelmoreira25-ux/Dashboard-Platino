@@ -1690,6 +1690,11 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="app-topbar-title hidden md:block">Início</h1>
+                <button id="management-feedback-alert" type="button" onclick="openFeedbackModal()" class="gestor-only ml-auto hidden relative items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-blue-300 hover:text-blue-700" title="Feedbacks e sugestões recebidos">
+                    <i class="ph ph-bell-ringing text-xl"></i>
+                    <span class="hidden sm:inline">Ouvidoria</span>
+                    <span id="management-feedback-count" class="hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-center text-[10px] font-black text-white">0</span>
+                </button>
             </div>
 
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
@@ -1796,7 +1801,7 @@
                                 <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Comunicados Internos</p>
                                 <h3 class="mt-1 text-2xl font-black text-slate-900">Últimas novidades da empresa</h3>
                             </div>
-                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                            <button onclick="openAvisosEditor('comunicados')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar comunicados
                             </button>
                         </div>
@@ -1809,7 +1814,7 @@
                                 <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Conheça a Equipe</p>
                                 <h3 class="mt-1 text-2xl font-black text-slate-900">Pessoas que movem a Platino</h3>
                             </div>
-                            <button onclick="openAvisosEditor()" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                            <button onclick="openAvisosEditor('carrossel')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
                                 <i class="ph ph-images-square text-lg"></i> Editar carrossel
                             </button>
                         </div>
@@ -2002,7 +2007,7 @@
                                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-100/70">Chargebacks</p>
                                             <h4 class="metallic-title text-lg font-black">Controle do mês</h4>
                                         </div>
-                                        <button onclick="openAvisosEditor()" class="gestor-only hidden items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-white/15">
+                                        <button onclick="openAvisosEditor('chargebacks')" class="gestor-only hidden items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-white/15">
                                             <i class="ph ph-pencil-simple"></i> Editar
                                         </button>
                                     </div>
@@ -2039,11 +2044,11 @@
                                 <div class="mb-3 flex items-center justify-between gap-3">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Clientes potenciais</p>
-                                        <h4 class="metallic-title text-lg font-black">Pagamentos realizados</h4>
+                                        <h4 class="metallic-title text-lg font-black">Oportunidades em andamento</h4>
                                     </div>
                                     <i class="ph ph-hand-coins text-2xl text-blue-200/70"></i>
                                 </div>
-                                <div id="ranking-paid-clients-list" class="space-y-2"></div>
+                                <div id="ranking-potential-clients-list" class="space-y-2"></div>
                             </div>
                         </div>
                     </div>
@@ -3006,15 +3011,20 @@
                 </button>
             </div>
             <div class="editor-modal-body p-6 space-y-6">
-                <div class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                <div id="avisos-editor-comunicados" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
                     <h4 class="font-semibold text-slate-800 mb-3">Comunicados Internos do Início</h4>
                     <div class="grid gap-3">
                         <input id="editor-avisos-main-title" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Título principal do comunicado" />
                         <textarea id="editor-avisos-main-text" rows="3" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Texto do comunicado principal"></textarea>
                         <input id="editor-avisos-main-meta" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="Ex: Postado pela Gestão hoje" />
                     </div>
-                    <p class="mt-4 text-xs text-slate-500">Cards do início: Categoria | Título | Descrição</p>
-                    <textarea id="editor-inicio-notices" rows="5" class="mt-2 w-full border border-blue-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Sistema | Atualização do sistema disponível. | Melhorias visuais e novos recursos"></textarea>
+                    <div class="mt-4 flex items-center justify-between gap-3">
+                        <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Últimas novidades</p>
+                        <button type="button" onclick="addNoticeEditorItem()" class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold text-white hover:bg-blue-700">
+                            <i class="ph ph-plus"></i> Adicionar comunicado
+                        </button>
+                    </div>
+                    <div id="editor-inicio-notices-list" class="mt-3 grid gap-3"></div>
                 </div>
                 <div class="grid gap-4">
                     <div>
@@ -3044,7 +3054,7 @@
                         <input id="editor-avisos-week-revenue" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm" placeholder="36.505,73" />
                     </div>
                 </div>
-                <div class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
+                <div id="avisos-editor-chargebacks" class="rounded-2xl border border-rose-100 bg-rose-50/50 p-4">
                     <h4 class="font-semibold text-slate-800 flex items-center gap-2"><i class="ph ph-credit-card text-rose-700"></i> Chargebacks</h4>
                     <div class="mt-3 grid gap-3 sm:grid-cols-[180px_1fr]">
                         <div>
@@ -3068,7 +3078,7 @@
                     <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Dia/Mês/Ano. O destaque aparece automaticamente no mês do aniversário.</p>
                     <textarea id="editor-avisos-birthdays" rows="4" class="w-full border border-rose-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" placeholder="Ana Souza | 08/06/2000&#10;Carlos Lima | 21/06/1998"></textarea>
                 </div>
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div id="avisos-editor-carrossel" class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <h4 class="font-semibold text-slate-800 mb-2">Carrossel Pessoas que movem a Platino</h4>
                     <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Cargo | Detalhes | URL ou caminho da foto | Aniversário</p>
                     <textarea id="editor-team-carousel" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Giovana Santos | Supervisora Administrativa | Administrativo - ramal 201 - giovana@platino.com | assets/foto.png | 08/06/2000"></textarea>
@@ -4531,14 +4541,14 @@
             juridico: [
                 { name: 'Tabata Rangel de Lima', sold: 0, goal: 150000 },
                 { name: 'Elaine Aparecida dos Santos', sold: 0, goal: 80000 },
-                { name: 'Nicole Monteiro Faria', sold: 0, goal: 100000 },
                 { name: 'Janaina Rodrigues Paiva', sold: 0, goal: 150000 }
             ],
             history: [
                 { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
             ],
             hunters: [],
-            paidClients: []
+            paidClients: [],
+            potentialClients: []
         };
 
         const rankingSectors = ['comercial', 'juridico'];
@@ -4610,6 +4620,15 @@
                     status: String(item?.status || 'Pago').trim()
                 }))
                 .filter(item => item.name || item.value || item.date || item.responsible);
+            const normalizePotentialClients = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.potentialClients : [])
+                .map(item => ({
+                    name: String(item?.name || item?.client || item?.cliente || '').trim(),
+                    date: String(item?.date || item?.data || '').trim(),
+                    responsible: String(item?.responsible || item?.responsavel || item?.hunter || '').trim(),
+                    status: String(item?.status || 'Potencial').trim(),
+                    product: String(item?.product || item?.produto || '').trim()
+                }))
+                .filter(item => item.name || item.date || item.responsible || item.status || item.product);
             const normalized = {
                 comercial,
                 juridico,
@@ -4619,6 +4638,7 @@
                 history: normalizeHistory(sourceValue.history),
                 hunters: normalizeHunters(sourceValue.hunters),
                 paidClients: normalizePaidClients(sourceValue.paidClients),
+                potentialClients: normalizePotentialClients(sourceValue.potentialClients),
                 source: sourceValue.source || 'manual',
                 updatedAt: sourceValue.updatedAt || null,
                 updatedBy: sourceValue.updatedBy || 'Supervisão'
@@ -4774,6 +4794,7 @@
             renderRankingHistory();
             renderRankingHunters();
             renderRankingPaidClients();
+            renderRankingPotentialClients();
             updateRankingSyncStatus();
         }
 
@@ -4801,7 +4822,11 @@
             const previousTotal = parseRankingValue(previous.companyTotal) || ((parseRankingValue(previous.comercial) || 0) + (parseRankingValue(previous.juridico) || 0));
             const goalToBeat = previousTotal;
             const missing = Math.max(goalToBeat - currentTotal, 0);
-            const percent = goalToBeat ? Math.min(Math.round((currentTotal / goalToBeat) * 100), 100) : 0;
+            const percent = goalToBeat ? Math.round((currentTotal / goalToBeat) * 100) : 0;
+            const now = new Date();
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const projectedTotal = now.getDate() ? (currentTotal / now.getDate()) * daysInMonth : currentTotal;
+            const projectedToBeat = goalToBeat ? projectedTotal >= goalToBeat : false;
 
             container.innerHTML = `
                 <div class="rounded-xl border border-white/10 bg-white/5 p-3">
@@ -4810,11 +4835,13 @@
                         <span class="money-value text-sm font-black">${formatCurrency(previousTotal)}</span>
                     </div>
                     <div class="mt-3 metal-level-track">
-                        <div class="metal-level-fill emerald" style="--level-width: ${percent}%"></div>
+                        <div class="metal-level-fill emerald" style="--level-width: ${Math.min(percent, 100)}%"></div>
                     </div>
-                    <div class="mt-3 grid grid-cols-2 gap-2 text-[11px] text-blue-100/75">
+                    <p class="mt-2 text-[11px] font-bold ${percent >= 100 ? 'text-emerald-300' : 'text-blue-100/75'}">${percent >= 100 ? `Resultado anterior superado em ${percent - 100}%` : `${percent}% do resultado anterior alcançado`}</p>
+                    <div class="mt-3 grid grid-cols-3 gap-2 text-[11px] text-blue-100/75">
                         <div>Atual<br><strong class="money-value text-white">${formatCurrency(currentTotal)}</strong></div>
                         <div>Para superar<br><strong class="money-value text-white">${missing ? formatCurrency(missing) : 'Superado'}</strong></div>
+                        <div>Projeção<br><strong class="money-value ${projectedToBeat ? 'text-emerald-300' : 'text-amber-200'}">${formatCurrency(projectedTotal)}</strong></div>
                     </div>
                 </div>
             `;
@@ -4828,6 +4855,7 @@
             const items = [...(rankingData.hunters || [])].sort((a, b) => (b.paidClients || 0) - (a.paidClients || 0) || (b.value || 0) - (a.value || 0));
             const totals = items.reduce((acc, item) => {
                 acc.convertedClients += Number(item.convertedClients) || 0;
+                acc.potentialClients += Number(item.potentialClients) || 0;
                 acc.paidClients += Number(item.paidClients) || 0;
                 acc.notPaidClients += Number(item.notPaidClients) || 0;
                 acc.projections += Number(item.projections) || 0;
@@ -4835,6 +4863,7 @@
                 return acc;
             }, {
                 convertedClients: 0,
+                potentialClients: 0,
                 paidClients: 0,
                 notPaidClients: 0,
                 projections: 0,
@@ -4850,6 +4879,10 @@
                     <div class="rounded-xl border border-white/10 bg-white/5 p-3">
                         <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Pagos</p>
                         <p class="mt-1 text-2xl font-black money-value">${totals.paidClients}</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 p-3">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Potenciais</p>
+                        <p class="mt-1 text-2xl font-black money-value">${totals.potentialClients}</p>
                     </div>
                     <div class="rounded-xl border border-white/10 bg-white/5 p-3">
                         <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-100/60">Não pagos</p>
@@ -4900,6 +4933,23 @@
                         </div>
                         <p class="money-value text-sm font-black">${formatCurrency(item.value || 0)}</p>
                     </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRankingPotentialClients() {
+            const container = document.getElementById('ranking-potential-clients-list');
+            if (!container) return;
+            const items = [...(rankingData.potentialClients || [])];
+            if (!items.length) {
+                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-blue-100/70">Nenhum cliente potencial sincronizado na aba HUNTER.</div>';
+                return;
+            }
+            container.innerHTML = items.slice(0, 8).map(item => `
+                <div class="ranking-row rounded-xl p-3">
+                    <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Cliente')}</p>
+                    <p class="mt-1 text-[11px] text-blue-100/65">${escapeHtml(item.status || 'Potencial')}${item.product ? ` • ${escapeHtml(item.product)}` : ''}</p>
+                    <p class="mt-1 text-[10px] text-blue-200/60">${escapeHtml(item.responsible || 'Responsável a confirmar')}${item.date ? ` • ${escapeHtml(item.date)}` : ''}</p>
                 </div>
             `).join('');
         }
@@ -5177,6 +5227,7 @@
                 history: rankingData.history,
                 hunters: rankingData.hunters,
                 paidClients: rankingData.paidClients,
+                potentialClients: rankingData.potentialClients,
                 source: 'manual',
                 updatedAt: new Date().toISOString(),
                 updatedBy: window.firebaseAuthUser?.email || 'Supervisão'
@@ -5248,7 +5299,8 @@
                     teamTotals: normalized.teamTotals,
                     history: normalized.history,
                     hunters: normalized.hunters,
-                    paidClients: normalized.paidClients
+                    paidClients: normalized.paidClients,
+                    potentialClients: normalized.potentialClients
                 });
                 if (signature === rankingSheetLastSignature) return;
 
@@ -5280,7 +5332,6 @@
             { name: 'GIULLIAN GABRIELLEN', date: '11/01/2000', role: 'Hunter Jurídico', photo: 'assets/equipe/giullian-gabriellen.png' },
             { name: 'NICOLAS PERES ISSO', date: '03/01/2006', role: 'Supervisor Jurídico', photo: 'assets/equipe/nicolas-peres-isso.png', aliases: ['Nicolas Peres'] },
             { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
-            { name: 'NICOLE MONTEIRO FARIA', date: '18/02/2006', role: 'Consultora Jurídica', photo: 'assets/equipe/nicole-monteiro-faria.png', photoPosition: 'center center' },
             { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', photo: 'assets/equipe/roberta-ines-brandao.png', photoPosition: 'center center', aliases: ['Roberta Brandão'] },
             { name: 'GABRIEL NUNES PAES', date: '25/03/1997', role: 'Consultor financeiro - Hunter', photo: 'assets/equipe/gabriel-nunes-paes.png' },
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
@@ -5289,7 +5340,6 @@
             { name: 'SONIA REGINA LEANDRO', date: '30/05/1964', role: 'Auxiliar de limpeza', photo: 'assets/equipe/sonia-regina-leandro.png' },
             { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991', role: 'Consultora Jurídica', photo: 'assets/equipe/tabata-rangel-de-lima.png', photoPosition: 'center 18%' },
             { name: 'MONIQUE CRISTINA DA SILVA', date: '31/05/1993', role: 'Consultora financeira', photo: 'assets/equipe/monique-cristina-da-silva.png' },
-            { name: 'GIOVANA DILENA ROCHA', date: '28/06/1999', role: 'Departamento Processual', photo: 'assets/equipe/giovana-dilena-rocha.png' },
             { name: 'TAFAREL MOREIRA', date: '30/06/1998', role: 'Supervisor Administrativo', photo: 'assets/equipe/tafarel-moreira.png' },
             { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003', role: 'Consultora financeira', photo: 'assets/equipe/geovanna-alves-xavier.png' },
             { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004', role: 'Marketing', photo: 'assets/equipe/jonatas-silva-ferraz.png', photoPosition: 'center center', aliases: ['Jonathas Silva Ferraz'] },
@@ -5301,6 +5351,12 @@
             { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995', role: 'Consultora financeira', photo: 'assets/equipe/mayara-cardoso-pereira.png' },
             { name: 'YASMIM NOGUEIRA', date: '29/11/2005', role: 'Departamento administrativo', photo: 'assets/equipe/yasmim-nogueira.png' }
         ];
+
+        const INACTIVE_TEAM_NAMES = ['Giovana Dilena Rocha', 'Giovanna Juliana Rocha', 'João Victor TJ', 'João Vitor TJ', 'Nicole Monteiro Faria'];
+
+        function isInactiveTeamMember(name) {
+            return INACTIVE_TEAM_NAMES.some(inactiveName => isSamePersonName(name, inactiveName));
+        }
 
         const platinoBirthdays = platinoPeople.map(person => ({
             name: person.name,
@@ -5416,7 +5472,7 @@
                     date: formatBirthdayDate(person?.date),
                     photo: String(person?.photo || '').trim()
                 }))
-                .filter(person => person.name);
+                .filter(person => person.name && !isInactiveTeamMember(person.name));
 
             defaultAvisosData.birthdays.forEach(defaultPerson => {
                 const exists = mergedBirthdays.some(person => isSamePersonName(person.name, defaultPerson.name));
@@ -5454,7 +5510,7 @@
                 photoPosition: String(item?.photoPosition || '').trim(),
                 birthday: formatBirthdayDate(item?.birthday || ''),
                 aliases: Array.isArray(item?.aliases) ? item.aliases : []
-            })).filter(item => item.name || item.role || item.details || item.photo || item.birthday);
+            })).filter(item => (item.name || item.role || item.details || item.photo || item.birthday) && !isInactiveTeamMember(item.name));
 
             const matchesTeamProfile = (person, profile) => {
                 const names = [profile.name, ...(profile.aliases || [])];
@@ -5717,6 +5773,52 @@
                 .filter(item => item.category || item.title || item.text);
         }
 
+        let noticeEditorItems = [];
+
+        function renderNoticeEditorItems() {
+            const container = document.getElementById('editor-inicio-notices-list');
+            if (!container) return;
+            if (!noticeEditorItems.length) {
+                container.innerHTML = '<div class="rounded-xl border border-dashed border-blue-200 bg-white p-4 text-sm text-slate-500">Nenhum comunicado. Clique em “Adicionar comunicado”.</div>';
+                return;
+            }
+            container.innerHTML = noticeEditorItems.map((item, index) => `
+                <div class="rounded-xl border border-blue-100 bg-white p-4 shadow-sm" data-notice-editor-row="${index}">
+                    <div class="mb-3 flex items-center justify-between gap-3">
+                        <strong class="text-sm text-slate-800">Comunicado ${index + 1}</strong>
+                        <button type="button" onclick="removeNoticeEditorItem(${index})" class="rounded-lg px-2.5 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50"><i class="ph ph-trash"></i> Remover</button>
+                    </div>
+                    <div class="grid gap-3">
+                        <input data-notice-category type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm" placeholder="Categoria, por exemplo: Sistema" value="${escapeHtml(item.category || '')}">
+                        <input data-notice-title type="text" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold" placeholder="Título do comunicado" value="${escapeHtml(item.title || '')}">
+                        <textarea data-notice-text rows="3" class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm" placeholder="Escreva o comunicado para a equipe">${escapeHtml(item.text || '')}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function syncNoticeEditorItems() {
+            noticeEditorItems = Array.from(document.querySelectorAll('[data-notice-editor-row]')).map(row => ({
+                category: row.querySelector('[data-notice-category]')?.value.trim() || '',
+                title: row.querySelector('[data-notice-title]')?.value.trim() || '',
+                text: row.querySelector('[data-notice-text]')?.value.trim() || ''
+            })).filter(item => item.category || item.title || item.text);
+            return noticeEditorItems;
+        }
+
+        function addNoticeEditorItem() {
+            syncNoticeEditorItems();
+            noticeEditorItems.unshift({ category: 'Comunicado', title: '', text: '' });
+            renderNoticeEditorItems();
+            document.querySelector('[data-notice-editor-row] [data-notice-title]')?.focus();
+        }
+
+        function removeNoticeEditorItem(index) {
+            syncNoticeEditorItems();
+            noticeEditorItems.splice(index, 1);
+            renderNoticeEditorItems();
+        }
+
         function serializeChargebacksForEditor(items) {
             return (items || [])
                 .map(item => `${item.client || ''} | ${item.date || ''}`)
@@ -5758,12 +5860,13 @@
                 .filter(item => item.name || item.role || item.details || item.photo || item.birthday);
         }
 
-        function openAvisosEditor() {
+        function openAvisosEditor(section = '') {
             if (!requireGestor('editar a Central de Informações')) return;
             document.getElementById('editor-avisos-main-title').value = avisosData.main.title;
             document.getElementById('editor-avisos-main-text').value = avisosData.main.text;
             document.getElementById('editor-avisos-main-meta').value = avisosData.main.meta;
-            document.getElementById('editor-inicio-notices').value = serializeNoticesForEditor(avisosData.notices);
+            noticeEditorItems = (avisosData.notices || []).map(item => ({ ...item }));
+            renderNoticeEditorItems();
             document.getElementById('editor-team-carousel').value = serializeTeamForEditor(avisosData.team);
             document.getElementById('editor-avisos-highlight-title').value = avisosData.highlight.title;
             document.getElementById('editor-avisos-highlight-name').value = avisosData.highlight.name;
@@ -5783,6 +5886,15 @@
             const modal = document.getElementById('avisos-modal');
             modal.classList.remove('hidden', 'opacity-0');
             document.getElementById('avisos-modal-content').classList.remove('scale-95');
+            const target = document.getElementById(`avisos-editor-${section}`);
+            if (target) {
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('ring-4', 'ring-blue-200');
+                    setTimeout(() => target.classList.remove('ring-4', 'ring-blue-200'), 1400);
+                    target.querySelector('input, textarea, button')?.focus();
+                }, 80);
+            }
         }
 
         function closeAvisosEditor() {
@@ -5793,6 +5905,46 @@
         }
 
         let feedbackData = [];
+        let feedbackNotificationInitialized = false;
+        let knownFeedbackIds = new Set();
+
+        function showManagementFeedbackToast(item) {
+            const existing = document.getElementById('management-feedback-toast');
+            existing?.remove();
+            const toast = document.createElement('button');
+            toast.id = 'management-feedback-toast';
+            toast.type = 'button';
+            toast.onclick = () => {
+                toast.remove();
+                openFeedbackModal();
+            };
+            toast.className = 'fixed right-4 top-20 z-[140] max-w-sm rounded-2xl border border-blue-200 bg-white p-4 text-left shadow-2xl animate-fade-in';
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <span class="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-blue-600 text-white"><i class="ph ph-bell-ringing text-xl"></i></span>
+                    <span><strong class="block text-sm text-slate-900">Nova mensagem na Ouvidoria</strong><span class="mt-1 block text-xs text-slate-600">${escapeHtml(item?.type || 'Feedback')} — ${escapeHtml(item?.subject || 'Nova mensagem recebida')}</span><span class="mt-2 block text-[11px] font-bold text-blue-700">Clique para visualizar</span></span>
+                </div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 12000);
+        }
+
+        function updateManagementFeedbackAlert(items) {
+            const list = Array.isArray(items) ? items : [];
+            const unhandled = list.filter(item => item.handled !== true);
+            const badge = document.getElementById('management-feedback-count');
+            if (badge) {
+                badge.innerText = String(unhandled.length);
+                badge.classList.toggle('hidden', unhandled.length === 0);
+            }
+
+            const currentIds = new Set(list.map(item => item.id).filter(Boolean));
+            if (feedbackNotificationInitialized) {
+                const newest = list.find(item => item.id && !knownFeedbackIds.has(item.id));
+                if (newest && window.platinoUserRole === 'gestor') showManagementFeedbackToast(newest);
+            }
+            knownFeedbackIds = currentIds;
+            feedbackNotificationInitialized = true;
+        }
 
         // Feedback viewer (Gestor)
         function openFeedbackModal() {
@@ -5891,6 +6043,7 @@
         window.applyRemoteFeedbacks = function (items) {
             feedbackData = Array.isArray(items) ? items : [];
             localStorage.setItem('platinoFeedbacks', JSON.stringify(feedbackData.slice(0, 100)));
+            updateManagementFeedbackAlert(feedbackData);
             if (!document.getElementById('feedback-modal').classList.contains('hidden')) {
                 renderFeedbackList();
             }
@@ -5983,14 +6136,13 @@
             advogadoBanco: 'Advogado(a) do banco',
             assunto: 'Assunto / natureza da ação',
             statusAtual: 'Status atual',
-            atualizacaoProcessual: 'Atualização processual',
             dataUltimaMovimentacao: 'Data da última movimentação',
             descricaoUltimaMovimentacao: 'Descrição da última movimentação',
             dataConsulta: 'Data da consulta',
             horaConsulta: 'Hora da consulta',
             proximosPassos: 'Próximos passos',
-            anexosProcesso: 'Anexos em processo',
-            advogadoResponsavel: 'Advogado(a) responsável pelo acompanhamento',
+            anexosProcesso: 'Link dos anexos/documentos do processo',
+            advogadoResponsavel: 'Representante responsável pelo acompanhamento',
             linkProcesso: 'Link para consulta das movimentações',
             imagemProcesso: 'Captura de tela do processo (opcional)'
         };
@@ -6241,18 +6393,24 @@
                 fields: [
                     'resumoProcesso', 'numeroProcesso', 'origem', 'sigilo', 'justicaGratuita',
                     'dataDistribuicao', 'cliente', 'banco', 'advogadoCliente', 'advogadoBanco',
-                    'assunto', 'statusAtual', 'atualizacaoProcessual', 'dataUltimaMovimentacao',
+                    'assunto', 'statusAtual', 'dataUltimaMovimentacao',
                     'descricaoUltimaMovimentacao', 'dataConsulta', 'horaConsulta', 'proximosPassos',
                     'anexosProcesso', 'advogadoResponsavel', 'linkProcesso', 'imagemProcesso'
                 ],
                 requiredFields: ['resumoProcesso'],
+                customLabels: {
+                    banco: 'Réu / Instituição financeira',
+                    advogadoBanco: 'Advogado(a) do réu / instituição financeira',
+                    dataConsulta: 'Data da última consulta',
+                    anexosProcesso: 'Link dos anexos/documentos do processo',
+                    advogadoResponsavel: 'Representante responsável pelo acompanhamento'
+                },
                 fieldTypes: {
                     resumoProcesso: 'textarea',
                     statusAtual: 'textarea',
-                    atualizacaoProcessual: 'textarea',
                     descricaoUltimaMovimentacao: 'textarea',
                     proximosPassos: 'textarea',
-                    anexosProcesso: 'textarea',
+                    anexosProcesso: 'url',
                     dataDistribuicao: 'date',
                     dataUltimaMovimentacao: 'date',
                     dataConsulta: 'date',
@@ -6264,9 +6422,11 @@
                     resumoProcesso: 'Cole aqui o resumo completo recebido do processo. Depois clique em “Separar informações”.',
                     origem: 'Ex.: TJMG - 34ª Vara Cível da Comarca de Belo Horizonte',
                     sigilo: 'Ex.: Não',
-                    justicaGratuita: 'Ex.: Concedida à parte autora',
+                    justicaGratuita: 'Sim ou Não (identificado automaticamente)',
                     statusAtual: 'Situação atual apresentada ao cliente',
-                    atualizacaoProcessual: 'Resumo das movimentações e decisões recentes',
+                    banco: 'Nome do réu ou da instituição financeira que está sendo processada',
+                    anexosProcesso: 'https://... (não será preenchido com data)',
+                    advogadoResponsavel: 'Nome do assistente jurídico ou responsável pela consulta',
                     linkProcesso: 'https://...'
                 },
                 blocks: []
@@ -6368,25 +6528,42 @@
                 const match = summary.match(new RegExp(`(?:${start})\\s*[:\\-]\\s*([\\s\\S]*?)(?=\\n\\s*(?:${ends})\\s*[:\\-]|$)`, 'i'));
                 return match?.[1]?.trim() || '';
             };
+            const normalizedSummary = summary.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            const extractJusticeGratuita = () => {
+                const mentions = normalizedSummary.match(/[^.!?\n]*(?:justica gratuita|assistencia judiciaria|gratuidade da justica)[^.!?\n]*/g) || [];
+                const context = mentions.join(' ');
+                if (!context) return '';
+                if (/(?:nao\s+(?:foi\s+)?(?:concedid[ao]|deferid[ao]|aceit[ao]|reconhecid[ao])|indeferid[ao]|negad[ao]|rejeitad[ao]|sem\s+(?:o\s+)?beneficio|beneficio\s+nao\s+concedido)/.test(context)) return 'Não';
+                if (/(?:deferid[ao]|concedid[ao]|aceit[ao]|reconhecid[ao]|beneficio\s+concedido)/.test(context)) return 'Sim';
+                return line('justiça gratuita|assistência judiciária|gratuidade da justiça');
+            };
+            const lawyer = side => {
+                const author = side === 'author';
+                const sideLabels = author
+                    ? '(?:cliente|autor(?:a)?|parte autora|polo ativo|requerente)'
+                    : '(?:banco|réu|ré|parte ré|polo passivo|requerido|instituição financeira)';
+                return line(`advogad[oa]s?(?:\\(a\\))? d[oa] ${sideLabels}|advogad[oa]s?(?:\\(a\\))? ${sideLabels}|adv\\.? ${sideLabels}|patrono(?:\\(a\\))? d[oa] ${sideLabels}|procurador(?:a)? d[oa] ${sideLabels}`);
+            };
             const values = {
                 numeroProcesso: line('número do processo|processo') || summary.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/)?.[0] || '',
                 origem: line('origem|tribunal|vara'),
                 sigilo: line('segredo ou sigilo|sigilo'),
-                justicaGratuita: line('justiça gratuita|assistência judiciária'),
+                justicaGratuita: extractJusticeGratuita(),
                 dataDistribuicao: normalizeAdmProcessDate(line('data da distribuição|distribuição')),
                 cliente: line('polo ativo|autor(?:a)?|cliente'),
                 banco: line('polo passivo|réu|instituição financeira|banco'),
-                advogadoCliente: line('advogado do (?:cliente|autor)|adv\\. polo ativo'),
-                advogadoBanco: line('advogado do (?:banco|réu)|adv\\. polo passivo'),
+                advogadoCliente: lawyer('author'),
+                advogadoBanco: lawyer('bank'),
                 assunto: line('assunto|classe|natureza'),
-                statusAtual: section('status atual|situação atual', 'atualização processual|última movimentação|próximos passos|anexos'),
-                atualizacaoProcessual: section('atualização processual|resumo processual', 'última movimentação|próximos passos|anexos'),
+                statusAtual: section('status atual|situação atual', 'atualização processual|resumo processual|última movimentação|próximos passos|anexos')
+                    || section('atualização processual|resumo processual', 'última movimentação|próximos passos|anexos'),
                 dataUltimaMovimentacao: normalizeAdmProcessDate(line('data da última movimentação|última movimentação em')),
                 descricaoUltimaMovimentacao: section('descrição da última movimentação|última movimentação', 'próximos passos|anexos|data da consulta'),
                 proximosPassos: section('próximos passos', 'anexos|advogado responsável|link'),
-                anexosProcesso: section('anexos(?: em processo)?|documentos anexos', 'advogado responsável|link|fim'),
-                advogadoResponsavel: line('advogado responsável'),
-                linkProcesso: line('link(?: do processo)?|consulta(?: do processo)?') || summary.match(/https?:\/\/[^\s]+/i)?.[0] || ''
+                anexosProcesso: line('link (?:dos |de )?anexos|anexos(?: em processo)?|documentos anexos')
+                    || section('anexos(?: em processo)?|documentos anexos', 'representante responsável|responsável pelo acompanhamento|advogado responsável|link|fim').match(/https?:\/\/[^\s]+/i)?.[0] || '',
+                advogadoResponsavel: line('representante responsável(?: pelo acompanhamento)?|responsável (?:pela consulta|pelo acompanhamento)|assistente jurídico|advogado responsável'),
+                linkProcesso: line('link (?:para )?(?:consulta das movimentações|do processo|da consulta)|consulta do processo')
             };
 
             let filled = 0;
@@ -6433,6 +6610,11 @@
                     </label>
                 `;
             }).join('');
+
+            const consultationDate = document.getElementById('adm-field-dataConsulta');
+            if (consultationDate && !consultationDate.value) {
+                consultationDate.valueAsDate = new Date();
+            }
 
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-100/60';
@@ -6743,7 +6925,7 @@
                     text: document.getElementById('editor-avisos-main-text').value.trim() || defaultAvisosData.main.text,
                     meta: document.getElementById('editor-avisos-main-meta').value.trim() || defaultAvisosData.main.meta
                 },
-                notices: parseNoticesFromEditor(document.getElementById('editor-inicio-notices').value),
+                notices: syncNoticeEditorItems(),
                 highlight: {
                     title: document.getElementById('editor-avisos-highlight-title').value.trim() || defaultAvisosData.highlight.title,
                     name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
@@ -6870,25 +7052,18 @@
         if (isLocalStaticPreview()) {
           return localFirebaseConfig;
         }
-
-        const response = await fetch("/api/firebase-config", { cache: "no-store" });
-        if (!response.ok) {
-          let details = "";
-          try {
-            const data = await response.json();
-            if (Array.isArray(data?.missing) && data.missing.length) {
-              details = ` Variáveis ausentes: ${data.missing.join(", ")}.`;
-            }
-          } catch (error) {
-            console.warn("Não foi possível ler o erro da configuração Firebase.", error);
-          }
-          throw new Error(`Não foi possível carregar a configuração segura do Firebase.${details}`);
+        try {
+          const response = await fetch("/api/firebase-config", { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const config = await response.json();
+          if (!config?.apiKey || !config?.authDomain || !config?.projectId) throw new Error("Configuração incompleta");
+          return config;
+        } catch (error) {
+          // A configuração web do Firebase não é uma credencial privada; o acesso aos
+          // dados continua protegido por autenticação e pelas regras do Firestore.
+          console.warn("Endpoint de configuração indisponível; usando configuração web de contingência.", error);
+          return localFirebaseConfig;
         }
-        const config = await response.json();
-        if (!config?.apiKey || !config?.authDomain || !config?.projectId) {
-          throw new Error("Configuração do Firebase incompleta.");
-        }
-        return config;
       }
 
       let auth = null;
@@ -7221,9 +7396,7 @@
         { email: "giullian@platino.com", name: "Giullian Gabriellen", sector: "Hunter Jurídico" },
         { email: "nicolas@platino.com", name: "Nicolas Peres Isso", sector: "Supervisão Jurídica" },
         { email: "emily@platino.com", name: "Emily do Val Fernandes", sector: "Departamento Pessoal" },
-        { email: "nicole@platino.com", name: "Nicole Monteiro Faria", sector: "Jurídico" },
         { email: "roberta@platino.com", name: "Roberta Inês Brandão", sector: "Supervisão Comercial" },
-        { email: "joaovictor@platino.com", name: "João Victor (TJ)", sector: "Comercial" },
         { email: "gabriel@platino.com", name: "Gabriel Nunes Paes", sector: "Comercial / Hunter" },
         { email: "janaina@platino.com", name: "Janaina Rodrigues Paiva", sector: "Comercial" },
         { email: "rafaela@platino.com", name: "Rafaela Marcelino", sector: "Comercial" },
@@ -7231,7 +7404,6 @@
         { email: "sonia@platino.com", name: "Sonia Regina Leandro", sector: "Apoio Operacional" },
         { email: "tabata@platino.com", name: "Tabata Rangel de Lima", sector: "Jurídico" },
         { email: "monique@platino.com", name: "Monique Cristina da Silva", sector: "Comercial" },
-        { email: "giovana@platino.com", name: "Giovana Dilena Rocha", sector: "Departamento Processual" },
         { email: "tafarel@platino.com", name: "Tafarel Moreira", sector: "Supervisão Administrativa", gestor: true },
         { email: "geovanna@platino.com", name: "Geovanna Alves Xavier", sector: "Comercial" },
         { email: "jonatas@platino.com", name: "Jonatas Silva Ferraz", sector: "Marketing" },
