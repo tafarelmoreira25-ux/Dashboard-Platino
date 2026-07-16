@@ -1801,8 +1801,8 @@
                                 <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Comunicados Internos</p>
                                 <h3 class="mt-1 text-2xl font-black text-slate-900">Últimas novidades da empresa</h3>
                             </div>
-                            <button onclick="openAvisosEditor('comunicados')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
-                                <i class="ph ph-pencil-simple text-lg"></i> Editar comunicados
+                            <button onclick="openAvisosEditor('comunicados')" class="notice-editor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                <i class="ph ph-pencil-simple text-lg"></i> Adicionar ou editar recados
                             </button>
                         </div>
                         <div id="inicio-notices-list" class="grid gap-3 md:grid-cols-2"></div>
@@ -1858,16 +1858,16 @@
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
                             <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
-                                <img src="assets/platino-infohub-icon.png" alt="Emblema Platino do destaque do mês" class="mascot-avatar">
+                                <img id="avisos-highlight-photo" src="assets/equipe/mayara-cardoso-pereira.png" alt="Mayara Cardoso, destaque do mês de junho" class="h-full w-full object-cover object-top">
                             </div>
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
                                     <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
-                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque do Mês de Maio - Comercial</h3>
+                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque do Mês de Junho - Comercial</h3>
                                     <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Líder do Mês</span>
                                 </div>
                                 <p id="avisos-highlight-name" class="font-black text-2xl">Mayara Cardoso</p>
-                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em Junho!</p>
+                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em junho!</p>
                             </div>
                             <div class="md:text-right">
                                     <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
@@ -2171,6 +2171,26 @@
                         <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
                             <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Central operacional
                         </span>
+                    </div>
+
+                    <div class="mb-8">
+                        <div class="mb-4 flex items-center gap-3">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm"><i class="ph-fill ph-push-pin"></i></span>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">Informações fixadas</p>
+                                <h3 class="font-bold text-slate-800">Comunicados importantes do RH</h3>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                            <figure class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-3 shadow-sm">
+                                <img src="assets/rh/comunicado-registro-de-ponto.png" alt="Comunicado do Departamento Pessoal sobre o registro correto de ponto" class="h-auto w-full rounded-xl" loading="lazy">
+                                <figcaption class="px-2 pb-1 pt-3 text-xs font-semibold text-slate-600"><i class="ph ph-clock mr-1 text-blue-600"></i> Registro correto de ponto</figcaption>
+                            </figure>
+                            <figure class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-3 shadow-sm">
+                                <img src="assets/rh/calendario-ultimos-sabados-2026.png" alt="Calendário dos últimos sábados de julho a dezembro de 2026" class="h-auto w-full rounded-xl" loading="lazy">
+                                <figcaption class="px-2 pb-1 pt-3 text-xs font-semibold text-slate-600"><i class="ph ph-calendar-check mr-1 text-blue-600"></i> Últimos sábados de 2026</figcaption>
+                            </figure>
+                        </div>
                     </div>
 
                     <div class="mb-3 flex items-center gap-3">
@@ -3522,6 +3542,11 @@
             return isGestorUser() || window.platinoUserCanEditRh === true || ['anna@platino.com', 'emily@platino.com', 'emilly@platino.com'].includes(email);
         }
 
+        function isNoticeEditorUser() {
+            const email = window.firebaseAuthUser?.email?.toLowerCase() || '';
+            return isGestorUser() || ['isabela@platino.com', 'emily@platino.com', 'emilly@platino.com'].includes(email);
+        }
+
         function requireGestor(action = 'editar o sistema') {
             if (isGestorUser()) return true;
             alert(`Acesso restrito: apenas o gestor pode ${action}.`);
@@ -3548,6 +3573,13 @@
                 el.classList.toggle('block', canEditRh);
                 el.setAttribute('aria-hidden', canEditRh ? 'false' : 'true');
                 if ('disabled' in el) el.disabled = !canEditRh;
+            });
+            const canEditNotices = isNoticeEditorUser();
+            document.querySelectorAll('.notice-editor-only').forEach(el => {
+                el.classList.toggle('hidden', !canEditNotices);
+                el.classList.toggle('flex', canEditNotices);
+                el.setAttribute('aria-hidden', canEditNotices ? 'false' : 'true');
+                if ('disabled' in el) el.disabled = !canEditNotices;
             });
         }
 
@@ -5450,10 +5482,10 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'Destaque do Mês de Maio - Comercial',
+                title: 'Destaque do Mês de Junho - Comercial',
                 name: 'Mayara Cardoso',
-                subtitle: 'Maior taxa de conversão em Maio!',
-                value: 'R$R$ 32.344,77',
+                subtitle: 'Maior taxa de conversão em junho!',
+                value: 'R$ 32.344,77',
                 badge: 'Líder do mês'
             },
             week: {
@@ -5576,7 +5608,11 @@
                     title: String(item?.title || '').trim(),
                     text: String(item?.text || '').trim()
                 })).filter(item => item.category || item.title || item.text),
-                highlight: { ...defaultAvisosData.highlight, ...(value.highlight || {}) },
+                highlight: (() => {
+                    const highlight = { ...defaultAvisosData.highlight, ...(value.highlight || {}) };
+                    const isLegacyMayaraHighlight = /mayara/i.test(highlight.name || '') && /mês de maio|mes de maio/i.test(highlight.title || '');
+                    return isLegacyMayaraHighlight ? { ...highlight, ...defaultAvisosData.highlight } : highlight;
+                })(),
                 week: { ...defaultAvisosData.week, ...(monthlyValue.week || {}) },
                 chargebacks: normalizedChargebacks,
                 birthdays: normalizedBirthdays,
@@ -5872,7 +5908,12 @@
         }
 
         function openAvisosEditor(section = '') {
-            if (!requireGestor('editar a Central de Informações')) return;
+            if (section === 'comunicados') {
+                if (!isNoticeEditorUser()) {
+                    alert('Acesso restrito: apenas Gestão, Isabela e Emily podem editar os comunicados.');
+                    return;
+                }
+            } else if (!requireGestor('editar a Central de Informações')) return;
             document.getElementById('editor-avisos-main-title').value = avisosData.main.title;
             document.getElementById('editor-avisos-main-text').value = avisosData.main.text;
             document.getElementById('editor-avisos-main-meta').value = avisosData.main.meta;
@@ -5894,6 +5935,16 @@
                 .map(person => `${person.name} | ${person.date}`)
                 .join('\n');
             document.getElementById('avisos-save-status').innerText = '';
+            const noticesOnly = section === 'comunicados' && !isGestorUser();
+            document.querySelectorAll('#avisos-modal .editor-modal-body > div').forEach(editorSection => {
+                editorSection.classList.toggle('hidden', noticesOnly && editorSection.id !== 'avisos-editor-comunicados');
+            });
+            const modalHeading = document.querySelector('#avisos-modal h3');
+            const modalDescription = modalHeading?.nextElementSibling;
+            if (modalHeading) modalHeading.innerText = noticesOnly ? 'Editar comunicados internos' : 'Editar InfoHub';
+            if (modalDescription) modalDescription.innerText = noticesOnly
+                ? 'Adicione recados e atualize as últimas novidades da empresa.'
+                : 'Atualize resultados, destaque, comunicado e perfis do carrossel.';
             const modal = document.getElementById('avisos-modal');
             modal.classList.remove('hidden', 'opacity-0');
             document.getElementById('avisos-modal-content').classList.remove('scale-95');
@@ -7177,7 +7228,10 @@
         }
 
         async function saveAvisosEditor() {
-            if (!requireGestor('salvar a Central de Informações')) return;
+            if (!isNoticeEditorUser()) {
+                alert('Acesso restrito: apenas Gestão, Isabela e Emily podem publicar comunicados.');
+                return;
+            }
             const saveButton = document.getElementById('avisos-save-button');
             const status = document.getElementById('avisos-save-status');
             const currentUser = window.firebaseAuthUser?.email || 'Supervisão';
@@ -7349,6 +7403,12 @@
         throw new Error(`Acesso restrito: apenas o gestor pode ${action}.`);
       }
 
+      function assertNoticeWrite(action) {
+        const email = window.firebaseAuthUser?.email?.toLowerCase() || "";
+        if (window.platinoUserRole === "gestor" || ["isabela@platino.com", "emily@platino.com", "emilly@platino.com"].includes(email)) return;
+        throw new Error(`Acesso restrito: apenas Gestão, Isabela e Emily podem ${action}.`);
+      }
+
       function assertManagementSharedWrite(action) {
         if (window.platinoUserRole === "gestor" || window.platinoUserCanEditRh === true) return;
         throw new Error(`Acesso restrito: apenas Gestão/RH pode ${action}.`);
@@ -7390,7 +7450,7 @@
 
       window.platinoNoticeStore = {
         save: async (data) => {
-          assertGestorWrite("publicar a Central de Informações");
+          assertNoticeWrite("publicar comunicados");
           return setDoc(avisosRef, {
             ...data,
             serverUpdatedAt: serverTimestamp()

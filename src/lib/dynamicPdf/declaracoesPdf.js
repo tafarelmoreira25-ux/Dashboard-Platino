@@ -57,8 +57,8 @@ export async function gerarDeclaracaoHipossuficienciaPdf(dados) {
       {
         texto:
           `${dados.nacionalidade}, ${dados.estadoCivil}, ${dados.profissao}, ` +
-          `${genero.portador} da Cédula de Identidade RG nº ${dados.rg} ` +
-          `${dados.orgaoExpedidor}, ${genero.inscrito} no CPF/MF sob nº ` +
+          `${genero.portador} da Cédula de Identidade RG nº ${dados.rg}, ` +
+          `${genero.inscrito} no CPF/MF sob nº ` +
           `${dados.cpfCnpj}, com endereço eletrônico: ${dados.email}, residente e ` +
           `${genero.domiciliado} na ${dados.endereco}. Venho respeitosamente perante ` +
           "Vossa Excelência, por meio deste instrumento, declarar que não tenho " +

@@ -34,6 +34,18 @@ service cloud.firestore {
         );
     }
 
+    function isNoticeEditor() {
+      return isManagement()
+        || (
+          signedIn()
+          && (
+            request.auth.token.email == 'isabela@platino.com'
+            || request.auth.token.email == 'emily@platino.com'
+            || request.auth.token.email == 'emilly@platino.com'
+          )
+        );
+    }
+
     function isValidShortText(value, maxSize) {
       return value is string
         && value.size() > 0
@@ -75,7 +87,19 @@ service cloud.firestore {
 
     match /appContent/{document} {
       allow read: if signedIn();
-      allow create, update: if isManagement();
+      allow create: if isManagement();
+      allow update: if isManagement()
+        || (
+          document == 'centralAvisos'
+          && isNoticeEditor()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'main',
+            'notices',
+            'updatedAt',
+            'updatedBy',
+            'serverUpdatedAt'
+          ])
+        );
       allow delete: if false;
     }
 
