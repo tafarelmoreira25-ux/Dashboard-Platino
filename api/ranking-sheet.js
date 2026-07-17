@@ -93,7 +93,7 @@ function getDefaultSheetCsvUrlFor(sheetName) {
 function getHunterSheetCsvUrl() {
   if (process.env.HUNTER_SHEET_CSV_URL) return process.env.HUNTER_SHEET_CSV_URL;
   const spreadsheetId = process.env.HUNTER_SPREADSHEET_ID || DEFAULT_HUNTER_SPREADSHEET_ID;
-  const sheetName = process.env.HUNTER_SHEET_NAME || DEFAULT_HUNTER_SHEET_NAME;
+  const sheetName = process.env.HUNTER_SHEET_NAME || `${DEFAULT_HUNTER_SHEET_NAME} ${getCurrentPortugueseMonthName()}`;
   const encodedSheet = encodeURIComponent(sheetName);
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
 }
@@ -444,7 +444,7 @@ function extractHunterDataFromCsv(text) {
     const client = normalizeConsultantName(getColumnByAliases(row, headerMap, ["CLIENTE", "CLIENTE POTENCIAL", "NOME CLIENTE"]));
     const explicitHunter = normalizeConsultantName(getColumnByAliases(row, headerMap, ["HUNTER", "CAPTADOR", "ORIGEM", "INDICADOR"]));
     const consultant = normalizeConsultantName(getColumnByAliases(row, headerMap, ["CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL", "VENDEDOR"]));
-    const hunter = explicitHunter || DEFAULT_HUNTER_NAME;
+    const hunter = explicitHunter || consultant || DEFAULT_HUNTER_NAME;
     const situation = normalizeConsultantName(getColumnByAliases(row, headerMap, ["SITUAÇÃO", "SITUACAO", "STATUS"]));
     const product = normalizeConsultantName(getColumnByAliases(row, headerMap, ["PRODUTO"]));
     const date = normalizeConsultantName(getColumnByAliases(row, headerMap, ["DATA", "DATA PAGAMENTO", "DATA DO PAGAMENTO"]));
@@ -470,7 +470,8 @@ function extractHunterDataFromCsv(text) {
     else if (category === "projection") current.projections += 1;
     else if (category === "potential") current.potentialClients += 1;
 
-    const value = parseFirstMoneyFromText(observation);
+    const directValue = getColumnByAliases(row, headerMap, ["VALOR", "VALOR PAGO", "PAGAMENTO", "TOTAL PAGO"]);
+    const value = parseMoney(directValue) || parseFirstMoneyFromText(observation);
     current.value += value;
     hunterTotals.set(key, current);
 
@@ -944,10 +945,14 @@ export default async function handler(request, response) {
 
     try {
       const hunterDatasets = [];
-      const indicatorsCsv = await fetchCsv(getIndicatorsSheetCsvUrl());
-      hunterDatasets.push(extractHunterDataFromCsv(indicatorsCsv));
-      const hunterCsv = await fetchCsv(getHunterSheetCsvUrl());
-      hunterDatasets.push(extractHunterDataFromCsv(hunterCsv));
+      const hunterSources = await Promise.allSettled([
+        fetchCsv(getIndicatorsSheetCsvUrl()),
+        fetchCsv(getHunterSheetCsvUrl())
+      ]);
+      hunterSources.forEach(result => {
+        if (result.status === "fulfilled") hunterDatasets.push(extractHunterDataFromCsv(result.value));
+      });
+      if (!hunterDatasets.length) throw new Error("Nenhuma aba de Hunter pôde ser carregada.");
       const hunterData = mergeHunterData(hunterDatasets);
       if (hunterData.hunters.length) supplemental.hunters = hunterData.hunters;
       if (hunterData.paidClients.length) supplemental.paidClients = hunterData.paidClients;

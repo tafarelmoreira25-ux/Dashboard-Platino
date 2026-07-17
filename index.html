@@ -5453,6 +5453,7 @@
                 <div class="ranking-row flex items-center justify-between gap-3 rounded-xl p-3">
                     <div class="min-w-0">
                         <p class="truncate font-bold text-white">${escapeHtml(item.name || 'Giullian Gabriellen')}</p>
+                        <p class="mt-0.5 text-[10px] uppercase tracking-wider text-blue-100/55">${Number(item.paidClients) || 0} pago(s) • ${Number(item.convertedClients) || 0} cliente(s)</p>
                     </div>
                     <p class="money-value text-sm font-black">${formatCurrency(item.value || 0)}</p>
                 </div>
