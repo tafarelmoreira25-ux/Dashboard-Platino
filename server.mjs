@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import handler from './api/generate-document.js';
 import rankingSheetHandler from './api/ranking-sheet.js';
+import clientSheetHandler from './api/consultar.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/generate-document', (req, res) => handler(req, res));
 app.post('/api/generate-document', (req, res) => handler(req, res));
 app.get('/api/ranking-sheet', (req, res) => rankingSheetHandler(req, res));
+app.get('/api/consultar', (req, res) => clientSheetHandler(req, res));
 
 // Serve static files from project root (index.html, assets, modelos-originais)
 app.use(express.static(path.resolve(process.cwd())));

@@ -15,6 +15,7 @@ const TEMPLATE_TITLES = {
   "termo-compromisso-pagamento": "Termo de Compromisso de Pagamento",
   "modelo-termo-compromisso-pagamento": "Modelo - Termo de Compromisso de Pagamento",
   "relatorio-atualizacao-processo-judicial": "Relatório de Atualização do Processo Judicial",
+  "laudo-pericial-contabil": "Laudo Pericial Contábil",
 };
 
 function slugify(value) {

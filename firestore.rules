@@ -38,11 +38,7 @@ service cloud.firestore {
       return isManagement()
         || (
           signedIn()
-          && (
-            request.auth.token.email == 'isabela@platino.com'
-            || request.auth.token.email == 'emily@platino.com'
-            || request.auth.token.email == 'emilly@platino.com'
-          )
+          && request.auth.token.email == 'isabela@platino.com'
         );
     }
 

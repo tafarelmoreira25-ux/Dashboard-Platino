@@ -263,6 +263,42 @@ function isDateLike(value) {
   return Boolean(parseSheetDate(value));
 }
 
+function parseIsoDate(value) {
+  const match = String(value || "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+function getRankingPeriod(request) {
+  const period = String(request.query?.period || "month").toLowerCase();
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (period === "today") return { key: period, start: today, end: today };
+  if (period === "week") {
+    const start = new Date(today);
+    const day = start.getDay();
+    start.setDate(start.getDate() - (day === 0 ? 6 : day - 1));
+    return { key: period, start, end: today };
+  }
+  if (period === "custom") {
+    const start = parseIsoDate(request.query?.from);
+    const end = parseIsoDate(request.query?.to);
+    if (start && end && start <= end) return { key: period, start, end };
+  }
+  return {
+    key: "month",
+    start: new Date(today.getFullYear(), today.getMonth(), 1),
+    end: today
+  };
+}
+
+function isDateInRankingPeriod(value, period) {
+  const parsed = parseSheetDate(value);
+  if (!parsed) return false;
+  const date = new Date(parsed.year, parsed.month - 1, parsed.day);
+  return date >= period.start && date <= period.end;
+}
+
 async function fetchCsv(url) {
   const response = await fetch(url, { cache: "no-store" });
   if (!response.ok) {
@@ -679,7 +715,7 @@ function applySummaryData(grouped, summaryEntries) {
   });
 }
 
-function rowsFromPlatinoSideBySideCsv(text) {
+function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {} })) {
   const csvRows = parseCsv(text);
   if (csvRows.length < 2) return null;
 
@@ -704,9 +740,7 @@ function rowsFromPlatinoSideBySideCsv(text) {
     teamTotals[section.sector] = summary.team.total || 0;
 
     for (const row of tableRows.slice(1)) {
-      const isValidEntryDate = summary.entries.length
-        ? isDateLike(row[section.dateIndex])
-        : isCurrentMonthDate(row[section.dateIndex]);
+      const isValidEntryDate = isDateInRankingPeriod(row[section.dateIndex], period);
       if (!isValidEntryDate) continue;
 
       const name = normalizeConsultantName(row[section.consultantIndex]);
@@ -725,9 +759,11 @@ function rowsFromPlatinoSideBySideCsv(text) {
       grouped.set(key, current);
     }
 
-    applySummaryData(grouped, summary.entries);
+    if (period.key === "month") applySummaryData(grouped, summary.entries);
 
-    const summaryNameKeys = new Set(summary.entries.map(entry => normalizeNameKey(entry.name)).filter(Boolean));
+    const summaryNameKeys = period.key === "month"
+      ? new Set(summary.entries.map(entry => normalizeNameKey(entry.name)).filter(Boolean))
+      : new Set();
     if (summaryNameKeys.size) {
       for (const key of Array.from(grouped.keys())) {
         const appearsInSummary = Array.from(summaryNameKeys).some(summaryKey =>
@@ -739,6 +775,9 @@ function rowsFromPlatinoSideBySideCsv(text) {
 
     grouped.forEach(item => applyDefaultIndividualGoal(item, section.sector));
     teamGoals[section.sector] = getTeamGoalFromEntries(Array.from(grouped.values()), section.sector) || teamGoals[section.sector];
+    if (period.key !== "month") {
+      teamTotals[section.sector] = Array.from(grouped.values()).reduce((sum, item) => sum + (item.sold || 0), 0);
+    }
 
     grouped.forEach(item => {
       rows.push({
@@ -753,7 +792,7 @@ function rowsFromPlatinoSideBySideCsv(text) {
     });
   }
 
-  return { rows, teamGoals, teamTotals, metrics };
+  return { rows, teamGoals, teamTotals, metrics, period: period.key };
 }
 
 function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, metrics = {}, supplemental = {}) {
@@ -810,6 +849,7 @@ export default async function handler(request, response) {
   const sharedUrl = process.env.RANKING_SHEET_CSV_URL;
   const comercialUrl = process.env.RANKING_COMERCIAL_SHEET_CSV_URL;
   const juridicoUrl = process.env.RANKING_JURIDICO_SHEET_CSV_URL;
+  const period = getRankingPeriod(request);
 
   try {
     const rows = [];
@@ -829,7 +869,7 @@ export default async function handler(request, response) {
       supplemental.history.push(...extraData.history);
       supplemental.hunters.push(...extraData.hunters);
       supplemental.paidClients.push(...extraData.paidClients);
-      const platinoData = rowsFromPlatinoSideBySideCsv(csv);
+      const platinoData = rowsFromPlatinoSideBySideCsv(csv, period);
       if (platinoData) {
         rows.push(...platinoData.rows);
         Object.assign(explicitTeamGoals, platinoData.teamGoals);
@@ -895,7 +935,12 @@ export default async function handler(request, response) {
     }
 
     response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json(buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics, supplemental));
+    return response.status(200).json({
+      ...buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics, supplemental),
+      period: period.key,
+      periodStart: period.start.toISOString(),
+      periodEnd: period.end.toISOString()
+    });
   } catch (error) {
     return response.status(502).json({
       error: "Nao foi possivel sincronizar a planilha de ranking.",

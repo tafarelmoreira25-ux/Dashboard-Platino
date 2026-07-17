@@ -871,6 +871,55 @@
         `;
     }
 
+    function buildSynthesizedHtml(query, results) {
+        const queryTokens = tokenize(query, false);
+        const candidates = [];
+        const seen = new Set();
+
+        results.slice(0, 4).forEach((doc, documentIndex) => {
+            const content = String(doc.meta?.answer || doc.meta?.raw?.resposta || doc.content || '')
+                .replace(/\b(?:CHECKLIST|ERROS COMUNS|O QUE NÃƒO FAZER|PRÃ“XIMA ETAPA|QUANDO CHAMAR SUPERVISÃƒO):/gi, '\n')
+                .replace(/[•*-]\s*/g, '')
+                .trim();
+            content
+                .split(/(?<=[.!?])\s+|\r?\n+/)
+                .map(sentence => compactText(sentence))
+                .filter(sentence => sentence.length >= 25 && sentence.length <= 320)
+                .forEach((sentence, sentenceIndex) => {
+                    const normalizedSentence = normalize(sentence);
+                    const key = normalizedSentence.slice(0, 120);
+                    if (!key || seen.has(key)) return;
+                    seen.add(key);
+                    const overlap = queryTokens.filter(token => normalizedSentence.includes(token)).length;
+                    candidates.push({
+                        sentence,
+                        score: overlap * 12 + Math.max(8 - documentIndex * 2, 1) - sentenceIndex * 0.05
+                    });
+                });
+        });
+
+        const selected = candidates
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 5)
+            .map(item => item.sentence);
+        if (!selected.length) return '';
+
+        const lead = selected[0];
+        const complements = selected.slice(1);
+        return `
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 mb-2">OrientaÃ§Ã£o resumida</p>
+                <p>${formatText(lead)}</p>
+                ${complements.length ? `
+                    <p class="mt-3 font-semibold text-slate-700">Pontos importantes:</p>
+                    <ul class="mt-2 list-disc pl-5 space-y-1">
+                        ${complements.map(item => `<li>${formatText(item)}</li>`).join('')}
+                    </ul>
+                ` : ''}
+            </div>
+        `;
+    }
+
     function fallbackAnswer() {
         return {
             found: false,
@@ -900,27 +949,11 @@
 
         const primary = results[0];
         const relatedHtml = buildRelatedHtml(results, primary);
-
-        if (primary.type === 'json') {
-            return {
-                found: true,
-                html: `${formatJsonAnswer(primary)}${relatedHtml}`,
-                results
-            };
-        }
-
-        const title = primary.meta?.displayTitle || primary.title;
+        const synthesizedHtml = buildSynthesizedHtml(query, results);
 
         return {
             found: true,
-            html: `
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide text-blue-600 mb-2">${escapeHtml(primary.section)}</p>
-                    <p class="font-semibold text-slate-800 mb-2">${escapeHtml(title)}</p>
-                    <p>${formatText(primary.content)}</p>
-                    ${relatedHtml}
-                </div>
-            `,
+            html: `${synthesizedHtml || formatJsonAnswer(primary)}${relatedHtml}`,
             results
         };
     }
