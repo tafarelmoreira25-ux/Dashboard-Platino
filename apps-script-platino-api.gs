@@ -34,9 +34,9 @@ function doGet() {
     cliente: findColumn(["CLIENTE", "NOME DO CLIENTE", "NOME"]),
     dataVenda: findColumn(["DATA DA VENDA", "DATA VENDA", "DATA"]),
     vendedor: findColumn(["VENDEDOR", "CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL"]),
-    valor: findColumn(["VALOR DA VENDA", "VALOR VENDA", "VALOR", "VALOR LIQUIDO", "VALOR LÍQUIDO"]),
+    valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR VENDA", "VALOR", "VALOR LIQUIDO", "VALOR LÍQUIDO"]),
     grupoAberto: findColumn(["GRUPO ABERTO", "ABERTURA DO GRUPO", "GRUPO"]),
-    status: findColumn(["STATUS", "SITUACAO", "SITUAÇÃO"]),
+    status: findColumn(["OBSERVAÇÃO", "OBSERVACAO", "STATUS", "SITUACAO", "SITUAÇÃO"]),
     distrato: findColumn(["DISTRATO", "STATUS DISTRATO", "CANCELAMENTO"]),
     comprovante: findColumn(["COMPROVANTE", "COMPROVANTE RECEBIDO", "STATUS COMPROVANTE"]),
     dataComprovante: findColumn(["DATA DO COMPROVANTE", "DATA COMPROVANTE", "HORA DO COMPROVANTE"])

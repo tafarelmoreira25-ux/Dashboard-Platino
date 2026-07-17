@@ -5,6 +5,10 @@ let clientCacheAt = 0;
 const CACHE_MS = 60000;
 let firebaseCertificates = null;
 let firebaseCertificatesExpireAt = 0;
+const DEFAULT_CLIENT_SHEET_API_URL =
+  "https://script.google.com/macros/s/AKfycby2b8UGWBXzQahMNgnCFG2N9LFBWeodyJihxCta9LQQ-m5GJACDerEOWHp5FTafbMKGRw/exec";
+const DEFAULT_OPERATION_SHEET_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1MvKj4uO1GJL1XKJMqM5c2dauAG6q8yKt7fYxGaRMBKI/export?format=csv&gid=0";
 
 function decodeJwtPart(value) {
   return JSON.parse(Buffer.from(value, "base64url").toString("utf8"));
@@ -76,6 +80,76 @@ function normalizeText(value) {
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
+}
+
+function normalizeHeader(value) {
+  return normalizeText(value).toUpperCase();
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+    if (char === '"' && quoted && next === '"') {
+      cell += '"';
+      index += 1;
+    } else if (char === '"') {
+      quoted = !quoted;
+    } else if (char === "," && !quoted) {
+      row.push(cell);
+      cell = "";
+    } else if ((char === "\n" || char === "\r") && !quoted) {
+      if (char === "\r" && next === "\n") index += 1;
+      row.push(cell);
+      if (row.some(value => String(value).trim())) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+  row.push(cell);
+  if (row.some(value => String(value).trim())) rows.push(row);
+  return rows;
+}
+
+function recordsFromOperationCsv(text) {
+  const rows = parseCsv(text);
+  if (rows.length < 2) return [];
+  const headers = rows[0].map(normalizeHeader);
+  const findColumn = aliases => {
+    for (const alias of aliases) {
+      const index = headers.indexOf(normalizeHeader(alias));
+      if (index >= 0) return index;
+    }
+    return -1;
+  };
+  const columns = {
+    cliente: findColumn(["CLIENTE", "NOME DO CLIENTE"]),
+    dataVenda: findColumn(["DATA DA VENDA", "DATA VENDA", "DATA"]),
+    vendedor: findColumn(["CONSULTOR", "VENDEDOR", "RESPONSAVEL"]),
+    valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR"]),
+    grupoAberto: findColumn(["GRUPO ABERTO", "GRUPO"]),
+    status: findColumn(["OBSERVACAO", "STATUS", "SITUACAO"]),
+    comprovante: findColumn(["COMPROVANTE", "ENTRADA"]),
+    dataComprovante: findColumn(["DATA DO COMPROVANTE", "DATA COMPROVANTE"])
+  };
+  const cell = (row, index) => index >= 0 ? String(row[index] || "").trim() : "";
+
+  return rows.slice(1).map(row => normalizeRecord({
+    cliente: cell(row, columns.cliente),
+    dataVenda: cell(row, columns.dataVenda),
+    vendedor: cell(row, columns.vendedor),
+    valor: cell(row, columns.valor),
+    grupoAberto: cell(row, columns.grupoAberto),
+    status: cell(row, columns.status),
+    comprovante: cell(row, columns.comprovante),
+    dataComprovante: cell(row, columns.dataComprovante)
+  })).filter(item => item.cliente);
 }
 
 function normalizeRecord(item) {
@@ -206,25 +280,55 @@ function scoreClientMatch(query, clientName) {
   return (matched.length / tokens.length) * 100 + matched.join("").length;
 }
 
-async function loadClients(apiUrl) {
+async function loadClients(apiUrl, operationCsvUrl) {
   const now = Date.now();
   if (clientCache && now - clientCacheAt < CACHE_MS) return clientCache;
 
-  const upstream = await fetch(apiUrl, {
-    cache: "no-store",
-    redirect: "follow",
-    headers: { Accept: "application/json" }
+  const datasets = [];
+  const failures = [];
+
+  if (operationCsvUrl) {
+    try {
+      const sheetResponse = await fetch(operationCsvUrl, { cache: "no-store", redirect: "follow" });
+      if (!sheetResponse.ok) throw new Error(`Planilha operacional respondeu HTTP ${sheetResponse.status}.`);
+      datasets.push(recordsFromOperationCsv(await sheetResponse.text()));
+    } catch (error) {
+      failures.push(error.message);
+    }
+  }
+
+  if (apiUrl) {
+    try {
+      const upstream = await fetch(apiUrl, {
+        cache: "no-store",
+        redirect: "follow",
+        headers: { Accept: "application/json" }
+      });
+      if (!upstream.ok) throw new Error(`Google Apps Script respondeu HTTP ${upstream.status}.`);
+      const data = await upstream.json();
+      if (!Array.isArray(data)) throw new Error("A implantação não retornou uma lista de clientes.");
+      datasets.push(data.map(normalizeRecord).filter(item => item.cliente));
+    } catch (error) {
+      failures.push(error.message);
+    }
+  }
+
+  if (!datasets.length) throw new Error(failures.join(" "));
+
+  const merged = new Map();
+  datasets.flat().forEach(item => {
+    const key = [
+      normalizeText(item.cliente),
+      String(item.dataVenda || "").trim()
+    ].join("|");
+    const current = merged.get(key) || {};
+    merged.set(key, {
+      ...current,
+      ...Object.fromEntries(Object.entries(item).filter(([, value]) => value !== "" && value != null))
+    });
   });
-  if (!upstream.ok) {
-    throw new Error(`Google Apps Script respondeu HTTP ${upstream.status}.`);
-  }
 
-  const data = await upstream.json();
-  if (!Array.isArray(data)) {
-    throw new Error("A implantação não retornou uma lista de clientes.");
-  }
-
-  clientCache = data.map(normalizeRecord).filter(item => item.cliente);
+  clientCache = Array.from(merged.values());
   clientCacheAt = now;
   return clientCache;
 }
@@ -235,12 +339,8 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Método não permitido." });
   }
 
-  const apiUrl = process.env.CLIENT_SHEET_API_URL;
-  if (!apiUrl) {
-    return response.status(503).json({
-      error: "Consulta comercial não configurada no servidor."
-    });
-  }
+  const apiUrl = process.env.CLIENT_SHEET_API_URL || DEFAULT_CLIENT_SHEET_API_URL;
+  const operationCsvUrl = process.env.OPERATION_SHEET_CSV_URL || DEFAULT_OPERATION_SHEET_CSV_URL;
 
   let authenticatedUser;
   try {
@@ -257,7 +357,7 @@ export default async function handler(request, response) {
   const action = String(request.query?.action || "").toLowerCase();
   if (action === "timeline") {
     try {
-      const clients = await loadClients(apiUrl);
+      const clients = await loadClients(apiUrl, operationCsvUrl);
       response.setHeader("Cache-Control", "private, no-store");
       return response.status(200).json(buildTimeline(clients));
     } catch (error) {
@@ -276,7 +376,7 @@ export default async function handler(request, response) {
   }
 
   try {
-    const clients = await loadClients(apiUrl);
+    const clients = await loadClients(apiUrl, operationCsvUrl);
     const scored = clients
       .map(item => ({ item, score: scoreClientMatch(query, item.cliente) }))
       .filter(result => result.score >= 25)

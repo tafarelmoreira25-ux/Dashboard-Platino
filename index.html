@@ -1839,10 +1839,10 @@
                                 <div class="dot" onclick="goToSlide(6)"></div>
                             </div>
 
-                            <button onclick="prevCarouselSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm">
+                            <button type="button" id="home-carousel-prev" onclick="prevCarouselSlide(event)" aria-label="Voltar um destaque" title="Destaque anterior" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation">
                                 <i class="ph ph-caret-left text-lg"></i>
                             </button>
-                            <button onclick="nextCarouselSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm">
+                            <button type="button" id="home-carousel-next" onclick="nextCarouselSlide(event)" aria-label="Avançar um destaque" title="Próximo destaque" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation">
                                 <i class="ph ph-caret-right text-lg"></i>
                             </button>
                         </div>
@@ -1877,13 +1877,13 @@
                             </div>
                         </div>
                         <div class="relative">
-                            <button type="button" onclick="moveTeamCarousel(-1)" class="team-nav-button prev" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
+                            <button type="button" onclick="moveTeamCarousel(-1, event)" class="team-nav-button prev touch-manipulation" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
                                 <i class="ph ph-caret-left text-lg"></i>
                             </button>
                             <div id="team-carousel" class="team-carousel manual-scroll">
                                 <div id="team-track" class="team-track"></div>
                             </div>
-                            <button type="button" onclick="moveTeamCarousel(1)" class="team-nav-button next" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
+                            <button type="button" onclick="moveTeamCarousel(1, event)" class="team-nav-button next touch-manipulation" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
                                 <i class="ph ph-caret-right text-lg"></i>
                             </button>
                         </div>
@@ -4755,11 +4755,18 @@
 
         // LÓGICA DO CAROUSEL DE SLIDES
         let currentCarouselSlide = 0;
-        const totalCarouselSlides = 7;
 
         function updateCarouselUI() {
+            const carousel = document.querySelector('#section-inicio .slide-carousel');
+            if (!carousel) return;
+            const slides = Array.from(carousel.querySelectorAll('.slide-item'));
+            const dots = Array.from(carousel.querySelectorAll('.dot'));
+            if (!slides.length) return;
+
+            currentCarouselSlide = ((currentCarouselSlide % slides.length) + slides.length) % slides.length;
+
             // Atualizar slides
-            document.querySelectorAll('.slide-item').forEach((slide, index) => {
+            slides.forEach((slide, index) => {
                 if (index === currentCarouselSlide) {
                     slide.classList.add('active');
                 } else {
@@ -4768,7 +4775,7 @@
             });
 
             // Atualizar dots
-            document.querySelectorAll('.dot').forEach((dot, index) => {
+            dots.forEach((dot, index) => {
                 if (index === currentCarouselSlide) {
                     dot.classList.add('active');
                 } else {
@@ -4777,26 +4784,22 @@
             });
         }
 
-        function nextCarouselSlide() {
-            if (currentCarouselSlide < totalCarouselSlides - 1) {
-                currentCarouselSlide++;
-            } else {
-                currentCarouselSlide = 0;
-            }
+        function nextCarouselSlide(event) {
+            event?.preventDefault();
+            event?.stopPropagation();
+            currentCarouselSlide += 1;
             updateCarouselUI();
         }
 
-        function prevCarouselSlide() {
-            if (currentCarouselSlide > 0) {
-                currentCarouselSlide--;
-            } else {
-                currentCarouselSlide = totalCarouselSlides - 1;
-            }
+        function prevCarouselSlide(event) {
+            event?.preventDefault();
+            event?.stopPropagation();
+            currentCarouselSlide -= 1;
             updateCarouselUI();
         }
 
         function goToSlide(index) {
-            currentCarouselSlide = index;
+            currentCarouselSlide = Number(index) || 0;
             updateCarouselUI();
         }
 
@@ -5523,7 +5526,7 @@
                 const position = index + 1;
                 const isLeader = index === 0;
                 const positionBadge = position <= 8
-                    ? `<img src="assets/ranking-position-${position}.png" alt="${position}ª posição" class="ranking-position-img">`
+                    ? `<img src="assets/ranking-position-${position}.png?v=20260717-2" alt="${position}ª posição" class="ranking-position-img">`
                     : `<span class="ranking-position-img ranking-position-fallback" aria-label="${position}ª posição">${position}</span>`;
                 const sold = getRankingSold(item);
                 const motionIcon = isLeader
@@ -6198,6 +6201,10 @@
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
             const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
             const currentMonth = getCurrentBirthdayMonth();
+            container.dataset.originalCount = String(team.length);
+            teamCarouselManualIndex = 0;
+            container.style.transition = '';
+            container.style.transform = '';
 
             container.innerHTML = doubled.map((person, index) => {
                 const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
@@ -6230,7 +6237,9 @@
         let teamCarouselManualTimer = null;
         let teamCarouselManualIndex = 0;
 
-        function moveTeamCarousel(direction) {
+        function moveTeamCarousel(direction, event) {
+            event?.preventDefault();
+            event?.stopPropagation();
             const carousel = document.getElementById('team-carousel');
             const track = document.getElementById('team-track');
             if (!carousel || !track) return;
@@ -6238,16 +6247,13 @@
             const card = track.querySelector('.team-card');
             const gap = 16;
             const cardWidth = card ? card.getBoundingClientRect().width + gap : 236;
-            const originalCards = Math.max(Math.floor(track.children.length / 2), 1);
-            const visibleCards = Math.max(Math.floor(carousel.clientWidth / cardWidth), 1);
-            const maxIndex = Math.max(originalCards - visibleCards, 0);
+            const originalCards = Math.max(Number(track.dataset.originalCount) || Math.floor(track.children.length / 2), 1);
+            const step = Number(direction) < 0 ? -1 : 1;
 
             carousel.classList.add('is-manual');
             track.style.animation = 'none';
 
-            teamCarouselManualIndex += direction;
-            if (teamCarouselManualIndex > maxIndex) teamCarouselManualIndex = 0;
-            if (teamCarouselManualIndex < 0) teamCarouselManualIndex = maxIndex;
+            teamCarouselManualIndex = (teamCarouselManualIndex + step + originalCards) % originalCards;
 
             track.style.transition = 'transform 0.35s ease';
             track.style.transform = `translateX(-${teamCarouselManualIndex * cardWidth}px)`;

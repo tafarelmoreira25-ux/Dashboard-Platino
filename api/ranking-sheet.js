@@ -26,6 +26,7 @@ const SUPPLEMENTAL_HEADERS = {
 };
 
 const DEFAULT_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
+const DEFAULT_OPERATION_SPREADSHEET_ID = "1MvKj4uO1GJL1XKJMqM5c2dauAG6q8yKt7fYxGaRMBKI";
 const DEFAULT_HUNTER_SPREADSHEET_ID = "1CfFR1wjF74xXea4bYrjkea8qaQxsjwoQ13KsiWh2cIE";
 const DEFAULT_HUNTER_SHEET_NAME = "HUNTER";
 const DEFAULT_INDICATORS_SHEET_NAME = "INDICADORES";
@@ -261,6 +262,12 @@ function isCurrentMonthDate(value) {
 
 function isDateLike(value) {
   return Boolean(parseSheetDate(value));
+}
+
+function getOperationSheetCsvUrl() {
+  if (process.env.OPERATION_SHEET_CSV_URL) return process.env.OPERATION_SHEET_CSV_URL;
+  const spreadsheetId = process.env.OPERATION_SPREADSHEET_ID || DEFAULT_OPERATION_SPREADSHEET_ID;
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=0`;
 }
 
 function parseIsoDate(value) {
@@ -505,6 +512,57 @@ function extractHunterDataFromCsv(text) {
     ),
     paidClients,
     potentialClients
+  };
+}
+
+function rowsFromOperationCsv(text, period) {
+  const csvRows = parseCsv(text);
+  if (csvRows.length < 2) return { rows: [], total: 0, contracts: 0 };
+  const headers = csvRows[0].map(normalizeHeader);
+  const findColumn = aliases => {
+    for (const alias of aliases) {
+      const index = headers.indexOf(normalizeHeader(alias));
+      if (index >= 0) return index;
+    }
+    return -1;
+  };
+  const dateIndex = findColumn(["DATA DA VENDA", "DATA VENDA", "DATA"]);
+  const consultantIndex = findColumn(["CONSULTOR", "VENDEDOR", "RESPONSAVEL"]);
+  const valueIndex = findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR"]);
+  const statusIndex = findColumn(["OBSERVACAO", "STATUS", "SITUACAO"]);
+  if (dateIndex < 0 || consultantIndex < 0 || valueIndex < 0) {
+    return { rows: [], total: 0, contracts: 0 };
+  }
+
+  const grouped = new Map();
+  let contracts = 0;
+  for (const row of csvRows.slice(1)) {
+    if (!isDateInRankingPeriod(row[dateIndex], period)) continue;
+    const status = normalizeHeader(statusIndex >= 0 ? row[statusIndex] : "");
+    if (status.includes("DISTRATO") || status.includes("CANCELAD")) continue;
+    const name = normalizeConsultantName(row[consultantIndex]);
+    const sold = parseMoney(row[valueIndex]);
+    if (!name || !sold) continue;
+    const key = normalizeNameKey(name);
+    const current = grouped.get(key) || { name, sold: 0 };
+    current.sold += sold;
+    grouped.set(key, current);
+    contracts += 1;
+  }
+
+  const rows = Array.from(grouped.values()).map(item => ({
+    sector: "comercial",
+    name: item.name,
+    sold: item.sold,
+    goal: 0,
+    gap: 0,
+    teamGoal: DEFAULT_TEAM_GOALS.comercial,
+    teamGap: 0
+  }));
+  return {
+    rows,
+    total: rows.reduce((sum, item) => sum + item.sold, 0),
+    contracts
   };
 }
 
@@ -813,7 +871,29 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     updatedAt: new Date().toISOString()
   };
 
+  const consolidatedRows = new Map();
   for (const row of rows) {
+    if (!ranking[row.sector] || !row.name) continue;
+    if (row.sector === "juridico" && normalizeNameKey(row.name).startsWith("NICOLE")) continue;
+    const key = `${row.sector}|${normalizeNameKey(row.name)}`;
+    const current = consolidatedRows.get(key) || {
+      sector: row.sector,
+      name: row.name,
+      sold: 0,
+      goal: 0,
+      gap: 0,
+      teamGoal: 0,
+      teamGap: 0
+    };
+    current.sold += Number(row.sold) || 0;
+    current.goal = Math.max(current.goal, Number(row.goal) || 0);
+    current.teamGoal = Math.max(current.teamGoal, Number(row.teamGoal) || 0);
+    current.teamGap = Math.max(current.teamGap, Number(row.teamGap) || 0);
+    current.gap = Math.max(current.goal - current.sold, 0);
+    consolidatedRows.set(key, current);
+  }
+
+  for (const row of consolidatedRows.values()) {
     ranking[row.sector].push({
       name: row.name,
       sold: row.sold,
@@ -894,6 +974,16 @@ export default async function handler(request, response) {
       supplemental.hunters.push(...extraData.hunters);
       supplemental.paidClients.push(...extraData.paidClients);
       rows.push(...rowsFromCsv(csv, "juridico"));
+    }
+
+    try {
+      const operationCsv = await fetchCsv(getOperationSheetCsvUrl());
+      const operationData = rowsFromOperationCsv(operationCsv, period);
+      rows.push(...operationData.rows);
+      explicitTeamTotals.comercial = (Number(explicitTeamTotals.comercial) || 0) + operationData.total;
+      metrics.comercialContracts = (Number(metrics.comercialContracts) || 0) + operationData.contracts;
+    } catch (operationError) {
+      console.warn("Nao foi possivel sincronizar a segunda planilha operacional.", operationError);
     }
 
     if (!supplemental.history.length && !sharedUrl && !comercialUrl && !juridicoUrl) {
