@@ -259,6 +259,28 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .timeline-floating-card {
+            animation: timelineFloat 5s ease-in-out infinite;
+            box-shadow: 0 14px 32px rgba(2, 6, 23, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .timeline-floating-card:nth-child(even) {
+            animation-delay: -2.5s;
+        }
+
+        .timeline-floating-card:hover {
+            animation-play-state: paused;
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 42px rgba(2, 6, 23, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        @keyframes timelineFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
         .ranking-sector-title {
             color: #e2e8f0;
             background: linear-gradient(105deg, #64748b 0%, #ffffff 24%, #cbd5e1 46%, #f8fafc 58%, #7f8da3 78%, #ffffff 100%);
@@ -2166,7 +2188,7 @@
                                 <div class="mb-3 flex items-center justify-between gap-3">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Atualizações da operação</p>
-                                        <h4 class="metallic-title text-lg font-black">Linha do tempo</h4>
+                                        <h4 class="metallic-title text-lg font-black">PLATINO EM TEMPO REAL</h4>
                                     </div>
                                     <div class="flex flex-wrap items-center justify-end gap-2">
                                         <button type="button" id="timeline-add-message-button" class="timeline-editor-only hidden items-center gap-1.5 rounded-xl border border-blue-300/20 bg-blue-400/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-100 hover:bg-blue-400/20">
@@ -3243,7 +3265,7 @@
                 </div>
                 <div id="avisos-editor-timeline" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
                     <h4 class="font-semibold text-slate-800">Publicar frase na linha do tempo</h4>
-                    <p class="mt-1 text-xs text-slate-500">A mensagem aparecerá para toda a equipe e desaparecerá automaticamente após 12 horas.</p>
+                    <p class="mt-1 text-xs text-slate-500">A mensagem aparecerá para toda a equipe e desaparecerá automaticamente após 24 horas.</p>
                     <textarea id="editor-timeline-message" maxlength="500" rows="5" class="mt-3 w-full rounded-xl border border-blue-100 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Escreva aqui o aviso ou a frase para a equipe..."></textarea>
                     <p class="mt-2 text-[11px] text-slate-500">Limite de 500 caracteres.</p>
                 </div>
@@ -5473,9 +5495,13 @@
                     author: item.author
                 }));
             const timelineItems = [...manualMessages, ...salesTimelineEvents]
+                .filter(item => {
+                    const timestamp = new Date(item.data || 0).getTime();
+                    return Number.isFinite(timestamp) && timestamp <= Date.now() && Date.now() - timestamp < 24 * 60 * 60 * 1000;
+                })
                 .sort((a, b) => new Date(b.data || 0).getTime() - new Date(a.data || 0).getTime());
             if (!timelineItems.length) {
-                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-blue-100/70">Nenhuma movimentação do mês encontrada na planilha.</div>';
+                container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-blue-100/70">Nenhuma movimentação registrada nas últimas 24 horas.</div>';
                 return;
             }
             const visual = {
@@ -5488,15 +5514,25 @@
             };
             container.innerHTML = timelineItems.map(item => {
                 const style = visual[item.type] || visual.venda;
+                const eventDate = new Date(item.data);
+                const eventTime = Number.isNaN(eventDate.getTime())
+                    ? 'Horário não informado'
+                    : eventDate.toLocaleString('pt-BR', {
+                        timeZone: 'America/Sao_Paulo',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        ...(item.sourceHasTime === false ? {} : { hour: '2-digit', minute: '2-digit' })
+                    });
                 return `
-                <div class="relative flex gap-3 rounded-xl border p-3 ${style.bg}">
+                <div class="timeline-floating-card relative flex gap-3 rounded-xl border p-3 ${style.bg}">
                     <span class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-white/10 bg-slate-950/40 ${style.color}">
                         <i class="ph ${style.icon} text-lg"></i>
                     </span>
                     <div class="min-w-0 flex-1">
                         <p class="text-sm font-bold leading-relaxed text-white">${escapeHtml(item.message || 'Atualização operacional')}</p>
-                        <p class="mt-1 text-[10px] uppercase tracking-wider text-blue-100/55">${escapeHtml(item.data || 'Agora')}</p>
-                        ${item.type === 'manual' ? `<p class="mt-2 text-[10px] font-bold uppercase tracking-wider text-violet-100/70">Publicado por ${escapeHtml(item.author || 'Gestão')} • disponível por 12 horas</p>` : ''}
+                        ${item.type === 'manual' ? '' : `<p class="mt-1 text-[10px] uppercase tracking-wider text-blue-100/55">${escapeHtml(item.sourceLabel || 'Registro em')}: ${escapeHtml(eventTime)}</p>`}
+                        ${item.type === 'manual' ? `<p class="mt-2 text-[10px] font-bold uppercase tracking-wider text-violet-100/70">Publicado por ${escapeHtml(item.author || 'Gestão')} • disponível por 24 horas</p>` : ''}
                     </div>
                 </div>
             `;
@@ -5557,7 +5593,7 @@
                     const updated = payload?.updatedAt
                         ? new Date(payload.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
                         : '';
-                    status.innerText = `Planilha sincronizada${updated ? ` às ${updated}` : ''} • ${distratosMes} distrato(s) • ${gruposPendentes} grupo(s) pendente(s)`;
+                    status.innerText = `Dados consultados${updated ? ` às ${updated}` : ''} • atualização automática a cada 1 min • ${distratosMes} distrato(s) • ${gruposPendentes} grupo(s) pendente(s)`;
                 }
             } catch (error) {
                 console.warn('Linha do tempo indisponível.', error);
@@ -6559,7 +6595,7 @@
                 chargebacks: ['Editar chargebacks', 'Atualize a quantidade e os registros recentes.'],
                 birthdays: ['Editar aniversários', 'Atualize os aniversários exibidos no carrossel.'],
                 carrossel: ['Editar equipe', 'Atualize somente os perfis do carrossel da equipe.'],
-                timeline: ['Publicar na linha do tempo', 'A frase ficará visível para toda a equipe durante 12 horas.']
+                timeline: ['Publicar na linha do tempo', 'A frase ficará visível para toda a equipe durante 24 horas.']
             };
             const [heading, description] = editorLabels[requestedSection] || editorLabels.comunicados;
             if (modalHeading) modalHeading.innerText = heading;
@@ -7935,7 +7971,7 @@
                     message: message.slice(0, 500),
                     author: currentUser,
                     createdAt: createdAt.toISOString(),
-                    expiresAt: new Date(createdAt.getTime() + 12 * 60 * 60 * 1000).toISOString()
+                    expiresAt: new Date(createdAt.getTime() + 24 * 60 * 60 * 1000).toISOString()
                 };
                 nextData.timelineMessages = [
                     timelineMessage,

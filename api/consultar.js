@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 let clientCache = null;
 let clientCacheAt = 0;
 const CACHE_MS = 60000;
+const TIMELINE_WINDOW_MS = 24 * 60 * 60 * 1000;
 let firebaseCertificates = null;
 let firebaseCertificatesExpireAt = 0;
 const DEFAULT_CLIENT_SHEET_API_URL =
@@ -137,6 +138,7 @@ function recordsFromOperationCsv(text) {
     vendedor: findColumn(["CONSULTOR", "VENDEDOR", "RESPONSAVEL"]),
     valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR"]),
     grupoAberto: findColumn(["GRUPO ABERTO", "GRUPO"]),
+    dataGrupoAberto: findColumn(["DATA/HORA DA ABERTURA DO GRUPO", "DATA DA ABERTURA DO GRUPO", "DATA GRUPO ABERTO"]),
     status: findColumn(["OBSERVACAO", "STATUS", "SITUACAO"]),
     comprovante: findColumn(["COMPROVANTE", "ENTRADA"]),
     dataComprovante: findColumn(["DATA DO COMPROVANTE", "DATA COMPROVANTE"])
@@ -150,6 +152,7 @@ function recordsFromOperationCsv(text) {
     vendedor: cell(row, columns.vendedor),
     valor: cell(row, columns.valor),
     grupoAberto: cell(row, columns.grupoAberto),
+    dataGrupoAberto: cell(row, columns.dataGrupoAberto),
     status: cell(row, columns.status),
     comprovante: cell(row, columns.comprovante),
     dataComprovante: cell(row, columns.dataComprovante)
@@ -190,6 +193,7 @@ function normalizeRecord(item) {
     dataVenda: String(item?.dataVenda || item?.data || item?.DATA || "").trim(),
     dataCadastro: String(item?.dataCadastro || item?.["DATA/HORA DO CADASTRO"] || item?.criadoEm || "").trim(),
     grupoAberto: String(item?.grupoAberto || item?.["GRUPO ABERTO"] || "").trim(),
+    dataGrupoAberto: String(item?.dataGrupoAberto || item?.["DATA/HORA DA ABERTURA DO GRUPO"] || "").trim(),
     status: String(item?.status || item?.STATUS || item?.situacao || "").trim(),
     vendedor: String(item?.vendedor || item?.consultor || item?.VENDEDOR || item?.CONSULTOR || "").replace(/\s+/g, " ").trim(),
     valor: item?.valor ?? item?.valorVenda ?? item?.["VALOR DA VENDA"] ?? "",
@@ -202,7 +206,10 @@ function normalizeRecord(item) {
 function parseSheetDate(value) {
   const text = String(value || "").trim();
   const br = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
-  if (br) return new Date(Number(br[3]), Number(br[2]) - 1, Number(br[1]), Number(br[4] || 12), Number(br[5] || 0));
+  if (br) {
+    const pad = number => String(number).padStart(2, "0");
+    return new Date(`${br[3]}-${pad(br[2])}-${pad(br[1])}T${pad(br[4] || 0)}:${pad(br[5] || 0)}:00-03:00`);
+  }
   const date = new Date(text);
   return Number.isNaN(date.getTime()) ? null : date;
 }
@@ -234,6 +241,12 @@ function isDistrato(record) {
 }
 
 function buildTimeline(clients, rankingSales = []) {
+  const now = Date.now();
+  const isWithinTimelineWindow = date => {
+    const timestamp = date?.getTime?.();
+    return Number.isFinite(timestamp) && timestamp <= now && now - timestamp < TIMELINE_WINDOW_MS;
+  };
+  const hasTime = value => /\b\d{1,2}:\d{2}\b/.test(String(value || ""));
   const monthRecords = clients
     .map(record => ({
       ...record,
@@ -250,22 +263,26 @@ function buildTimeline(clients, rankingSales = []) {
 
   for (const record of monthRecords.slice(0, 30)) {
     const value = parseMoney(record.valor);
-    if (isDistrato(record)) {
+    if (isDistrato(record) && isWithinTimelineWindow(record.parsedDate)) {
       events.push({
         id: `distrato-${normalizeText(record.cliente)}-${record.dataVenda}`,
         type: "distrato",
         cliente: record.cliente,
-        data: record.dataVenda,
+        data: record.parsedDate.toISOString(),
+        sourceLabel: hasTime(record.dataVenda) ? "Data e hora da venda" : "Data da venda",
+        sourceHasTime: hasTime(record.dataVenda),
         message: `Distrato registrado para ${record.cliente}.`
       });
-    } else if (!currentMonthSales.length) {
+    } else if (!currentMonthSales.length && isWithinTimelineWindow(record.parsedDate)) {
       events.push({
         id: `venda-${normalizeText(record.cliente)}-${record.dataVenda}`,
         type: "venda",
         cliente: record.cliente,
         vendedor: record.vendedor,
         valor: value,
-        data: record.dataVenda,
+        data: record.parsedDate.toISOString(),
+        sourceLabel: hasTime(record.dataVenda) ? "Data e hora da venda" : "Data da venda",
+        sourceHasTime: hasTime(record.dataVenda),
         message: value && record.vendedor
           ? `Venda de ${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)} da ${record.vendedor}. Parabéns!`
           : `Nova venda registrada para ${record.cliente}${record.vendedor ? ` por ${record.vendedor}` : ""}.`
@@ -273,21 +290,27 @@ function buildTimeline(clients, rankingSales = []) {
     }
 
     if (isPositive(record.grupoAberto)) {
+      const groupOpenedAt = parseSheetDate(record.dataGrupoAberto);
+      if (!isWithinTimelineWindow(groupOpenedAt)) continue;
       events.push({
         id: `grupo-${normalizeText(record.cliente)}-${record.dataVenda}`,
         type: "grupo",
         cliente: record.cliente,
-        data: record.dataVenda,
+        data: groupOpenedAt.toISOString(),
+        sourceLabel: "Data e hora da abertura do grupo",
+        sourceHasTime: true,
         message: `Foi aberto o grupo do cliente ${record.cliente}.`
       });
     } else if (!isDistrato(record) && record.groupDeadlineBaseDate) {
       const pendingHours = Math.floor((Date.now() - record.groupDeadlineBaseDate.getTime()) / 3600000);
-      if (pendingHours >= 3) {
+      if (pendingHours >= 3 && isWithinTimelineWindow(record.groupDeadlineBaseDate)) {
         events.push({
           id: `grupo-pendente-${normalizeText(record.cliente)}-${record.dataVenda}`,
           type: "grupo_pendente",
           cliente: record.cliente,
-          data: record.dataVenda,
+          data: record.groupDeadlineBaseDate.toISOString(),
+          sourceLabel: record.dataCadastro ? "Cliente entrou em" : "Data e hora da venda",
+          sourceHasTime: hasTime(record.dataCadastro || record.dataVenda),
           hours: pendingHours,
           message: `Grupo Pendente - Abrir com urgência: ${record.cliente} está há ${pendingHours} hora(s) aguardando a abertura do grupo.`
         });
@@ -296,6 +319,7 @@ function buildTimeline(clients, rankingSales = []) {
   }
 
   for (const sale of currentMonthSales) {
+    if (!isWithinTimelineWindow(sale.parsedDate)) continue;
     const value = parseMoney(sale.valor);
     const team = sale.sector === "juridico" ? "Jurídico" : "Comercial";
     events.push({
@@ -303,24 +327,28 @@ function buildTimeline(clients, rankingSales = []) {
       type: "venda",
       vendedor: sale.vendedor,
       valor: value,
-      data: sale.dataVenda,
+      data: sale.parsedDate.toISOString(),
+      sourceLabel: hasTime(sale.dataVenda) ? "Data e hora da venda" : "Data da venda",
+      sourceHasTime: hasTime(sale.dataVenda),
       sector: sale.sector,
       message: `${team}: venda de ${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)} da ${sale.vendedor}. Parabéns!${sale.description ? ` ${sale.description}.` : ""}`
     });
   }
 
   const latestProof = monthRecords
-    .filter(record => record.dataComprovante || record.comprovante)
-    .map(record => parseSheetDate(record.dataComprovante || record.dataVenda))
+    .filter(record => record.dataComprovante)
+    .map(record => parseSheetDate(record.dataComprovante))
     .filter(Boolean)
     .sort((a, b) => b - a)[0];
   if (latestProof) {
     const hours = Math.floor((Date.now() - latestProof.getTime()) / 3600000);
-    if (hours >= 5) {
+    if (hours >= 5 && isWithinTimelineWindow(latestProof)) {
       events.unshift({
         id: `alerta-comprovante-${latestProof.toISOString()}`,
         type: "alerta",
         data: latestProof.toISOString(),
+        sourceLabel: "Último comprovante recebido em",
+        sourceHasTime: true,
         hours,
         message: `Equipe, estamos há ${hours} horas sem nenhum comprovante. Quem será o próximo?`
       });
@@ -329,6 +357,7 @@ function buildTimeline(clients, rankingSales = []) {
 
   return {
     events: events
+      .filter(event => isWithinTimelineWindow(parseSheetDate(event.data)))
       .sort((a, b) => (parseSheetDate(b.data)?.getTime() || 0) - (parseSheetDate(a.data)?.getTime() || 0))
       .slice(0, 24),
     metrics: {

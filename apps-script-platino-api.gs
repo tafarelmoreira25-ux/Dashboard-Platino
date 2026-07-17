@@ -37,6 +37,7 @@ function doGet() {
     vendedor: findColumn(["VENDEDOR", "CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL"]),
     valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR VENDA", "VALOR", "VALOR LIQUIDO", "VALOR LÍQUIDO"]),
     grupoAberto: findColumn(["GRUPO ABERTO", "ABERTURA DO GRUPO", "GRUPO"]),
+    dataGrupoAberto: findColumn(["DATA/HORA DA ABERTURA DO GRUPO", "DATA DA ABERTURA DO GRUPO", "DATA GRUPO ABERTO"]),
     status: findColumn(["OBSERVAÇÃO", "OBSERVACAO", "STATUS", "SITUACAO", "SITUAÇÃO"]),
     distrato: findColumn(["DISTRATO", "STATUS DISTRATO", "CANCELAMENTO"]),
     comprovante: findColumn(["COMPROVANTE", "COMPROVANTE RECEBIDO", "STATUS COMPROVANTE"]),
@@ -52,6 +53,7 @@ function doGet() {
       vendedor: cell(row, column.vendedor),
       valor: cell(row, column.valor),
       grupoAberto: cell(row, column.grupoAberto),
+      dataGrupoAberto: cell(row, column.dataGrupoAberto),
       status: cell(row, column.status),
       distrato: cell(row, column.distrato),
       comprovante: cell(row, column.comprovante),
@@ -79,16 +81,28 @@ function onEdit(e) {
     .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toUpperCase();
-  const clientColumn = headers.findIndex(value => ["CLIENTE", "NOME DO CLIENTE", "NOME"].includes(normalize(value))) + 1;
-  if (!clientColumn || e.range.getColumn() !== clientColumn || !String(e.value || "").trim()) return;
+  const editedHeader = normalize(headers[e.range.getColumn() - 1]);
+  const ensureTimestamp = headerName => {
+    let timestampColumn = headers.findIndex(value => normalize(value) === normalize(headerName)) + 1;
+    if (!timestampColumn) {
+      timestampColumn = sheet.getLastColumn() + 1;
+      sheet.getRange(1, timestampColumn).setValue(headerName);
+      headers[timestampColumn - 1] = headerName;
+    }
+    const timestampCell = sheet.getRange(e.range.getRow(), timestampColumn);
+    if (!timestampCell.getValue()) timestampCell.setValue(new Date()).setNumberFormat("dd/MM/yyyy HH:mm");
+  };
+  const hasValue = String(e.value || "").trim();
+  const normalizedValue = normalize(hasValue);
+  const isConfirmed = hasValue && !["NAO", "N", "FALSE", "0", "PENDENTE"].includes(normalizedValue);
 
-  let createdAtColumn = headers.findIndex(value => normalize(value) === "DATA/HORA DO CADASTRO") + 1;
-  if (!createdAtColumn) {
-    createdAtColumn = lastColumn + 1;
-    sheet.getRange(1, createdAtColumn).setValue("DATA/HORA DO CADASTRO");
+  if (["CLIENTE", "NOME DO CLIENTE", "NOME"].includes(editedHeader) && hasValue) {
+    ensureTimestamp("DATA/HORA DO CADASTRO");
   }
-  const createdAtCell = sheet.getRange(e.range.getRow(), createdAtColumn);
-  if (!createdAtCell.getValue()) {
-    createdAtCell.setValue(new Date()).setNumberFormat("dd/MM/yyyy HH:mm");
+  if (["GRUPO ABERTO", "ABERTURA DO GRUPO", "GRUPO"].includes(editedHeader) && isConfirmed) {
+    ensureTimestamp("DATA/HORA DA ABERTURA DO GRUPO");
+  }
+  if (["COMPROVANTE", "COMPROVANTE RECEBIDO", "STATUS COMPROVANTE"].includes(editedHeader) && isConfirmed) {
+    ensureTimestamp("DATA DO COMPROVANTE");
   }
 }
