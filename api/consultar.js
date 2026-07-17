@@ -250,7 +250,9 @@ function buildTimeline(clients, rankingSales = []) {
   const monthRecords = clients
     .map(record => ({
       ...record,
-      parsedDate: parseSheetDate(record.dataVenda),
+      saleDate: parseSheetDate(record.dataVenda),
+      entryDate: parseSheetDate(record.dataCadastro),
+      parsedDate: parseSheetDate(record.dataCadastro || record.dataVenda),
       groupDeadlineBaseDate: parseSheetDate(record.dataCadastro || record.dataVenda)
     }))
     .filter(record => isCurrentMonth(record.parsedDate))
@@ -263,24 +265,39 @@ function buildTimeline(clients, rankingSales = []) {
 
   for (const record of monthRecords.slice(0, 30)) {
     const value = parseMoney(record.valor);
-    if (isDistrato(record) && isWithinTimelineWindow(record.parsedDate)) {
+    const saleDate = record.saleDate;
+    if (record.entryDate && isWithinTimelineWindow(record.entryDate)) {
+      events.push({
+        id: `cliente-${normalizeText(record.cliente)}-${record.dataCadastro}`,
+        type: "cliente",
+        cliente: record.cliente,
+        data: record.entryDate.toISOString(),
+        sourceLabel: "Cliente entrou em",
+        sourceHasTime: hasTime(record.dataCadastro),
+        message: isPositive(record.grupoAberto)
+          ? `Novo cliente registrado: ${record.cliente}.`
+          : `Novo cliente aguardando abertura de grupo: ${record.cliente}.`
+      });
+    }
+
+    if (isDistrato(record) && isWithinTimelineWindow(saleDate)) {
       events.push({
         id: `distrato-${normalizeText(record.cliente)}-${record.dataVenda}`,
         type: "distrato",
         cliente: record.cliente,
-        data: record.parsedDate.toISOString(),
+        data: saleDate.toISOString(),
         sourceLabel: hasTime(record.dataVenda) ? "Data e hora da venda" : "Data da venda",
         sourceHasTime: hasTime(record.dataVenda),
         message: `Distrato registrado para ${record.cliente}.`
       });
-    } else if (!currentMonthSales.length && isWithinTimelineWindow(record.parsedDate)) {
+    } else if (!currentMonthSales.length && isWithinTimelineWindow(saleDate)) {
       events.push({
         id: `venda-${normalizeText(record.cliente)}-${record.dataVenda}`,
         type: "venda",
         cliente: record.cliente,
         vendedor: record.vendedor,
         valor: value,
-        data: record.parsedDate.toISOString(),
+        data: saleDate.toISOString(),
         sourceLabel: hasTime(record.dataVenda) ? "Data e hora da venda" : "Data da venda",
         sourceHasTime: hasTime(record.dataVenda),
         message: value && record.vendedor

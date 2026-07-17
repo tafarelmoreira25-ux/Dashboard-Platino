@@ -138,17 +138,52 @@ function valoresDoModelo(dados, calc) {
   };
 }
 
+function ajustarTextoNaLargura(content, font, size, width) {
+  if (font.widthOfTextAtSize(content, size) <= width) return content;
+  const suffix = "...";
+  let low = 0;
+  let high = content.length;
+  while (low < high) {
+    const middle = Math.ceil((low + high) / 2);
+    const candidate = `${content.slice(0, middle).trimEnd()}${suffix}`;
+    if (font.widthOfTextAtSize(candidate, size) <= width) low = middle;
+    else high = middle - 1;
+  }
+  return `${content.slice(0, low).trimEnd()}${suffix}`;
+}
+
 function desenharCampo(page, font, field, value) {
-  const content = texto(value);
+  const content = texto(value).replace(/\s+/g, " ");
+  const key = String(field.key || "").replace(/\s+/g, "");
   const originalSize = Math.min(field.size || 10, 11);
-  const estimatedPlaceholderWidth = (String(field.key || "").replace(/\s+/g, "").length + 4) * originalSize * 0.58;
-  const availableWidth = Math.max(38, 612 - 62 - field.x);
-  const maxWidth = Math.min(availableWidth, Math.max(field.width + 5, estimatedPlaceholderWidth, 38));
+  const width = Math.max(36, Number(field.width) || 100);
+  const minimumSize = originalSize >= 14 ? 10 : 7.5;
   let size = originalSize;
-  while (size > 6.2 && font.widthOfTextAtSize(content, size) > maxWidth) size -= 0.25;
-  const shown = content.length > 190 ? `${content.slice(0, 187)}...` : content;
-  page.drawRectangle({ x: field.x - 7, y: field.y - (originalSize * 2.15), width: maxWidth + 12, height: (originalSize * 3.05), color: rgb(1, 1, 1) });
-  page.drawText(shown, { x: field.x, y: field.y, size, font, color: rgb(0.08, 0.08, 0.09), maxWidth, lineHeight: size * 1.12 });
+
+  while (size > minimumSize && font.widthOfTextAtSize(content, size) > width) size -= 0.25;
+  const shown = ajustarTextoNaLargura(content, font, size, width);
+  const isNumeric = /^(VALOR_|TOTAL_|DIFERENCA_|TAXA_|CET_|SALDO_|JUROS_|AMORTIZACAO_|PRESTACAO_|PROVEITO_|QUANTIDADE_)/.test(key);
+  const textWidth = font.widthOfTextAtSize(shown, size);
+  const textX = isNumeric ? field.x + Math.max(0, width - textWidth) : field.x;
+  const maskPaddingX = 2;
+  const maskPaddingY = 2.25;
+
+  // Apaga somente o marcador do modelo. A máscara antiga tinha cerca de três
+  // linhas de altura e encobria bordas, rótulos e fundos das células vizinhas.
+  page.drawRectangle({
+    x: field.x - maskPaddingX,
+    y: field.y - maskPaddingY,
+    width: width + (maskPaddingX * 2),
+    height: originalSize + (maskPaddingY * 2),
+    color: rgb(1, 1, 1)
+  });
+  page.drawText(shown, {
+    x: textX,
+    y: field.y,
+    size,
+    font,
+    color: rgb(0.10, 0.13, 0.18)
+  });
 }
 
 export async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
