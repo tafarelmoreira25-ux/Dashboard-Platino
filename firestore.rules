@@ -42,6 +42,19 @@ service cloud.firestore {
         );
     }
 
+    function isTimelineEditor() {
+      return isNoticeEditor()
+        || (
+          signedIn()
+          && (
+            request.auth.token.email == 'roberta@platino.com'
+            || request.auth.token.email == 'nicolas@platino.com'
+            || request.auth.token.email.matches('^roberta.*@platino[.]com$')
+            || request.auth.token.email.matches('^nicolas.*@platino[.]com$')
+          )
+        );
+    }
+
     function isValidShortText(value, maxSize) {
       return value is string
         && value.size() > 0
@@ -87,14 +100,28 @@ service cloud.firestore {
       allow update: if isManagement()
         || (
           document == 'centralAvisos'
-          && isNoticeEditor()
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-            'main',
-            'notices',
-            'updatedAt',
-            'updatedBy',
-            'serverUpdatedAt'
-          ])
+          && (
+            (
+              isNoticeEditor()
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'main',
+                'notices',
+                'timelineMessages',
+                'updatedAt',
+                'updatedBy',
+                'serverUpdatedAt'
+              ])
+            )
+            || (
+              isTimelineEditor()
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'timelineMessages',
+                'updatedAt',
+                'updatedBy',
+                'serverUpdatedAt'
+              ])
+            )
+          )
         );
       allow delete: if false;
     }

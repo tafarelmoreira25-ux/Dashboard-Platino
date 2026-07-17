@@ -477,6 +477,8 @@
         }
 
         .team-carousel {
+            position: relative;
+            z-index: 1;
             overflow: hidden;
             scroll-behavior: smooth;
             mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
@@ -510,10 +512,10 @@
         .team-nav-button {
             position: absolute;
             top: 50%;
-            z-index: 20;
+            z-index: 60;
             display: inline-flex;
-            height: 2.5rem;
-            width: 2.5rem;
+            height: 3rem;
+            width: 3rem;
             transform: translateY(-50%);
             align-items: center;
             justify-content: center;
@@ -523,6 +525,14 @@
             color: #eff6ff;
             box-shadow: 0 16px 30px rgba(15, 23, 42, 0.22);
             transition: background 0.2s ease, transform 0.2s ease;
+            pointer-events: auto;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .team-nav-button > * {
+            pointer-events: none;
         }
 
         .team-nav-button:hover {
@@ -1877,13 +1887,13 @@
                             </div>
                         </div>
                         <div class="relative">
-                            <button type="button" onclick="moveTeamCarousel(-1, event)" class="team-nav-button prev touch-manipulation" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
+                            <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
                                 <i class="ph ph-caret-left text-lg"></i>
                             </button>
                             <div id="team-carousel" class="team-carousel manual-scroll">
                                 <div id="team-track" class="team-track"></div>
                             </div>
-                            <button type="button" onclick="moveTeamCarousel(1, event)" class="team-nav-button next touch-manipulation" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
+                            <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
                                 <i class="ph ph-caret-right text-lg"></i>
                             </button>
                         </div>
@@ -2126,9 +2136,14 @@
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Atualizações da operação</p>
                                         <h4 class="metallic-title text-lg font-black">Linha do tempo</h4>
                                     </div>
-                                    <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-200">
-                                        <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span> Ao vivo
-                                    </span>
+                                    <div class="flex flex-wrap items-center justify-end gap-2">
+                                        <button type="button" onclick="openAvisosEditor('timeline')" class="timeline-editor-only hidden items-center gap-1.5 rounded-xl border border-blue-300/20 bg-blue-400/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-100 hover:bg-blue-400/20">
+                                            <i class="ph ph-plus-circle text-sm"></i> Adicionar frase
+                                        </button>
+                                        <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-200">
+                                            <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span> Ao vivo
+                                        </span>
+                                    </div>
                                 </div>
                                 <p id="sales-timeline-status" class="mb-3 text-[11px] text-blue-100/60">Conectando à planilha...</p>
                                 <div id="sales-timeline-list" class="max-h-[34rem] space-y-3 overflow-y-auto pr-1"></div>
@@ -3194,6 +3209,12 @@
                     <p class="text-xs text-slate-500 mb-3">Digite uma pessoa por linha no formato: Nome | Cargo | Detalhes | URL ou caminho da foto | Aniversário</p>
                     <textarea id="editor-team-carousel" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Giovana Santos | Supervisora Administrativa | Administrativo - ramal 201 - giovana@platino.com | assets/foto.png | 08/06/2000"></textarea>
                 </div>
+                <div id="avisos-editor-timeline" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-4">
+                    <h4 class="font-semibold text-slate-800">Publicar frase na linha do tempo</h4>
+                    <p class="mt-1 text-xs text-slate-500">A mensagem aparecerá para toda a equipe e desaparecerá automaticamente após 12 horas.</p>
+                    <textarea id="editor-timeline-message" maxlength="500" rows="5" class="mt-3 w-full rounded-xl border border-blue-100 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" placeholder="Escreva aqui o aviso ou a frase para a equipe..."></textarea>
+                    <p class="mt-2 text-[11px] text-slate-500">Limite de 500 caracteres.</p>
+                </div>
             </div>
             <div class="editor-modal-footer p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
                 <div>
@@ -3639,6 +3660,13 @@
             return isGestorUser() || ['tafarel@platino.com', 'tafarel.moreira@platino.com', 'tafarelmoreira@platino.com', 'isabela@platino.com'].includes(email);
         }
 
+        function isTimelineEditorUser() {
+            const email = window.firebaseAuthUser?.email?.toLowerCase() || '';
+            const localPart = email.split('@')[0].replace(/[^a-z]/g, '');
+            return isGestorUser()
+                || ['tafarel', 'isabela', 'vanessa', 'roberta', 'nicolas'].some(name => localPart.startsWith(name));
+        }
+
         function requireGestor(action = 'editar o sistema') {
             if (isGestorUser()) return true;
             alert(`Acesso restrito: apenas o gestor pode ${action}.`);
@@ -3672,6 +3700,13 @@
                 el.classList.toggle('flex', canEditNotices);
                 el.setAttribute('aria-hidden', canEditNotices ? 'false' : 'true');
                 if ('disabled' in el) el.disabled = !canEditNotices;
+            });
+            const canEditTimeline = isTimelineEditorUser();
+            document.querySelectorAll('.timeline-editor-only').forEach(el => {
+                el.classList.toggle('hidden', !canEditTimeline);
+                el.classList.toggle('inline-flex', canEditTimeline);
+                el.setAttribute('aria-hidden', canEditTimeline ? 'false' : 'true');
+                if ('disabled' in el) el.disabled = !canEditTimeline;
             });
         }
 
@@ -5396,17 +5431,30 @@
         function renderSalesTimeline() {
             const container = document.getElementById('sales-timeline-list');
             if (!container) return;
-            if (!salesTimelineEvents.length) {
+            const manualMessages = (avisosData?.timelineMessages || [])
+                .filter(item => !item.expiresAt || new Date(item.expiresAt).getTime() > Date.now())
+                .map(item => ({
+                    id: item.id,
+                    type: 'manual',
+                    data: item.createdAt,
+                    message: item.message,
+                    author: item.author
+                }));
+            const timelineItems = [...manualMessages, ...salesTimelineEvents]
+                .sort((a, b) => new Date(b.data || 0).getTime() - new Date(a.data || 0).getTime());
+            if (!timelineItems.length) {
                 container.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-4 text-xs text-blue-100/70">Nenhuma movimentação do mês encontrada na planilha.</div>';
                 return;
             }
             const visual = {
                 venda: { icon: 'ph-trophy', color: 'text-emerald-300', bg: 'bg-emerald-400/10 border-emerald-300/20' },
                 grupo: { icon: 'ph-users-three', color: 'text-blue-300', bg: 'bg-blue-400/10 border-blue-300/20' },
+                grupo_pendente: { icon: 'ph-warning-circle', color: 'text-amber-200', bg: 'bg-rose-500/15 border-amber-300/40' },
                 distrato: { icon: 'ph-x-circle', color: 'text-rose-300', bg: 'bg-rose-400/10 border-rose-300/20' },
-                alerta: { icon: 'ph-megaphone', color: 'text-amber-300', bg: 'bg-amber-400/10 border-amber-300/20' }
+                alerta: { icon: 'ph-megaphone', color: 'text-amber-300', bg: 'bg-amber-400/10 border-amber-300/20' },
+                manual: { icon: 'ph-megaphone-simple', color: 'text-violet-200', bg: 'bg-violet-400/15 border-violet-300/30' }
             };
-            container.innerHTML = salesTimelineEvents.map(item => {
+            container.innerHTML = timelineItems.map(item => {
                 const style = visual[item.type] || visual.venda;
                 return `
                 <div class="relative flex gap-3 rounded-xl border p-3 ${style.bg}">
@@ -5416,6 +5464,7 @@
                     <div class="min-w-0 flex-1">
                         <p class="text-sm font-bold leading-relaxed text-white">${escapeHtml(item.message || 'Atualização operacional')}</p>
                         <p class="mt-1 text-[10px] uppercase tracking-wider text-blue-100/55">${escapeHtml(item.data || 'Agora')}</p>
+                        ${item.type === 'manual' ? `<p class="mt-2 text-[10px] font-bold uppercase tracking-wider text-violet-100/70">Publicado por ${escapeHtml(item.author || 'Gestão')} • disponível por 12 horas</p>` : ''}
                     </div>
                 </div>
             `;
@@ -5435,6 +5484,7 @@
                 const payload = await response.json();
                 salesTimelineEvents = Array.isArray(payload?.events) ? payload.events : [];
                 const distratosMes = Number(payload?.metrics?.distratosMes) || 0;
+                const gruposPendentes = Number(payload?.metrics?.gruposPendentes) || 0;
                 avisosData = normalizeAvisosData({
                     ...avisosData,
                     week: { ...avisosData.week, distratos: String(distratosMes) }
@@ -5446,7 +5496,7 @@
                     const updated = payload?.updatedAt
                         ? new Date(payload.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
                         : '';
-                    status.innerText = `Planilha sincronizada${updated ? ` às ${updated}` : ''} • ${distratosMes} distrato(s) no mês`;
+                    status.innerText = `Planilha sincronizada${updated ? ` às ${updated}` : ''} • ${distratosMes} distrato(s) • ${gruposPendentes} grupo(s) pendente(s)`;
                 }
             } catch (error) {
                 console.warn('Linha do tempo indisponível.', error);
@@ -5965,6 +6015,7 @@
             },
             birthdays: platinoBirthdays,
             team: platinoTeamProfiles,
+            timelineMessages: [],
             updatedAt: null,
             updatedBy: 'Supervisão'
         };
@@ -6082,6 +6133,15 @@
                 chargebacks: normalizedChargebacks,
                 birthdays: normalizedBirthdays,
                 team: officialTeam,
+                timelineMessages: (Array.isArray(value.timelineMessages) ? value.timelineMessages : [])
+                    .map(item => ({
+                        id: String(item?.id || '').trim(),
+                        message: String(item?.message || '').trim(),
+                        author: String(item?.author || 'Gestão').trim(),
+                        createdAt: String(item?.createdAt || '').trim(),
+                        expiresAt: String(item?.expiresAt || '').trim()
+                    }))
+                    .filter(item => item.message && (!item.expiresAt || new Date(item.expiresAt).getTime() > Date.now())),
                 updatedAt: value.updatedAt || null,
                 updatedBy: value.updatedBy || 'Supervisão'
             };
@@ -6123,6 +6183,7 @@
             renderInicioNotices();
             renderChargebacks();
             renderTeamCarousel();
+            renderSalesTimeline();
 
             const updatedTag = document.getElementById('avisos-updated-tag');
             if (avisosData.updatedAt) {
@@ -6268,6 +6329,21 @@
             }, 6000);
         }
 
+        function bindTeamCarouselControls() {
+            const previousButton = document.getElementById('team-carousel-prev');
+            const nextButton = document.getElementById('team-carousel-next');
+            if (previousButton && !previousButton.dataset.carouselBound) {
+                previousButton.dataset.carouselBound = 'true';
+                previousButton.addEventListener('click', event => moveTeamCarousel(-1, event));
+            }
+            if (nextButton && !nextButton.dataset.carouselBound) {
+                nextButton.dataset.carouselBound = 'true';
+                nextButton.addEventListener('click', event => moveTeamCarousel(1, event));
+            }
+        }
+
+        bindTeamCarouselControls();
+
         function serializeNoticesForEditor(notices) {
             return (notices || [])
                 .map(item => `${item.category || ''} | ${item.title || ''} | ${item.text || ''}`)
@@ -6378,7 +6454,12 @@
 
         function openAvisosEditor(section = '') {
             const requestedSection = section || 'comunicados';
-            if (requestedSection === 'comunicados') {
+            if (requestedSection === 'timeline') {
+                if (!isTimelineEditorUser()) {
+                    alert('Acesso restrito: apenas Gestão, Tafarel, Isabela, Vanessa, Roberta e Nicolas podem publicar na linha do tempo.');
+                    return;
+                }
+            } else if (requestedSection === 'comunicados') {
                 if (!isNoticeEditorUser()) {
                     alert('Acesso restrito: apenas Gestão, Tafarel e Isabela podem editar os comunicados.');
                     return;
@@ -6402,6 +6483,8 @@
             document.getElementById('editor-avisos-birthdays').value = avisosData.birthdays
                 .map(person => `${person.name} | ${person.date}`)
                 .join('\n');
+            const timelineMessageInput = document.getElementById('editor-timeline-message');
+            if (timelineMessageInput) timelineMessageInput.value = '';
             document.getElementById('avisos-save-status').innerText = '';
             document.querySelectorAll('#avisos-modal .editor-modal-body > div').forEach(editorSection => {
                 editorSection.classList.toggle('hidden', editorSection.id !== `avisos-editor-${requestedSection}`);
@@ -6414,7 +6497,8 @@
                 week: ['Editar resultados da semana', 'Atualize somente os quatro indicadores semanais.'],
                 chargebacks: ['Editar chargebacks', 'Atualize a quantidade e os registros recentes.'],
                 birthdays: ['Editar aniversários', 'Atualize os aniversários exibidos no carrossel.'],
-                carrossel: ['Editar equipe', 'Atualize somente os perfis do carrossel da equipe.']
+                carrossel: ['Editar equipe', 'Atualize somente os perfis do carrossel da equipe.'],
+                timeline: ['Publicar na linha do tempo', 'A frase ficará visível para toda a equipe durante 12 horas.']
             };
             const [heading, description] = editorLabels[requestedSection] || editorLabels.comunicados;
             if (modalHeading) modalHeading.innerText = heading;
@@ -7749,15 +7833,23 @@
 
         async function saveAvisosEditor() {
             const isCommunicationEdit = activeAvisosEditorSection === 'comunicados';
-            if (isCommunicationEdit ? !isNoticeEditorUser() : !isGestorUser()) {
-                alert(isCommunicationEdit
-                    ? 'Acesso restrito: apenas Gestão, Tafarel e Isabela podem publicar comunicados.'
-                    : 'Acesso restrito: apenas a Gestão pode publicar esta seção.');
+            const isTimelineEdit = activeAvisosEditorSection === 'timeline';
+            const isAllowed = isTimelineEdit
+                ? isTimelineEditorUser()
+                : isCommunicationEdit
+                    ? isNoticeEditorUser()
+                    : isGestorUser();
+            if (!isAllowed) {
+                alert(isTimelineEdit
+                    ? 'Acesso restrito para publicar na linha do tempo.'
+                    : isCommunicationEdit
+                        ? 'Acesso restrito: apenas Gestão, Tafarel e Isabela podem publicar comunicados.'
+                        : 'Acesso restrito: apenas a Gestão pode publicar esta seção.');
                 return;
             }
             const saveButton = document.getElementById('avisos-save-button');
             const status = document.getElementById('avisos-save-status');
-            const currentUser = window.firebaseAuthUser?.email || 'Supervisão';
+            const currentUser = window.firebaseAuthUser?.displayName || window.firebaseAuthUser?.email || 'Supervisão';
 
             const nextData = {
                 ...avisosData,
@@ -7769,7 +7861,27 @@
                 updatedBy: nextData.updatedBy
             };
 
-            if (activeAvisosEditorSection === 'comunicados') {
+            if (activeAvisosEditorSection === 'timeline') {
+                const message = document.getElementById('editor-timeline-message')?.value.trim() || '';
+                if (!message) {
+                    status.className = 'text-xs text-amber-600 mt-1';
+                    status.innerText = 'Escreva uma frase antes de publicar.';
+                    return;
+                }
+                const createdAt = new Date();
+                const timelineMessage = {
+                    id: `manual-${createdAt.getTime()}`,
+                    message: message.slice(0, 500),
+                    author: currentUser,
+                    createdAt: createdAt.toISOString(),
+                    expiresAt: new Date(createdAt.getTime() + 12 * 60 * 60 * 1000).toISOString()
+                };
+                nextData.timelineMessages = [
+                    timelineMessage,
+                    ...(avisosData.timelineMessages || []).filter(item => !item.expiresAt || new Date(item.expiresAt).getTime() > Date.now())
+                ].slice(0, 30);
+                remoteData.timelineMessages = nextData.timelineMessages;
+            } else if (activeAvisosEditorSection === 'comunicados') {
                 nextData.notices = syncNoticeEditorItems();
                 remoteData.notices = nextData.notices;
             } else if (activeAvisosEditorSection === 'highlight') {
@@ -7946,8 +8058,9 @@
 
       function assertNoticeWrite(action) {
         const email = window.firebaseAuthUser?.email?.toLowerCase() || "";
-        if (window.platinoUserRole === "gestor" || ["tafarel@platino.com", "tafarel.moreira@platino.com", "tafarelmoreira@platino.com", "isabela@platino.com"].includes(email)) return;
-        throw new Error(`Acesso restrito: apenas Gestão, Tafarel e Isabela podem ${action}.`);
+        const localPart = email.split("@")[0].replace(/[^a-z]/g, "");
+        if (window.platinoUserRole === "gestor" || ["tafarel", "isabela", "vanessa", "roberta", "nicolas"].some(name => localPart.startsWith(name))) return;
+        throw new Error(`Acesso restrito para ${action}.`);
       }
 
       function assertManagementSharedWrite(action) {

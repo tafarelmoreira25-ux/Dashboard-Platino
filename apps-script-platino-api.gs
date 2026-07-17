@@ -33,6 +33,7 @@ function doGet() {
   const column = {
     cliente: findColumn(["CLIENTE", "NOME DO CLIENTE", "NOME"]),
     dataVenda: findColumn(["DATA DA VENDA", "DATA VENDA", "DATA"]),
+    dataCadastro: findColumn(["DATA/HORA DO CADASTRO", "DATA HORA DO CADASTRO", "CRIADO EM"]),
     vendedor: findColumn(["VENDEDOR", "CONSULTOR", "RESPONSAVEL", "RESPONSÁVEL"]),
     valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR VENDA", "VALOR", "VALOR LIQUIDO", "VALOR LÍQUIDO"]),
     grupoAberto: findColumn(["GRUPO ABERTO", "ABERTURA DO GRUPO", "GRUPO"]),
@@ -47,6 +48,7 @@ function doGet() {
     .map(row => ({
       cliente: cell(row, column.cliente),
       dataVenda: cell(row, column.dataVenda),
+      dataCadastro: cell(row, column.dataCadastro),
       vendedor: cell(row, column.vendedor),
       valor: cell(row, column.valor),
       grupoAberto: cell(row, column.grupoAberto),
@@ -60,4 +62,33 @@ function doGet() {
   return ContentService
     .createTextOutput(JSON.stringify(result))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Registra automaticamente o momento em que um novo cliente é preenchido.
+ * O prazo de três horas para abertura do grupo usa este horário.
+ */
+function onEdit(e) {
+  const sheet = e && e.range && e.range.getSheet();
+  if (!sheet || sheet.getName() !== "# COMERCIAL" || e.range.getRow() < 2) return;
+
+  const lastColumn = Math.max(sheet.getLastColumn(), 1);
+  const headers = sheet.getRange(1, 1, 1, lastColumn).getDisplayValues()[0];
+  const normalize = value => String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toUpperCase();
+  const clientColumn = headers.findIndex(value => ["CLIENTE", "NOME DO CLIENTE", "NOME"].includes(normalize(value))) + 1;
+  if (!clientColumn || e.range.getColumn() !== clientColumn || !String(e.value || "").trim()) return;
+
+  let createdAtColumn = headers.findIndex(value => normalize(value) === "DATA/HORA DO CADASTRO") + 1;
+  if (!createdAtColumn) {
+    createdAtColumn = lastColumn + 1;
+    sheet.getRange(1, createdAtColumn).setValue("DATA/HORA DO CADASTRO");
+  }
+  const createdAtCell = sheet.getRange(e.range.getRow(), createdAtColumn);
+  if (!createdAtCell.getValue()) {
+    createdAtCell.setValue(new Date()).setNumberFormat("dd/MM/yyyy HH:mm");
+  }
 }

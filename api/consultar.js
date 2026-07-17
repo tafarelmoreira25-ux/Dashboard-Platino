@@ -9,6 +9,8 @@ const DEFAULT_CLIENT_SHEET_API_URL =
   "https://script.google.com/macros/s/AKfycby2b8UGWBXzQahMNgnCFG2N9LFBWeodyJihxCta9LQQ-m5GJACDerEOWHp5FTafbMKGRw/exec";
 const DEFAULT_OPERATION_SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1MvKj4uO1GJL1XKJMqM5c2dauAG6q8yKt7fYxGaRMBKI/export?format=csv&gid=0";
+const DEFAULT_RANKING_TIMELINE_CSV_URL =
+  "https://docs.google.com/spreadsheets/d/1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg/export?format=csv&gid=945522157";
 
 function decodeJwtPart(value) {
   return JSON.parse(Buffer.from(value, "base64url").toString("utf8"));
@@ -131,6 +133,7 @@ function recordsFromOperationCsv(text) {
   const columns = {
     cliente: findColumn(["CLIENTE", "NOME DO CLIENTE"]),
     dataVenda: findColumn(["DATA DA VENDA", "DATA VENDA", "DATA"]),
+    dataCadastro: findColumn(["DATA/HORA DO CADASTRO", "DATA HORA DO CADASTRO", "CRIADO EM"]),
     vendedor: findColumn(["CONSULTOR", "VENDEDOR", "RESPONSAVEL"]),
     valor: findColumn(["VALOR DO PROCEDIMENTO", "VALOR DA VENDA", "VALOR"]),
     grupoAberto: findColumn(["GRUPO ABERTO", "GRUPO"]),
@@ -143,6 +146,7 @@ function recordsFromOperationCsv(text) {
   return rows.slice(1).map(row => normalizeRecord({
     cliente: cell(row, columns.cliente),
     dataVenda: cell(row, columns.dataVenda),
+    dataCadastro: cell(row, columns.dataCadastro),
     vendedor: cell(row, columns.vendedor),
     valor: cell(row, columns.valor),
     grupoAberto: cell(row, columns.grupoAberto),
@@ -152,10 +156,39 @@ function recordsFromOperationCsv(text) {
   })).filter(item => item.cliente);
 }
 
+function salesFromRankingCsv(text) {
+  const rows = parseCsv(text);
+  const headerIndex = rows.findIndex(row => row.filter(cell => normalizeHeader(cell) === "DATA").length >= 2);
+  if (headerIndex < 0) return [];
+  const dateColumns = rows[headerIndex]
+    .map((cell, index) => normalizeHeader(cell) === "DATA" ? index : -1)
+    .filter(index => index >= 0);
+  const sales = [];
+
+  for (const row of rows.slice(headerIndex + 1)) {
+    dateColumns.forEach((dateIndex, sectionIndex) => {
+      if (!parseSheetDate(row[dateIndex])) return;
+      const vendedor = String(row[dateIndex + 5] || "").trim();
+      const valorLiquido = row[dateIndex + 4];
+      const valorBruto = row[dateIndex + 1];
+      if (!vendedor || (!parseMoney(valorLiquido) && !parseMoney(valorBruto))) return;
+      sales.push({
+        dataVenda: String(row[dateIndex] || "").trim(),
+        vendedor,
+        valor: valorLiquido || valorBruto,
+        sector: sectionIndex === 0 ? "comercial" : "juridico",
+        description: String(row[dateIndex + 6] || "").trim()
+      });
+    });
+  }
+  return sales;
+}
+
 function normalizeRecord(item) {
   return {
     cliente: String(item?.cliente || item?.CLIENTE || "").replace(/\s+/g, " ").trim(),
     dataVenda: String(item?.dataVenda || item?.data || item?.DATA || "").trim(),
+    dataCadastro: String(item?.dataCadastro || item?.["DATA/HORA DO CADASTRO"] || item?.criadoEm || "").trim(),
     grupoAberto: String(item?.grupoAberto || item?.["GRUPO ABERTO"] || "").trim(),
     status: String(item?.status || item?.STATUS || item?.situacao || "").trim(),
     vendedor: String(item?.vendedor || item?.consultor || item?.VENDEDOR || item?.CONSULTOR || "").replace(/\s+/g, " ").trim(),
@@ -200,8 +233,16 @@ function isDistrato(record) {
   return status.includes("distrato") || status.includes("cancelad") || isPositive(record.distrato);
 }
 
-function buildTimeline(clients) {
+function buildTimeline(clients, rankingSales = []) {
   const monthRecords = clients
+    .map(record => ({
+      ...record,
+      parsedDate: parseSheetDate(record.dataVenda),
+      groupDeadlineBaseDate: parseSheetDate(record.dataCadastro || record.dataVenda)
+    }))
+    .filter(record => isCurrentMonth(record.parsedDate))
+    .sort((a, b) => b.parsedDate - a.parsedDate);
+  const currentMonthSales = rankingSales
     .map(record => ({ ...record, parsedDate: parseSheetDate(record.dataVenda) }))
     .filter(record => isCurrentMonth(record.parsedDate))
     .sort((a, b) => b.parsedDate - a.parsedDate);
@@ -209,19 +250,27 @@ function buildTimeline(clients) {
 
   for (const record of monthRecords.slice(0, 30)) {
     const value = parseMoney(record.valor);
-    events.push({
-      id: `venda-${normalizeText(record.cliente)}-${record.dataVenda}`,
-      type: isDistrato(record) ? "distrato" : "venda",
-      cliente: record.cliente,
-      vendedor: record.vendedor,
-      valor: value,
-      data: record.dataVenda,
-      message: isDistrato(record)
-        ? `Distrato registrado para ${record.cliente}.`
-        : value && record.vendedor
+    if (isDistrato(record)) {
+      events.push({
+        id: `distrato-${normalizeText(record.cliente)}-${record.dataVenda}`,
+        type: "distrato",
+        cliente: record.cliente,
+        data: record.dataVenda,
+        message: `Distrato registrado para ${record.cliente}.`
+      });
+    } else if (!currentMonthSales.length) {
+      events.push({
+        id: `venda-${normalizeText(record.cliente)}-${record.dataVenda}`,
+        type: "venda",
+        cliente: record.cliente,
+        vendedor: record.vendedor,
+        valor: value,
+        data: record.dataVenda,
+        message: value && record.vendedor
           ? `Venda de ${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)} da ${record.vendedor}. Parabéns!`
           : `Nova venda registrada para ${record.cliente}${record.vendedor ? ` por ${record.vendedor}` : ""}.`
-    });
+      });
+    }
 
     if (isPositive(record.grupoAberto)) {
       events.push({
@@ -231,7 +280,33 @@ function buildTimeline(clients) {
         data: record.dataVenda,
         message: `Foi aberto o grupo do cliente ${record.cliente}.`
       });
+    } else if (!isDistrato(record) && record.groupDeadlineBaseDate) {
+      const pendingHours = Math.floor((Date.now() - record.groupDeadlineBaseDate.getTime()) / 3600000);
+      if (pendingHours >= 3) {
+        events.push({
+          id: `grupo-pendente-${normalizeText(record.cliente)}-${record.dataVenda}`,
+          type: "grupo_pendente",
+          cliente: record.cliente,
+          data: record.dataVenda,
+          hours: pendingHours,
+          message: `Grupo Pendente - Abrir com urgência: ${record.cliente} está há ${pendingHours} hora(s) aguardando a abertura do grupo.`
+        });
+      }
     }
+  }
+
+  for (const sale of currentMonthSales) {
+    const value = parseMoney(sale.valor);
+    const team = sale.sector === "juridico" ? "Jurídico" : "Comercial";
+    events.push({
+      id: `ranking-${sale.sector}-${normalizeText(sale.vendedor)}-${sale.dataVenda}-${value}`,
+      type: "venda",
+      vendedor: sale.vendedor,
+      valor: value,
+      data: sale.dataVenda,
+      sector: sale.sector,
+      message: `${team}: venda de ${new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)} da ${sale.vendedor}. Parabéns!${sale.description ? ` ${sale.description}.` : ""}`
+    });
   }
 
   const latestProof = monthRecords
@@ -253,16 +328,24 @@ function buildTimeline(clients) {
   }
 
   return {
-    events: events.slice(0, 24),
+    events: events
+      .sort((a, b) => (parseSheetDate(b.data)?.getTime() || 0) - (parseSheetDate(a.data)?.getTime() || 0))
+      .slice(0, 24),
     metrics: {
       distratosMes: monthRecords.filter(isDistrato).length,
-      vendasMes: monthRecords.filter(record => !isDistrato(record)).length
+      vendasMes: currentMonthSales.length || monthRecords.filter(record => !isDistrato(record)).length,
+      gruposPendentes: monthRecords.filter(record =>
+        !isDistrato(record)
+        && !isPositive(record.grupoAberto)
+        && record.groupDeadlineBaseDate
+        && Date.now() - record.groupDeadlineBaseDate.getTime() >= 3 * 60 * 60 * 1000
+      ).length
     },
     updatedAt: new Date().toISOString()
   };
 }
 
-export { buildTimeline };
+export { buildTimeline, salesFromRankingCsv };
 
 function scoreClientMatch(query, clientName) {
   const question = ` ${normalizeText(query)} `;
@@ -333,6 +416,12 @@ async function loadClients(apiUrl, operationCsvUrl) {
   return clientCache;
 }
 
+async function loadRankingSales(csvUrl) {
+  const response = await fetch(csvUrl, { cache: "no-store", redirect: "follow" });
+  if (!response.ok) throw new Error(`Planilha do ranking respondeu HTTP ${response.status}.`);
+  return salesFromRankingCsv(await response.text());
+}
+
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -341,6 +430,7 @@ export default async function handler(request, response) {
 
   const apiUrl = process.env.CLIENT_SHEET_API_URL || DEFAULT_CLIENT_SHEET_API_URL;
   const operationCsvUrl = process.env.OPERATION_SHEET_CSV_URL || DEFAULT_OPERATION_SHEET_CSV_URL;
+  const rankingTimelineCsvUrl = process.env.RANKING_TIMELINE_SHEET_CSV_URL || DEFAULT_RANKING_TIMELINE_CSV_URL;
 
   let authenticatedUser;
   try {
@@ -357,9 +447,15 @@ export default async function handler(request, response) {
   const action = String(request.query?.action || "").toLowerCase();
   if (action === "timeline") {
     try {
-      const clients = await loadClients(apiUrl, operationCsvUrl);
+      const [clients, rankingSales] = await Promise.all([
+        loadClients(apiUrl, operationCsvUrl),
+        loadRankingSales(rankingTimelineCsvUrl).catch(error => {
+          console.warn("Linha do tempo do ranking indisponível; usando base operacional.", error);
+          return [];
+        })
+      ]);
       response.setHeader("Cache-Control", "private, no-store");
-      return response.status(200).json(buildTimeline(clients));
+      return response.status(200).json(buildTimeline(clients, rankingSales));
     } catch (error) {
       return response.status(502).json({
         error: "Não foi possível montar a linha do tempo.",
