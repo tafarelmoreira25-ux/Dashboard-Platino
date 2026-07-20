@@ -130,19 +130,27 @@ export function subscribeToReminders({ auth, db }, callback, onError = console.e
   }, onError);
 }
 
-export async function createReminder({ auth, db }, { title, notes = "", dueAt }) {
+export async function createReminder(
+  { auth, db },
+  { title, notes = "", dueAt, type = "task", priority = "normal", notify = true }
+) {
   const user = requireUser(auth);
   const cleanTitle = title.trim();
   if (!cleanTitle || cleanTitle.length > 200) throw new Error("Informe um título com até 200 caracteres.");
   if (notes.length > 4000) throw new Error("A anotação deve ter até 4.000 caracteres.");
   const date = dueAt instanceof Date ? dueAt : new Date(dueAt);
   if (Number.isNaN(date.getTime())) throw new Error("Informe uma data válida.");
+  if (!["task", "reminder", "goal", "note"].includes(type)) throw new Error("Tipo de registro inválido.");
+  if (!["normal", "high", "urgent"].includes(priority)) throw new Error("Prioridade inválida.");
 
   const reference = await addDoc(remindersRef(db, user.uid), {
     title: cleanTitle,
     notes: notes.trim(),
     dueAt: Timestamp.fromDate(date),
     completed: false,
+    type,
+    priority,
+    notify: Boolean(notify),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -166,6 +174,9 @@ export async function updateReminder({ auth, db }, reminderId, patch) {
     allowed.dueAt = Timestamp.fromDate(date);
   }
   if ("completed" in patch) allowed.completed = Boolean(patch.completed);
+  if ("type" in patch && ["task", "reminder", "goal", "note"].includes(patch.type)) allowed.type = patch.type;
+  if ("priority" in patch && ["normal", "high", "urgent"].includes(patch.priority)) allowed.priority = patch.priority;
+  if ("notify" in patch) allowed.notify = Boolean(patch.notify);
   await updateDoc(doc(db, "users", user.uid, "reminders", reminderId), {
     ...allowed,
     updatedAt: serverTimestamp(),

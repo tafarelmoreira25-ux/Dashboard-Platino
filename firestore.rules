@@ -80,6 +80,9 @@ service cloud.firestore {
           'notes',
           'dueAt',
           'completed',
+          'type',
+          'priority',
+          'notify',
           'createdAt',
           'updatedAt'
         ])
@@ -89,7 +92,10 @@ service cloud.firestore {
         && data.notes is string
         && data.notes.size() <= 4000
         && data.dueAt is timestamp
-        && data.completed is bool;
+        && data.completed is bool
+        && data.get('type', 'task') in ['task', 'reminder', 'goal', 'note']
+        && data.get('priority', 'normal') in ['normal', 'high', 'urgent']
+        && data.get('notify', false) is bool;
     }
 
     function isTimelineEditor() {

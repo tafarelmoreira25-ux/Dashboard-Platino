@@ -1748,6 +1748,9 @@
                 <button id="nav-inicio" onclick="navigateTo('inicio')" class="nav-btn nav-active">
                     <i class="ph ph-house"></i> Início
                 </button>
+                <button id="nav-perfil" onclick="navigateTo('perfil')" class="nav-btn">
+                    <i class="ph ph-user-circle"></i> Meu Workspace
+                </button>
                 <button id="nav-avisos" onclick="navigateTo('avisos')" class="nav-btn">
                     <i class="ph ph-megaphone"></i> Central de vendas
                 </button>
@@ -1774,9 +1777,6 @@
                 </button>
                 <button id="nav-drive" onclick="navigateTo('drive')" class="nav-btn">
                     <i class="ph ph-folder-simple-lock"></i> Drive
-                </button>
-                <button id="nav-perfil" onclick="navigateTo('perfil')" class="nav-btn">
-                    <i class="ph ph-user-circle"></i> Perfil e Tarefas
                 </button>
                 <button id="nav-contas" onclick="navigateTo('contas')" class="nav-btn gestor-only hidden">
                     <i class="ph ph-user-gear"></i> Gestão de Contas
@@ -3023,16 +3023,37 @@
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
-                                    <h3 class="text-xl font-bold text-slate-800">Lembretes e tarefas</h3>
-                                    <p class="text-sm text-slate-500">Seus registros são privados e vinculados ao seu UID.</p>
+                                    <h3 class="text-xl font-bold text-slate-800">Minha área de trabalho</h3>
+                                    <p class="text-sm text-slate-500">Demandas, tarefas, recados, metas e lembretes privados.</p>
                                 </div>
-                                <span id="reminder-due-count" class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">0 vencidos</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <button id="workspace-notification-button" type="button" class="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700"><i class="ph ph-bell mr-1"></i> Ativar notificações</button>
+                                    <span id="reminder-due-count" class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">0 vencidos</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                <div class="rounded-2xl bg-blue-50 p-3"><p class="text-[10px] font-bold uppercase text-blue-500">Tarefas</p><strong id="workspace-task-count" class="text-2xl text-blue-800">0</strong></div>
+                                <div class="rounded-2xl bg-violet-50 p-3"><p class="text-[10px] font-bold uppercase text-violet-500">Lembretes</p><strong id="workspace-reminder-count" class="text-2xl text-violet-800">0</strong></div>
+                                <div class="rounded-2xl bg-emerald-50 p-3"><p class="text-[10px] font-bold uppercase text-emerald-500">Metas</p><strong id="workspace-goal-count" class="text-2xl text-emerald-800">0</strong></div>
+                                <div class="rounded-2xl bg-amber-50 p-3"><p class="text-[10px] font-bold uppercase text-amber-500">Recados</p><strong id="workspace-note-count" class="text-2xl text-amber-800">0</strong></div>
                             </div>
                             <form id="reminder-form" class="mt-5 grid gap-3 rounded-2xl bg-slate-50 p-4 md:grid-cols-2">
                                 <input id="reminder-title" maxlength="200" required class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 md:col-span-2" placeholder="Ex.: Cobrar a pendência do cliente Leandro">
+                                <select id="reminder-type" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500">
+                                    <option value="task">Demanda / Tarefa</option>
+                                    <option value="reminder">Lembrete</option>
+                                    <option value="goal">Meta</option>
+                                    <option value="note">Recado / Anotação</option>
+                                </select>
                                 <input id="reminder-date" type="datetime-local" required class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500">
-                                <button class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700"><i class="ph ph-plus mr-1"></i> Adicionar</button>
+                                <select id="reminder-priority" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500">
+                                    <option value="normal">Prioridade normal</option>
+                                    <option value="high">Prioridade alta</option>
+                                    <option value="urgent">Urgente</option>
+                                </select>
+                                <label class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600"><input id="reminder-notify" type="checkbox" checked class="h-4 w-4 rounded"> Avisar na data</label>
                                 <textarea id="reminder-notes" maxlength="4000" rows="2" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 md:col-span-2" placeholder="Observações opcionais"></textarea>
+                                <button class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 md:col-span-2"><i class="ph ph-plus mr-1"></i> Adicionar ao meu workspace</button>
                                 <p id="reminder-status" class="min-h-5 text-sm text-slate-500 md:col-span-2"></p>
                             </form>
                             <div id="reminder-list" class="mt-5 space-y-3">
@@ -8256,6 +8277,8 @@
       let stopReminderSubscription = null;
       let stopAccountSubscription = null;
       let accountManagementApi = null;
+      let currentWorkspaceItems = [];
+      let workspaceNotificationTimer = null;
 
       const htmlSafe = value => String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -8276,12 +8299,26 @@
       function renderReminders(items) {
         const list = document.getElementById("reminder-list");
         const due = getDueReminders(items);
+        currentWorkspaceItems = items;
+        const countByType = type => items.filter(item => (item.type || "task") === type && !item.completed).length;
+        document.getElementById("workspace-task-count").textContent = countByType("task");
+        document.getElementById("workspace-reminder-count").textContent = countByType("reminder");
+        document.getElementById("workspace-goal-count").textContent = countByType("goal");
+        document.getElementById("workspace-note-count").textContent = countByType("note");
         document.getElementById("reminder-due-count").textContent = `${due.length} vencido${due.length === 1 ? "" : "s"}`;
         if (!items.length) {
           list.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">Nenhum lembrete cadastrado.</p>';
           return;
         }
         list.innerHTML = items.map(item => {
+          const type = item.type || "task";
+          const typeLabels = { task: "Tarefa", reminder: "Lembrete", goal: "Meta", note: "Recado" };
+          const typeStyles = {
+            task: "bg-blue-100 text-blue-700",
+            reminder: "bg-violet-100 text-violet-700",
+            goal: "bg-emerald-100 text-emerald-700",
+            note: "bg-amber-100 text-amber-700",
+          };
           const date = item.dueAt?.toDate?.();
           const formattedDate = date
             ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(date)
@@ -8294,6 +8331,12 @@
                   <i class="ph ph-check"></i>
                 </button>
                 <div class="min-w-0 flex-1">
+                  <div class="mb-1 flex flex-wrap gap-2">
+                    <span class="rounded-full px-2 py-1 text-[10px] font-bold uppercase ${typeStyles[type]}">${typeLabels[type]}</span>
+                    ${item.priority === "urgent" ? '<span class="rounded-full bg-red-100 px-2 py-1 text-[10px] font-bold uppercase text-red-700">Urgente</span>' : ""}
+                    ${item.priority === "high" ? '<span class="rounded-full bg-orange-100 px-2 py-1 text-[10px] font-bold uppercase text-orange-700">Alta prioridade</span>' : ""}
+                    ${item.notify ? '<span class="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-500"><i class="ph ph-bell"></i> Alerta</span>' : ""}
+                  </div>
                   <h4 class="font-bold ${item.completed ? "text-slate-400 line-through" : "text-slate-800"}">${htmlSafe(item.title)}</h4>
                   ${item.notes ? `<p class="mt-1 whitespace-pre-wrap text-sm text-slate-500">${htmlSafe(item.notes)}</p>` : ""}
                   <p class="mt-2 text-xs font-semibold ${overdue ? "text-amber-700" : "text-slate-400"}"><i class="ph ph-calendar mr-1"></i>${htmlSafe(formattedDate)}</p>
@@ -8316,6 +8359,30 @@
               setWorkspaceStatus("reminder-status", error.message, "error");
             }
           });
+        });
+        checkWorkspaceNotifications();
+      }
+
+      function checkWorkspaceNotifications() {
+        if (!auth?.currentUser) return;
+        const due = getDueReminders(currentWorkspaceItems).filter(item => item.notify !== false);
+        if (due.length) {
+          setWorkspaceStatus(
+            "reminder-status",
+            `Você tem ${due.length} registro${due.length === 1 ? "" : "s"} que chegou${due.length === 1 ? "" : "ram"} à data programada.`,
+            "error"
+          );
+        }
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+        due.forEach(item => {
+          const key = `platino-notified-${auth.currentUser.uid}-${item.id}`;
+          if (sessionStorage.getItem(key)) return;
+          new Notification("Platino OS — lembrete", {
+            body: item.title,
+            icon: "assets/platino-infohub-icon.png",
+            tag: key,
+          });
+          sessionStorage.setItem(key, "1");
         });
       }
 
@@ -8368,6 +8435,8 @@
         stopReminderSubscription = subscribeToReminders(services, renderReminders, error =>
           setWorkspaceStatus("reminder-status", error.message, "error")
         );
+        if (workspaceNotificationTimer) clearInterval(workspaceNotificationTimer);
+        workspaceNotificationTimer = setInterval(checkWorkspaceNotifications, 60000);
       }
 
       function initializeAccountManagement() {
@@ -8413,11 +8482,30 @@
             title: document.getElementById("reminder-title").value,
             notes: document.getElementById("reminder-notes").value,
             dueAt: new Date(document.getElementById("reminder-date").value),
+            type: document.getElementById("reminder-type").value,
+            priority: document.getElementById("reminder-priority").value,
+            notify: document.getElementById("reminder-notify").checked,
           });
           event.target.reset();
           setWorkspaceStatus("reminder-status", "Lembrete adicionado.", "success");
         } catch (error) {
           setWorkspaceStatus("reminder-status", error.message, "error");
+        }
+      });
+
+      document.getElementById("workspace-notification-button").addEventListener("click", async () => {
+        if (!("Notification" in window)) {
+          setWorkspaceStatus("reminder-status", "Este navegador não oferece notificações.", "error");
+          return;
+        }
+        const permission = await Notification.requestPermission();
+        const button = document.getElementById("workspace-notification-button");
+        if (permission === "granted") {
+          button.innerHTML = '<i class="ph ph-bell-ringing mr-1"></i> Notificações ativas';
+          setWorkspaceStatus("reminder-status", "Notificações ativadas neste dispositivo.", "success");
+          checkWorkspaceNotifications();
+        } else {
+          setWorkspaceStatus("reminder-status", "Permissão de notificação não concedida.", "error");
         }
       });
 
@@ -8914,6 +9002,10 @@
           if (stopAccountSubscription) {
             stopAccountSubscription();
             stopAccountSubscription = null;
+          }
+          if (workspaceNotificationTimer) {
+            clearInterval(workspaceNotificationTimer);
+            workspaceNotificationTimer = null;
           }
           if (stopAvisosSubscription) {
             stopAvisosSubscription();
