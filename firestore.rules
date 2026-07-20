@@ -239,6 +239,22 @@ service cloud.firestore {
         allow create: if isOwner(uid) && validReminder();
         allow update: if isOwner(uid) && validReminder();
       }
+
+      match /monthlyGoals/{monthKey} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+          && monthKey.matches('^[0-9]{4}-[0-9]{2}$')
+          && request.resource.data.keys().hasOnly([
+            'amount',
+            'monthKey',
+            'createdAt',
+            'updatedAt'
+          ])
+          && request.resource.data.monthKey == monthKey
+          && request.resource.data.amount is number
+          && request.resource.data.amount > 0
+          && request.resource.data.amount <= 100000000;
+      }
     }
 
     // Auditoria é gravada exclusivamente pelo Admin SDK.

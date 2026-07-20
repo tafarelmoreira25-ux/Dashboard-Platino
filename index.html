@@ -2994,13 +2994,35 @@
             </section>
             
             <section id="section-perfil" class="content-section hidden animate-fade-in">
-                <div class="max-w-6xl mx-auto space-y-6">
-                    <div>
-                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Meu espaço</p>
-                        <h2 class="mt-1 text-2xl font-bold text-slate-800">Perfil e Workspace</h2>
-                        <p class="mt-1 text-sm text-slate-500">Atualize sua identificação e organize lembretes individuais.</p>
+                <div class="mx-auto w-full max-w-[1500px] space-y-6">
+                    <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Meu espaço</p>
+                            <h2 class="mt-1 text-2xl font-bold text-slate-800">Perfil e Workspace</h2>
+                            <p class="mt-1 text-sm text-slate-500">Prioridades, compromissos e resultados no seu campo de visão.</p>
+                        </div>
+                        <button type="button" onclick="document.getElementById('reminder-title')?.focus()" class="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-200 hover:bg-blue-700">
+                            <i class="ph ph-plus-circle mr-1"></i> Registrar nova demanda
+                        </button>
                     </div>
-                    <div class="grid gap-6 lg:grid-cols-[340px,1fr]">
+
+                    <div class="overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white shadow-xl">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-[0.22em] text-sky-300">Foco de agora</p>
+                                <h3 class="mt-1 text-xl font-black text-white">Demandas que não podem sair do radar</h3>
+                            </div>
+                            <div class="flex gap-2">
+                                <span id="workspace-focus-today-count" class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-blue-100">0 para hoje</span>
+                                <span id="workspace-focus-urgent-count" class="rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-200">0 urgentes</span>
+                            </div>
+                        </div>
+                        <div id="workspace-focus-list" class="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-blue-100/60 md:col-span-2 xl:col-span-4">Registre uma tarefa, meta, recado ou lembrete para vê-lo imediatamente aqui.</div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 xl:grid-cols-[300px,minmax(0,1fr)]">
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                             <div class="flex flex-col items-center text-center">
                                 <div class="h-28 w-28 overflow-hidden rounded-full border-4 border-blue-100 bg-slate-100">
@@ -3021,6 +3043,34 @@
                             </form>
                         </div>
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="mb-6 rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 p-5 text-white shadow-lg">
+                                <div class="flex flex-col gap-5 md:flex-row md:items-center">
+                                    <div class="relative mx-auto h-32 w-32 shrink-0 md:mx-0">
+                                        <svg class="h-32 w-32 -rotate-90" viewBox="0 0 120 120" aria-label="Progresso da meta mensal">
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"></circle>
+                                            <circle id="monthly-goal-ring" cx="60" cy="60" r="50" fill="none" stroke="#38bdf8" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" class="transition-all duration-700"></circle>
+                                        </svg>
+                                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                            <i id="monthly-goal-icon" class="ph ph-rocket-launch text-2xl text-sky-300"></i>
+                                            <strong id="monthly-goal-percent" class="text-xl">0%</strong>
+                                        </div>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-300">Meta mensal individual</p>
+                                        <h3 id="monthly-goal-level" class="mt-1 text-xl font-black text-white">Defina sua meta</h3>
+                                        <p id="monthly-goal-ranking-status" class="mt-1 text-sm text-blue-100/75">O resultado será localizado automaticamente no ranking.</p>
+                                        <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                                            <div class="rounded-xl bg-white/10 p-3"><span class="block text-[10px] uppercase text-blue-200">Resultado</span><strong id="monthly-goal-result">R$ 0,00</strong></div>
+                                            <div class="rounded-xl bg-white/10 p-3"><span class="block text-[10px] uppercase text-blue-200">Meta</span><strong id="monthly-goal-value">R$ 0,00</strong></div>
+                                        </div>
+                                        <form id="monthly-goal-form" class="mt-3 flex flex-col gap-2 sm:flex-row">
+                                            <input id="monthly-goal-input" type="number" min="1" step="0.01" required class="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-white outline-none placeholder:text-blue-200/50 focus:border-sky-300" placeholder="Digite sua meta em R$">
+                                            <button class="rounded-xl bg-sky-500 px-4 py-2 text-sm font-bold text-white hover:bg-sky-400">Salvar meta</button>
+                                        </form>
+                                        <p id="monthly-goal-status" class="mt-2 min-h-5 text-xs text-blue-100/70"></p>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
                                     <h3 class="text-xl font-bold text-slate-800">Minha área de trabalho</h3>
@@ -3045,7 +3095,19 @@
                                     <option value="goal">Meta</option>
                                     <option value="note">Recado / Anotação</option>
                                 </select>
-                                <input id="reminder-date" type="datetime-local" required class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500">
+                                <label class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                                    <span class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Data do aviso</span>
+                                    <span class="flex items-center gap-2">
+                                        <input id="reminder-date" type="date" required class="min-w-0 flex-1 bg-transparent text-sm text-slate-700 outline-none">
+                                        <button id="reminder-calendar-open" type="button" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100" title="Abrir calendário" aria-label="Abrir calendário">
+                                            <i class="ph ph-calendar-blank text-lg"></i>
+                                        </button>
+                                    </span>
+                                </label>
+                                <label class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                                    <span class="mb-1 block text-[10px] font-bold uppercase tracking-wider text-slate-500">Horário</span>
+                                    <input id="reminder-time" type="time" required value="09:00" class="w-full bg-transparent text-sm text-slate-700 outline-none">
+                                </label>
                                 <select id="reminder-priority" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500">
                                     <option value="normal">Prioridade normal</option>
                                     <option value="high">Prioridade alta</option>
@@ -5453,6 +5515,7 @@
             renderRankingPaidClients();
             renderSalesTimeline();
             updateRankingSyncStatus();
+            window.dispatchEvent(new CustomEvent('platino-ranking-updated'));
         }
 
         function getCompanyTotal() {
@@ -6171,6 +6234,25 @@
 
             return smaller.length > 0 && smaller.every(token => larger.includes(token));
         }
+
+        window.getPlatinoRankingUserResult = function (displayName = '', email = '') {
+            const localPart = String(email || '').split('@')[0].replace(/[._-]+/g, ' ');
+            const candidates = [displayName, localPart].filter(Boolean);
+            for (const sector of rankingSectors) {
+                const match = (rankingData[sector] || []).find(item =>
+                    candidates.some(candidate => isSamePersonName(item.name, candidate))
+                );
+                if (match) {
+                    return {
+                        found: true,
+                        name: match.name,
+                        sector,
+                        result: getRankingSold(match)
+                    };
+                }
+            }
+            return { found: false, name: '', sector: '', result: 0 };
+        };
 
         function getBirthdayMonth(date) {
             const match = String(date || '').match(/\d{1,2}\/(\d{1,2})(?:\/\d{2,4})?/);
@@ -8276,8 +8358,11 @@
       let stopProfileSubscription = null;
       let stopReminderSubscription = null;
       let stopAccountSubscription = null;
+      let stopMonthlyGoalSubscription = null;
       let accountManagementApi = null;
       let currentWorkspaceItems = [];
+      let currentMonthlyGoal = null;
+      let currentProfileDisplayName = "";
       let workspaceNotificationTimer = null;
 
       const htmlSafe = value => String(value ?? "")
@@ -8296,10 +8381,67 @@
         }`;
       }
 
+      function currentMonthKey() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      }
+
+      function formatGoalCurrency(value) {
+        return new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(Number(value) || 0);
+      }
+
+      function renderMonthlyGoal() {
+        const amount = Number(currentMonthlyGoal?.amount) || 0;
+        const ranking = window.getPlatinoRankingUserResult?.(
+          currentProfileDisplayName || auth?.currentUser?.displayName || "",
+          auth?.currentUser?.email || ""
+        ) || { found: false, result: 0 };
+        const result = Number(ranking.result) || 0;
+        const rawPercent = amount > 0 ? (result / amount) * 100 : 0;
+        const percent = Math.max(0, Math.min(rawPercent, 100));
+        const ring = document.getElementById("monthly-goal-ring");
+        ring.style.strokeDashoffset = String(314.16 * (1 - percent / 100));
+        document.getElementById("monthly-goal-percent").textContent = `${Math.round(rawPercent)}%`;
+        document.getElementById("monthly-goal-result").textContent = formatGoalCurrency(result);
+        document.getElementById("monthly-goal-value").textContent = formatGoalCurrency(amount);
+        document.getElementById("monthly-goal-input").value = amount || "";
+
+        const icon = document.getElementById("monthly-goal-icon");
+        const level = document.getElementById("monthly-goal-level");
+        if (!amount) {
+          level.textContent = "Defina sua meta";
+          icon.className = "ph ph-rocket-launch text-2xl text-sky-300";
+        } else if (rawPercent >= 100) {
+          level.textContent = "Meta atingida!";
+          icon.className = "ph ph-trophy text-2xl text-amber-300";
+          ring.setAttribute("stroke", "#fbbf24");
+        } else if (rawPercent >= 75) {
+          level.textContent = "Reta final";
+          icon.className = "ph ph-fire text-2xl text-orange-300";
+          ring.setAttribute("stroke", "#fb923c");
+        } else if (rawPercent >= 40) {
+          level.textContent = "Avançando bem";
+          icon.className = "ph ph-trend-up text-2xl text-emerald-300";
+          ring.setAttribute("stroke", "#34d399");
+        } else {
+          level.textContent = "Jornada iniciada";
+          icon.className = "ph ph-rocket-launch text-2xl text-sky-300";
+          ring.setAttribute("stroke", "#38bdf8");
+        }
+
+        document.getElementById("monthly-goal-ranking-status").textContent = ranking.found
+          ? `Resultado sincronizado com ${ranking.name} no ranking de ${ranking.sector}.`
+          : "Seu nome ainda não foi localizado no ranking; o progresso iniciará quando houver correspondência.";
+      }
+
       function renderReminders(items) {
         const list = document.getElementById("reminder-list");
         const due = getDueReminders(items);
         currentWorkspaceItems = items;
+        renderWorkspaceFocus(items);
         const countByType = type => items.filter(item => (item.type || "task") === type && !item.completed).length;
         document.getElementById("workspace-task-count").textContent = countByType("task");
         document.getElementById("workspace-reminder-count").textContent = countByType("reminder");
@@ -8363,6 +8505,68 @@
         checkWorkspaceNotifications();
       }
 
+      function renderWorkspaceFocus(items) {
+        const container = document.getElementById("workspace-focus-list");
+        const now = new Date();
+        const endOfToday = new Date(now);
+        endOfToday.setHours(23, 59, 59, 999);
+        const active = items
+          .filter(item => !item.completed)
+          .sort((a, b) => {
+            const aDate = a.dueAt?.toDate?.()?.getTime() ?? Number.MAX_SAFE_INTEGER;
+            const bDate = b.dueAt?.toDate?.()?.getTime() ?? Number.MAX_SAFE_INTEGER;
+            const aOverdue = aDate <= now.getTime() ? 1 : 0;
+            const bOverdue = bDate <= now.getTime() ? 1 : 0;
+            if (aOverdue !== bOverdue) return bOverdue - aOverdue;
+            const priorityWeight = { urgent: 3, high: 2, normal: 1 };
+            const priorityDifference = (priorityWeight[b.priority] || 1) - (priorityWeight[a.priority] || 1);
+            return priorityDifference || aDate - bDate;
+          });
+        const todayCount = active.filter(item => {
+          const date = item.dueAt?.toDate?.();
+          return date && date.getTime() <= endOfToday.getTime();
+        }).length;
+        const urgentCount = active.filter(item => item.priority === "urgent").length;
+        document.getElementById("workspace-focus-today-count").textContent = `${todayCount} para hoje`;
+        document.getElementById("workspace-focus-urgent-count").textContent = `${urgentCount} urgente${urgentCount === 1 ? "" : "s"}`;
+
+        if (!active.length) {
+          container.innerHTML = '<div class="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-blue-100/60 md:col-span-2 xl:col-span-4">Tudo em dia. Registre uma nova demanda para mantê-la no seu campo de visão.</div>';
+          return;
+        }
+
+        const typeLabels = { task: "Tarefa", reminder: "Lembrete", goal: "Meta", note: "Recado" };
+        container.innerHTML = active.slice(0, 4).map(item => {
+          const date = item.dueAt?.toDate?.();
+          const overdue = date && date.getTime() <= now.getTime();
+          const dateLabel = date
+            ? new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(date)
+            : "Sem data";
+          const urgent = item.priority === "urgent";
+          return `
+            <article class="relative overflow-hidden rounded-2xl border p-4 ${overdue || urgent ? "border-red-400/50 bg-red-500/15" : "border-white/10 bg-white/5"}">
+              <div class="absolute inset-x-0 top-0 h-1 ${overdue || urgent ? "bg-red-400" : "bg-sky-400"}"></div>
+              <div class="flex items-start justify-between gap-2">
+                <span class="rounded-full bg-white/10 px-2 py-1 text-[10px] font-bold uppercase text-blue-100">${typeLabels[item.type || "task"]}</span>
+                ${overdue ? '<span class="text-[10px] font-black uppercase text-red-200">Atenção</span>' : ""}
+              </div>
+              <h4 class="mt-3 line-clamp-2 font-black text-white">${htmlSafe(item.title)}</h4>
+              <p class="mt-2 text-xs font-bold ${overdue ? "text-red-200" : "text-sky-200"}"><i class="ph ph-calendar-check mr-1"></i>${htmlSafe(dateLabel)}</p>
+              <button type="button" data-focus-complete="${htmlSafe(item.id)}" class="mt-3 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs font-bold text-white hover:bg-white/20"><i class="ph ph-check-circle mr-1"></i> Marcar como concluída</button>
+            </article>`;
+        }).join("");
+
+        container.querySelectorAll("[data-focus-complete]").forEach(button => {
+          button.addEventListener("click", async () => {
+            try {
+              await updateReminder({ auth, db }, button.dataset.focusComplete, { completed: true });
+            } catch (error) {
+              setWorkspaceStatus("reminder-status", error.message, "error");
+            }
+          });
+        });
+      }
+
       function checkWorkspaceNotifications() {
         if (!auth?.currentUser) return;
         const due = getDueReminders(currentWorkspaceItems).filter(item => item.notify !== false);
@@ -8424,16 +8628,27 @@
       async function initializeProfileWorkspace(user) {
         if (stopProfileSubscription) stopProfileSubscription();
         if (stopReminderSubscription) stopReminderSubscription();
+        if (stopMonthlyGoalSubscription) stopMonthlyGoalSubscription();
         const services = { auth, db };
         await ensureOwnProfile(services);
         stopProfileSubscription = onSnapshot(doc(db, "users", user.uid), snapshot => {
           const profile = snapshot.data() || {};
+          currentProfileDisplayName = profile.displayName || user.displayName || "";
           document.getElementById("profile-name-input").value = profile.displayName || user.displayName || "";
           document.getElementById("profile-avatar-preview").src = profile.avatarDataUrl || profile.photoURL || "assets/platino-infohub-icon.png";
           if (profile.displayName) document.getElementById("user-name").textContent = profile.displayName;
+          renderMonthlyGoal();
         });
         stopReminderSubscription = subscribeToReminders(services, renderReminders, error =>
           setWorkspaceStatus("reminder-status", error.message, "error")
+        );
+        stopMonthlyGoalSubscription = onSnapshot(
+          doc(db, "users", user.uid, "monthlyGoals", currentMonthKey()),
+          snapshot => {
+            currentMonthlyGoal = snapshot.exists() ? snapshot.data() : null;
+            renderMonthlyGoal();
+          },
+          error => setWorkspaceStatus("monthly-goal-status", error.message, "error")
         );
         if (workspaceNotificationTimer) clearInterval(workspaceNotificationTimer);
         workspaceNotificationTimer = setInterval(checkWorkspaceNotifications, 60000);
@@ -8481,15 +8696,33 @@
           await createReminder({ auth, db }, {
             title: document.getElementById("reminder-title").value,
             notes: document.getElementById("reminder-notes").value,
-            dueAt: new Date(document.getElementById("reminder-date").value),
+            dueAt: new Date(
+              `${document.getElementById("reminder-date").value}T${document.getElementById("reminder-time").value}:00`
+            ),
             type: document.getElementById("reminder-type").value,
             priority: document.getElementById("reminder-priority").value,
             notify: document.getElementById("reminder-notify").checked,
           });
           event.target.reset();
           setWorkspaceStatus("reminder-status", "Lembrete adicionado.", "success");
+          setTimeout(() => {
+            document.getElementById("workspace-focus-list")?.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }, 180);
         } catch (error) {
           setWorkspaceStatus("reminder-status", error.message, "error");
+        }
+      });
+
+      document.getElementById("reminder-calendar-open").addEventListener("click", () => {
+        const dateInput = document.getElementById("reminder-date");
+        if (typeof dateInput.showPicker === "function") {
+          dateInput.showPicker();
+        } else {
+          dateInput.focus();
+          dateInput.click();
         }
       });
 
@@ -8508,6 +8741,30 @@
           setWorkspaceStatus("reminder-status", "Permissão de notificação não concedida.", "error");
         }
       });
+
+      document.getElementById("monthly-goal-form").addEventListener("submit", async event => {
+        event.preventDefault();
+        const amount = Number(document.getElementById("monthly-goal-input").value);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          setWorkspaceStatus("monthly-goal-status", "Informe uma meta maior que zero.", "error");
+          return;
+        }
+        try {
+          const monthKey = currentMonthKey();
+          const reference = doc(db, "users", auth.currentUser.uid, "monthlyGoals", monthKey);
+          await setDoc(reference, {
+            amount,
+            monthKey,
+            createdAt: currentMonthlyGoal?.createdAt || serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          }, { merge: true });
+          setWorkspaceStatus("monthly-goal-status", "Meta mensal salva e conectada ao ranking.", "success");
+        } catch (error) {
+          setWorkspaceStatus("monthly-goal-status", error.message, "error");
+        }
+      });
+
+      window.addEventListener("platino-ranking-updated", renderMonthlyGoal);
 
       document.getElementById("account-create-form").addEventListener("submit", async event => {
         event.preventDefault();
@@ -8998,6 +9255,10 @@
           if (stopReminderSubscription) {
             stopReminderSubscription();
             stopReminderSubscription = null;
+          }
+          if (stopMonthlyGoalSubscription) {
+            stopMonthlyGoalSubscription();
+            stopMonthlyGoalSubscription = null;
           }
           if (stopAccountSubscription) {
             stopAccountSubscription();
