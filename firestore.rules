@@ -9,6 +9,9 @@ service cloud.firestore {
     function isManagement() {
       return signedIn()
         && (
+          request.auth.token.get('role', '') == 'admin'
+          || request.auth.token.get('role', '') == 'manager'
+          ||
           request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
           || request.auth.token.email == 'gestao@platino.com'
           || request.auth.token.email == 'tafarel@platino.com'
@@ -40,6 +43,53 @@ service cloud.firestore {
           signedIn()
           && request.auth.token.email == 'isabela@platino.com'
         );
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function validProfile() {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'displayName',
+          'email',
+          'photoURL',
+          'avatarDataUrl',
+          'role',
+          'disabled',
+          'createdAt',
+          'createdBy',
+          'updatedAt'
+        ])
+        && data.displayName is string
+        && data.displayName.size() > 0
+        && data.displayName.size() <= 120
+        && data.email is string
+        && data.photoURL is string
+        && data.avatarDataUrl is string
+        && data.avatarDataUrl.size() <= 200000
+        && data.role in ['admin', 'manager', 'collaborator']
+        && data.disabled is bool;
+    }
+
+    function validReminder() {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'title',
+          'notes',
+          'dueAt',
+          'completed',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.notes is string
+        && data.notes.size() <= 4000
+        && data.dueAt is timestamp
+        && data.completed is bool;
     }
 
     function isTimelineEditor() {
@@ -155,6 +205,40 @@ service cloud.firestore {
           'reviewedAt'
         ]);
       allow delete: if false;
+    }
+
+    // O documento é criado pela Cloud Function (Admin SDK). No cliente, o
+    // colaborador só pode editar os campos visuais do próprio perfil.
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isOwner(uid)
+        && validProfile()
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == 'collaborator'
+        && request.resource.data.disabled == false
+        && request.resource.data.createdBy == uid;
+      allow delete: if false;
+      allow update: if isOwner(uid)
+        && validProfile()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName',
+          'photoURL',
+          'avatarDataUrl',
+          'updatedAt'
+        ]);
+
+      // O UID no caminho é a fronteira de segurança do workspace individual.
+      match /reminders/{reminderId} {
+        allow read, delete: if isOwner(uid);
+        allow create: if isOwner(uid) && validReminder();
+        allow update: if isOwner(uid) && validReminder();
+      }
+    }
+
+    // Auditoria é gravada exclusivamente pelo Admin SDK.
+    match /adminAudit/{auditId} {
+      allow read: if isManagement();
+      allow write: if false;
     }
   }
 }

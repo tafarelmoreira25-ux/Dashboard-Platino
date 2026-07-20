@@ -3,3 +3,7 @@
 .env.*.local
 node_modules/
 *.log
+firebase-service-account.json
+
+.vercel
+.env*
