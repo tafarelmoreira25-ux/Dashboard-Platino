@@ -3063,9 +3063,9 @@
                                             <div class="rounded-xl bg-white/10 p-3"><span class="block text-[10px] uppercase text-blue-200">Resultado</span><strong id="monthly-goal-result">R$ 0,00</strong></div>
                                             <div class="rounded-xl bg-white/10 p-3"><span class="block text-[10px] uppercase text-blue-200">Meta</span><strong id="monthly-goal-value">R$ 0,00</strong></div>
                                         </div>
-                                        <form id="monthly-goal-form" class="mt-3 flex flex-col gap-2 sm:flex-row">
-                                            <input id="monthly-goal-input" type="number" min="1" step="0.01" required class="min-w-0 flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-white outline-none placeholder:text-blue-200/50 focus:border-sky-300" placeholder="Digite sua meta em R$">
-                                            <button class="rounded-xl bg-sky-500 px-4 py-2 text-sm font-bold text-white hover:bg-sky-400">Salvar meta</button>
+                                        <form id="monthly-goal-form" class="relative z-20 mt-3 flex flex-col gap-2 sm:flex-row">
+                                            <input id="monthly-goal-input" type="text" inputmode="decimal" autocomplete="off" class="pointer-events-auto min-w-0 flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-white outline-none placeholder:text-blue-200/50 focus:border-sky-300" placeholder="Ex.: 50.000,00">
+                                            <button id="monthly-goal-save" type="button" class="pointer-events-auto relative z-30 rounded-xl bg-sky-500 px-4 py-2 text-sm font-bold text-white hover:bg-sky-400 disabled:cursor-wait disabled:opacity-60">Salvar meta</button>
                                         </form>
                                         <p id="monthly-goal-status" class="mt-2 min-h-5 text-xs text-blue-100/70"></p>
                                     </div>
@@ -8742,14 +8742,27 @@
         }
       });
 
-      document.getElementById("monthly-goal-form").addEventListener("submit", async event => {
-        event.preventDefault();
-        const amount = Number(document.getElementById("monthly-goal-input").value);
+      function parseMonthlyGoalAmount(value) {
+        const raw = String(value || "").trim().replace(/[R$\s]/gi, "");
+        if (!raw) return 0;
+        const normalized = raw.includes(",")
+          ? raw.replace(/\./g, "").replace(",", ".")
+          : raw.replace(/[^\d.-]/g, "");
+        const amount = Number(normalized);
+        return Number.isFinite(amount) ? amount : 0;
+      }
+
+      async function saveMonthlyGoalValue() {
+        const button = document.getElementById("monthly-goal-save");
+        const amount = parseMonthlyGoalAmount(document.getElementById("monthly-goal-input").value);
         if (!Number.isFinite(amount) || amount <= 0) {
-          setWorkspaceStatus("monthly-goal-status", "Informe uma meta maior que zero.", "error");
+          setWorkspaceStatus("monthly-goal-status", "Informe uma meta válida. Exemplo: 50.000,00", "error");
           return;
         }
         try {
+          button.disabled = true;
+          button.textContent = "Salvando...";
+          setWorkspaceStatus("monthly-goal-status", "Salvando sua meta mensal...");
           const monthKey = currentMonthKey();
           const reference = doc(db, "users", auth.currentUser.uid, "monthlyGoals", monthKey);
           await setDoc(reference, {
@@ -8761,8 +8774,17 @@
           setWorkspaceStatus("monthly-goal-status", "Meta mensal salva e conectada ao ranking.", "success");
         } catch (error) {
           setWorkspaceStatus("monthly-goal-status", error.message, "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Salvar meta";
         }
+      }
+
+      document.getElementById("monthly-goal-form").addEventListener("submit", event => {
+        event.preventDefault();
+        saveMonthlyGoalValue();
       });
+      document.getElementById("monthly-goal-save").addEventListener("click", saveMonthlyGoalValue);
 
       window.addEventListener("platino-ranking-updated", renderMonthlyGoal);
 
