@@ -1432,7 +1432,11 @@
         }
 
         .adm-template-picker-panel {
-            margin-top: 0.65rem;
+            position: absolute;
+            z-index: 70;
+            top: calc(100% + 0.65rem);
+            left: 0;
+            right: 0;
             overflow: hidden;
             border: 1px solid rgba(147, 197, 253, 0.3);
             border-radius: 1rem;
@@ -1501,6 +1505,23 @@
             background: rgba(255, 255, 255, 0.055);
             color: #e2e8f0;
             text-align: left;
+        }
+
+        .adm-template-option-edit {
+            display: grid;
+            width: 2.15rem;
+            height: 2.15rem;
+            place-items: center;
+            border-radius: 0.65rem;
+            color: #bfdbfe;
+            transition: background-color 160ms ease, color 160ms ease;
+        }
+
+        .adm-template-option-edit:hover,
+        .adm-template-option-edit:focus-visible {
+            background: rgba(96, 165, 250, 0.22);
+            color: #ffffff;
+            outline: none;
         }
 
         .adm-template-option:hover,
@@ -2524,7 +2545,7 @@
                                         <div class="adm-template-picker-tools">
                                             <div class="flex items-center justify-between gap-3 pb-2">
                                                 <span class="text-sm font-black text-white"><i class="ph ph-books mr-1 text-blue-300"></i> Biblioteca de modelos</span>
-                                                <span class="text-[0.65rem] font-bold uppercase tracking-wider text-blue-200/60">14 documentos</span>
+                                                <span id="adm-template-count" class="text-[0.65rem] font-bold uppercase tracking-wider text-blue-200/60">Modelos disponíveis</span>
                                             </div>
                                             <div class="adm-template-search-wrap">
                                                 <i class="ph ph-magnifying-glass text-lg"></i>
@@ -4102,7 +4123,8 @@
             rhMiniNotices: [],
             quickEditorRecords: {},
             flowOverrides: {},
-            financeiroRegistros: []
+            financeiroRegistros: [],
+            templateNameOverrides: {}
         };
 
         let managementSharedData = {
@@ -4111,6 +4133,7 @@
             flowOverrides: JSON.parse(localStorage.getItem('platinoFlowOverrides') || '{}'),
             financeiroRegistros: JSON.parse(localStorage.getItem('platinoFinanceiroRegistros') || '[]'),
             rhMiniNotices: JSON.parse(localStorage.getItem('platinoRhMiniNotices') || '[]'),
+            templateNameOverrides: JSON.parse(localStorage.getItem('platinoTemplateNameOverrides') || '{}'),
             rhWeeklyNotes: localStorage.getItem('platinoRhWeeklyNotes') || managementSharedDefaults.rhWeeklyNotes
         };
 
@@ -4120,6 +4143,7 @@
             localStorage.setItem('platinoFlowOverrides', JSON.stringify(managementSharedData.flowOverrides || {}));
             localStorage.setItem('platinoFinanceiroRegistros', JSON.stringify((managementSharedData.financeiroRegistros || []).slice(0, 50)));
             localStorage.setItem('platinoRhMiniNotices', JSON.stringify((managementSharedData.rhMiniNotices || []).slice(0, 20)));
+            localStorage.setItem('platinoTemplateNameOverrides', JSON.stringify(managementSharedData.templateNameOverrides || {}));
         }
 
         async function publishManagementShared(statusEl, successMessage) {
@@ -7250,6 +7274,7 @@
                 ...remoteData,
                 quickEditorRecords: remoteData.quickEditorRecords || managementSharedData.quickEditorRecords || {},
                 flowOverrides: remoteData.flowOverrides || managementSharedData.flowOverrides || {},
+                templateNameOverrides: remoteData.templateNameOverrides || managementSharedData.templateNameOverrides || {},
                 rhMiniNotices: Array.isArray(remoteData.rhMiniNotices)
                     ? remoteData.rhMiniNotices
                     : (managementSharedData.rhMiniNotices || []),
@@ -7263,6 +7288,11 @@
             getFlowCollections().forEach(collection => renderAccordions(collection.containerId, collection.data));
             loadRhNotes();
             renderRhMiniMural();
+            applyAdmTemplateNames();
+            syncAdmTemplatePicker();
+            if (!document.getElementById('adm-template-picker-panel')?.hidden) {
+                renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+            }
 
             const rhStatus = document.getElementById('rh-notes-status');
             if (rhStatus) {
@@ -7876,9 +7906,20 @@
             return admTemplateCatalog[value] || { category: 'Documento jurídico', icon: 'ph-file-text', description: 'Modelo disponível para geração.' };
         }
 
+        function applyAdmTemplateNames() {
+            const select = document.getElementById('adm-pdf-template');
+            if (!select) return;
+            const overrides = managementSharedData.templateNameOverrides || {};
+            Array.from(select.options).forEach(option => {
+                if (!option.dataset.originalName) option.dataset.originalName = option.text;
+                option.text = String(overrides[option.value] || option.dataset.originalName).trim();
+            });
+        }
+
         function syncAdmTemplatePicker() {
             const select = document.getElementById('adm-pdf-template');
             if (!select) return;
+            applyAdmTemplateNames();
             const info = getAdmTemplateInfo(select.value);
             const title = select.options[select.selectedIndex]?.text || 'Selecione um modelo';
             const titleElement = document.getElementById('adm-template-picker-title');
@@ -7903,24 +7944,48 @@
             const select = document.getElementById('adm-pdf-template');
             const container = document.getElementById('adm-template-options');
             if (!select || !container) return;
+            applyAdmTemplateNames();
             const normalizedQuery = String(query).trim().toLocaleLowerCase('pt-BR');
-            const options = Array.from(select.options).filter(option => {
+            const allOptions = Array.from(select.options);
+            const count = document.getElementById('adm-template-count');
+            if (count) count.textContent = `${allOptions.length} ${allOptions.length === 1 ? 'documento' : 'documentos'}`;
+            const options = allOptions.filter(option => {
                 const info = getAdmTemplateInfo(option.value);
                 return `${option.text} ${info.category} ${info.description}`.toLocaleLowerCase('pt-BR').includes(normalizedQuery);
             });
             container.innerHTML = options.length ? options.map(option => {
                 const info = getAdmTemplateInfo(option.value);
                 const selected = option.value === select.value;
-                return `<button type="button" class="adm-template-option" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}" onclick="selectAdmTemplate(this.dataset.templateValue)">
+                return `<div class="adm-template-option" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
                     <span class="adm-template-option-icon"><i class="ph ${escapeHtml(info.icon)}"></i></span>
-                    <span class="min-w-0">
+                    <button type="button" class="min-w-0 text-left" onclick="selectAdmTemplate(this.closest('[data-template-value]').dataset.templateValue)">
                         <span class="block text-[0.62rem] font-black uppercase tracking-[0.12em] text-blue-300">${escapeHtml(info.category)}</span>
                         <span class="mt-0.5 block text-sm font-black leading-snug text-white">${escapeHtml(option.text)}</span>
                         <span class="mt-1 block text-xs font-medium leading-snug text-slate-400">${escapeHtml(info.description)}</span>
-                    </span>
-                    <i class="ph ${selected ? 'ph-check-circle text-blue-300' : 'ph-caret-right text-slate-500'} text-lg"></i>
-                </button>`;
-            }).join('') : '<div class="col-span-full grid min-h-28 place-items-center rounded-xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-1 block text-2xl text-blue-300"></i>Nenhum modelo encontrado.</span></div>';
+                    </button>
+                    ${isGestorUser()
+                        ? `<button type="button" class="adm-template-option-edit" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')"><i class="ph ph-pencil-simple text-lg"></i></button>`
+                        : `<i class="ph ${selected ? 'ph-check-circle text-blue-300' : 'ph-caret-right text-slate-500'} text-lg"></i>`}
+                </div>`;
+            }).join('') : `<div class="col-span-full grid min-h-28 place-items-center rounded-xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-1 block text-2xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
+        }
+
+        async function renameAdmTemplate(event, value) {
+            event?.stopPropagation();
+            if (!requireGestor('renomear modelos de documentos')) return;
+            const select = document.getElementById('adm-pdf-template');
+            const option = Array.from(select?.options || []).find(item => item.value === value);
+            if (!option) return;
+            const nextName = window.prompt('Novo nome do modelo:', option.text)?.trim();
+            if (!nextName || nextName === option.text) return;
+            managementSharedData.templateNameOverrides = {
+                ...(managementSharedData.templateNameOverrides || {}),
+                [value]: nextName.slice(0, 120)
+            };
+            applyAdmTemplateNames();
+            syncAdmTemplatePicker();
+            renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+            await publishManagementShared(document.getElementById('adm-pdf-status'), 'Nome do modelo atualizado para todos os usuários.');
         }
 
         function toggleAdmTemplatePicker(force) {
@@ -7952,6 +8017,12 @@
                 toggleAdmTemplatePicker(false);
                 document.getElementById('adm-template-picker-button')?.focus();
             }
+        });
+
+        document.addEventListener('click', event => {
+            const picker = document.querySelector('.adm-template-picker');
+            const panel = document.getElementById('adm-template-picker-panel');
+            if (picker && panel && !panel.hidden && !picker.contains(event.target)) toggleAdmTemplatePicker(false);
         });
 
         function renderAdmPdfFields() {
