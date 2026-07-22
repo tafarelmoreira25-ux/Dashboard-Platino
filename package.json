@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "audit:buttons": "node tests/button-interaction-audit.mjs"
   },
   "dependencies": {
     "express": "^4.18.2",

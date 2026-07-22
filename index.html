@@ -2,8 +2,12 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Platino Assessoria | Central Operacional</title>
+    <link rel="icon" type="image/png" href="assets/platino-icon.png?v=20260722">
+    <link rel="shortcut icon" type="image/png" href="assets/platino-icon.png?v=20260722">
+    <link rel="apple-touch-icon" href="assets/platino-icon.png?v=20260722">
+    <meta name="theme-color" content="#071d65">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -741,18 +745,34 @@
         }
 
         .dot {
-            width: 0.5rem;
-            height: 0.5rem;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
+            position: relative;
+            display: inline-flex;
+            width: 2.75rem;
+            height: 2.75rem;
+            min-width: 2.75rem;
+            min-height: 2.75rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: transparent;
             cursor: pointer;
             transition: all 0.3s ease;
+            touch-action: manipulation;
         }
 
-        .dot.active {
-            background: white;
-            width: 1.5rem;
+        .dot::after {
+            content: "";
+            width: 0.5rem;
+            height: 0.5rem;
             border-radius: 0.25rem;
+            background: rgba(255, 255, 255, 0.4);
+            transition: width 0.3s ease, background 0.3s ease;
+            pointer-events: none;
+        }
+
+        .dot.active::after {
+            width: 1.5rem;
+            background: white;
         }
 
         .celios-powered-badge {
@@ -1646,11 +1666,98 @@
             }
         }
 
+        /* Camada global de confiabilidade para mouse, toque e zoom. */
+        button,
+        [role="button"],
+        .nav-btn,
+        label:has(input[type="file"]) {
+            min-height: 44px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(59, 130, 246, 0.2);
+            pointer-events: auto;
+            user-select: none;
+        }
+
+        button:not(:disabled),
+        [role="button"]:not([aria-disabled="true"]) {
+            cursor: pointer;
+        }
+
+        button > i,
+        button > svg,
+        button > img,
+        [role="button"] > i,
+        [role="button"] > svg {
+            pointer-events: none;
+        }
+
+        button::before,
+        button::after {
+            pointer-events: none;
+        }
+
+        button:focus-visible,
+        [role="button"]:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid rgba(56, 189, 248, 0.9) !important;
+            outline-offset: 3px;
+        }
+
+        button:active:not(:disabled),
+        [role="button"]:active:not([aria-disabled="true"]) {
+            filter: brightness(0.92);
+        }
+
+        /* O widget fechado não pode formar uma camada invisível sobre a página. */
+        #chat-widget {
+            pointer-events: none;
+        }
+
+        #chat-toggle-btn,
+        #chat-window:not([inert]) {
+            pointer-events: auto;
+        }
+
+        #chat-window[inert] {
+            pointer-events: none !important;
+            visibility: hidden;
+        }
+
+        .dev-badge-container {
+            pointer-events: none !important;
+        }
+
+        .fixed.inset-0.hidden,
+        [aria-hidden="true"].fixed.inset-0 {
+            pointer-events: none !important;
+        }
+
+        @media (max-width: 767px), (any-pointer: coarse) {
+            input,
+            select,
+            textarea {
+                font-size: 16px !important;
+            }
+
+            button,
+            [role="button"],
+            .nav-btn {
+                min-height: 46px;
+            }
+
+            .content-section {
+                touch-action: pan-y;
+            }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
-   <button class="dev-badge-container" type="button" aria-label="Developed by Tafarel Moreira">
+   <div class="dev-badge-container" aria-label="Developed by Tafarel Moreira">
     <div class="icon-circle">
         <img src="assets/tafarel-moreira-logo-badge.png" alt="Logo Tafarel Moreira">
     </div>
@@ -1659,7 +1766,7 @@
         <span class="text-line-1">developed by</span>
         <span class="text-line-2">Tafarel Moreira</span>
     </div>
-</button>
+</div>
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
@@ -1707,6 +1814,7 @@
 
             <button
               id="login-button"
+              type="button"
               class="metal-login-button w-full py-3.5 rounded-2xl font-bold transition focus:outline-none focus:ring-4 focus:ring-blue-500/25"
             >
               Entrar
@@ -1900,13 +2008,13 @@
                             </div>
 
                             <div class="slide-dots">
-                                <div class="dot active" onclick="goToSlide(0)"></div>
-                                <div class="dot" onclick="goToSlide(1)"></div>
-                                <div class="dot" onclick="goToSlide(2)"></div>
-                                <div class="dot" onclick="goToSlide(3)"></div>
-                                <div class="dot" onclick="goToSlide(4)"></div>
-                                <div class="dot" onclick="goToSlide(5)"></div>
-                                <div class="dot" onclick="goToSlide(6)"></div>
+                                <button type="button" class="dot active" onclick="goToSlide(0)" aria-label="Abrir destaque 1"></button>
+                                <button type="button" class="dot" onclick="goToSlide(1)" aria-label="Abrir destaque 2"></button>
+                                <button type="button" class="dot" onclick="goToSlide(2)" aria-label="Abrir destaque 3"></button>
+                                <button type="button" class="dot" onclick="goToSlide(3)" aria-label="Abrir destaque 4"></button>
+                                <button type="button" class="dot" onclick="goToSlide(4)" aria-label="Abrir destaque 5"></button>
+                                <button type="button" class="dot" onclick="goToSlide(5)" aria-label="Abrir destaque 6"></button>
+                                <button type="button" class="dot" onclick="goToSlide(6)" aria-label="Abrir destaque 7"></button>
                             </div>
 
                             <button type="button" id="home-carousel-prev" onclick="prevCarouselSlide(event)" aria-label="Voltar um destaque" title="Destaque anterior" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation">
@@ -3038,7 +3146,7 @@
                                     <label class="mb-1 block text-sm font-semibold text-slate-700">Nome exibido</label>
                                     <input id="profile-name-input" maxlength="120" required class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500" placeholder="Seu nome">
                                 </div>
-                                <button class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800">Salvar perfil</button>
+                                <button type="submit" class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800">Salvar perfil</button>
                                 <p id="profile-status" class="min-h-5 text-center text-sm text-slate-500"></p>
                             </form>
                         </div>
@@ -3115,7 +3223,7 @@
                                 </select>
                                 <label class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600"><input id="reminder-notify" type="checkbox" checked class="h-4 w-4 rounded"> Avisar na data</label>
                                 <textarea id="reminder-notes" maxlength="4000" rows="2" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 md:col-span-2" placeholder="Observações opcionais"></textarea>
-                                <button class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 md:col-span-2"><i class="ph ph-plus mr-1"></i> Adicionar ao meu workspace</button>
+                                <button type="submit" class="rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 md:col-span-2"><i class="ph ph-plus mr-1"></i> Adicionar ao meu workspace</button>
                                 <p id="reminder-status" class="min-h-5 text-sm text-slate-500 md:col-span-2"></p>
                             </form>
                             <div id="reminder-list" class="mt-5 space-y-3">
@@ -3143,7 +3251,7 @@
                                 <option value="collaborator">Colaborador</option>
                                 <option value="manager">Gestão</option>
                             </select>
-                            <button class="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700"><i class="ph ph-user-plus mr-1"></i> Criar conta</button>
+                            <button type="submit" class="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700"><i class="ph ph-user-plus mr-1"></i> Criar conta</button>
                             <p id="account-status" class="min-h-5 text-sm text-slate-500"></p>
                         </form>
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -3562,8 +3670,8 @@
         </div>
     </div>
 
-    <div class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
-        <div id="chat-window" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
+    <div id="chat-widget" class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
+        <div id="chat-window" inert aria-hidden="true" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-950 border border-white/20 rounded-full overflow-hidden relative">
@@ -5081,7 +5189,12 @@
             if (chatOpen) {
                 chat.classList.remove('scale-100', 'opacity-100');
                 chat.classList.add('scale-0', 'opacity-0');
+                chat.setAttribute('inert', '');
+                chat.setAttribute('aria-hidden', 'true');
+                btn.focus({ preventScroll: true });
             } else {
+                chat.removeAttribute('inert');
+                chat.setAttribute('aria-hidden', 'false');
                 chat.classList.remove('scale-0', 'opacity-0');
                 chat.classList.add('scale-100', 'opacity-100');
                 document.getElementById('chat-input').focus();
