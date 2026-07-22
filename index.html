@@ -8975,6 +8975,7 @@
               button.disabled = true;
               await accountManagementApi.setDisabled(button.dataset.accountUid, !disabled);
               setWorkspaceStatus("account-status", "Conta atualizada com sucesso.", "success");
+              await loadManagementAccounts();
             } catch (error) {
               setWorkspaceStatus("account-status", error.message, "error");
             } finally {
@@ -8982,6 +8983,18 @@
             }
           });
         });
+      }
+
+      async function loadManagementAccounts() {
+        const list = document.getElementById("account-list");
+        if (list) list.innerHTML = '<p class="py-8 text-center text-sm font-semibold text-slate-400"><i class="ph ph-spinner-gap mr-2 inline-block animate-spin"></i>Consultando Firebase Authentication...</p>';
+        try {
+          const result = await accountManagementApi.listUsers();
+          renderAccounts(Array.isArray(result.users) ? result.users : []);
+        } catch (error) {
+          setWorkspaceStatus("account-status", error.message, "error");
+          if (list) list.innerHTML = '<p class="py-8 text-center text-sm text-red-500">Não foi possível carregar as contas do Firebase Authentication.</p>';
+        }
       }
 
       async function initializeProfileWorkspace(user) {
@@ -9016,11 +9029,8 @@
       function initializeAccountManagement() {
         if (stopAccountSubscription) stopAccountSubscription();
         accountManagementApi = createAccountManagementApi(auth);
-        stopAccountSubscription = onSnapshot(
-          query(collection(db, "users"), orderBy("displayName", "asc")),
-          snapshot => renderAccounts(snapshot.docs.map(item => ({ id: item.id, ...item.data() }))),
-          error => setWorkspaceStatus("account-status", error.message, "error")
-        );
+        stopAccountSubscription = null;
+        loadManagementAccounts();
       }
 
       document.getElementById("profile-form").addEventListener("submit", async event => {
@@ -9159,6 +9169,7 @@
           });
           event.target.reset();
           setWorkspaceStatus("account-status", "Conta criada. O colaborador já pode entrar.", "success");
+          await loadManagementAccounts();
         } catch (error) {
           setWorkspaceStatus("account-status", error.message, "error");
         }

@@ -4,6 +4,7 @@ import handler from './api/generate-document.js';
 import rankingSheetHandler from './api/ranking-sheet.js';
 import clientSheetHandler from './api/consultar.js';
 import createUserHandler from './api/admin/create-user.js';
+import listUsersHandler from './api/admin/list-users.js';
 import setUserDisabledHandler from './api/admin/set-user-disabled.js';
 
 const app = express();
@@ -18,6 +19,7 @@ app.post('/api/generate-document', (req, res) => handler(req, res));
 app.get('/api/ranking-sheet', (req, res) => rankingSheetHandler(req, res));
 app.get('/api/consultar', (req, res) => clientSheetHandler(req, res));
 app.post('/api/admin/create-user', (req, res) => createUserHandler(req, res));
+app.post('/api/admin/list-users', (req, res) => listUsersHandler(req, res));
 app.post('/api/admin/set-user-disabled', (req, res) => setUserDisabledHandler(req, res));
 
 // Serve static files from project root (index.html, assets, modelos-originais)

@@ -212,6 +212,7 @@ async function callManagementApi(auth, path, body) {
 
 export function createAccountManagementApi(auth) {
   return {
+    listUsers: () => callManagementApi(auth, "/api/admin/list-users", {}),
     createUser: (form) => callManagementApi(auth, "/api/admin/create-user", form),
     setDisabled: (uid, disabled) =>
       callManagementApi(auth, "/api/admin/set-user-disabled", { uid, disabled }),
