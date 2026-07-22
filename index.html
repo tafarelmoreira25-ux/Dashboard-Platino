@@ -1392,6 +1392,139 @@
             color: #0f172a;
         }
 
+        .adm-template-picker {
+            position: relative;
+            min-width: 0;
+        }
+
+        .adm-template-picker-trigger {
+            width: 100%;
+            min-height: 4.75rem;
+            display: grid;
+            grid-template-columns: 2.75rem minmax(0, 1fr) 1.5rem;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid rgba(148, 163, 184, 0.34);
+            border-radius: 1rem;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            color: #0f172a;
+            text-align: left;
+            box-shadow: 0 10px 24px rgba(2, 6, 23, 0.18);
+        }
+
+        .adm-template-picker-trigger:hover,
+        .adm-template-picker-trigger[aria-expanded="true"] {
+            border-color: rgba(96, 165, 250, 0.82);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 14px 30px rgba(2, 6, 23, 0.22);
+        }
+
+        .adm-template-picker-icon {
+            display: grid;
+            width: 2.75rem;
+            height: 2.75rem;
+            place-items: center;
+            border-radius: 0.8rem;
+            background: linear-gradient(145deg, #0f2c58, #174b8f);
+            color: #bfdbfe;
+            font-size: 1.25rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+        }
+
+        .adm-template-picker-panel {
+            margin-top: 0.65rem;
+            overflow: hidden;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            border-radius: 1rem;
+            background: linear-gradient(155deg, rgba(15, 36, 70, 0.98), rgba(7, 20, 42, 0.99));
+            box-shadow: 0 22px 48px rgba(2, 6, 23, 0.42);
+        }
+
+        .adm-template-picker-tools {
+            padding: 0.85rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .adm-template-search-wrap {
+            position: relative;
+        }
+
+        .adm-template-search-wrap > i {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        .adm-template-search {
+            width: 100%;
+            min-height: 2.9rem;
+            padding: 0.7rem 0.9rem 0.7rem 2.65rem;
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            border-radius: 0.8rem;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .adm-template-search:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
+        }
+
+        .adm-template-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.55rem;
+            max-height: 23rem;
+            overflow-y: auto;
+            padding: 0.85rem;
+            overscroll-behavior: contain;
+        }
+
+        .adm-template-option {
+            min-height: 5.4rem;
+            display: grid;
+            grid-template-columns: 2.35rem minmax(0, 1fr) 1.2rem;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.75rem;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 0.85rem;
+            background: rgba(255, 255, 255, 0.055);
+            color: #e2e8f0;
+            text-align: left;
+        }
+
+        .adm-template-option:hover,
+        .adm-template-option[aria-selected="true"] {
+            border-color: rgba(96, 165, 250, 0.68);
+            background: rgba(59, 130, 246, 0.17);
+        }
+
+        .adm-template-option[aria-selected="true"] {
+            box-shadow: inset 3px 0 0 #60a5fa;
+        }
+
+        .adm-template-option-icon {
+            display: grid;
+            width: 2.35rem;
+            height: 2.35rem;
+            place-items: center;
+            border-radius: 0.7rem;
+            background: rgba(96, 165, 250, 0.15);
+            color: #93c5fd;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 760px) {
+            .adm-template-options { grid-template-columns: 1fr; max-height: 20rem; }
+            .adm-template-picker-trigger { min-height: 4.5rem; }
+        }
+
         .adm-pdf-fields {
             border: 1px solid rgba(148, 163, 184, 0.22);
             background: rgba(15, 23, 42, 0.5);
@@ -2356,9 +2489,9 @@
 
                         <form id="adm-pdf-form" class="grid gap-4" onsubmit="event.preventDefault(); generateAdmPdf(event)">
                             <div class="grid gap-3 lg:grid-cols-[1.4fr_0.6fr_0.75fr]">
-                                <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
-                                    Modelo
-                                    <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="adm-pdf-control adm-pdf-select px-4 py-3 text-sm font-semibold normal-case tracking-normal">
+                                <div class="adm-template-picker grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
+                                    <span>Modelo jurídico</span>
+                                    <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="sr-only" aria-hidden="true" tabindex="-1">
                                         <option value="chargeback">Chargeback</option>
                                         <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
                                         <option value="citacao-judicial">Citação Judicial</option>
@@ -2374,7 +2507,29 @@
                                         <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
                                         <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
                                     </select>
-                                </label>
+                                    <button id="adm-template-picker-button" type="button" class="adm-template-picker-trigger normal-case tracking-normal" aria-haspopup="listbox" aria-expanded="false" aria-controls="adm-template-picker-panel" onclick="toggleAdmTemplatePicker()">
+                                        <span class="adm-template-picker-icon"><i class="ph ph-scales"></i></span>
+                                        <span class="min-w-0">
+                                            <span id="adm-template-picker-category" class="block text-[0.65rem] font-black uppercase tracking-[0.14em] text-blue-600">Documento jurídico</span>
+                                            <span id="adm-template-picker-title" class="mt-0.5 block truncate text-sm font-black text-slate-900">Selecione um modelo</span>
+                                            <span id="adm-template-picker-description" class="mt-0.5 block truncate text-xs font-medium text-slate-500">Escolha na biblioteca de documentos</span>
+                                        </span>
+                                        <i class="ph ph-caret-down text-lg text-slate-500 transition-transform" data-picker-chevron></i>
+                                    </button>
+                                    <div id="adm-template-picker-panel" class="adm-template-picker-panel normal-case tracking-normal" hidden>
+                                        <div class="adm-template-picker-tools">
+                                            <div class="flex items-center justify-between gap-3 pb-2">
+                                                <span class="text-sm font-black text-white"><i class="ph ph-books mr-1 text-blue-300"></i> Biblioteca de modelos</span>
+                                                <span class="text-[0.65rem] font-bold uppercase tracking-wider text-blue-200/60">14 documentos</span>
+                                            </div>
+                                            <div class="adm-template-search-wrap">
+                                                <i class="ph ph-magnifying-glass text-lg"></i>
+                                                <input id="adm-template-search" type="search" class="adm-template-search" placeholder="Buscar por nome, área ou finalidade..." autocomplete="off" oninput="renderAdmTemplateOptions(this.value)">
+                                            </div>
+                                        </div>
+                                        <div id="adm-template-options" class="adm-template-options" role="listbox" aria-label="Modelos jurídicos disponíveis"></div>
+                                    </div>
+                                </div>
                                 <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
                                     Data do documento
                                     <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal">
@@ -7687,7 +7842,98 @@
             }
         }
 
+        const admTemplateCatalog = {
+            'chargeback': { category: 'Defesa financeira', icon: 'ph-credit-card', description: 'Contestação formal de cobrança ou transação.' },
+            'citacao-intimacao-extrajudicial': { category: 'Extrajudicial', icon: 'ph-envelope-open', description: 'Comunicação formal sem processo judicial.' },
+            'citacao-judicial': { category: 'Judicial', icon: 'ph-gavel', description: 'Documento destinado a procedimento judicial.' },
+            'contestacao-taxas-email': { category: 'Defesa financeira', icon: 'ph-at', description: 'Contestação objetiva de taxas por e-mail.' },
+            'declaracao-ausencia-carteira-trabalho': { category: 'Declarações', icon: 'ph-identification-card', description: 'Declaração trabalhista de ausência de CTPS.' },
+            'declaracao-hipossuficiencia': { category: 'Declarações', icon: 'ph-file-text', description: 'Declaração para pedido de gratuidade.' },
+            'declaracao-isencao-irpf': { category: 'Declarações', icon: 'ph-receipt', description: 'Declaração de isenção do imposto de renda.' },
+            'notificacao-extrajudicial-platino': { category: 'Extrajudicial', icon: 'ph-megaphone', description: 'Notificação extrajudicial institucional Platino.' },
+            'procuracao-dra-juliane': { category: 'Representação', icon: 'ph-seal-check', description: 'Instrumento de mandato e representação.' },
+            'termo-ciencia-autorizacao-seguranca': { category: 'Termos e autorizações', icon: 'ph-shield-check', description: 'Ciência e autorização sobre segurança.' },
+            'termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-handshake', description: 'Formalização de compromisso de pagamento.' },
+            'modelo-termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-files', description: 'Modelo-base de compromisso de pagamento.' },
+            'relatorio-atualizacao-processo-judicial': { category: 'Judicial', icon: 'ph-briefcase', description: 'Relatório de andamento e movimentações.' },
+            'laudo-pericial-contabil': { category: 'Perícia contábil', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.' }
+        };
+
+        function getAdmTemplateInfo(value) {
+            return admTemplateCatalog[value] || { category: 'Documento jurídico', icon: 'ph-file-text', description: 'Modelo disponível para geração.' };
+        }
+
+        function syncAdmTemplatePicker() {
+            const select = document.getElementById('adm-pdf-template');
+            if (!select) return;
+            const info = getAdmTemplateInfo(select.value);
+            const title = select.options[select.selectedIndex]?.text || 'Selecione um modelo';
+            const titleElement = document.getElementById('adm-template-picker-title');
+            const categoryElement = document.getElementById('adm-template-picker-category');
+            const descriptionElement = document.getElementById('adm-template-picker-description');
+            const iconElement = document.querySelector('#adm-template-picker-button .adm-template-picker-icon i');
+            if (titleElement) titleElement.textContent = title;
+            if (categoryElement) categoryElement.textContent = info.category;
+            if (descriptionElement) descriptionElement.textContent = info.description;
+            if (iconElement) iconElement.className = `ph ${info.icon}`;
+        }
+
+        function renderAdmTemplateOptions(query = '') {
+            const select = document.getElementById('adm-pdf-template');
+            const container = document.getElementById('adm-template-options');
+            if (!select || !container) return;
+            const normalizedQuery = String(query).trim().toLocaleLowerCase('pt-BR');
+            const options = Array.from(select.options).filter(option => {
+                const info = getAdmTemplateInfo(option.value);
+                return `${option.text} ${info.category} ${info.description}`.toLocaleLowerCase('pt-BR').includes(normalizedQuery);
+            });
+            container.innerHTML = options.length ? options.map(option => {
+                const info = getAdmTemplateInfo(option.value);
+                const selected = option.value === select.value;
+                return `<button type="button" class="adm-template-option" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}" onclick="selectAdmTemplate(this.dataset.templateValue)">
+                    <span class="adm-template-option-icon"><i class="ph ${escapeHtml(info.icon)}"></i></span>
+                    <span class="min-w-0">
+                        <span class="block text-[0.62rem] font-black uppercase tracking-[0.12em] text-blue-300">${escapeHtml(info.category)}</span>
+                        <span class="mt-0.5 block text-sm font-black leading-snug text-white">${escapeHtml(option.text)}</span>
+                        <span class="mt-1 block text-xs font-medium leading-snug text-slate-400">${escapeHtml(info.description)}</span>
+                    </span>
+                    <i class="ph ${selected ? 'ph-check-circle text-blue-300' : 'ph-caret-right text-slate-500'} text-lg"></i>
+                </button>`;
+            }).join('') : '<div class="col-span-full grid min-h-28 place-items-center rounded-xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-1 block text-2xl text-blue-300"></i>Nenhum modelo encontrado.</span></div>';
+        }
+
+        function toggleAdmTemplatePicker(force) {
+            const panel = document.getElementById('adm-template-picker-panel');
+            const button = document.getElementById('adm-template-picker-button');
+            if (!panel || !button) return;
+            const shouldOpen = typeof force === 'boolean' ? force : panel.hidden;
+            panel.hidden = !shouldOpen;
+            button.setAttribute('aria-expanded', String(shouldOpen));
+            button.querySelector('[data-picker-chevron]')?.classList.toggle('rotate-180', shouldOpen);
+            if (shouldOpen) {
+                renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+                window.setTimeout(() => document.getElementById('adm-template-search')?.focus(), 30);
+            }
+        }
+
+        function selectAdmTemplate(value) {
+            const select = document.getElementById('adm-pdf-template');
+            if (!select || !Array.from(select.options).some(option => option.value === value)) return;
+            select.value = value;
+            renderAdmPdfFields();
+            toggleAdmTemplatePicker(false);
+            document.getElementById('adm-template-picker-button')?.focus();
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !document.getElementById('adm-template-picker-panel')?.hidden) {
+                toggleAdmTemplatePicker(false);
+                document.getElementById('adm-template-picker-button')?.focus();
+            }
+        });
+
         function renderAdmPdfFields() {
+            syncAdmTemplatePicker();
             const template = getAdmPdfTemplate();
             const fieldsContainer = document.getElementById('adm-pdf-fields');
             const status = document.getElementById('adm-pdf-status');
