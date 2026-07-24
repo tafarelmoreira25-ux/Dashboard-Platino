@@ -204,24 +204,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /laudosPericiais/{laudoId} {
-      allow create: if signedIn()
-        && request.resource.data.status == 'Pendente'
-        && request.resource.data.createdBy == request.auth.token.email;
-      allow read: if signedIn() && request.auth.token.email == 'administrativo@platino.com';
-      allow update: if signedIn()
-        && request.auth.token.email == 'administrativo@platino.com'
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-          'status',
-          'validationCode',
-          'validationDate',
-          'signed',
-          'reviewedBy',
-          'reviewedAt'
-        ]);
-      allow delete: if false;
-    }
-
     match /sdrLeads/{leadId} {
       allow read: if isSdrAccess();
       allow create: if isSdrAccess()
