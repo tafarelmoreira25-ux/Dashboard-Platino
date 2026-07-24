@@ -8540,7 +8540,7 @@
                 });
                 if (!response.ok) {
                     const payload = await response.json().catch(() => ({}));
-                    throw new Error(payload?.error || `O servidor respondeu HTTP ${response.status}.`);
+                    throw new Error(payload?.detail || payload?.error || `O servidor respondeu HTTP ${response.status}.`);
                 }
                 blob = await response.blob();
             }
