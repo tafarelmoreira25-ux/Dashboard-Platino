@@ -211,7 +211,7 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
         imagemProcesso: data.imagemProcesso,
         codigoValidacao: texto(data.codigoValidacao) || texto(data.numeroDocumento),
       }, {
-        assinaturaBytes: await asset("relatorio-processual-assinatura.png").catch(() => null),
+        assinaturaBytes: await asset("assinatura-manuscrita-rafael.png").catch(() => null),
       }),
     "laudo-pericial-contabil": async () => gerarLaudoPericialContabilPdf({
       ...data,

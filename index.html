@@ -2580,7 +2580,7 @@
                                     <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70 sm:col-span-2 lg:col-span-1">
                                         Nome do arquivo
                                         <div class="relative">
-                                            <input id="adm-pdf-file-name" type="text" class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold normal-case tracking-normal" placeholder="Digite o nome do documento" oninput="this.dataset.edited = 'true'">
+                                            <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold normal-case tracking-normal" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
                                             <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black normal-case tracking-normal text-slate-400">.pdf</span>
                                         </div>
                                     </label>
@@ -8392,16 +8392,15 @@
         }
 
         function getAdmPdfFileName(template, data, override = '') {
-            const customName = String(override || document.getElementById('adm-pdf-file-name')?.value || '')
+            const documentName = String(override || template.title || 'Documento')
                 .replace(/\.pdf$/i, '')
                 .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-')
                 .replace(/\s+/g, ' ')
                 .replace(/[. ]+$/g, '')
-                .trim();
-            if (customName) return `${customName}.pdf`;
-            const mainName = data.cliente || data.banco || 'documento';
+                .trim() || 'Documento';
+            const mainName = data.cliente || data.nomeCliente || 'cliente-nao-informado';
             const documentNumber = data.numeroDocumento || ensureAdmPdfNumber();
-            return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
+            return `${slugifyAdmPdf(documentName)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
         }
 
         let admPdfGeneratorReady = null;

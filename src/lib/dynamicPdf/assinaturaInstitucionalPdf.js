@@ -51,9 +51,9 @@ export async function desenharAssinaturaInstitucional({
   codigoValidacao,
 }) {
   const centro = larguraPagina / 2;
-  const larguraLinha = 238;
-  const alturaMaximaImagem = 58;
-  const larguraMaximaImagem = 190;
+  const larguraLinha = 210;
+  const alturaMaximaImagem = 42;
+  const larguraMaximaImagem = 175;
   let y = yTopo;
   let imagem = null;
 
@@ -79,10 +79,10 @@ export async function desenharAssinaturaInstitucional({
       width: largura,
       height: altura,
     });
-    y -= altura + 12;
+    y -= altura + 7;
   } else {
     centralizar(pagina, fontes.normal, "[ assinatura manuscrita ]", y - 29, 7.5, larguraPagina, CINZA_CLARO);
-    y -= 58;
+    y -= 45;
   }
 
   pagina.drawLine({
@@ -92,23 +92,16 @@ export async function desenharAssinaturaInstitucional({
     color: CINZA_ESCURO,
   });
 
+  y -= 15;
+  centralizar(pagina, fontes.negrito, nome, y, 8.8, larguraPagina);
+  y -= 12;
+  centralizar(pagina, fontes.normal, `${departamento} • ${organizacao}`, y, 7.6, larguraPagina, CINZA_ESCURO);
+
   y -= 18;
-  centralizar(pagina, fontes.negrito, nome, y, 9.2, larguraPagina);
-  y -= 14;
-  centralizar(pagina, fontes.normal, departamento, y, 8.4, larguraPagina, CINZA_ESCURO);
-  y -= 14;
-  centralizar(pagina, fontes.negrito, organizacao, y, 8.2, larguraPagina, CINZA_ESCURO);
-
-  y -= 24;
-  centralizar(pagina, fontes.normal, "Documento assinado digitalmente por", y, 7.5, larguraPagina, CINZA_ESCURO);
-  y -= 12;
-  centralizar(pagina, fontes.negrito, nome, y, 7.7, larguraPagina, CINZA_ESCURO);
-  y -= 12;
-  centralizar(pagina, fontes.normal, `em ${texto(dataAssinatura)} às ${texto(horaAssinatura)}`, y, 7.5, larguraPagina, CINZA_ESCURO);
-
-  y -= 19;
-  centralizar(pagina, fontes.normal, "Código de validação:", y, 7.2, larguraPagina, CINZA_ESCURO);
+  centralizar(pagina, fontes.normal, `Documento assinado digitalmente por ${nome}`, y, 7.2, larguraPagina, CINZA_ESCURO);
   y -= 11;
-  centralizar(pagina, fontes.negrito, texto(codigoValidacao) || "Não informado", y, 7.4, larguraPagina, CINZA_ESCURO);
+  centralizar(pagina, fontes.normal, `em ${texto(dataAssinatura)} às ${texto(horaAssinatura)}`, y, 7.2, larguraPagina, CINZA_ESCURO);
+  y -= 14;
+  centralizar(pagina, fontes.normal, `Código de validação: ${texto(codigoValidacao) || "Não informado"}`, y, 7.1, larguraPagina, CINZA_ESCURO);
   return y;
 }
