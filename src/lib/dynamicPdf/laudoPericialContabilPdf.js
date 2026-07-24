@@ -86,8 +86,13 @@ function calcularCenarios(dados) {
     inconsistencias.push("A restituição selecionada exige justificativa técnica ou jurídica.");
   }
   if (contratual <= 0) inconsistencias.push("Prestação contratual não informada.");
-  if (primeiroJurosContrato > contratual + 0.01) inconsistencias.push("A prestação contratual é inferior aos juros do primeiro período.");
-  if (Math.abs(saldoFinalContrato) > Math.max(1, bruto * 0.01)) inconsistencias.push("A reprodução contratual não encerra com saldo próximo de zero.");
+  if (primeiroJurosContrato > contratual + 0.01) {
+    const principalMaximo = i > 0 ? contratual / i : 0;
+    inconsistencias.push(`A prestação contratual (R$ ${moeda(contratual)}) é inferior aos juros do primeiro período (R$ ${moeda(primeiroJurosContrato)}). Com taxa de ${percentual(i * 100)}% a.m., o principal máximo compatível com essa parcela seria R$ ${moeda(principalMaximo)}.`);
+  }
+  if (Math.abs(saldoFinalContrato) > Math.max(1, bruto * 0.01)) {
+    inconsistencias.push(`A reprodução contratual não encerra com saldo próximo de zero (saldo final calculado: R$ ${moeda(saldoFinalContrato)}). Confira valor financiado bruto, taxa, parcela, quantidade e datas.`);
+  }
   return { bruto, tarifas, pv, n, pagas, i, metodo, pmt, contratual, diferencaMensal, estornoPagas, multiplicadorRestituicao, tarifasRestituicao, proveito, taxaAnual, memoria, inconsistencias };
 }
 
