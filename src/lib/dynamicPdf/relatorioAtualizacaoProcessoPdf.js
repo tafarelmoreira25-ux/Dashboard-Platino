@@ -314,7 +314,7 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBy
   ], { alinhamento: "justify", manterJunto: true, antes: 5, depois: 10 });
 
   paragrafo(contexto, [{ texto: "Cordialmente," }], { antes: 0, depois: 8 });
-  garantir(contexto, 145);
+  garantir(contexto, 92);
   const agora = dataHoraAssinatura();
   await desenharAssinaturaInstitucional({
     pdf,

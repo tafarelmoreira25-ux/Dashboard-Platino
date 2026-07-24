@@ -52,8 +52,8 @@ export async function desenharAssinaturaInstitucional({
 }) {
   const centro = larguraPagina / 2;
   const larguraLinha = 210;
-  const alturaMaximaImagem = 42;
-  const larguraMaximaImagem = 175;
+  const alturaMaximaImagem = 36;
+  const larguraMaximaImagem = 165;
   let y = yTopo;
   let imagem = null;
 
@@ -79,10 +79,10 @@ export async function desenharAssinaturaInstitucional({
       width: largura,
       height: altura,
     });
-    y -= altura + 7;
+    y -= altura + 5;
   } else {
     centralizar(pagina, fontes.normal, "[ assinatura manuscrita ]", y - 29, 7.5, larguraPagina, CINZA_CLARO);
-    y -= 45;
+    y -= 39;
   }
 
   pagina.drawLine({
@@ -92,16 +92,13 @@ export async function desenharAssinaturaInstitucional({
     color: CINZA_ESCURO,
   });
 
-  y -= 15;
-  centralizar(pagina, fontes.negrito, nome, y, 8.8, larguraPagina);
-  y -= 12;
-  centralizar(pagina, fontes.normal, `${departamento} • ${organizacao}`, y, 7.6, larguraPagina, CINZA_ESCURO);
-
-  y -= 18;
-  centralizar(pagina, fontes.normal, `Documento assinado digitalmente por ${nome}`, y, 7.2, larguraPagina, CINZA_ESCURO);
+  y -= 13;
+  centralizar(pagina, fontes.negrito, nome, y, 8.5, larguraPagina);
   y -= 11;
-  centralizar(pagina, fontes.normal, `em ${texto(dataAssinatura)} às ${texto(horaAssinatura)}`, y, 7.2, larguraPagina, CINZA_ESCURO);
+  centralizar(pagina, fontes.normal, `${departamento} • ${organizacao}`, y, 7.3, larguraPagina, CINZA_ESCURO);
+
   y -= 14;
-  centralizar(pagina, fontes.normal, `Código de validação: ${texto(codigoValidacao) || "Não informado"}`, y, 7.1, larguraPagina, CINZA_ESCURO);
+  const identificacaoDigital = `Documento assinado digitalmente por ${nome} • em ${texto(dataAssinatura)} às ${texto(horaAssinatura)} • Código de validação: ${texto(codigoValidacao) || "Não informado"}`;
+  centralizar(pagina, fontes.normal, identificacaoDigital, y, 6.4, larguraPagina, CINZA_ESCURO);
   return y;
 }
