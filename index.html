@@ -2052,6 +2052,9 @@
                 <button id="nav-juridico" onclick="navigateTo('juridico')" class="nav-btn">
                     <i class="ph ph-scales"></i> Jurídico
                 </button>
+                <button id="nav-sdr" onclick="navigateTo('sdr')" class="nav-btn">
+                    <i class="ph ph-headset"></i> SDR - Qualificação
+                </button>
                 <button id="nav-rh" onclick="navigateTo('rh')" class="nav-btn">
                     <i class="ph ph-users-three"></i> RH
                 </button>
@@ -2304,21 +2307,11 @@
                                     <i class="ph ph-pencil-simple"></i> Editar resultados
                                 </button>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-file-text text-blue-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Novos</span></div>
                                     <p id="avisos-week-contracts" class="mt-2 text-3xl font-black">0</p>
                                     <p class="text-xs text-blue-100">Contratos</p>
-                                </div>
-                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                                    <div class="flex items-center justify-between"><i class="ph ph-check-circle text-indigo-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Concluídos</span></div>
-                                    <p id="avisos-week-laudos" class="mt-2 text-3xl font-black">0</p>
-                                    <p class="text-xs text-blue-100">Laudos fechados</p>
-                                </div>
-                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                                    <div class="flex items-center justify-between"><i class="ph ph-x-circle text-red-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Período</span></div>
-                                    <p id="avisos-week-distratos" class="mt-2 text-3xl font-black">0</p>
-                                    <p class="text-xs text-blue-100">Distratos</p>
                                 </div>
                                 <div class="rounded-xl border border-purple-300/20 bg-purple-400/15 p-4 backdrop-blur-sm">
                                     <div class="flex items-center justify-between"><i class="ph ph-currency-circle-dollar text-purple-200 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-purple-100">Total</span></div>
@@ -2630,6 +2623,44 @@
                         <p class="text-slate-500 mt-1">Procedimentos e gestão de pastas do setor jurídico.</p>
                     </div>
                     <div class="space-y-4" id="jur-accordions"></div>
+                </div>
+            </section>
+
+            <section id="section-sdr" class="content-section hidden animate-fade-in">
+                <div class="max-w-7xl mx-auto space-y-5">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                        <div><h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-headset text-cyan-500"></i> SDR - Qualificação de Leads</h2><p class="text-slate-500 mt-1">Fila de contatos, qualificação completa e encaminhamento integrado ao Comercial.</p></div>
+                        <button type="button" onclick="sdrNovoLead()" class="metal-button rounded-xl px-4 py-2.5 text-sm font-bold text-white"><i class="ph ph-plus mr-1"></i>Novo lead</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8">
+                        <div class="rounded-2xl bg-white p-4 shadow-sm border border-slate-100"><span class="text-xs text-slate-500">Aguardando</span><strong id="sdr-metric-novos" class="mt-1 block text-2xl text-slate-800">0</strong></div>
+                        <div class="rounded-2xl bg-white p-4 shadow-sm border border-slate-100"><span class="text-xs text-slate-500">Hoje</span><strong id="sdr-metric-hoje" class="mt-1 block text-2xl text-slate-800">0</strong></div>
+                        <div class="rounded-2xl bg-white p-4 shadow-sm border border-slate-100"><span class="text-xs text-slate-500">Retornos</span><strong id="sdr-metric-retornos" class="mt-1 block text-2xl text-slate-800">0</strong></div>
+                        <div class="rounded-2xl bg-white p-4 shadow-sm border border-slate-100"><span class="text-xs text-slate-500">Em qualificação</span><strong id="sdr-metric-qualificacao" class="mt-1 block text-2xl text-slate-800">0</strong></div>
+                        <div class="rounded-2xl bg-emerald-50 p-4 shadow-sm border border-emerald-100"><span class="text-xs text-emerald-700">Quentes</span><strong id="sdr-metric-quentes" class="mt-1 block text-2xl text-emerald-700">0</strong></div>
+                        <div class="rounded-2xl bg-amber-50 p-4 shadow-sm border border-amber-100"><span class="text-xs text-amber-700">Mornos</span><strong id="sdr-metric-mornos" class="mt-1 block text-2xl text-amber-700">0</strong></div>
+                        <div class="rounded-2xl bg-slate-50 p-4 shadow-sm border border-slate-200"><span class="text-xs text-slate-600">Frios</span><strong id="sdr-metric-frios" class="mt-1 block text-2xl text-slate-700">0</strong></div>
+                        <div class="rounded-2xl bg-cyan-50 p-4 shadow-sm border border-cyan-100"><span class="text-xs text-cyan-700">Encaminhados</span><strong id="sdr-metric-encaminhados" class="mt-1 block text-2xl text-cyan-700">0</strong></div>
+                    </div>
+                    <div class="grid gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+                        <div class="rounded-2xl bg-white p-4 shadow-sm border border-slate-100">
+                            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between"><h3 class="font-bold text-slate-800">Fila de leads</h3><div class="flex gap-2"><select id="sdr-filter-status" onchange="sdrRender()" class="rounded-lg border border-slate-200 px-2 py-2 text-xs"><option value="">Todos os status</option><option>Novo lead</option><option>Contato agendado</option><option>Tentativa de contato</option><option>Em qualificação</option><option>Retorno agendado</option><option>Qualificação pendente</option><option>Qualificado</option><option>Encaminhado ao vendedor</option><option>Não qualificado</option><option>Sem contato</option><option>Descartado</option></select><select id="sdr-filter-classificacao" onchange="sdrRender()" class="rounded-lg border border-slate-200 px-2 py-2 text-xs"><option value="">Todas as classificações</option><option>Quente</option><option>Morno</option><option>Frio</option></select></div></div>
+                            <div id="sdr-lead-list" class="mt-4 space-y-2"></div>
+                        </div>
+                        <form id="sdr-lead-form" onsubmit="sdrSalvarLead(event)" class="rounded-2xl bg-white p-5 shadow-sm border border-slate-100 space-y-4">
+                            <input type="hidden" id="sdr-lead-id">
+                            <div class="flex items-center justify-between"><h3 id="sdr-form-title" class="font-bold text-slate-800">Novo lead</h3><span id="sdr-form-status" class="text-xs text-slate-500">Rascunho</span></div>
+                            <div class="grid gap-3 md:grid-cols-2"><label class="text-xs font-semibold text-slate-600">Nome completo *<input id="sdr-nome" required class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Telefone/WhatsApp *<input id="sdr-telefone" required class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">CPF/CNPJ <span class="font-normal">(obrigatório ao encaminhar)</span><input id="sdr-documento" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Somente no encaminhamento"></label><label class="text-xs font-semibold text-slate-600">E-mail<input id="sdr-email" type="email" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Origem<select id="sdr-origem" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"><option>Instagram</option><option>Facebook</option><option>Google</option><option>WhatsApp</option><option>Site</option><option>Simulador</option><option>Indicação</option><option>Lista de prospecção</option><option>Parceiro</option><option>Tráfego pago</option><option>Outro</option></select></label><label class="text-xs font-semibold text-slate-600">Próximo contato<input id="sdr-proximo-contato" type="datetime-local" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></label></div>
+                            <div class="rounded-xl bg-slate-50 p-4 space-y-3"><h4 class="font-bold text-slate-700">Contrato</h4><div class="grid gap-3 md:grid-cols-3"><label class="text-xs font-semibold text-slate-600">Tipo<select id="sdr-tipo-contrato" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option>Carro</option><option>Motocicleta</option><option>Outro veículo</option><option>Imóvel</option><option>Empréstimo pessoal</option><option>Empréstimo consignado</option><option>Outro</option></select></label><label class="text-xs font-semibold text-slate-600">Banco<input id="sdr-banco" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Parcela atual (R$)<input id="sdr-parcela" inputmode="decimal" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Parcelas restantes<input id="sdr-restantes" type="number" min="0" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Situação<select id="sdr-situacao" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option>Em dia</option><option>Em atraso</option><option>Quitado</option><option>Renegociado</option><option>Não informado</option></select></label><label class="text-xs font-semibold text-slate-600">Possui contrato?<select id="sdr-possui-contrato" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option>Não informado</option><option>Sim</option><option>Não</option></select></label></div></div>
+                            <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-4 space-y-3"><div><h4 class="font-bold text-indigo-900">Simulação preliminar do contrato</h4><p class="mt-1 text-xs text-indigo-800">Use apenas dados informados pelo lead e referência pública/manual documentada. Este cálculo não é consulta, aprovação ou autorização do Banco Central.</p></div><div class="grid gap-3 md:grid-cols-3"><label class="text-xs font-semibold text-slate-600">Saldo devedor estimado (R$)<input id="sdr-simulacao-saldo" inputmode="decimal" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Taxa contratada (% a.m.)<input id="sdr-simulacao-taxa" inputmode="decimal" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Taxa de referência (% a.m.)<input id="sdr-simulacao-referencia" inputmode="decimal" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm"></label><label class="text-xs font-semibold text-slate-600">Fonte da referência<input id="sdr-simulacao-fonte" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm" placeholder="BCB - série/modalidade ou fonte manual"></label><label class="text-xs font-semibold text-slate-600">Período da referência<input id="sdr-simulacao-periodo" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm" placeholder="Mês/ano"></label><label class="text-xs font-semibold text-slate-600">Data da simulação<input id="sdr-simulacao-data" type="datetime-local" class="mt-1 w-full rounded-lg border border-indigo-200 px-2 py-2 text-sm"></label></div><button type="button" onclick="sdrSimular()" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-bold text-white">Calcular simulação preliminar</button><div id="sdr-simulacao-resultado" class="text-sm text-indigo-900"></div></div>
+                            <div class="grid gap-3 md:grid-cols-2"><label class="text-xs font-semibold text-slate-600">Pergunta 1 - dor principal<textarea id="sdr-q1" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Resposta completa do lead"></textarea></label><label class="text-xs font-semibold text-slate-600">Pergunta 2 - contrato e parcelas<textarea id="sdr-q2" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label><label class="text-xs font-semibold text-slate-600">Pergunta 3 - impacto no orçamento<textarea id="sdr-q3" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label><label class="text-xs font-semibold text-slate-600">Pergunta 4 - prazo de decisão<textarea id="sdr-q4" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label><label class="text-xs font-semibold text-slate-600">Pergunta 5 - disponibilidade financeira<textarea id="sdr-q5" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label><label class="text-xs font-semibold text-slate-600">Principal objeção<textarea id="sdr-objecao" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label></div>
+                            <div class="grid gap-3 md:grid-cols-3"><label class="text-xs font-semibold text-slate-600">Dor principal<select id="sdr-marcador-dor" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option value="">Selecione</option><option>Parcela alta</option><option>Juros/encargos</option><option>Atraso</option><option>Saldo não reduz</option><option>Outro</option></select></label><label class="text-xs font-semibold text-slate-600">Urgência<select id="sdr-marcador-urgencia" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option value="">Selecione</option><option>Alta</option><option>Média</option><option>Baixa</option></select></label><label class="text-xs font-semibold text-slate-600">Intenção de avançar<select id="sdr-marcador-intencao" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option value="">Selecione</option><option>Imediata</option><option>Após análise</option><option>Apenas pesquisando</option></select></label><label class="text-xs font-semibold text-slate-600">Disponibilidade<select id="sdr-marcador-disponibilidade" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option value="">Selecione</option><option>Disponível</option><option>Precisa condição</option><option>Sem disponibilidade</option></select></label><label class="text-xs font-semibold text-slate-600">Depende de outra pessoa?<select id="sdr-marcador-decisor" class="mt-1 w-full rounded-lg border border-slate-200 px-2 py-2 text-sm"><option>Não informado</option><option>Não</option><option>Sim</option></select></label><label class="text-xs font-semibold text-slate-600">Vendedor responsável<input id="sdr-vendedor" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Selecionar vendedor"></label></div>
+                            <div class="rounded-xl border border-cyan-100 bg-cyan-50 p-4"><div class="flex items-center justify-between"><span class="text-sm font-bold text-cyan-900">Percentual interno de interesse</span><strong id="sdr-score" class="text-xl text-cyan-700">0%</strong></div><p class="mt-1 text-xs text-cyan-800">Qualificação comercial; não representa probabilidade de redução, êxito judicial ou resultado técnico.</p></div>
+                            <label class="text-xs font-semibold text-slate-600">Resumo editável do SDR<textarea id="sdr-resumo" rows="4" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label>
+                            <label class="text-xs font-semibold text-slate-600">Motivo da devolução (obrigatório ao devolver)<textarea id="sdr-motivo-devolucao" rows="2" class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"></textarea></label><div><h4 class="text-xs font-bold uppercase tracking-wide text-slate-500">Histórico</h4><div id="sdr-history" class="mt-2 max-h-32 space-y-1 overflow-auto rounded-lg bg-slate-50 p-2 text-xs text-slate-500">Novo lead ainda sem eventos.</div></div>
+                            <div id="sdr-form-message" class="min-h-5 text-sm"></div><div class="flex flex-wrap gap-2"><button type="submit" class="metal-button rounded-xl px-4 py-2 text-sm font-bold text-white">Salvar rascunho</button><button type="button" onclick="sdrEncaminhar()" class="rounded-xl bg-cyan-600 px-4 py-2 text-sm font-bold text-white">Finalizar e encaminhar</button><button type="button" onclick="sdrDevolver()" class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700">Registrar devolução</button></div>
+                        </form>
+                    </div>
                 </div>
             </section>
 
@@ -4731,6 +4762,7 @@
             comercial: 'Comercial',
             adm: 'Administrativo',
             juridico: 'Jurídico',
+            sdr: 'SDR',
             rh: 'RH',
             financeiro: 'Financeiro',
             drive: 'Drive',
@@ -6794,8 +6826,8 @@
             document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
             document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
             document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
-            document.getElementById('avisos-week-laudos').innerText = avisosData.week.laudos;
-            document.getElementById('avisos-week-distratos').innerText = avisosData.week.distratos;
+            setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
+            setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
             document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
             
             renderInicioNotices();
@@ -7684,12 +7716,12 @@
                     'valorFinanciadoBruto', 'valorPrestacaoContratual', 'quantidadeParcelas',
                     'parcelasPagas', 'taxaJurosMensal', 'metodoCalculo', 'valorTarifaCadastro',
                     'valorRegistroContrato', 'valorAvaliacaoBem', 'valorSeguroPrestamista', 'valorSeguroBem',
-                    'validacaoPerito', 'dataValidacao', 'codigoValidacao', 'incluirAssinatura'
+                    'validacaoPerito', 'dataValidacao', 'codigoValidacao', 'incluirAssinatura', 'multiplicadorRestituicao', 'justificativaRestituicao'
                 ],
                 requiredFields: [
                     'cliente', 'cpf', 'banco', 'contrato', 'valorFinanciadoBruto',
                     'valorPrestacaoContratual', 'quantidadeParcelas', 'taxaJurosMensal', 'metodoCalculo',
-                    'validacaoPerito', 'dataValidacao', 'codigoValidacao'
+                    'validacaoPerito', 'dataValidacao', 'codigoValidacao', 'multiplicadorRestituicao'
                 ],
                 customLabels: {
                     cliente: 'Contratante / cliente', cpf: 'CPF ou CNPJ do cliente', banco: 'Instituição financeira',
@@ -7703,16 +7735,24 @@
                     valorAvaliacaoBem: 'Avaliação do bem (R$)', valorSeguroPrestamista: 'Seguro prestamista (R$)',
                     valorSeguroBem: 'Seguro do bem (R$)'
                     ,validacaoPerito: 'Validação do perito Denis', dataValidacao: 'Data da validação pericial',
+                    multiplicadorRestituicao: 'Multiplicador de restituição (0, 1 ou 2)', justificativaRestituicao: 'Justificativa da restituição (quando aplicável)',
                     codigoValidacao: 'Código de validação do laudo', incluirAssinatura: 'Incluir assinatura eletrônica visual'
                 },
                 fieldTypes: {
-                    dataContrato: 'date', dataBaseCalculo: 'date', dataValidacao: 'date', metodoCalculo: 'select',
+                    dataContrato: 'date', dataBaseCalculo: 'date', dataValidacao: 'date', metodoCalculo: 'select', multiplicadorRestituicao: 'select',
                     validacaoPerito: 'select', incluirAssinatura: 'select', quantidadeParcelas: 'number', parcelasPagas: 'number'
                 },
                 fieldOptions: {
                     metodoCalculo: [
                         { value: 'Tabela Price', label: 'Tabela Price — expurgo apenas das tarifas' },
-                        { value: 'MAJS', label: 'MAJS — juros simples / expurgo do anatocismo' }
+                        { value: 'SAC', label: 'SAC — amortização constante' },
+                        { value: 'GAUSS', label: 'Gauss — cenário de juros distribuídos linearmente' },
+                        { value: 'Juros simples', label: 'Juros simples — amortização linear' }
+                    ],
+                    multiplicadorRestituicao: [
+                        { value: '0', label: 'Sem restituição automática' },
+                        { value: '1', label: 'Restituição simples (exige fundamentação)' },
+                        { value: '2', label: 'Restituição em dobro (exige fundamentação jurídica)' }
                     ],
                     validacaoPerito: [
                         { value: 'Pendente', label: 'Aguardando validação do perito' },
@@ -8090,6 +8130,8 @@
             if (validationDate && !validationDate.value) validationDate.valueAsDate = new Date();
             const validationCode = document.getElementById('adm-field-codigoValidacao');
             if (validationCode && !validationCode.value) validationCode.value = `DENIS-${ensureAdmPdfNumber()}`;
+            const restitutionMultiplier = document.getElementById('adm-field-multiplicadorRestituicao');
+            if (restitutionMultiplier && !restitutionMultiplier.value) restitutionMultiplier.value = '0';
             document.getElementById('adm-field-validacaoPerito')?.addEventListener('change', updateLaudoValidationControls);
             updateLaudoValidationControls();
             updateLaudoWorkflowVisibility();
@@ -8736,6 +8778,36 @@
             renderAvisos();
         };
 
+        const SDR_STORAGE_KEY = 'platinoSdrLeads';
+        let sdrLeads = JSON.parse(localStorage.getItem(SDR_STORAGE_KEY) || '[]');
+        let sdrActiveId = '';
+        const sdrStatusList = ['Novo lead','Contato agendado','Tentativa de contato','Em qualificação','Retorno agendado','Qualificação pendente','Qualificado','Encaminhado ao vendedor','Não qualificado','Sem contato','Descartado'];
+        const sdrGet = id => document.getElementById(id)?.value?.trim() || '';
+        const sdrSet = (id, value) => { const el = document.getElementById(id); if (el) el.value = value ?? ''; };
+        const sdrEsc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[char]));
+        function sdrAccess() { const sector = String(window.platinoUserSector || '').toLowerCase(); return window.platinoUserRole === 'gestor' || sector.includes('sdr') || sector.includes('comercial') || sector.includes('admin') || sector.includes('gestão'); }
+        window.sdrApplyAccess = () => { const allowed = sdrAccess(); document.getElementById('nav-sdr')?.classList.toggle('hidden', !allowed); if (!allowed && !document.getElementById('section-sdr')?.classList.contains('hidden')) navigateTo('inicio'); };
+        function sdrClassificacao(score) { return score >= 70 ? 'Quente' : score >= 40 ? 'Morno' : 'Frio'; }
+        function sdrCalculateScore() {
+            const score = (sdrGet('sdr-marcador-dor') ? 20 : 0) + (sdrGet('sdr-q2') ? 20 : 0) + ({ Alta: 20, Média: 12, Baixa: 5 }[sdrGet('sdr-marcador-urgencia')] || 0) + ({ Imediata: 20, 'Após análise': 12, 'Apenas pesquisando': 4 }[sdrGet('sdr-marcador-intencao')] || 0) + ({ Disponível: 20, 'Precisa condição': 12, 'Sem disponibilidade': 3 }[sdrGet('sdr-marcador-disponibilidade')] || 0);
+            const classification = sdrClassificacao(score); const scoreEl = document.getElementById('sdr-score'); if (scoreEl) scoreEl.textContent = `${score}% - ${classification}`; return { score, classification };
+        }
+        function sdrBuildSummary(data) { return `${data.nome}, proveniente de ${data.origem}, demonstrou interesse de ${data.score}% e foi classificado como lead ${data.classificacao}. Busca informações sobre ${data.tipoContrato} com ${data.banco || 'instituição não informada'}, com parcela atual de ${data.parcela || 'não informada'} e ${data.restantes || 'quantidade não informada'} parcelas restantes, em situação ${data.situacao}.\n\nPrincipal dificuldade: ${data.marcadores.dor || 'não informada'}. Prazo de decisão: ${data.marcadores.intencao || 'não informado'}. Disponibilidade: ${data.marcadores.disponibilidade || 'não informada'}.\n\nPrincipal objeção: ${data.objecao || 'não informada'}. Próxima ação: ${data.proximoContato ? 'realizar retorno agendado' : 'encaminhar para avaliação comercial'}.`; }
+        function sdrCollect() { const result = sdrCalculateScore(); const now = new Date().toISOString(); const id = sdrGet('sdr-lead-id') || `sdr-${Date.now()}`; const old = sdrLeads.find(item => item.id === id); const data = { ...(old || {}), id, nome: sdrGet('sdr-nome'), telefone: sdrGet('sdr-telefone'), documento: sdrGet('sdr-documento'), email: sdrGet('sdr-email'), origem: sdrGet('sdr-origem'), proximoContato: sdrGet('sdr-proximo-contato'), tipoContrato: sdrGet('sdr-tipo-contrato'), banco: sdrGet('sdr-banco'), parcela: sdrGet('sdr-parcela'), restantes: sdrGet('sdr-restantes'), situacao: sdrGet('sdr-situacao'), possuiContrato: sdrGet('sdr-possui-contrato'), respostas: [sdrGet('sdr-q1'),sdrGet('sdr-q2'),sdrGet('sdr-q3'),sdrGet('sdr-q4'),sdrGet('sdr-q5')], objecao: sdrGet('sdr-objecao'), marcadores: { dor:sdrGet('sdr-marcador-dor'), urgencia:sdrGet('sdr-marcador-urgencia'), intencao:sdrGet('sdr-marcador-intencao'), disponibilidade:sdrGet('sdr-marcador-disponibilidade'), decisor:sdrGet('sdr-marcador-decisor') }, vendedor: sdrGet('sdr-vendedor'), resumo: sdrGet('sdr-resumo'), motivoDevolucao: sdrGet('sdr-motivo-devolucao'), simulacao: old?.simulacao || null, score: result.score, classificacao: result.classification, status: old?.status || 'Novo lead', createdAt: old?.createdAt || now, updatedAt: now, createdBy: window.firebaseAuthUser?.email || 'Usuário' }; if (!data.resumo) data.resumo = sdrBuildSummary(data); return data; }
+        function sdrPersist(data) { const index = sdrLeads.findIndex(item => item.id === data.id); if (index >= 0) sdrLeads[index] = data; else sdrLeads.unshift(data); localStorage.setItem(SDR_STORAGE_KEY, JSON.stringify(sdrLeads.slice(0, 500))); const sync = window.platinoSdrStore?.save?.(data); sync?.catch?.(error => console.warn('Lead SDR salvo localmente; sincronização pendente.', error)); sdrRender(); }
+        function sdrSetMessage(message, type = 'info') { const el = document.getElementById('sdr-form-message'); if (!el) return; el.className = `min-h-5 text-sm ${type === 'error' ? 'text-red-600' : type === 'success' ? 'text-emerald-600' : 'text-slate-500'}`; el.textContent = message; }
+        function sdrFill(data) { sdrActiveId = data.id; Object.entries({ 'sdr-lead-id':data.id,'sdr-nome':data.nome,'sdr-telefone':data.telefone,'sdr-documento':data.documento,'sdr-email':data.email,'sdr-origem':data.origem,'sdr-proximo-contato':data.proximoContato,'sdr-tipo-contrato':data.tipoContrato,'sdr-banco':data.banco,'sdr-parcela':data.parcela,'sdr-restantes':data.restantes,'sdr-situacao':data.situacao,'sdr-possui-contrato':data.possuiContrato,'sdr-q1':data.respostas?.[0],'sdr-q2':data.respostas?.[1],'sdr-q3':data.respostas?.[2],'sdr-q4':data.respostas?.[3],'sdr-q5':data.respostas?.[4],'sdr-objecao':data.objecao,'sdr-marcador-dor':data.marcadores?.dor,'sdr-marcador-urgencia':data.marcadores?.urgencia,'sdr-marcador-intencao':data.marcadores?.intencao,'sdr-marcador-disponibilidade':data.marcadores?.disponibilidade,'sdr-marcador-decisor':data.marcadores?.decisor,'sdr-vendedor':data.vendedor,'sdr-resumo':data.resumo,'sdr-motivo-devolucao':data.motivoDevolucao,'sdr-simulacao-saldo':data.simulacao?.saldo,'sdr-simulacao-taxa':data.simulacao?.taxaContratada,'sdr-simulacao-referencia':data.simulacao?.taxaReferencia,'sdr-simulacao-fonte':data.simulacao?.fonte,'sdr-simulacao-periodo':data.simulacao?.periodo,'sdr-simulacao-data':data.simulacao?.data}).forEach(([id,value]) => sdrSet(id,value)); document.getElementById('sdr-form-title').textContent = data.nome || 'Lead'; document.getElementById('sdr-form-status').textContent = data.status || 'Rascunho'; const history = document.getElementById('sdr-history'); if (history) history.innerHTML = data.history?.length ? data.history.slice().reverse().map(item => `<div>${sdrEsc(item.type)} - ${sdrEsc(item.user)} - ${new Date(item.at).toLocaleString('pt-BR')}</div>`).join('') : 'Novo lead ainda sem eventos.'; if (data.simulacao) sdrRenderSimulation(data.simulacao); sdrCalculateScore(); }
+        function sdrNovoLead() { document.getElementById('sdr-lead-form')?.reset(); sdrSet('sdr-lead-id',''); document.getElementById('sdr-form-title').textContent = 'Novo lead'; document.getElementById('sdr-form-status').textContent = 'Rascunho'; sdrSetMessage('Preencha nome e telefone para salvar o primeiro contato.'); sdrCalculateScore(); }
+        function sdrAddHistory(data, type, details = {}) { data.history = [...(data.history || []), { type, ...details, user: window.firebaseAuthUser?.email || 'Usuário', at: new Date().toISOString() }]; }
+        function sdrSalvarLead(event) { event?.preventDefault(); if (!sdrAccess()) return sdrSetMessage('Seu perfil não possui acesso de edição ao SDR.', 'error'); const data = sdrCollect(); const duplicate = sdrLeads.find(item => item.id !== data.id && [item.documento,item.telefone,item.email].filter(Boolean).some(value => value === data.documento || value === data.telefone || value === data.email)); if (duplicate) return sdrSetMessage(`Possível duplicidade: ${duplicate.nome}. Abra o registro existente antes de criar outro.`, 'error'); sdrAddHistory(data, 'rascunho_salvo'); sdrPersist(data); sdrFill(data); sdrSetMessage('Rascunho salvo. As respostas completas permanecem na ficha.', 'success'); }
+        function sdrEncaminhar() { const data = sdrCollect(); const missing = []; if (!data.documento) missing.push('CPF/CNPJ'); if (!data.vendedor) missing.push('vendedor'); if (!data.respostas.every(Boolean)) missing.push('as cinco respostas'); if (!Object.values(data.marcadores).slice(0,4).every(Boolean)) missing.push('marcadores de qualificação'); if (!data.resumo) missing.push('resumo'); if (missing.length) return sdrSetMessage(`Complete antes de encaminhar: ${missing.join(', ')}.`, 'error'); data.status = 'Encaminhado ao vendedor'; data.forwardedAt = new Date().toISOString(); sdrAddHistory(data, 'encaminhamento', { vendedor: data.vendedor }); sdrPersist(data); sdrFill(data); sdrSetMessage('Ficha completa encaminhada ao vendedor e registrada no histórico.', 'success'); }
+        function sdrDevolver() { const data = sdrCollect(); if (!data.motivoDevolucao) return sdrSetMessage('Informe obrigatoriamente o motivo da devolução.', 'error'); data.status = 'Retorno agendado'; data.returnedAt = new Date().toISOString(); sdrAddHistory(data, 'devolucao', { motivo: data.motivoDevolucao }); sdrPersist(data); sdrFill(data); sdrSetMessage('Devolução registrada com motivo no histórico do lead.', 'success'); }
+        function sdrMoney(value) { return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(value) || 0); }
+        function sdrRenderSimulation(sim) { const target = document.getElementById('sdr-simulacao-resultado'); if (!target || !sim) return; target.innerHTML = `<div class="mt-3 grid gap-2 md:grid-cols-3"><span>Parcela informada: <strong>${sdrMoney(sim.parcelaAtual)}</strong></span><span>Parcela estimada: <strong>${sdrMoney(sim.parcelaSimulada)}</strong></span><span>Diferença mensal: <strong>${sdrMoney(sim.diferencaMensal)}</strong></span></div><p class="mt-2 text-xs">Resultado: <strong>${sdrEsc(sim.resultado)}</strong>. Referência: ${sdrEsc(sim.fonte)} - ${sdrEsc(sim.periodo)}.</p><p class="mt-2 text-xs">Esta simulação possui caráter exclusivamente informativo e preliminar. Não representa consulta individual, autorização ou aprovação do Banco Central do Brasil, nem garantia de redução.</p>`; }
+        function sdrSimular() { const saldo = Number(sdrGet('sdr-simulacao-saldo').replace('.','').replace(',','.')); const parcela = Number(sdrGet('sdr-parcela').replace('.','').replace(',','.')); const n = Number(sdrGet('sdr-restantes')); const taxa = Number(sdrGet('sdr-simulacao-referencia').replace(',','.')) / 100; const fonte = sdrGet('sdr-simulacao-fonte'); const periodo = sdrGet('sdr-simulacao-periodo'); if (!(saldo > 0 && n > 0 && taxa >= 0 && fonte && periodo)) { const target=document.getElementById('sdr-simulacao-resultado'); if(target) target.textContent='Dados insuficientes para uma simulação confiável. Informe saldo, parcelas restantes, taxa de referência, fonte e período.'; return; } const parcelaSimulada = taxa === 0 ? saldo / n : saldo * taxa / (1 - ((1 + taxa) ** -n)); const diferencaMensal = parcela - parcelaSimulada; const sim = { saldo, parcelaAtual:parcela, taxaContratada:sdrGet('sdr-simulacao-taxa'), taxaReferencia:taxa*100, parcelaSimulada, diferencaMensal, diferencaTotal:diferencaMensal*n, fonte, periodo, data:sdrGet('sdr-simulacao-data') || new Date().toISOString(), resultado: Math.abs(diferencaMensal) < Math.max(1, parcela * 0.05) ? 'Sem diferença relevante identificada' : 'Diferença identificada para análise técnica' }; const data=sdrCollect(); data.simulacao=sim; sdrPersist(data); sdrRenderSimulation(sim); sdrSetMessage('Simulação preliminar calculada e registrada no histórico do lead.', 'success'); }
+        function sdrRender() { const status = sdrGet('sdr-filter-status'), classification = sdrGet('sdr-filter-classificacao'); const visible = sdrLeads.filter(item => (!status || item.status === status) && (!classification || item.classificacao === classification)); const list = document.getElementById('sdr-lead-list'); if (list) list.innerHTML = visible.length ? visible.map(item => `<button type="button" onclick="sdrAbrirLead('${sdrEsc(item.id)}')" class="w-full rounded-xl border border-slate-100 p-3 text-left hover:border-cyan-200 hover:bg-cyan-50/40"><div class="flex items-center justify-between gap-2"><strong class="text-sm text-slate-800">${sdrEsc(item.nome)}</strong><span class="rounded-full px-2 py-1 text-[10px] font-bold ${item.classificacao === 'Quente' ? 'bg-emerald-100 text-emerald-700' : item.classificacao === 'Morno' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'}">${item.classificacao} · ${item.score}%</span></div><div class="mt-1 text-xs text-slate-500">${sdrEsc(item.telefone)} · ${sdrEsc(item.status)}${item.vendedor ? ` · ${sdrEsc(item.vendedor)}` : ''}</div></button>`).join('') : '<p class="rounded-xl bg-slate-50 p-4 text-sm text-slate-500">Nenhum lead na fila.</p>'; const counts = { novos:sdrLeads.filter(i=>i.status==='Novo lead').length, hoje:sdrLeads.filter(i=>i.proximoContato && i.proximoContato.slice(0,10)===new Date().toISOString().slice(0,10)).length, retornos:sdrLeads.filter(i=>i.status==='Retorno agendado').length, qualificacao:sdrLeads.filter(i=>i.status==='Em qualificação').length, quentes:sdrLeads.filter(i=>i.classificacao==='Quente').length, mornos:sdrLeads.filter(i=>i.classificacao==='Morno').length, frios:sdrLeads.filter(i=>i.classificacao==='Frio').length, encaminhados:sdrLeads.filter(i=>i.status==='Encaminhado ao vendedor').length }; Object.entries(counts).forEach(([key,value]) => { const el=document.getElementById(`sdr-metric-${key}`); if(el) el.textContent=value; }); }
+        function sdrAbrirLead(id) { const lead = sdrLeads.find(item => item.id === id); if (lead) sdrFill(lead); }
+        window.applyRemoteSdrLeads = items => { sdrLeads = Array.isArray(items) ? items : []; localStorage.setItem(SDR_STORAGE_KEY, JSON.stringify(sdrLeads)); sdrRender(); };
         window.onload = () => {
             loadFlowOverrides();
             renderAccordions('com-accordions', fluxosComercial);
@@ -8751,6 +8823,8 @@
             loadAvisosData();
             updateCarouselUI();
             bindSalesTimelineInteractions();
+            document.querySelectorAll('#sdr-lead-form input, #sdr-lead-form textarea, #sdr-lead-form select').forEach(field => field.addEventListener('input', sdrCalculateScore));
+            sdrRender();
         };
 
         // Firebase login will be handled by the auth module imported at the end of the page.
@@ -8831,13 +8905,15 @@
       let avisosRef = null;
       let rankingRef = null;
       let managementRef = null;
-      let feedbacksRef = null;
-      let laudosRef = null;
+        let feedbacksRef = null;
+        let laudosRef = null;
+      let sdrRef = null;
       let stopAvisosSubscription = null;
       let stopRankingSubscription = null;
       let stopManagementSubscription = null;
       let stopFeedbackSubscription = null;
       let stopLaudosSubscription = null;
+      let stopSdrSubscription = null;
       let stopProfileSubscription = null;
       let stopReminderSubscription = null;
       let stopAccountSubscription = null;
@@ -9476,6 +9552,23 @@
         }
       };
 
+      window.platinoSdrStore = {
+        save: async (data) => {
+          if (!auth?.currentUser) throw new Error("Faça login antes de salvar o lead.");
+          return setDoc(doc(db, "sdrLeads", data.id), {
+            ...data,
+            updatedAtServer: serverTimestamp()
+          }, { merge: true });
+        },
+        subscribe: () => {
+          if (stopSdrSubscription || !sdrRef) return;
+          const leadsQuery = query(sdrRef, orderBy("updatedAt", "desc"), limit(500));
+          stopSdrSubscription = onSnapshot(leadsQuery, snapshot => {
+            window.applyRemoteSdrLeads?.(snapshot.docs.map(item => ({ id: item.id, ...item.data() })));
+          }, error => console.warn("Não foi possível sincronizar os leads SDR.", error));
+        }
+      };
+
       const loginScreen = document.getElementById("login-screen");
       const appContent = document.getElementById("app-content");
       const loginButton = document.getElementById("login-button");
@@ -9719,6 +9812,7 @@
         document.getElementById("user-role").innerText = role === "gestor" ? `Gestor - ${displaySector}` : displaySector;
 
         window.applyGestorVisibility?.();
+        window.sdrApplyAccess?.();
         window.updateLaudoValidationControls?.();
         window.updateLaudoWorkflowVisibility?.();
       }
@@ -9736,6 +9830,7 @@
           managementRef = doc(db, "appContent", "managementEdits");
           feedbacksRef = collection(db, "feedbacks");
           laudosRef = collection(db, "laudosPericiais");
+          sdrRef = collection(db, "sdrLeads");
 
           onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -9750,6 +9845,7 @@
           window.platinoRankingStore.subscribe();
           window.platinoManagementStore.subscribe();
           startRankingSheetSync();
+          window.platinoSdrStore.subscribe();
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
             initializeAccountManagement();

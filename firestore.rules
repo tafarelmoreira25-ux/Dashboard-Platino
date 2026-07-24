@@ -111,6 +111,15 @@ service cloud.firestore {
         );
     }
 
+    function isSdrAccess() {
+      return signedIn()
+        && (
+          isManagement()
+          || request.auth.token.get('role', '') in ['admin', 'manager']
+          || request.auth.token.get('sector', '') in ['SDR', 'Comercial', 'Supervisão SDR']
+        );
+    }
+
     function isValidShortText(value, maxSize) {
       return value is string
         && value.size() > 0
@@ -211,6 +220,16 @@ service cloud.firestore {
           'reviewedAt'
         ]);
       allow delete: if false;
+    }
+
+    match /sdrLeads/{leadId} {
+      allow read: if isSdrAccess();
+      allow create: if isSdrAccess()
+        && request.resource.data.createdBy == request.auth.token.email
+        && request.resource.data.id == leadId;
+      allow update: if isSdrAccess()
+        && request.resource.data.id == leadId;
+      allow delete: if isManagement();
     }
 
     // O documento é criado pela Cloud Function (Admin SDK). No cliente, o

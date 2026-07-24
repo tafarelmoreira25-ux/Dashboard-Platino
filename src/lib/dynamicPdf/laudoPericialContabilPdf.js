@@ -23,6 +23,22 @@ function texto(value, fallback = "Não identificado") {
   return String(value ?? "").trim() || fallback;
 }
 
+function normalizarMetodo(valor) {
+  const metodo = String(valor || "Tabela Price").toUpperCase();
+  if (metodo.includes("GAUSS")) return "GAUSS";
+  if (metodo.includes("SAC")) return "SAC";
+  if (metodo.includes("SIMPLES") || metodo.includes("MAJS")) return "SIMPLES";
+  return "PRICE";
+}
+
+function parcelaPrice(pv, i, n) {
+  return i === 0 ? pv / n : pv * ((i * ((1 + i) ** n)) / (((1 + i) ** n) - 1));
+}
+
+function parcelaGauss(pv, i, n) {
+  return pv * (1 + (i * n)) / (n * (1 + (i * (n - 1) / 2)));
+}
+
 function calcularCenarios(dados) {
   const bruto = numero(dados.valorFinanciadoBruto);
   const tarifas = [dados.valorSeguroPrestamista, dados.valorSeguroBem, dados.valorTarifaCadastro, dados.valorRegistroContrato, dados.valorAvaliacaoBem]
@@ -31,16 +47,23 @@ function calcularCenarios(dados) {
   const n = Math.max(1, Math.trunc(numero(dados.quantidadeParcelas)));
   const pagas = Math.min(n, Math.max(0, Math.trunc(numero(dados.parcelasPagas))));
   const i = Math.max(0, numero(dados.taxaJurosMensal) / 100);
-  const metodo = String(dados.metodoCalculo || "Tabela Price").toUpperCase().includes("MAJS") ? "MAJS" : "PRICE";
-  const pmtPrice = i === 0 ? pv / n : pv * ((i * ((1 + i) ** n)) / (((1 + i) ** n) - 1));
-  const amortMajs = pv / n;
-  const jurosMajs = pv * i;
-  const pmt = metodo === "MAJS" ? amortMajs + jurosMajs : pmtPrice;
+  const metodo = normalizarMetodo(dados.metodoCalculo);
+  const pmtPrice = parcelaPrice(pv, i, n);
+  const amortizacaoFixa = pv / n;
+  const jurosSimples = pv * i;
+  const pmt = metodo === "GAUSS"
+    ? parcelaGauss(pv, i, n)
+    : metodo === "SIMPLES"
+      ? amortizacaoFixa + jurosSimples
+      : pmtPrice;
   const contratual = numero(dados.valorPrestacaoContratual);
   const diferencaMensal = contratual - pmt;
   const estornoPagas = diferencaMensal * pagas;
-  const tarifasDobro = tarifas * 2;
-  const proveito = (diferencaMensal * n) + tarifasDobro;
+  const multiplicadorRestituicao = [0, 1, 2].includes(Number(dados.multiplicadorRestituicao))
+    ? Number(dados.multiplicadorRestituicao)
+    : 0;
+  const tarifasRestituicao = tarifas * multiplicadorRestituicao;
+  const proveito = (diferencaMensal * n) + tarifasRestituicao;
   const taxaAnual = (((1 + i) ** 12) - 1) * 100;
   const memoria = [];
   let saldoContrato = bruto;
@@ -48,26 +71,42 @@ function calcularCenarios(dados) {
   for (let parcela = 1; parcela <= n; parcela += 1) {
     const jurosContrato = saldoContrato * i;
     const amortContrato = contratual - jurosContrato;
-    const finalContrato = Math.max(0, saldoContrato - amortContrato);
-    const jurosRecalculo = metodo === "MAJS" ? jurosMajs : saldoRecalculo * i;
-    const amortRecalculo = metodo === "MAJS" ? amortMajs : pmt - jurosRecalculo;
-    const finalRecalculo = Math.max(0, saldoRecalculo - amortRecalculo);
+    const finalContrato = saldoContrato - amortContrato;
+    const jurosRecalculo = metodo === "GAUSS" || metodo === "SIMPLES" ? (pmt - amortizacaoFixa) : saldoRecalculo * i;
+    const amortRecalculo = metodo === "GAUSS" || metodo === "SIMPLES" ? amortizacaoFixa : pmt - jurosRecalculo;
+    const finalRecalculo = saldoRecalculo - amortRecalculo;
     memoria.push({ parcela, saldoContrato, jurosContrato, amortContrato, contratual, finalContrato, saldoRecalculo, jurosRecalculo, amortRecalculo, pmt, finalRecalculo });
     saldoContrato = finalContrato;
     saldoRecalculo = finalRecalculo;
   }
-  return { bruto, tarifas, pv, n, pagas, i, metodo, pmt, contratual, diferencaMensal, estornoPagas, tarifasDobro, proveito, taxaAnual, memoria };
+  const primeiroJurosContrato = memoria[0]?.jurosContrato || 0;
+  const saldoFinalContrato = memoria.at(-1)?.finalContrato || 0;
+  const inconsistencias = [];
+  if (multiplicadorRestituicao > 0 && !String(dados.justificativaRestituicao || "").trim()) {
+    inconsistencias.push("A restituição selecionada exige justificativa técnica ou jurídica.");
+  }
+  if (contratual <= 0) inconsistencias.push("Prestação contratual não informada.");
+  if (primeiroJurosContrato > contratual + 0.01) inconsistencias.push("A prestação contratual é inferior aos juros do primeiro período.");
+  if (Math.abs(saldoFinalContrato) > Math.max(1, bruto * 0.01)) inconsistencias.push("A reprodução contratual não encerra com saldo próximo de zero.");
+  return { bruto, tarifas, pv, n, pagas, i, metodo, pmt, contratual, diferencaMensal, estornoPagas, multiplicadorRestituicao, tarifasRestituicao, proveito, taxaAnual, memoria, inconsistencias };
 }
 
 async function carregarModelo() {
   const baseUrl = new URL("../../../modelos-originais/laudo-pericial-contabil-layout.pdf", import.meta.url);
   const camposUrl = new URL("./laudoPericialContabilCampos.json", import.meta.url);
+  if (typeof window === "undefined") {
+    const { readFile } = await import("node:fs/promises");
+    return {
+      bytes: await readFile(baseUrl),
+      campos: JSON.parse(await readFile(camposUrl, "utf8")),
+    };
+  }
   const [baseResponse, camposResponse] = await Promise.all([fetch(baseUrl), fetch(camposUrl)]);
   if (!baseResponse.ok || !camposResponse.ok) throw new Error("O modelo fiel do laudo não pôde ser carregado.");
   return { bytes: await baseResponse.arrayBuffer(), campos: await camposResponse.json() };
 }
 
-function valoresDoModelo(dados, calc) {
+function valoresDoModeloLegado(dados, calc) {
   const taxaMensal = numero(dados.taxaJurosMensal);
   const sistema = calc.metodo === "MAJS" ? "Método MAJS - juros simples" : "Tabela Price - expurgo de tarifas";
   const conclusao = `A prestação recalculada é de R$ ${moeda(calc.pmt)}, com diferença mensal de R$ ${moeda(calc.diferencaMensal)} e proveito econômico estimado de R$ ${moeda(calc.proveito)}.`;
@@ -138,18 +177,39 @@ function valoresDoModelo(dados, calc) {
   };
 }
 
+function valoresDoModelo(dados, calc) {
+  const values = valoresDoModeloLegado(dados, calc);
+  const nomesMetodo = { PRICE: "Tabela Price", SAC: "Sistema SAC", GAUSS: "Método Gauss", SIMPLES: "Juros simples com amortização linear" };
+  const sistema = `${nomesMetodo[calc.metodo]} - cenário de recálculo`;
+  const conclusao = calc.proveito > 0
+    ? `A prestação recalculada é de R$ ${moeda(calc.pmt)}, com diferença mensal de R$ ${moeda(calc.diferencaMensal)} e economia estimada de R$ ${moeda(calc.proveito)}.`
+    : `A prestação recalculada é de R$ ${moeda(calc.pmt)}. Não foi identificada economia positiva no cenário: impacto estimado de R$ ${moeda(calc.proveito)}.`;
+  return {
+    ...values,
+    STATUS_DOCUMENTO: calc.inconsistencias.length ? "PENDENTE DE CONFERÊNCIA" : "APROVADO PELO PERITO",
+    SISTEMA_AMORTIZACAO: sistema,
+    DESCRICAO_CENARIO_RECALCULO: sistema,
+    SISTEMA_AMORTIZACAO_RECALCULADO: sistema,
+    RESUMO_CONCLUSAO_TECNICA: conclusao,
+    RESPOSTA_QUESITO_02: `R$ ${moeda(calc.pmt)} pelo critério ${sistema}.`,
+    TOTAL_TARIFAS_QUESTIONADAS: moeda(calc.tarifasRestituicao),
+    PROVEITO_ECONOMICO_ESTIMADO: moeda(calc.proveito),
+    RESULTADO_DO_EXAME: calc.proveito > 0 ? "Economia potencial identificada" : "Sem economia positiva no cenário",
+    INTERPRETACAO_RESULTADOS: conclusao,
+    CONCLUSAO_TECNICA_COMPLETA: conclusao,
+    GRAU_SUFICIENCIA_DOCUMENTAL: calc.inconsistencias.length ? "Insuficiente para conclusão" : "Conforme documentos informados",
+    NECESSIDADE_COMPLEMENTACAO: calc.inconsistencias.length ? calc.inconsistencias.join(" ") : values.NECESSIDADE_COMPLEMENTACAO,
+    REFERENCIAS_TECNICAS_E_NORMATIVAS: "Decreto-Lei nº 9.295/46, CPC arts. 464-480 e NBC TP 01 (R2).",
+    FORMULA_CENARIO_RECALCULADO: calc.metodo === "GAUSS"
+      ? "PMT = PV x (1 + i x n) / [n x (1 + i x (n - 1) / 2)]"
+      : calc.metodo === "SAC"
+        ? "A = PV/n; PMT = A + (saldo anterior x i)"
+        : values.FORMULA_CENARIO_RECALCULADO,
+  };
+}
+
 function ajustarTextoNaLargura(content, font, size, width) {
-  if (font.widthOfTextAtSize(content, size) <= width) return content;
-  const suffix = "...";
-  let low = 0;
-  let high = content.length;
-  while (low < high) {
-    const middle = Math.ceil((low + high) / 2);
-    const candidate = `${content.slice(0, middle).trimEnd()}${suffix}`;
-    if (font.widthOfTextAtSize(candidate, size) <= width) low = middle;
-    else high = middle - 1;
-  }
-  return `${content.slice(0, low).trimEnd()}${suffix}`;
+  return content;
 }
 
 function desenharCampo(page, font, field, value) {
@@ -157,7 +217,7 @@ function desenharCampo(page, font, field, value) {
   const key = String(field.key || "").replace(/\s+/g, "");
   const originalSize = Math.min(field.size || 10, 11);
   const width = Math.max(36, Number(field.width) || 100);
-  const minimumSize = originalSize >= 14 ? 10 : 7.5;
+  const minimumSize = originalSize >= 14 ? 8 : 6;
   let size = originalSize;
 
   while (size > minimumSize && font.widthOfTextAtSize(content, size) > width) size -= 0.25;
@@ -182,6 +242,9 @@ function desenharCampo(page, font, field, value) {
     y: field.y,
     size,
     font,
+    maxWidth: width,
+    lineHeight: size * 1.15,
+    wordBreaks: [" "],
     color: rgb(0.10, 0.13, 0.18)
   });
 }
@@ -193,6 +256,9 @@ export async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
   if (!aprovado) throw new Error("O laudo precisa estar aprovado pelo perito antes da geração e do download do PDF final.");
 
   const calc = calcularCenarios(dados);
+  if (calc.inconsistencias.length && String(dados.permitirInconsistencia || "").toUpperCase() !== "SIM") {
+    throw new Error(`Laudo bloqueado: ${calc.inconsistencias.join(" ")} Corrija os dados contratuais ou registre uma exceção técnica revisada pelo perito.`);
+  }
   const modelo = await carregarModelo();
   const pdf = await PDFDocument.load(modelo.bytes);
   if (pdf.getPageCount() !== 12) throw new Error("O modelo do laudo deve possuir exatamente 12 páginas.");
@@ -221,4 +287,4 @@ export async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
   return pdf.save();
 }
 
-export { calcularCenarios };
+export { calcularCenarios, parcelaPrice, parcelaGauss, normalizarMetodo };
