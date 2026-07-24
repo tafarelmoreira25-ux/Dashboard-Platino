@@ -6526,9 +6526,7 @@
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
             { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
             { name: 'FERNANDA RAMOS', date: '13/04/2007', role: 'Consultora financeira', photo: 'assets/equipe/fernanda-ramos.png' },
-            { name: 'SONIA REGINA LEANDRO', date: '30/05/1964', role: 'Auxiliar de limpeza', photo: 'assets/equipe/sonia-regina-leandro.png' },
             { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991', role: 'Consultora Jurídica', photo: 'assets/equipe/tabata-rangel-de-lima.png', photoPosition: 'center 18%' },
-            { name: 'MONIQUE CRISTINA DA SILVA', date: '31/05/1993', role: 'Consultora financeira', photo: 'assets/equipe/monique-cristina-da-silva.png' },
             { name: 'TAFAREL MOREIRA', date: '30/06/1998', role: 'Supervisor Administrativo', photo: 'assets/equipe/tafarel-moreira.png' },
             { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003', role: 'Consultora financeira', photo: 'assets/equipe/geovanna-alves-xavier.png' },
             { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004', role: 'Marketing', photo: 'assets/equipe/jonatas-silva-ferraz.png', photoPosition: 'center center', aliases: ['Jonathas Silva Ferraz'] },
@@ -8575,10 +8573,12 @@
                 }
                 return;
             }
-            if (selectedTemplateKey === 'laudo-pericial-contabil' && !currentLaudoReviewId) {
+            // O administrador autenticado pode emitir diretamente um laudo já aprovado.
+            // A fila continua obrigatória para fluxos iniciados por usuários não administrativos.
+            if (selectedTemplateKey === 'laudo-pericial-contabil' && !currentLaudoReviewId && validatorEmail !== 'administrativo@platino.com') {
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'Abra um laudo pendente na fila de validação antes de gerar o PDF final.';
+                    status.innerText = 'Envie o laudo para validação antes de gerar o PDF final.';
                 }
                 return;
             }
