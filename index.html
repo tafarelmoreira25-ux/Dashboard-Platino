@@ -2580,7 +2580,7 @@
                                     <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70 sm:col-span-2 lg:col-span-1">
                                         Nome do arquivo
                                         <div class="relative">
-                                            <input id="adm-pdf-file-name" type="text" class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold normal-case tracking-normal" placeholder="Digite o nome do documento" oninput="this.dataset.edited = 'true'">
+                                            <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold normal-case tracking-normal" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
                                             <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black normal-case tracking-normal text-slate-400">.pdf</span>
                                         </div>
                                     </label>
@@ -2589,19 +2589,11 @@
 
                             <div id="adm-pdf-fields" class="adm-pdf-fields grid gap-3 sm:grid-cols-2"></div>
 
-                            <label id="laudo-exception-wrap" class="hidden items-start gap-2 rounded-xl border border-amber-300/30 bg-amber-400/10 px-3 py-2 text-xs text-amber-100">
-                                <input id="laudo-allow-inconsistency" type="checkbox" class="mt-0.5 accent-amber-400">
-                                <span><strong>Emitir com ressalva técnica</strong><br>Permite gerar mesmo com divergência matemática, mantendo a inconsistência registrada para revisão do perito.</span>
-                            </label>
-
                             <div class="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
                                 <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
                                 <div class="adm-pdf-actions">
                                     <button type="button" onclick="resetAdmPdfForm()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/10">
                                         <i class="ph ph-arrow-counter-clockwise"></i> Limpar
-                                    </button>
-                                    <button id="laudo-save-draft-button" type="button" onclick="saveLaudoForReview()" class="hidden min-h-11 items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-2 text-sm font-black text-slate-950 shadow-lg transition hover:bg-amber-400">
-                                        <i class="ph ph-paper-plane-tilt"></i> Enviar para validação
                                     </button>
                                     <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700 active:scale-[0.98]">
                                         <i class="ph ph-download-simple"></i> <span>Gerar PDF</span>
@@ -2609,13 +2601,6 @@
                                 </div>
                             </div>
                         </form>
-                        <div id="laudo-review-queue" class="hidden mt-6 rounded-2xl border border-amber-300/20 bg-amber-400/10 p-4">
-                            <div class="flex items-center justify-between gap-3">
-                                <div><p class="text-[10px] font-black uppercase tracking-[0.18em] text-amber-200">Área do perito</p><h4 class="mt-1 font-black text-white">Laudos aguardando validação</h4></div>
-                                <span id="laudo-pending-count" class="rounded-full bg-amber-300 px-2.5 py-1 text-xs font-black text-slate-950">0</span>
-                            </div>
-                            <div id="laudo-pending-list" class="mt-4 grid gap-3"></div>
-                        </div>
                     </div>
                     <div class="space-y-4" id="adm-accordions"></div>
                 </div>
@@ -7714,19 +7699,33 @@
                 title: 'Laudo Pericial Contábil',
                 source: 'Modelo_Laudo_Pericial_Contabil_Financiamento.docx',
                 fields: [
-                    'cliente', 'cpf', 'banco', 'cnpjBanco', 'contrato', 'cidadeEstado',
+                    'contratoTexto', 'cliente', 'cpf', 'banco', 'cnpjBanco', 'contrato', 'cidadeEstado',
                     'dataContrato', 'dataBaseCalculo', 'descricaoBem', 'valorBem', 'valorEntrada',
                     'valorFinanciadoBruto', 'valorPrestacaoContratual', 'quantidadeParcelas',
-                    'parcelasPagas', 'taxaJurosMensal', 'metodoCalculo', 'valorTarifaCadastro',
-                    'valorRegistroContrato', 'valorAvaliacaoBem', 'valorSeguroPrestamista', 'valorSeguroBem',
-                    'validacaoPerito', 'dataValidacao', 'codigoValidacao', 'incluirAssinatura', 'multiplicadorRestituicao', 'justificativaRestituicao'
+                    'parcelasPagas', 'taxaJurosMensal', 'valorTarifaCadastro', 'valorRegistroContrato',
+                    'valorAvaliacaoBem', 'valorSeguro', 'valorIof', 'valorIofAdicional',
+                    'metodoCalculo', 'multiplicadorRestituicao', 'justificativaRestituicao'
                 ],
                 requiredFields: [
                     'cliente', 'cpf', 'banco', 'contrato', 'valorFinanciadoBruto',
-                    'valorPrestacaoContratual', 'quantidadeParcelas', 'taxaJurosMensal', 'metodoCalculo',
-                    'validacaoPerito', 'dataValidacao', 'codigoValidacao', 'multiplicadorRestituicao'
+                    'valorPrestacaoContratual', 'quantidadeParcelas', 'taxaJurosMensal', 'metodoCalculo'
                 ],
+                groups: {
+                    contratoTexto: 'Importação automática',
+                    cliente: 'Dados do Cliente', cpf: 'Dados do Cliente', banco: 'Dados do Cliente',
+                    cnpjBanco: 'Dados do Cliente', contrato: 'Dados do Cliente', cidadeEstado: 'Dados do Cliente',
+                    dataContrato: 'Dados do Cliente', dataBaseCalculo: 'Dados do Cliente',
+                    descricaoBem: 'Dados do Financiamento', valorBem: 'Dados do Financiamento',
+                    valorEntrada: 'Dados do Financiamento', valorFinanciadoBruto: 'Dados do Financiamento',
+                    valorPrestacaoContratual: 'Dados do Financiamento', quantidadeParcelas: 'Dados do Financiamento',
+                    parcelasPagas: 'Dados do Financiamento', taxaJurosMensal: 'Dados do Financiamento',
+                    valorTarifaCadastro: 'Tarifas', valorRegistroContrato: 'Tarifas',
+                    valorAvaliacaoBem: 'Tarifas', valorSeguro: 'Tarifas', valorIof: 'Tarifas',
+                    valorIofAdicional: 'Tarifas', metodoCalculo: 'Recálculo',
+                    multiplicadorRestituicao: 'Recálculo', justificativaRestituicao: 'Recálculo'
+                },
                 customLabels: {
+                    contratoTexto: 'Cole aqui o contrato.',
                     cliente: 'Contratante / cliente', cpf: 'CPF ou CNPJ do cliente', banco: 'Instituição financeira',
                     cnpjBanco: 'CNPJ da instituição financeira', contrato: 'Número do contrato', cidadeEstado: 'Cidade / UF da emissão',
                     dataContrato: 'Data da contratação', dataBaseCalculo: 'Data-base do cálculo', descricaoBem: 'Veículo / bem financiado',
@@ -7736,42 +7735,32 @@
                     taxaJurosMensal: 'Taxa de juros mensal (%)', metodoCalculo: 'Método de recálculo',
                     valorTarifaCadastro: 'Tarifa de cadastro (R$)', valorRegistroContrato: 'Registro de contrato (R$)',
                     valorAvaliacaoBem: 'Avaliação do bem (R$)', valorSeguroPrestamista: 'Seguro prestamista (R$)',
-                    valorSeguroBem: 'Seguro do bem (R$)'
-                    ,validacaoPerito: 'Validação do perito Denis', dataValidacao: 'Data da validação pericial',
-                    multiplicadorRestituicao: 'Multiplicador de restituição (0, 1 ou 2)', justificativaRestituicao: 'Justificativa da restituição (quando aplicável)',
-                    codigoValidacao: 'Código de validação do laudo', incluirAssinatura: 'Incluir assinatura eletrônica visual'
+                    valorSeguro: 'Seguro (R$)', valorIof: 'IOF (R$)', valorIofAdicional: 'IOF adicional (R$)',
+                    multiplicadorRestituicao: 'Multiplicador', justificativaRestituicao: 'Justificativa'
                 },
                 fieldTypes: {
-                    dataContrato: 'date', dataBaseCalculo: 'date', dataValidacao: 'date', metodoCalculo: 'select', multiplicadorRestituicao: 'select',
-                    validacaoPerito: 'select', incluirAssinatura: 'select', quantidadeParcelas: 'number', parcelasPagas: 'number'
+                    contratoTexto: 'textarea', dataContrato: 'date', dataBaseCalculo: 'date',
+                    metodoCalculo: 'select', multiplicadorRestituicao: 'select',
+                    quantidadeParcelas: 'number', parcelasPagas: 'number', justificativaRestituicao: 'textarea'
                 },
                 fieldOptions: {
                     metodoCalculo: [
-                        { value: 'Tabela Price', label: 'Tabela Price — expurgo apenas das tarifas' },
-                        { value: 'SAC', label: 'SAC — amortização constante' },
-                        { value: 'GAUSS', label: 'Gauss — cenário de juros distribuídos linearmente' },
-                        { value: 'Juros simples', label: 'Juros simples — amortização linear' }
+                        { value: 'Tabela Price - Expurgo das Tarifas', label: 'Tabela Price - Expurgo das Tarifas' },
+                        { value: 'Tabela Price - Expurgo das Tarifas e Seguros', label: 'Tabela Price - Expurgo das Tarifas e Seguros' },
+                        { value: 'Tabela Price Completa', label: 'Tabela Price Completa' },
+                        { value: 'Sistema SAC', label: 'Sistema SAC' }
                     ],
                     multiplicadorRestituicao: [
                         { value: '0', label: 'Sem restituição automática' },
                         { value: '1', label: 'Restituição simples (exige fundamentação)' },
                         { value: '2', label: 'Restituição em dobro (exige fundamentação jurídica)' }
                     ],
-                    validacaoPerito: [
-                        { value: 'Pendente', label: 'Aguardando validação do perito' },
-                        { value: 'Aprovado', label: 'Aprovado pelo perito' },
-                        { value: 'Reprovado', label: 'Reprovado — requer correção' }
-                    ],
-                    incluirAssinatura: [
-                        { value: 'Não', label: 'Não incluir assinatura' },
-                        { value: 'Sim', label: 'Sim, incluir após aprovação' }
-                    ]
                 },
                 placeholders: {
+                    contratoTexto: 'Cole o texto completo extraído do PDF ou OCR. O sistema localizará os dados automaticamente.',
                     descricaoBem: 'Ex.: Volkswagen T-Cross 2022', valorFinanciadoBruto: 'Ex.: 85.000,00',
                     valorPrestacaoContratual: 'Ex.: 2.145,80', taxaJurosMensal: 'Ex.: 1,89',
                     quantidadeParcelas: 'Ex.: 48', parcelasPagas: 'Ex.: 12'
-                    ,codigoValidacao: 'Código interno para conferência do laudo'
                 },
                 blocks: []
             }
@@ -8088,6 +8077,67 @@
             if (picker && panel && !panel.hidden && !picker.contains(event.target)) toggleAdmTemplatePicker(false);
         });
 
+        function extractLaudoContract() {
+            const source = getAdmPdfField('contratoTexto');
+            const status = document.getElementById('adm-pdf-status');
+            if (!source) {
+                if (status) status.innerText = 'Cole o contrato antes de organizar os dados.';
+                return;
+            }
+            const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
+            const normalized = source.replace(/\u00a0/g, ' ').replace(/[ \t]+/g, ' ');
+            const capture = (...patterns) => {
+                for (const pattern of patterns) {
+                    const match = normalized.match(pattern);
+                    if (match?.[1]) return clean(match[1]).replace(/^[\s:–—-]+|[\s;|]+$/g, '');
+                }
+                return '';
+            };
+            const money = labels => capture(new RegExp(`(?:${labels})\\s*[:\\-–—]?\\s*(?:R\\$\\s*)?([\\d.]+,\\d{2})`, 'i'));
+            const date = labels => normalizeAdmProcessDate(capture(new RegExp(`(?:${labels})\\s*[:\\-–—]?\\s*(\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{2,4})`, 'i')).replace(/[.-]/g, '/'));
+            const values = {
+                cliente: capture(/(?:nome do (?:cliente|contratante)|contratante|proponente|cliente)\s*[:\-–—]?\s*([^\n\r|;]{3,100})/i),
+                cpf: capture(/\bCPF(?:\/CNPJ)?\s*[:\-–—]?\s*([\d.\-]{11,18})/i) || capture(/\b(\d{3}\.\d{3}\.\d{3}-\d{2})\b/),
+                banco: capture(/(?:institui(?:ç|c)[aã]o financeira|credor|banco)\s*[:\-–—]?\s*([^\n\r|;]{2,100})/i),
+                cnpjBanco: capture(/\bCNPJ\s*[:\-–—]?\s*([\d.\/-]{14,20})/i),
+                contrato: capture(/(?:n(?:º|°|o)?\.?\s*(?:do\s*)?contrato|contrato n(?:º|°|o)?\.?)\s*[:\-–—]?\s*([A-Z0-9.\/-]{3,40})/i),
+                cidadeEstado: capture(/(?:cidade|local)\s*[:\-–—]?\s*([^\n\r|;]{2,80})/i),
+                dataContrato: date('data (?:do contrato|da contrata(?:ç|c)[aã]o)|contratado em'),
+                descricaoBem: capture(/(?:ve[ií]culo|bem financiado|marca[ /]+modelo|descri(?:ç|c)[aã]o do bem)\s*[:\-–—]?\s*([^\n\r|;]{3,120})/i),
+                valorBem: money('valor (?:do ve[ií]culo|do bem|[àa] vista)'),
+                valorEntrada: money('(?:valor da )?entrada|recursos pr[oó]prios'),
+                valorFinanciadoBruto: money('valor (?:total )?financiado|cr[eé]dito financiado|valor liberado'),
+                valorPrestacaoContratual: money('(?:valor da )?presta(?:ç|c)[aã]o|valor da parcela'),
+                quantidadeParcelas: capture(/(?:quantidade|n(?:º|°|o)?\.?)\s*(?:de\s*)?parcelas\s*[:\-–—]?\s*(\d{1,3})/i, /(\d{1,3})\s*(?:parcelas|presta(?:ç|c)[oõ]es)/i),
+                taxaJurosMensal: capture(/(?:taxa (?:de )?juros\s*)?(?:a\.?\s*m\.?|ao m[eê]s|mensal)\s*[:\-–—]?\s*([\d.,]+)\s*%/i, /([\d.,]+)\s*%\s*(?:a\.?\s*m\.?|ao m[eê]s)/i),
+                valorIofAdicional: money('IOF adicional'),
+                valorIof: money('IOF(?! adicional)'),
+                valorSeguro: money('seguro(?: prestamista| do bem)?'),
+                valorRegistroContrato: money('registro (?:de|do) contrato'),
+                valorTarifaCadastro: money('tarifa (?:de )?cadastro|TAC'),
+                valorAvaliacaoBem: money('tarifa (?:de )?avalia(?:ç|c)[aã]o|avalia(?:ç|c)[aã]o do bem')
+            };
+            let filled = 0;
+            let missing = 0;
+            Object.entries(values).forEach(([field, value]) => {
+                const input = document.getElementById(`adm-field-${field}`);
+                if (!input) return;
+                input.classList.remove('ring-2', 'ring-amber-400', 'border-amber-400');
+                if (value) {
+                    input.value = value;
+                    filled += 1;
+                } else if (!input.value.trim()) {
+                    input.classList.add('ring-2', 'ring-amber-400', 'border-amber-400');
+                    input.dataset.parserMissing = 'true';
+                    missing += 1;
+                }
+            });
+            if (status) {
+                status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
+                status.innerText = `${filled} campos identificados automaticamente. ${missing ? `${missing} campos não localizados foram destacados para conferência.` : 'Todos os campos principais foram localizados.'}`;
+            }
+        }
+
         function renderAdmPdfFields() {
             syncAdmTemplatePicker();
             syncAdmPdfFileName();
@@ -8096,6 +8146,7 @@
             const status = document.getElementById('adm-pdf-status');
             if (!fieldsContainer) return;
 
+            let currentGroup = '';
             fieldsContainer.innerHTML = template.fields.map((field, index) => {
                 const label = getAdmPdfFieldLabel(template, field);
                 const required = Array.isArray(template.requiredFields)
@@ -8105,7 +8156,7 @@
                 const span = ['endereco', 'enderecoBanco'].includes(field) || type === 'textarea' || type === 'file' ? 'sm:col-span-2' : '';
                 const placeholder = template.placeholders?.[field] || label;
                 const control = type === 'textarea'
-                    ? `<textarea id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} rows="${field === 'resumoProcesso' ? '8' : '4'}" class="adm-pdf-control resize-y px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}"></textarea>`
+                    ? `<textarea id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} rows="${['resumoProcesso', 'contratoTexto'].includes(field) ? '10' : '4'}" class="adm-pdf-control resize-y px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}"></textarea>`
                     : type === 'select'
                         ? `<select id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} class="adm-pdf-control adm-pdf-select px-4 py-3 text-sm font-semibold normal-case tracking-normal">${(template.fieldOptions?.[field] || []).map(option => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`).join('')}</select>`
                     : type === 'file'
@@ -8113,12 +8164,29 @@
                         : `<input id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} type="${type}" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}">`;
                 const extractButton = field === 'resumoProcesso'
                     ? `<button type="button" onclick="extractAdmProcessSummary()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black normal-case tracking-normal text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Separar informações do resumo</button>`
+                    : field === 'contratoTexto'
+                        ? `<button type="button" onclick="extractLaudoContract()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-black normal-case tracking-normal text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Organizar dados do contrato</button>`
+                    : '';
+                const group = template.groups?.[field] || '';
+                const groupHeader = group && group !== currentGroup
+                    ? `<div class="sm:col-span-2 mt-3 border-b border-white/10 pb-2"><h4 class="text-sm font-black normal-case tracking-normal text-white">${escapeHtml(group)}</h4></div>`
+                    : '';
+                if (group) currentGroup = group;
+                const methodHelp = field === 'metodoCalculo'
+                    ? `<div class="mt-2 grid gap-1.5 normal-case tracking-normal text-[11px] font-medium leading-relaxed text-blue-100/65">
+                        <span><strong class="text-blue-100">Expurgo das Tarifas:</strong> retirar somente tarifas.</span>
+                        <span><strong class="text-blue-100">Expurgo das Tarifas e Seguros:</strong> usar quando também houver seguros financiados.</span>
+                        <span><strong class="text-blue-100">Tabela Price Completa:</strong> reconstruir todo o financiamento.</span>
+                        <span><strong class="text-blue-100">Sistema SAC:</strong> somente para contrato original com amortização SAC.</span>
+                       </div>`
                     : '';
                 return `
+                    ${groupHeader}
                     <label class="${span} grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
                         ${escapeHtml(label)}${required ? ' *' : ''}
                         ${control}
                         ${extractButton}
+                        ${methodHelp}
                     </label>
                 `;
             }).join('');
@@ -8129,24 +8197,18 @@
             }
             const calculationDate = document.getElementById('adm-field-dataBaseCalculo');
             if (calculationDate && !calculationDate.value) calculationDate.valueAsDate = new Date();
-            const validationDate = document.getElementById('adm-field-dataValidacao');
-            if (validationDate && !validationDate.value) validationDate.valueAsDate = new Date();
-            const validationCode = document.getElementById('adm-field-codigoValidacao');
-            if (validationCode && !validationCode.value) validationCode.value = `DENIS-${ensureAdmPdfNumber()}`;
             const restitutionMultiplier = document.getElementById('adm-field-multiplicadorRestituicao');
             if (restitutionMultiplier && !restitutionMultiplier.value) restitutionMultiplier.value = '0';
-            document.getElementById('adm-field-validacaoPerito')?.addEventListener('change', updateLaudoValidationControls);
-            updateLaudoValidationControls();
-            updateLaudoWorkflowVisibility();
 
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-100/60';
-                status.innerText = 'Modelo carregado. Preencha os campos destacados do documento original.';
+                status.innerText = template === admPdfTemplates['laudo-pericial-contabil']
+                    ? 'Cole o contrato, organize os dados, confira os campos e gere o PDF.'
+                    : 'Modelo carregado. Preencha os campos destacados do documento original.';
             }
         }
 
         function resetAdmPdfForm() {
-            currentLaudoReviewId = '';
             const form = document.getElementById('adm-pdf-form');
             if (form) form.reset();
             const date = document.getElementById('adm-pdf-date');
@@ -8169,140 +8231,12 @@
             });
         }
 
-        function updateLaudoValidationControls() {
-            const validation = document.getElementById('adm-field-validacaoPerito');
-            const signature = document.getElementById('adm-field-incluirAssinatura');
-            if (!signature) return;
-            const currentEmail = window.firebaseAuthUser?.email?.toLowerCase() || '';
-            const peritoLogged = currentEmail === 'administrativo@platino.com';
-            if (validation) {
-                validation.disabled = !peritoLogged;
-                validation.title = peritoLogged
-                    ? 'Aprovação autorizada para o perito.'
-                    : 'Somente o login administrativo@platino.com pode validar este laudo.';
-                validation.closest('label')?.classList.toggle('opacity-60', !peritoLogged);
-            }
-            const approved = peritoLogged && validation?.value === 'Aprovado';
-            signature.disabled = !approved;
-            if (!approved) signature.value = 'Não';
-            signature.closest('label')?.classList.toggle('opacity-50', !approved);
-            const exceptionWrap = document.getElementById('laudo-exception-wrap');
-            exceptionWrap?.classList.toggle('hidden', !approved);
-            exceptionWrap?.classList.toggle('flex', approved);
-            const status = document.getElementById('adm-pdf-status');
-            if (validation && !peritoLogged && status) {
-                status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                status.innerText = 'Validação bloqueada: somente administrativo@platino.com pode aprovar e assinar o laudo.';
-            }
-        }
-
-        let laudoReviewItems = [];
-        let currentLaudoReviewId = '';
-
-        function updateLaudoWorkflowVisibility() {
-            const isLaudo = document.getElementById('adm-pdf-template')?.value === 'laudo-pericial-contabil';
-            const peritoLogged = window.firebaseAuthUser?.email?.toLowerCase() === 'administrativo@platino.com';
-            const draftButton = document.getElementById('laudo-save-draft-button');
-            const generateButton = document.getElementById('adm-pdf-generate-button');
-            const queue = document.getElementById('laudo-review-queue');
-            draftButton?.classList.toggle('hidden', !isLaudo || peritoLogged);
-            draftButton?.classList.toggle('inline-flex', isLaudo && !peritoLogged);
-            generateButton?.classList.toggle('hidden', isLaudo && !peritoLogged);
-            generateButton?.classList.toggle('inline-flex', !isLaudo || peritoLogged);
-            queue?.classList.toggle('hidden', !peritoLogged);
-        }
-
-        async function saveLaudoForReview() {
-            const form = document.getElementById('adm-pdf-form');
-            const status = document.getElementById('adm-pdf-status');
-            const button = document.getElementById('laudo-save-draft-button');
-            if (!form?.checkValidity()) {
-                form?.reportValidity();
-                if (status) status.innerText = 'Preencha os campos obrigatórios antes de enviar ao perito.';
-                return;
-            }
-            try {
-                button.disabled = true;
-                button.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> Enviando...';
-                const data = await buildAdmPdfData(getAdmPdfTemplate());
-                data.validacaoPerito = 'Pendente';
-                data.incluirAssinatura = 'Não';
-                if (!window.platinoLaudoStore) throw new Error('A sincronização com o Firebase ainda não está conectada.');
-                const saved = await window.platinoLaudoStore.savePending(data);
-                currentLaudoReviewId = saved.id;
-                if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-emerald-300';
-                    status.innerText = 'Laudo enviado ao perito. Ele já aparece na fila de validação do login administrativo@platino.com.';
-                }
-            } catch (error) {
-                console.error(error);
-                if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-red-300';
-                    status.innerText = error.message || 'Não foi possível enviar o laudo para validação.';
-                }
-            } finally {
-                button.disabled = false;
-                button.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Enviar para validação';
-            }
-        }
-
-        function renderLaudoReviewQueue() {
-            const list = document.getElementById('laudo-pending-list');
-            const count = document.getElementById('laudo-pending-count');
-            if (!list || !count) return;
-            const pending = laudoReviewItems.filter(item => item.status === 'Pendente');
-            count.innerText = String(pending.length);
-            if (!pending.length) {
-                list.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-amber-100/75">Nenhum laudo aguardando validação.</div>';
-                return;
-            }
-            list.innerHTML = pending.map(item => `
-                <button type="button" onclick="openLaudoForReview('${item.id}')" class="rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-amber-300/40 hover:bg-white/10">
-                    <div class="flex items-start justify-between gap-3"><div><strong class="text-white">${escapeHtml(item.data?.cliente || 'Cliente não informado')}</strong><p class="mt-1 text-xs text-amber-100/70">${escapeHtml(item.data?.banco || 'Instituição não informada')} • Contrato ${escapeHtml(item.data?.contrato || 'não informado')}</p></div><span class="rounded-full bg-amber-300/15 px-2 py-1 text-[10px] font-black uppercase text-amber-200">Pendente</span></div>
-                    <p class="mt-2 text-[11px] text-blue-100/60">Enviado por ${escapeHtml(item.createdBy || 'usuário')} • Clique para analisar</p>
-                </button>`).join('');
-        }
-
-        function openLaudoForReview(id) {
-            const item = laudoReviewItems.find(entry => entry.id === id);
-            if (!item?.data) return;
-            currentLaudoReviewId = id;
-            const templateSelect = document.getElementById('adm-pdf-template');
-            templateSelect.value = 'laudo-pericial-contabil';
-            renderAdmPdfFields();
-            Object.entries(item.data).forEach(([field, value]) => {
-                const input = document.getElementById(`adm-field-${field}`);
-                if (!input || value == null) return;
-                const type = getAdmPdfInputType(field, getAdmPdfTemplate());
-                input.value = type === 'date' ? normalizeAdmProcessDate(value) : String(value);
-            });
-            const validation = document.getElementById('adm-field-validacaoPerito');
-            if (validation) validation.value = 'Pendente';
-            updateLaudoValidationControls();
-            updateLaudoWorkflowVisibility();
-            const status = document.getElementById('adm-pdf-status');
-            if (status) {
-                status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                status.innerText = 'Laudo pendente carregado. Revise os dados, escolha a validação e gere o PDF final.';
-            }
-            document.getElementById('adm-pdf-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        window.applyRemoteLaudos = function (items) {
-            laudoReviewItems = Array.isArray(items) ? items : [];
-            renderLaudoReviewQueue();
-        };
-
         async function buildAdmPdfData(template) {
             const dateParts = getAdmPdfDateParts(document.getElementById('adm-pdf-date')?.value || '');
             const data = {
                 ...dateParts,
-                numeroDocumento: ensureAdmPdfNumber(),
-                loginValidador: window.firebaseAuthUser?.email?.toLowerCase() || ''
+                numeroDocumento: ensureAdmPdfNumber()
             };
-            if (template === admPdfTemplates['laudo-pericial-contabil']) {
-                data.permitirInconsistencia = document.getElementById('laudo-allow-inconsistency')?.checked ? 'SIM' : '';
-            }
             for (const field of template.fields) {
                 const type = getAdmPdfInputType(field, template);
                 if (type === 'file') {
@@ -8458,16 +8392,15 @@
         }
 
         function getAdmPdfFileName(template, data, override = '') {
-            const customName = String(override || document.getElementById('adm-pdf-file-name')?.value || '')
+            const documentName = String(override || template.title || 'Documento')
                 .replace(/\.pdf$/i, '')
                 .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-')
                 .replace(/\s+/g, ' ')
                 .replace(/[. ]+$/g, '')
-                .trim();
-            if (customName) return `${customName}.pdf`;
-            const mainName = data.cliente || data.banco || 'documento';
+                .trim() || 'Documento';
+            const mainName = data.cliente || data.nomeCliente || 'cliente-nao-informado';
             const documentNumber = data.numeroDocumento || ensureAdmPdfNumber();
-            return `${slugifyAdmPdf(template.title)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
+            return `${slugifyAdmPdf(documentName)}-${slugifyAdmPdf(mainName)}-${slugifyAdmPdf(documentNumber)}.pdf`;
         }
 
         let admPdfGeneratorReady = null;
@@ -8576,31 +8509,6 @@
             }
 
             const selectedTemplateKey = document.getElementById('adm-pdf-template')?.value || 'chargeback';
-            const validatorEmail = window.firebaseAuthUser?.email?.toLowerCase() || '';
-            if (selectedTemplateKey === 'laudo-pericial-contabil' && validatorEmail !== 'administrativo@platino.com') {
-                if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'Somente o login administrativo@platino.com pode aprovar, assinar e baixar o laudo final.';
-                }
-                return;
-            }
-            // O administrador autenticado pode emitir diretamente um laudo já aprovado.
-            // A fila continua obrigatória para fluxos iniciados por usuários não administrativos.
-            if (selectedTemplateKey === 'laudo-pericial-contabil' && !currentLaudoReviewId && validatorEmail !== 'administrativo@platino.com') {
-                if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'Envie o laudo para validação antes de gerar o PDF final.';
-                }
-                return;
-            }
-            if (selectedTemplateKey === 'laudo-pericial-contabil' && getAdmPdfField('validacaoPerito') !== 'Aprovado') {
-                if (status) {
-                    status.className = 'min-h-5 text-xs font-semibold text-amber-300';
-                    status.innerText = 'O perito Denis precisa aprovar o laudo antes da assinatura e do download do PDF final.';
-                }
-                document.getElementById('adm-field-validacaoPerito')?.focus();
-                return;
-            }
 
             if (button) {
                 button.disabled = true;
@@ -8621,16 +8529,6 @@
 
                 if (status) status.innerText = 'Gerando PDF com o layout fiel do modelo...';
                 await requestAdmPdf(templateKey, data);
-
-                if (templateKey === 'laudo-pericial-contabil' && currentLaudoReviewId) {
-                    await window.platinoLaudoStore?.markReviewed?.(currentLaudoReviewId, {
-                        status: 'Aprovado',
-                        validationCode: data.codigoValidacao,
-                        validationDate: data.dataValidacao,
-                        signed: data.incluirAssinatura === 'Sim'
-                    });
-                    currentLaudoReviewId = '';
-                }
 
                 if (templateKey === 'procuracao-dra-juliane') {
                     const baseName = String(document.getElementById('adm-pdf-file-name')?.value || template.title).replace(/\.pdf$/i, '').trim();
@@ -8917,13 +8815,11 @@
       let rankingRef = null;
       let managementRef = null;
         let feedbacksRef = null;
-        let laudosRef = null;
       let sdrRef = null;
       let stopAvisosSubscription = null;
       let stopRankingSubscription = null;
       let stopManagementSubscription = null;
       let stopFeedbackSubscription = null;
-      let stopLaudosSubscription = null;
       let stopSdrSubscription = null;
       let stopProfileSubscription = null;
       let stopReminderSubscription = null;
@@ -9530,39 +9426,6 @@
         }
       };
 
-      window.platinoLaudoStore = {
-        savePending: async (data) => {
-          if (!auth?.currentUser) throw new Error("Faça login antes de enviar o laudo.");
-          const reference = await addDoc(laudosRef, {
-            status: "Pendente",
-            data,
-            createdBy: auth.currentUser.email || "Usuário",
-            createdAt: new Date().toISOString(),
-            createdAtServer: serverTimestamp()
-          });
-          return { id: reference.id };
-        },
-        markReviewed: async (id, review) => {
-          if ((auth.currentUser?.email || "").toLowerCase() !== "administrativo@platino.com") {
-            throw new Error("Somente o perito pode concluir a validação.");
-          }
-          return updateDoc(doc(db, "laudosPericiais", id), {
-            ...review,
-            reviewedBy: auth.currentUser.email,
-            reviewedAt: serverTimestamp()
-          });
-        },
-        subscribe: () => {
-          if (stopLaudosSubscription) return;
-          const laudosQuery = query(laudosRef, orderBy("createdAtServer", "desc"), limit(200));
-          stopLaudosSubscription = onSnapshot(
-            laudosQuery,
-            snapshot => window.applyRemoteLaudos?.(snapshot.docs.map(item => ({ id: item.id, ...item.data() }))),
-            error => console.warn("Não foi possível carregar os laudos pendentes.", error)
-          );
-        }
-      };
-
       window.platinoSdrStore = {
         save: async (data) => {
           if (!auth?.currentUser) throw new Error("Faça login antes de salvar o lead.");
@@ -9824,8 +9687,6 @@
 
         window.applyGestorVisibility?.();
         window.sdrApplyAccess?.();
-        window.updateLaudoValidationControls?.();
-        window.updateLaudoWorkflowVisibility?.();
       }
 
       async function startFirebase() {
@@ -9840,7 +9701,6 @@
           rankingRef = doc(db, "appContent", "ranking");
           managementRef = doc(db, "appContent", "managementEdits");
           feedbacksRef = collection(db, "feedbacks");
-          laudosRef = collection(db, "laudosPericiais");
           sdrRef = collection(db, "sdrLeads");
 
           onAuthStateChanged(auth, (user) => {
@@ -9860,9 +9720,6 @@
           if (window.platinoUserRole === "gestor") {
             window.platinoFeedbackStore.subscribe();
             initializeAccountManagement();
-          }
-          if ((user.email || "").toLowerCase() === "administrativo@platino.com") {
-            window.platinoLaudoStore.subscribe();
           }
         } else {
           loginScreen.classList.remove("hidden");
@@ -9907,10 +9764,6 @@
           if (stopFeedbackSubscription) {
             stopFeedbackSubscription();
             stopFeedbackSubscription = null;
-          }
-          if (stopLaudosSubscription) {
-            stopLaudosSubscription();
-            stopLaudosSubscription = null;
           }
         }
           });

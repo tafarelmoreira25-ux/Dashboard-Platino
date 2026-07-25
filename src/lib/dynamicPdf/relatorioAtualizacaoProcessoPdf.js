@@ -7,6 +7,10 @@ import {
   StandardFonts,
   rgb,
 } from "pdf-lib";
+import {
+  dataHoraAssinatura,
+  desenharAssinaturaInstitucional,
+} from "./assinaturaInstitucionalPdf.js";
 
 const A4 = [595.28, 841.89];
 const MARGEM = 54;
@@ -105,16 +109,6 @@ function cabecalhoRodape(contexto, pagina) {
   pagina.drawLine({ start: { x: MARGEM, y: 795 }, end: { x: A4[0] - MARGEM, y: 795 }, thickness: 1.2, color: AZUL });
 
   pagina.drawLine({ start: { x: MARGEM, y: 45 }, end: { x: A4[0] - MARGEM, y: 45 }, thickness: 0.6, color: rgb(0.75, 0.78, 0.82) });
-  if (contexto.assinaturaEletronica) {
-    const larguraAssinatura = fontes.negrito.widthOfTextAtSize(contexto.assinaturaEletronica, 7.2);
-    pagina.drawText(contexto.assinaturaEletronica, {
-      x: (A4[0] - larguraAssinatura) / 2,
-      y: 49,
-      size: 7.2,
-      font: fontes.negrito,
-      color: AZUL,
-    });
-  }
   const rodape1 = "Rua Fontoura Xavier, nº 1308 - Itaquera - São Paulo/SP - CEP: 08295-300";
   const rodape2 = "E-mail: platinoassessoriafinanceira@gmail.com";
   [rodape1, rodape2].forEach((linha, indice) => {
@@ -207,19 +201,16 @@ function dadosDaImagem(valor) {
   };
 }
 
-function formatarDataHoraAssinatura(data = new Date()) {
-  const formatador = new Intl.DateTimeFormat("pt-BR", {
-    timeZone: "America/Sao_Paulo",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return formatador.format(data).replace(",", " às");
+function textoCentralizadoAjustado(pagina, fonte, conteudo, x, y, largura, tamanho, cor = PRETO) {
+  const valor = texto(conteudo);
+  let tamanhoFinal = tamanho;
+  while (tamanhoFinal > 6.4 && fonte.widthOfTextAtSize(valor, tamanhoFinal) > largura) {
+    tamanhoFinal -= 0.2;
+  }
+  textoCentralizado(pagina, fonte, valor, x, y, largura, tamanhoFinal, cor);
 }
 
-export async function gerarRelatorioAtualizacaoProcessoPdf(dados) {
+export async function gerarRelatorioAtualizacaoProcessoPdf(dados, { assinaturaBytes } = {}) {
   const pdf = await PDFDocument.create();
   const fontes = {
     normal: await pdf.embedFont(StandardFonts.Helvetica),
@@ -230,7 +221,6 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados) {
     fontes,
     pagina: null,
     y: TOPO,
-    assinaturaEletronica: `Documento assinado digitalmente por RAFAEL MOREIRA em ${formatarDataHoraAssinatura()}`,
   };
   novaPagina(contexto);
 
@@ -240,21 +230,29 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados) {
   linhaCampo(contexto, "Justiça Gratuita", dados.justicaGratuita);
   linhaCampo(contexto, "Data da distribuição", dados.dataDistribuicao, { depois: 8 });
 
-  garantir(contexto, 76);
-  const coluna = (LARGURA - 12) / 2;
+  garantir(contexto, 98);
+  const coluna = LARGURA / 2;
   const yTabela = contexto.y;
-  contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - 60, width: LARGURA, height: 60, borderWidth: 0.8, borderColor: CINZA_CLARO });
-  contexto.pagina.drawLine({ start: { x: MARGEM + coluna + 12, y: yTabela }, end: { x: MARGEM + coluna + 12, y: yTabela - 60 }, thickness: 0.8, color: CINZA_CLARO });
-  contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - 19, width: LARGURA, height: 19, color: rgb(0.94, 0.96, 0.98) });
-  textoCentralizado(contexto.pagina, fontes.negrito, "POLO ATIVO", MARGEM, yTabela - 13, coluna + 12, 9, AZUL);
-  textoCentralizado(contexto.pagina, fontes.negrito, "POLO PASSIVO", MARGEM + coluna + 12, yTabela - 13, coluna, 9, AZUL);
-  contexto.y = yTabela - 27;
-  paragrafo(contexto, [{ texto: texto(dados.cliente) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoCliente) || "Não informado"}` }], { x: MARGEM + 7, largura: coluna - 2, tamanho: 8.7, alturaLinha: 11, alinhamento: "center", antes: 0, depois: 0 });
-  contexto.y = yTabela - 27;
-  paragrafo(contexto, [{ texto: texto(dados.banco) || "Não informado", negrito: true }, { texto: `\nADV.: ${texto(dados.advogadoBanco) || "Não informado"}` }], { x: MARGEM + coluna + 19, largura: coluna - 14, tamanho: 8.7, alturaLinha: 11, alinhamento: "center", antes: 0, depois: 0 });
-  contexto.y = yTabela - 69;
+  const alturaCabecalho = 21;
+  const alturaCorpo = 66;
+  const yBaseTabela = yTabela - alturaCabecalho - alturaCorpo;
+  contexto.pagina.drawRectangle({ x: MARGEM, y: yBaseTabela, width: LARGURA, height: alturaCabecalho + alturaCorpo, borderWidth: 0.8, borderColor: CINZA_CLARO });
+  contexto.pagina.drawLine({ start: { x: MARGEM + coluna, y: yTabela }, end: { x: MARGEM + coluna, y: yBaseTabela }, thickness: 0.8, color: CINZA_CLARO });
+  contexto.pagina.drawRectangle({ x: MARGEM, y: yTabela - alturaCabecalho, width: LARGURA, height: alturaCabecalho, color: rgb(0.94, 0.96, 0.98) });
+  contexto.pagina.drawLine({ start: { x: MARGEM, y: yTabela - alturaCabecalho }, end: { x: MARGEM + LARGURA, y: yTabela - alturaCabecalho }, thickness: 0.6, color: CINZA_CLARO });
+  textoCentralizado(contexto.pagina, fontes.negrito, "POLO ATIVO", MARGEM, yTabela - 14, coluna, 9, AZUL);
+  textoCentralizado(contexto.pagina, fontes.negrito, "POLO PASSIVO", MARGEM + coluna, yTabela - 14, coluna, 9, AZUL);
 
-  linhaCampo(contexto, "Assunto", dados.assunto, { depois: 7 });
+  const desenharParte = (x, nome, advogado) => {
+    const larguraCelula = coluna;
+    textoCentralizadoAjustado(contexto.pagina, fontes.negrito, texto(nome) || "Não informado", x + 8, yTabela - 43, larguraCelula - 16, 8.7);
+    textoCentralizadoAjustado(contexto.pagina, fontes.normal, `ADV.: ${texto(advogado) || "Não informado"}`, x + 8, yTabela - 66, larguraCelula - 16, 8.2, CINZA);
+  };
+  desenharParte(MARGEM, dados.cliente, dados.advogadoCliente);
+  desenharParte(MARGEM + coluna, dados.banco, dados.advogadoBanco);
+  contexto.y = yBaseTabela - 13;
+
+  linhaCampo(contexto, "Assunto", dados.assunto, { depois: 9 });
   secao(contexto, "Status atual");
   paragrafo(contexto, [{ texto: dados.statusAtual }], { alinhamento: "justify", antes: 0, depois: 7 });
   secao(contexto, "Última movimentação");
@@ -315,9 +313,20 @@ export async function gerarRelatorioAtualizacaoProcessoPdf(dados) {
     { texto: ", está acompanhando atentamente todas as movimentações processuais e adotará as medidas cabíveis dentro dos prazos estabelecidos pelo Juízo." },
   ], { alinhamento: "justify", manterJunto: true, antes: 5, depois: 10 });
 
-  garantir(contexto, 55);
-  paragrafo(contexto, [{ texto: "Cordialmente," }], { antes: 0, depois: 6 });
-  paragrafo(contexto, [{ texto: "Rafael Moreira - Departamento Processual", negrito: true }, { texto: "\nPLATINO SOLUÇÕES FINANCEIRAS" }], { antes: 0, depois: 0 });
+  paragrafo(contexto, [{ texto: "Cordialmente," }], { antes: 0, depois: 8 });
+  garantir(contexto, 92);
+  const agora = dataHoraAssinatura();
+  await desenharAssinaturaInstitucional({
+    pdf,
+    pagina: contexto.pagina,
+    fontes,
+    yTopo: contexto.y,
+    larguraPagina: A4[0],
+    assinaturaBytes,
+    dataAssinatura: texto(dados.dataAssinatura) || agora.data,
+    horaAssinatura: texto(dados.horaAssinatura) || agora.hora,
+    codigoValidacao: texto(dados.codigoValidacao) || texto(dados.numeroDocumento),
+  });
 
   return pdf.save();
 }
