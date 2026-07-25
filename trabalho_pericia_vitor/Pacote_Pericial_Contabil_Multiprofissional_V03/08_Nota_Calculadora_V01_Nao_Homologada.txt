@@ -1,0 +1,23 @@
+NOTA SOBRE A CALCULADORA V01
+
+A planilha V01 foi analisada, mas não integra o pacote V03 como ferramenta homologada.
+
+Motivos:
+1. IDs CHK-011, CHK-012 e CHK-013 não correspondem aos controles do JSON/manual.
+2. A tolerância monetária de CHK-002 diverge do contrato de dados.
+3. O solver usa critério de resíduo diferente da especificação e não separa resíduo
+   da função da largura final do intervalo.
+4. A equivalência de taxas usa tolerância fixa incompatível com a precisão declarada.
+5. A memória Price está ancorada na taxa declarada e não materializa, de forma autônoma,
+   a memória pela prestação contratual/taxa implícita.
+6. A explicação da diferença de prestação precisa considerar o intervalo de precisão da
+   taxa informada, em vez do rótulo genérico “arredondamento da parcela”.
+
+Para homologar uma nova calculadora:
+- implementar integralmente o JSON 04;
+- usar decimal arbitrário, mínimo 34 dígitos, HALF_EVEN;
+- separar PRICE_DECLARED_RATE e PRICE_IMPLICIT_RATE;
+- executar CHK-001 a CHK-014;
+- reproduzir o caso-base do capítulo 15 do manual;
+- gerar evidência de testes e memória linha a linha;
+- gerar corretamente os blocos dos peritos responsáveis.

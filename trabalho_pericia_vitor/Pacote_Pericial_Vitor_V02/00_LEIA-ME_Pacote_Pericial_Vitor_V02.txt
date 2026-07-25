@@ -1,0 +1,40 @@
+PACOTE PROFISSIONAL DE PERÍCIA CONTÁBIL — VITOR — V02
+Data de consolidação: 25/07/2026
+
+FINALIDADE
+Este pacote substitui a minuta V01 como referência de implantação. Ele separa:
+1) contrato de dados;
+2) comandos e controles;
+3) cálculo determinístico;
+4) geração narrativa;
+5) modelo de laudo/parecer;
+6) revisão, aprovação, assinatura e validação.
+
+ARQUIVOS
+01_Modelo_Laudo_Parecer_Pericial_Contabil_Vitor_V02.docx
+01_Modelo_Laudo_Parecer_Pericial_Contabil_Vitor_V02.pdf
+02_Manual_Integral_Implantacao_Motor_Pericial_Vitor_V02.docx
+02_Manual_Integral_Implantacao_Motor_Pericial_Vitor_V02.pdf
+03_Schema_Caso_Pericial_Vitor_V02.json
+04_Especificacao_Comandos_Controles_Vitor_V02.json
+05_Prompt_Mestre_Gerador_Pericial_Vitor_V02.txt
+06_Mapeamento_Tokens_Modelo_Vitor_V02.csv
+07_Relatorio_Revisao_V01_para_V02.md
+08_Nota_Calculadora_V01_Nao_Homologada.txt
+99_MANIFESTO_SHA256.txt
+
+COMO USAR
+- O DOCX 01 é o template de emissão. Tokens escalares e tabelas dinâmicas estão no CSV.
+- O JSON 03 valida os casos; valores decimais são strings.
+- O JSON 04 governa comandos, estados, cálculos e 15 controles canônicos.
+- O TXT 05 limita o gerador narrativo: ele não calcula nem inventa fatos.
+- O manual 02 contém fórmulas, arquitetura, API, banco, testes, assinatura e plano de implantação.
+
+AVISOS
+- A planilha V01 não foi promovida à V02 porque contém inconsistências de tolerância,
+  identificação de controles e separação das memórias Price. Consulte o arquivo 08.
+- O modelo deve ser preenchido com dados e fontes reais. Nenhum CRC, CNPC, certidão,
+  processo, série BCB ou conclusão pode ser presumido.
+- Minuta interna pode ser gerada com status MINUTA NÃO ASSINADA. Aprovação, assinatura e
+  publicação exigem regularidade válida, controles críticos aprovados e revisão humana.
+- O responsável técnico deve revisar integralmente a versão final antes de assiná-la.

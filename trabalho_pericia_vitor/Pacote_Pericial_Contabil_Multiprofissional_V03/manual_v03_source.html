@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Manual Integral de Implantação — Gerador Pericial Contábil Multiprofissional V03</title>
+<style>
+  @page { size: A4; margin: 2cm 1.7cm 1.8cm 1.7cm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #172338; font-family: Aptos, Arial, sans-serif; font-size: 9.6pt; line-height: 1.34; }
+  h1, h2, h3 { color: #15385c; page-break-after: avoid; }
+  h1 { font-size: 23pt; line-height: 1.08; margin: 0 0 10pt; }
+  h2 { font-size: 15pt; border-bottom: 2px solid #c7a45a; padding-bottom: 4pt; margin: 0 0 9pt; }
+  h3 { font-size: 11pt; margin: 10pt 0 4pt; }
+  p { margin: 0 0 6pt; text-align: justify; }
+  ul, ol { margin: 3pt 0 7pt 18pt; padding: 0; }
+  li { margin-bottom: 2pt; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; }
+  tr { page-break-inside: avoid; }
+  th { background: #15385c; color: #fff; text-align: left; }
+  td, th { border: 1px solid #bbc5cf; padding: 4pt 5pt; vertical-align: top; }
+  code { font-family: Consolas, monospace; font-size: 8.4pt; color: #1e456a; }
+  pre { font-family: Consolas, monospace; font-size: 7.8pt; line-height: 1.25; white-space: pre-wrap; background: #f2f5f7; border-left: 4px solid #c7a45a; padding: 7pt; }
+  .cover { min-height: 23.7cm; padding-top: 1.7cm; }
+  .cover-rule { width: 2.4cm; border-top: 5px solid #c7a45a; margin: 18pt 0 24pt; }
+  .eyebrow { color: #9a7430; font-size: 9pt; font-weight: 700; letter-spacing: 1.5pt; text-transform: uppercase; }
+  .subtitle { font-size: 13pt; color: #4a637c; }
+  .cover-box { margin-top: 35pt; padding: 14pt; border-left: 5px solid #c7a45a; background: #f1f4f7; }
+  .page { page-break-before: always; }
+  .callout { background: #f4f6f8; border-left: 4px solid #c7a45a; padding: 8pt 10pt; margin: 8pt 0; }
+  .warn { background: #fff7e0; border-left-color: #b98216; }
+  .ok { background: #edf7f2; border-left-color: #2d7a57; }
+  .small { font-size: 8pt; color: #58697a; }
+</style>
+</head>
+<body>
+  <section class="cover">
+    <div class="eyebrow">Especificação de implantação e homologação</div>
+    <div class="cover-rule"></div>
+    <h1>Gerador Pericial Contábil<br>Manual Integral V03</h1>
+    <p class="subtitle">Como adaptar o sistema para gerar cálculos, memórias, laudo e parecer destinados a um ou vários peritos responsáveis</p>
+    <div class="cover-box">
+      <p><strong>Profissionais:</strong> cadastro multiprofissional, sem nome fixo no modelo.</p>
+      <p><strong>Versão do pacote:</strong> 3.0.0 · 25/07/2026</p>
+      <p><strong>Escopo:</strong> documentos periciais contábeis e cálculos financeiros contratuais.</p>
+      <p><strong>Estado:</strong> especificação revisada para gerar e liberar o documento para impressão, assinatura manual e carimbo dos profissionais responsáveis.</p>
+    </div>
+  </section>
+
+  <section class="page">
+    <h2>1. Resultado da revisão multiprofissional</h2>
+    <p>A V03 preserva a arquitetura de cálculo e documentação da versão anterior, remove nomes fixos e encerra o fluxo do sistema na liberação para impressão.</p>
+    <table>
+      <tr><th>Tema</th><th>Problema identificado no V01</th><th>Tratamento na V02</th></tr>
+      <tr><td>Denominação</td><td>“Parecer técnico-contábil”, com hífen.</td><td>Padronizado como <strong>PARECER TÉCNICO CONTÁBIL</strong>, conforme NBC TP 01 (R2).</td></tr>
+      <tr><td>Profissionais</td><td>Cadastro associado a um único nome.</td><td>Lista de um ou vários peritos, com nome, categoria, CRC, função e CNPC opcional.</td></tr>
+      <tr><td>Tipos</td><td>Roteamento incompleto para arbitragem e perícia oficial.</td><td>Regras próprias para laudo judicial, consensual, arbitral, oficial e extrajudicial; parecer do assistente técnico.</td></tr>
+      <tr><td>CNPC</td><td>Campo associado ao profissional fixo.</td><td>Campo opcional por perito; quando não informado, a linha é omitida.</td></tr>
+      <tr><td>Liberação</td><td>Fluxo anterior ia além da função do gerador.</td><td>O gerador libera o documento para impressão; assinatura e carimbo são realizados fora do sistema.</td></tr>
+      <tr><td>Cálculo Price</td><td>Uma memória misturava prestação teórica e fluxo contratual.</td><td>Duas execuções identificadas: taxa declarada/prestação teórica e prestação contratual/taxa implícita.</td></tr>
+      <tr><td>Precisão</td><td>Tolerâncias divergentes entre JSON, planilha e manual.</td><td>Contrato único de precisão e 15 controles canônicos.</td></tr>
+      <tr><td>CET</td><td>Aplicabilidade regulatória não distinguia porte da pessoa jurídica.</td><td>Escopo regulatório explícito; fora dele, usar “taxa efetiva anual do fluxo econômico”.</td></tr>
+      <tr><td>BCB 20772</td><td>Classificada como recursos não identificados.</td><td>Corrigida para recursos direcionados.</td></tr>
+      <tr><td>Caso de aceite</td><td>Taxa anual implícita digitada como 64,0082%.</td><td>Valor correto: aproximadamente 64,0151600471% a.a.</td></tr>
+      <tr><td>Template</td><td>Instruções internas apareciam no documento a emitir e havia 285 tokens numerados.</td><td>Modelo de emissão limpo; tokens escalares e linhas dinâmicas controladas.</td></tr>
+      <tr><td>Schema</td><td>Arquivo se declarava schema sem ser JSON Schema válido.</td><td>JSON Schema Draft 2020-12 separado da especificação operacional.</td></tr>
+    </table>
+    <div class="callout warn"><strong>Decisão de homologação:</strong> a calculadora V01 deve ser tratada apenas como referência. O motor deve reimplementar os cálculos e controles V03 antes de uso operacional.</div>
+  </section>
+
+  <section class="page">
+    <h2>2. Base profissional e responsabilidade</h2>
+    <p>A NBC TP 01 (R2) exige que o laudo ou parecer identifique processo ou procedimento, partes, objeto, análise técnica, método, diligências, quesitos, conclusão, anexos e assinatura com categoria, CRC, função e CNPC quando houver. A V03 organiza esses campos para um ou vários profissionais.</p>
+    <table>
+      <tr><th>Documento</th><th>Quem emite</th><th>Título do arquivo final</th></tr>
+      <tr><td>Laudo judicial</td><td>Perito do juízo</td><td>LAUDO PERICIAL CONTÁBIL</td></tr>
+      <tr><td>Laudo consensual</td><td>Perito escolhido pelas partes</td><td>LAUDO PERICIAL CONTÁBIL</td></tr>
+      <tr><td>Laudo arbitral</td><td>Perito arbitral</td><td>LAUDO PERICIAL CONTÁBIL</td></tr>
+      <tr><td>Laudo oficial</td><td>Perito oficial</td><td>LAUDO PERICIAL CONTÁBIL</td></tr>
+      <tr><td>Laudo extrajudicial</td><td>Contador nomeado/contratado para perícia</td><td>LAUDO PERICIAL CONTÁBIL</td></tr>
+      <tr><td>Parecer</td><td>Assistente técnico</td><td>PARECER TÉCNICO CONTÁBIL</td></tr>
+    </table>
+    <p><strong>Regra operacional:</strong> o sistema não decide sozinho o tipo documental. A função deve ser selecionada no cadastro do trabalho.</p>
+    <h3>2.1 Identificação dos responsáveis</h3>
+    <ul>
+      <li>um ou vários profissionais vinculados ao mesmo documento;</li>
+      <li>nome completo, categoria profissional e número do CRC com UF;</li>
+      <li>função exercida no trabalho;</li>
+      <li>CNPC opcional;</li>
+      <li>bloco individual para assinatura e carimbo de cada profissional.</li>
+    </ul>
+    <div class="callout"><strong>Limite do gerador:</strong> o sistema produz cálculos, memórias e o documento para impressão. A assinatura e o carimbo físicos identificam os profissionais que assumem o trabalho.</div>
+    <p class="small">Referências oficiais: NBC TP 01 (R2), NBC PP 01 (R2), CPC art. 473 e Resolução CMN 4.881/2020. URLs completas constam no capítulo 17.</p>
+  </section>
+
+  <section class="page">
+    <h2>3. Arquitetura-alvo</h2>
+    <table>
+      <tr><th>Camada</th><th>Responsabilidade</th><th>Saída persistida</th></tr>
+      <tr><td>1. Caso e evidências</td><td>Cadastro, upload, OCR assistido e referência de origem.</td><td><code>case.json</code> e arquivos vinculados.</td></tr>
+      <tr><td>2. Normalização</td><td>Datas ISO, moeda decimal, taxa por período, enumerações e vínculo campo-fonte.</td><td>snapshot de entradas versionado.</td></tr>
+      <tr><td>3. Motor determinístico</td><td>Price, SAC, taxa implícita, fluxo/CET, histórico de pagamentos, cenários.</td><td>execução com versão, parâmetros, resultados e memória.</td></tr>
+      <tr><td>4. Controles</td><td>15 verificações canônicas, severidade, tolerância, evidência e justificativa.</td><td>relatório de controles imutável.</td></tr>
+      <tr><td>5. Narrativa</td><td>Redação baseada somente no payload aprovado; sem calcular nem inventar.</td><td>blocos textuais revisáveis.</td></tr>
+      <tr><td>6. Renderização</td><td>Tokens, tabelas dinâmicas, paginação, anexos e inspeção de resíduos.</td><td>DOCX/PDF de minuta.</td></tr>
+      <tr><td>7. Liberação</td><td>Conferência do conteúdo, identificação dos peritos e geração da versão imprimível.</td><td>DOCX/PDF liberado para impressão.</td></tr>
+      <tr><td>8. Assinatura física</td><td>Etapa externa ao sistema: impressão, assinatura e carimbo.</td><td>Documento físico assinado pelos responsáveis.</td></tr>
+    </table>
+    <pre>evidências → normalização → snapshot → cálculo determinístico
+          → controles → narrativa → renderização → conferência
+          → liberação para impressão → assinatura e carimbo físicos</pre>
+    <h3>3.1 Regra de imutabilidade</h3>
+    <p>Cada execução deve apontar para um conjunto definido de entradas. Qualquer alteração posterior cria nova versão e novo cálculo, preservando a versão anteriormente gerada.</p>
+  </section>
+
+  <section class="page">
+    <h2>4. Contrato de dados e banco</h2>
+    <p>O arquivo <code>03_Schema_Caso_Pericial_Multiprofissional_V03.json</code> é o contrato de validação. Decimais são strings para impedir perda de precisão; datas são ISO-8601; textos narrativos nunca substituem valores estruturados.</p>
+    <table>
+      <tr><th>Entidade sugerida</th><th>Chave/campos essenciais</th><th>Regra</th></tr>
+      <tr><td>cases</td><td>id, type, status, process_number, version</td><td>status por máquina de estados.</td></tr>
+      <tr><td>technical_responsibles</td><td>id, case_id, name, category, crc, function, cnpc?</td><td>uma ou várias linhas por documento.</td></tr>
+      <tr><td>evidence_files</td><td>id, case_id, file_name, source, received_at</td><td>arquivo vinculado ao caso.</td></tr>
+      <tr><td>field_sources</td><td>case_id, json_path, evidence_id, page, excerpt</td><td>todo campo crítico aponta para fonte.</td></tr>
+      <tr><td>calculation_runs</td><td>id, case_id, engine_version, input_version, status</td><td>reprodutível por versão de entrada.</td></tr>
+      <tr><td>calculation_values</td><td>run_id, key, raw_decimal, display_value, unit</td><td>valor bruto separado do apresentado.</td></tr>
+      <tr><td>schedule_rows</td><td>run_id, mode, installment, date, opening, interest, amortization, payment, closing</td><td>múltiplas memórias por modo.</td></tr>
+      <tr><td>control_results</td><td>run_id, control_id, status, measured, tolerance, evidence</td><td>justificativa versionada.</td></tr>
+      <tr><td>document_versions</td><td>id, case_id, template_version, status, generated_at</td><td>versões geradas para impressão.</td></tr>
+    </table>
+    <h3>4.1 Estados mínimos</h3>
+    <p><code>RASCUNHO → DADOS_CONFIRMADOS → CALCULADO → VALIDADO → DOCUMENTO_GERADO → LIBERADO_PARA_IMPRESSAO</code>. O sistema encerra seu fluxo nessa liberação; assinatura e carimbo são etapas físicas externas.</p>
+  </section>
+
+  <section class="page">
+    <h2>5. Ingestão e proveniência</h2>
+    <ol>
+      <li>Receber cada arquivo sem alterar o original; calcular SHA-256.</li>
+      <li>Extrair texto/OCR como camada auxiliar, preservando página e coordenada quando disponíveis.</li>
+      <li>Propor campos com confiança e referência exata; exigir confirmação humana dos campos críticos.</li>
+      <li>Registrar unidade, periodicidade e precisão declarada da taxa.</li>
+      <li>Utilizar os dados disponíveis no caso e registrar os campos não informados, sem impedir a geração da revisão contratual.</li>
+      <li>Fechar uma versão das entradas antes de executar o motor.</li>
+    </ol>
+    <h3>5.1 Campos que nunca devem ser presumidos</h3>
+    <p>Tipo/função pericial, número do processo, partes, valor liberado, encargos financiados, taxa e seu período, sistema de amortização, datas do fluxo, pagamentos realizados, escopo regulatório do CET, série BCB e qualificação profissional.</p>
+    <h3>5.2 Divergência documental</h3>
+    <p>Quando dois documentos discordarem, conservar ambos, registrar a divergência e solicitar uma decisão do responsável. O sistema não elege silenciosamente a “melhor” fonte.</p>
+  </section>
+
+  <section class="page">
+    <h2>6. Núcleo numérico e política de precisão</h2>
+    <p>Use decimal de precisão arbitrária com pelo menos 34 algarismos significativos e arredondamento <code>HALF_EVEN</code>. É proibido persistir resultados financeiros em binary float.</p>
+    <table>
+      <tr><th>Item</th><th>Política V02</th></tr>
+      <tr><td>Moeda armazenada</td><td>decimal bruto; apresentação em 2 casas.</td></tr>
+      <tr><td>Taxa armazenada</td><td>decimal unitário: 4,21% = <code>0.0421</code>.</td></tr>
+      <tr><td>Precisão interna</td><td>mínimo de 34 dígitos; não recalcular a partir do valor exibido.</td></tr>
+      <tr><td>Datas</td><td>ISO-8601; calendário e regra de vencimento registrados.</td></tr>
+      <tr><td>Tolerância monetária padrão</td><td>R$ 0,01, salvo controle com regra própria justificada.</td></tr>
+      <tr><td>Taxa declarada</td><td>comparar considerando meia unidade da última casa informada.</td></tr>
+      <tr><td>Última parcela</td><td>ajuste explícito, com valor anterior, valor ajustado e motivo.</td></tr>
+    </table>
+    <p>Para taxa mensal declarada com duas casas percentuais, 4,21% a.m. representa o intervalo de 4,205% a 4,215% a.m. A prestação contratual dentro da faixa teórica desse intervalo é compatível com a precisão declarada; não deve ser explicada automaticamente como “arredondamento da parcela”.</p>
+  </section>
+
+  <section class="page">
+    <h2>7. Sistema Price: duas memórias independentes</h2>
+    <h3>7.1 Taxa declarada → prestação teórica</h3>
+    <pre>PMT = PV × i / (1 − (1 + i)^−n)
+juros_k = saldo_inicial_k × i
+amortização_k = PMT − juros_k
+saldo_final_k = saldo_inicial_k − amortização_k</pre>
+    <p>Esta memória testa o contrato usando a taxa declarada. Identificador recomendado: <code>PRICE_DECLARED_RATE</code>.</p>
+    <h3>7.2 Prestação contratual → taxa implícita</h3>
+    <pre>encontrar i tal que:
+f(i) = PV − Σ[k=1..n] PMT_k / (1+i)^k = 0</pre>
+    <p>Esta memória reconstrói a taxa que compatibiliza principal e prestações contratuais. Identificador: <code>PRICE_IMPLICIT_RATE</code>. Para fluxo irregular, usar datas reais no expoente anual, não apenas o índice da parcela.</p>
+    <h3>7.3 Solucionador de raiz</h3>
+    <ol>
+      <li>Validar mudança de sinal no intervalo.</li>
+      <li>Preferir Brent ou bisseção protegida; Newton apenas com salvaguarda.</li>
+      <li>Registrar limites inicial/final, iterações, resíduo da função e largura do intervalo.</li>
+      <li>Aceitar somente se o resíduo absoluto e a largura do intervalo satisfizerem seus critérios próprios.</li>
+    </ol>
+    <p>Não confundir resíduo monetário da função com precisão da taxa. São dois controles distintos.</p>
+  </section>
+
+  <section class="page">
+    <h2>8. SAC, fluxos irregulares e pagamentos</h2>
+    <h3>8.1 SAC</h3>
+    <pre>amortização = PV / n
+juros_k = saldo_inicial_k × i
+prestação_k = amortização + juros_k</pre>
+    <p>O ajuste residual da última amortização deve zerar o saldo dentro de R$ 0,01 e ser registrado como ajuste, nunca escondido.</p>
+    <h3>8.2 Histórico realizado</h3>
+    <p>Uma memória de “contrato original” não substitui a evolução real. Para cada pagamento, manter valor previsto, valor pago, data prevista, data efetiva, encargos, amortização, juros e saldo. Pagamentos parciais, antecipações, mora e renegociações exigem eventos próprios e regra jurídica/contratual explicitada.</p>
+    <h3>8.3 Datas</h3>
+    <p>Guardar a regra usada para finais de semana, feriados, mês curto e aniversário contratual. Mudança de data não pode ocorrer apenas para fazer a planilha fechar.</p>
+  </section>
+
+  <section class="page">
+    <h2>9. CET e taxa econômica do fluxo</h2>
+    <p>A Resolução CMN 4.881/2020 disciplina o CET nas operações abrangidas com pessoas naturais, inclusive empresários individuais, e pessoas jurídicas classificadas como microempresas ou empresas de pequeno porte. O cadastro deve conter tipo e porte do tomador, produto e enquadramento.</p>
+    <pre>0 = Σ[j=0..m] FC_j / (1 + CET)^(dias_j/365)</pre>
+    <p>O fluxo deve incluir crédito efetivamente liberado e todos os pagamentos/custos conhecidos vinculados à operação conforme a regra aplicável. Datas reais e base anual 365 devem ser preservadas.</p>
+    <table>
+      <tr><th>Situação</th><th>Rótulo permitido</th></tr>
+      <tr><td>Dentro do escopo da Res. CMN 4.881/2020 e componentes completos</td><td>CET recalculado.</td></tr>
+      <tr><td>Escopo ainda não confirmado</td><td>Não emitir CET; manter pendência crítica.</td></tr>
+      <tr><td>Fora do escopo regulatório, mas fluxo completo</td><td>Taxa efetiva anual do fluxo econômico.</td></tr>
+      <tr><td>Fluxo incompleto</td><td>Resultado indicativo com ressalva; não rotular como CET definitivo.</td></tr>
+    </table>
+    <p>Registrar também o CET informado no contrato, a diferença, o resíduo do valor presente e a lista de componentes incluídos/excluídos.</p>
+  </section>
+
+  <section class="page">
+    <h2>10. Benchmark do Banco Central</h2>
+    <p>A série deve ser escolhida por comparabilidade, não apenas por proximidade numérica. Registrar modalidade, tomador, tipo de recurso, prefixação, competência, unidade, URL oficial e data/hora da consulta.</p>
+    <table>
+      <tr><th>Série</th><th>Exemplo de enquadramento</th><th>Recurso</th></tr>
+      <tr><td>20749</td><td>Pessoa física — aquisição de veículos — taxa média mensal.</td><td>Livres.</td></tr>
+      <tr><td>20742</td><td>Pessoa física — crédito pessoal não consignado — taxa média mensal.</td><td>Livres.</td></tr>
+      <tr><td>20772</td><td>Pessoa física — financiamento imobiliário com taxas de mercado — taxa média mensal.</td><td><strong>Direcionados.</strong></td></tr>
+    </table>
+    <p>O sistema exige uma justificativa de comparabilidade assinada pelo revisor. Se a série não corresponder à modalidade ou ao tipo de recurso, o controle CHK-011 falha.</p>
+    <div class="callout">A redação da revisão contratual pode utilizar conclusões categóricas e expressões como “contrato abusivo”, “juros ilegais”, “nulidade”, “fraude”, “valor incontroverso”, “valor a receber”, “valor a restituir” e “autorizado pelo Banco Central”, quando fornecidas no conteúdo do caso. O sistema preserva essa terminologia.</div>
+  </section>
+
+  <section class="page">
+    <h2>11. Controles canônicos de qualidade</h2>
+    <table>
+      <tr><th>ID</th><th>Controle</th><th>Resultado esperado</th></tr>
+      <tr><td>CHK-001</td><td>Campos críticos e fontes confirmados</td><td>ausentes, ambíguos ou sem referência.</td></tr>
+      <tr><td>CHK-002</td><td>Reconciliação do principal</td><td>diferença absoluta maior que R$ 0,01.</td></tr>
+      <tr><td>CHK-003</td><td>Prestação versus precisão da taxa</td><td>diferença incompatível com a faixa da taxa declarada e sem justificativa.</td></tr>
+      <tr><td>CHK-004</td><td>Taxa implícita: resíduo e intervalo</td><td>qualquer critério do solver falhar.</td></tr>
+      <tr><td>CHK-005</td><td>Equivalência periódica/anual</td><td>divergência além da precisão aplicável.</td></tr>
+      <tr><td>CHK-006</td><td>Saldo final</td><td>módulo maior que R$ 0,01.</td></tr>
+      <tr><td>CHK-007</td><td>Soma das amortizações</td><td>não reconciliar o principal em R$ 0,01.</td></tr>
+      <tr><td>CHK-008</td><td>Identidades linha a linha</td><td>juros, amortização, prestação ou saldo não fechar.</td></tr>
+      <tr><td>CHK-009</td><td>Escopo e completude do CET</td><td>rótulo regulatório indevido ou componente ausente.</td></tr>
+      <tr><td>CHK-010</td><td>Resíduo do fluxo/CET</td><td>valor presente absoluto maior que R$ 0,01.</td></tr>
+      <tr><td>CHK-011</td><td>Benchmark BCB</td><td>série, competência, origem ou comparabilidade inválida.</td></tr>
+      <tr><td>CHK-012</td><td>Renderização e tokens</td><td>token residual, tabela quebrada, página sem controle ou seção interna vazada.</td></tr>
+      <tr><td>CHK-013</td><td>Identificação dos peritos</td><td>ao menos um profissional com nome, categoria, CRC e função.</td></tr>
+      <tr><td>CHK-014</td><td>Versão para impressão</td><td>documento completo, sem tokens residuais e com blocos de assinatura e carimbo.</td></tr>
+    </table>
+    <p>Cada resultado deve conter: status, valor medido, tolerância, mensagem e evidência. Os controles numéricos e documentais devem ser executados antes da liberação para impressão.</p>
+  </section>
+
+  <section class="page">
+    <h2>12. Comandos e API</h2>
+    <p>Os comandos e pré-condições oficiais estão em <code>04_Especificacao_Comandos_Controles_Multiprofissional_V03.json</code>. A API deve ser idempotente e nunca aceitar que o cliente envie um resultado calculado como se fosse entrada confirmada.</p>
+    <pre>POST /cases/{caseId}/commands
+Idempotency-Key: UUID
+{
+  "command": "CALCULAR_PRICE",
+  "expected_case_version": 12,
+  "actor": {"id": "...", "role": "MOTOR_CALCULO"},
+  "payload": {
+    "schedule_mode": "DECLARED_RATE_THEORETICAL_PAYMENT"
+  },
+  "reason": "Execução após confirmação das entradas"
+}</pre>
+    <table>
+      <tr><th>Grupo</th><th>Comandos essenciais</th></tr>
+      <tr><td>Cadastro</td><td>CRIAR_CASO, INGESTAR_DOCUMENTO, EXTRAIR_DADOS, CONFIRMAR_DADOS.</td></tr>
+      <tr><td>Cálculo</td><td>RECONCILIAR_PRINCIPAL, CALCULAR_PRICE, CALCULAR_SAC, CALCULAR_TAXA_IMPLICITA, CALCULAR_CET, CONSULTAR_BENCHMARK, CRIAR_CENARIO, PROCESSAR_HISTORICO_PAGAMENTOS.</td></tr>
+      <tr><td>Qualidade</td><td>EXECUTAR_CONTROLES, APROVAR_JUSTIFICATIVA, SUBMETER_REVISAO, REGISTRAR_CORRECAO.</td></tr>
+      <tr><td>Documento</td><td>GERAR_DOCUMENTO, LIBERAR_PARA_IMPRESSAO.</td></tr>
+    </table>
+    <p>Resposta padrão: <code>command_id</code>, <code>case_version</code>, <code>status</code>, <code>result_refs</code> e <code>validation_messages</code>.</p>
+  </section>
+
+  <section class="page">
+    <h2>13. Geração da narrativa e do documento</h2>
+    <h3>13.1 Separação de responsabilidades</h3>
+    <p>O motor calcula; o módulo narrativo redige a revisão contratual; o template renderiza. O prompt não faz contas nem altera valores, mas preserva a conclusão e o vocabulário recebidos no payload, inclusive redação categórica.</p>
+    <h3>13.2 Ordem de renderização</h3>
+    <ol>
+      <li>Validar o caso no JSON Schema e congelar o snapshot.</li>
+      <li>Executar cálculos e controles; gerar os blocos narrativos.</li>
+      <li>Substituir tokens escalares conforme o CSV.</li>
+      <li>Para cada token <code>*_ROWS</code>, clonar a linha-modelo, inserir células e remover o sentinela.</li>
+      <li>Omitir campos opcionais sem conteúdo e criar um bloco de assinatura e carimbo para cada perito cadastrado.</li>
+      <li>Atualizar cabeçalho, rodapé, sumário, campos, numeração e quantidade de páginas.</li>
+      <li>Exportar PDF e procurar o padrão <code>{{...}}</code>; resultado deve ser zero.</li>
+      <li>Renderizar todas as páginas em imagem e inspecionar tabelas, quebras, órfãs, margens e assinatura.</li>
+      <li>Gerar a versão final para impressão com o status <code>LIBERADO_PARA_IMPRESSAO</code>.</li>
+    </ol>
+    <div class="callout">Nunca incluir no documento final: instruções ao operador, opções de título, tokens, mensagens de sistema, checklist interno ou raciocínio do modelo.</div>
+  </section>
+
+  <section class="page">
+    <h2>14. Assinatura manual e carimbo</h2>
+    <ol>
+      <li>Cadastrar um ou vários peritos responsáveis no caso.</li>
+      <li>Gerar um bloco individual para cada profissional, com nome, categoria, CRC, função e CNPC opcional.</li>
+      <li>Liberar o DOCX/PDF para impressão.</li>
+      <li>Imprimir o documento e colher assinatura e carimbo de cada profissional.</li>
+    </ol>
+    <p>A responsabilidade do sistema termina na geração e liberação do arquivo para impressão.</p>
+  </section>
+
+  <section class="page">
+    <h2>15. Testes e caso de aceite</h2>
+    <h3>15.1 Testes obrigatórios</h3>
+    <ul>
+      <li>unitários para cada fórmula, equivalência de taxas, datas e arredondamento;</li>
+      <li>propriedades: saldo nunca muda sem evento e amortizações reconciliam o principal;</li>
+      <li>testes dourados de memória completa e PDF;</li>
+      <li>casos extremos: taxa zero, prazo 1, fluxo irregular, primeiro período quebrado, principal negativo inválido e raiz inexistente;</li>
+      <li>schema inválido, token residual, perito sem nome/CRC/função e ausência de bloco para assinatura e carimbo.</li>
+    </ul>
+    <h3>15.2 Caso-base de aceite</h3>
+    <table>
+      <tr><th>Entrada/resultado</th><th>Valor</th></tr>
+      <tr><td>Principal financiado</td><td>R$ 17.635,41</td></tr>
+      <tr><td>Crédito líquido para o fluxo de CET</td><td>R$ 14.000,00</td></tr>
+      <tr><td>Prazo</td><td>48 parcelas mensais</td></tr>
+      <tr><td>Taxa declarada</td><td>4,21% a.m.</td></tr>
+      <tr><td>Prestação contratual</td><td>R$ 861,38</td></tr>
+      <tr><td>Prestação teórica na taxa exata declarada</td><td>aprox. R$ 861,4610</td></tr>
+      <tr><td>Taxa implícita mensal</td><td>aprox. 0,0420942494197753</td></tr>
+      <tr><td>Taxa implícita anual equivalente</td><td>aprox. 0,640151600470606 = 64,0151600471% a.a.</td></tr>
+    </table>
+    <p>A prestação contratual é compatível com a faixa decorrente da taxa mensal declarada com duas casas percentuais. O teste deve comprovar também CHK-004, CHK-006, CHK-007 e CHK-008.</p>
+  </section>
+
+  <section class="page">
+    <h2>16. Plano de adaptação no sistema</h2>
+    <table>
+      <tr><th>Etapa</th><th>Entrega</th><th>Critério de conclusão</th></tr>
+      <tr><td>1. Contrato</td><td>Importar schema, enums, comandos e 14 controles.</td><td>payloads válidos/ inválidos passam nos testes.</td></tr>
+      <tr><td>2. Persistência</td><td>Casos, fontes, versões e lista de peritos responsáveis.</td><td>reexecução reproduz o mesmo resultado.</td></tr>
+      <tr><td>3. Motor</td><td>Price duplo, SAC, solver, fluxo/CET, pagamentos.</td><td>casos dourados aprovados na precisão definida.</td></tr>
+      <tr><td>4. Benchmark</td><td>Coleta BCB com série, competência e URL oficial.</td><td>referência identificada no documento.</td></tr>
+      <tr><td>5. Controles</td><td>Execução dos controles matemáticos e documentais.</td><td>resultado dos 14 controles disponível.</td></tr>
+      <tr><td>6. Documento</td><td>Template, CSV de tokens e tabelas dinâmicas.</td><td>zero tokens residuais e QA visual aprovado.</td></tr>
+      <tr><td>7. Workflow</td><td>geração e liberação para impressão.</td><td>status LIBERADO_PARA_IMPRESSAO.</td></tr>
+      <tr><td>8. Assinaturas</td><td>bloco individual de assinatura e carimbo por perito.</td><td>quantidade de blocos igual à quantidade de responsáveis.</td></tr>
+      <tr><td>9. Homologação</td><td>testes de regressão e operação assistida.</td><td>casos de aceite reproduzidos.</td></tr>
+    </table>
+    <h3>16.1 Checklist de entrega ao desenvolvedor</h3>
+    <p>Entregar juntos o schema, a especificação operacional, o prompt, o mapa de tokens, o DOCX, o PDF de referência e este manual. O desenvolvedor deve devolver: diagrama da implementação, matriz de campos, evidência de testes, versão do motor, política decimal, um caso completo, DOCX/PDF gerados e relatório dos 14 controles.</p>
+  </section>
+
+  <section class="page">
+    <h2>17. Referências oficiais</h2>
+    <table>
+      <tr><th>Referência</th><th>Endereço</th></tr>
+      <tr><td>NBC TP 01 (R2) — CFC</td><td>https://www1.cfc.org.br/sisweb/SRE/docs/NBCTP01%28R2%29.pdf</td></tr>
+      <tr><td>NBC PP 01 (R2) — CFC</td><td>https://www1.cfc.org.br/sisweb/SRE/docs/NBCPP01%28R2%29.pdf</td></tr>
+      <tr><td>Código de Processo Civil, art. 473</td><td>https://www.presidencia.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105compilada.htm</td></tr>
+      <tr><td>Resolução CMN 4.881/2020</td><td>https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=4881&amp;tipo=Resolu%C3%A7%C3%A3o+CMN</td></tr>
+      <tr><td>Instrução Normativa BCB 83</td><td>https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=83&amp;tipo=Instru%C3%A7%C3%A3o+Normativa+BCB</td></tr>
+      <tr><td>STJ — Tema Repetitivo 1.378</td><td>https://processo.stj.jus.br/repetitivos/temas_repetitivos/pesquisa.jsp?novaConsulta=true&amp;num_processo_classe=2227280&amp;sg_classe=REsp&amp;tipo_pesquisa=T</td></tr>
+    </table>
+    <h3>17.1 Regra de atualização</h3>
+    <p>Antes de cada release, conferir vigência das normas, escopo regulatório, metadados das séries e status de precedentes. A data desta consolidação é 25/07/2026.</p>
+    <div class="callout ok"><strong>Uso pretendido:</strong> base técnica de implantação. O gerador libera o documento para impressão, assinatura e carimbo dos peritos responsáveis cadastrados.</div>
+  </section>
+</body>
+</html>

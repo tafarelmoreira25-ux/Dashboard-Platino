@@ -1,0 +1,69 @@
+PACOTE PROFISSIONAL — PERÍCIA CONTÁBIL-FINANCEIRA
+Responsável técnico indicado: Vitor Penatti Ferri
+Registro informado: CRC-SP nº 1SP344559/O-0
+Versão: 01
+Data: 25/07/2026
+
+CONTEÚDO
+
+01_Modelo_Profissional_Laudo_Parecer_Vitor_V01.docx
+Modelo editável com campos {{CAMPO}}, estrutura profissional, revisão
+integral e página de assinatura.
+
+01_Modelo_Profissional_Laudo_Parecer_Vitor_V01.pdf
+Prévia visual do modelo. Não é documento assinado.
+
+02_Manual_Integral_Implementacao_Motor_Pericial_V01.docx
+Manual editável com arquitetura, fórmulas, controles, comandos, estados,
+segurança, assinatura, testes e checklist de implantação.
+
+02_Manual_Integral_Implementacao_Motor_Pericial_V01.pdf
+Versão de leitura do manual.
+
+03_Especificacao_JSON_Comandos_Motor_Pericial_V01.json
+Contrato técnico de dados, fórmulas, comandos, estados, papéis, controles
+e caso numérico de aceitação.
+
+04_Prompt_Mestre_Gerador_Pericial_V01.txt
+Instrução para o componente que redige a minuta a partir dos resultados
+do motor determinístico.
+
+05_Calculadora_Referencia_Motor_Pericial_V01.xlsx
+Calculadora de homologação com entradas, resumo, Price completo até 360
+parcelas, cenários, fluxos do CET, checks e fontes.
+
+06_Mapeamento_Tokens_Modelo_V01.csv
+Registro integral dos 285 tokens do modelo, com caminho sugerido no
+sistema, tipo de dado, obrigatoriedade, origem, condição e validação.
+
+07_MANIFESTO_SHA256_Pacote_V01.txt
+Hashes SHA-256 dos arquivos para conferência de integridade.
+
+ORDEM DE IMPLANTAÇÃO
+
+1. Ler o Manual Integral.
+2. Implementar o JSON como contrato de dados e comandos.
+3. Reproduzir os resultados da Calculadora de Referência.
+4. Mapear os resultados do motor para os tokens {{CAMPO}} do modelo.
+5. Usar o Prompt Mestre somente para narrativa; nunca para calcular.
+6. Homologar o fluxo com Vitor.
+7. Conferir o CRC e anexar Certidão de Regularidade Profissional vigente.
+8. Revisar integralmente cada documento.
+9. Aprovar e assinar o PDF exato da versão aprovada.
+
+REGRAS INEGOCIÁVEIS
+
+- O motor financeiro deve ser determinístico e auditável.
+- A inteligência artificial não deve inventar nem recalcular números.
+- Média do Banco Central não é teto automático.
+- Cenário não é valor devido ou valor a receber.
+- Laudo e parecer têm títulos e funções profissionais diferentes.
+- Não usar “perito do juízo” sem nomeação.
+- Não inserir imagem de assinatura como se fosse assinatura digital.
+- Após a assinatura, qualquer alteração exige nova versão e nova assinatura.
+
+STATUS DESTE PACOTE
+
+Modelo, manual e calculadora foram produzidos para revisão e homologação.
+A identificação do CRC foi padronizada a partir do material fornecido,
+mas deve ser conferida com o documento original e a certidão vigente.

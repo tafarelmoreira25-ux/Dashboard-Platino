@@ -1,0 +1,44 @@
+PACOTE PROFISSIONAL DE PERÍCIA CONTÁBIL — MULTIPROFISSIONAL — V03
+Data de consolidação: 25/07/2026
+
+FINALIDADE
+Gerar cálculos, memórias, laudo pericial contábil ou parecer técnico contábil
+para um ou vários peritos responsáveis.
+
+FLUXO
+1. cadastrar o caso;
+2. cadastrar um ou vários peritos responsáveis;
+3. executar os cálculos;
+4. gerar o documento;
+5. liberar para impressão;
+6. imprimir, assinar e carimbar.
+
+ARQUIVOS
+01_Modelo_Laudo_Parecer_Pericial_Contabil_Multiprofissional_V03.docx
+01_Modelo_Laudo_Parecer_Pericial_Contabil_Multiprofissional_V03.pdf
+02_Manual_Integral_Implantacao_Gerador_Pericial_Multiprofissional_V03.docx
+02_Manual_Integral_Implantacao_Gerador_Pericial_Multiprofissional_V03.pdf
+03_Schema_Caso_Pericial_Multiprofissional_V03.json
+04_Especificacao_Comandos_Controles_Multiprofissional_V03.json
+05_Prompt_Mestre_Gerador_Pericial_Multiprofissional_V03.txt
+06_Mapeamento_Tokens_Modelo_Multiprofissional_V03.csv
+07_Relatorio_Revisao_V02_para_V03.md
+08_Nota_Calculadora_V01_Nao_Homologada.txt
+99_MANIFESTO_SHA256.txt
+
+IDENTIFICAÇÃO PROFISSIONAL
+- Não existe nome fixo no modelo.
+- O sistema aceita um ou vários profissionais.
+- Cada profissional recebe uma linha de identificação e um bloco de assinatura/carimbo.
+- O CNPC é um campo opcional.
+
+REVISÃO CONTRATUAL
+- A ausência de documento não impede a geração da revisão contratual.
+- O gerador aceita a terminologia recebida na conclusão.
+- A conclusão pode conter valor incontroverso, valor a receber, valor a
+  restituir, contrato abusivo, juros ilegais e demais expressões recebidas
+  no conteúdo do caso.
+
+LIBERAÇÃO
+O sistema pode liberar o DOCX/PDF para impressão. A assinatura e o carimbo
+são feitos pelos profissionais no documento impresso.

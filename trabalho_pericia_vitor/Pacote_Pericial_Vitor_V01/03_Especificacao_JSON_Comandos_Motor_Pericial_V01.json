@@ -1,0 +1,1340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "specification": "motor-pericial-contabil-financeiro",
+  "schema_version": "1.0.0",
+  "consolidated_at": "2026-07-25",
+  "locale": "pt-BR",
+  "currency": "BRL",
+  "purpose": "Contrato de dados e comandos para cálculo, validação, geração, revisão e assinatura de laudo pericial contábil ou parecer técnico-contábil.",
+  "professional_defaults": {
+    "name": "VITOR PENATTI FERRI",
+    "category": "CONTADOR",
+    "crc": "CRC-SP nº 1SP344559/O-0",
+    "cnpc": null,
+    "regularity_certificate": null,
+    "verification_required": true,
+    "rules": [
+      "Conferir o CRC com documento profissional original.",
+      "Anexar Certidão de Regularidade Profissional vigente antes da emissão.",
+      "Não preencher CNPC sem comprovação.",
+      "Não usar a expressão perito do juízo sem ato de nomeação.",
+      "A aprovação e a assinatura são pessoais do responsável técnico."
+    ]
+  },
+  "document_types": {
+    "LAUDO_JUDICIAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO CONTÁBIL",
+      "required_evidence": [
+        "ATO_NOMEACAO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_CONSENSUAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO CONTÁBIL ESCOLHIDO PELAS PARTES",
+      "required_evidence": [
+        "TERMO_ESCOLHA_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_EXTRAJUDICIAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL EXTRAJUDICIAL",
+      "professional_function": "PERITO CONTÁBIL CONTRATADO",
+      "required_evidence": [
+        "CONTRATO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "PARECER_TECNICO": {
+      "title": "PARECER TÉCNICO-CONTÁBIL",
+      "professional_function": "ASSISTENTE TÉCNICO OU CONTADOR PARECERISTA",
+      "required_evidence": [
+        "CONTRATO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    }
+  },
+  "roles": {
+    "ANALISTA": [
+      "CRIAR_CASO",
+      "INGESTAR_DOCUMENTO",
+      "EXTRAIR_DADOS",
+      "PROPOR_CORRECAO",
+      "GERAR_MINUTA"
+    ],
+    "REVISOR_DADOS": [
+      "CONFIRMAR_DADOS",
+      "REJEITAR_DADO",
+      "EXECUTAR_CONTROLES",
+      "SUBMETER_REVISAO"
+    ],
+    "MOTOR_CALCULO": [
+      "RECONCILIAR_PRINCIPAL",
+      "CALCULAR_PRICE",
+      "CALCULAR_SAC",
+      "CALCULAR_TAXA_IMPLICITA",
+      "CALCULAR_CET",
+      "CRIAR_CENARIO",
+      "EXECUTAR_CONTROLES"
+    ],
+    "RESPONSAVEL_TECNICO": [
+      "REGISTRAR_CORRECAO",
+      "APROVAR_TECNICAMENTE",
+      "REJEITAR_MINUTA",
+      "AUTORIZAR_ASSINATURA"
+    ],
+    "SERVICO_ASSINATURA": [
+      "ASSINAR_DOCUMENTO",
+      "VALIDAR_ASSINATURA"
+    ],
+    "PUBLICADOR": [
+      "PUBLICAR_PDF_FINAL"
+    ]
+  },
+  "states": {
+    "RASCUNHO": {
+      "next": [
+        "DADOS_EXTRAIDOS",
+        "CANCELADO"
+      ]
+    },
+    "DADOS_EXTRAIDOS": {
+      "next": [
+        "DADOS_CONFIRMADOS",
+        "RASCUNHO",
+        "CANCELADO"
+      ]
+    },
+    "DADOS_CONFIRMADOS": {
+      "next": [
+        "CALCULADO",
+        "DADOS_EXTRAIDOS",
+        "CANCELADO"
+      ]
+    },
+    "CALCULADO": {
+      "next": [
+        "VALIDADO",
+        "DADOS_CONFIRMADOS",
+        "CANCELADO"
+      ]
+    },
+    "VALIDADO": {
+      "next": [
+        "MINUTA_GERADA",
+        "CALCULADO",
+        "CANCELADO"
+      ]
+    },
+    "MINUTA_GERADA": {
+      "next": [
+        "EM_REVISAO",
+        "VALIDADO",
+        "CANCELADO"
+      ]
+    },
+    "EM_REVISAO": {
+      "next": [
+        "EM_REVISAO",
+        "APROVADO",
+        "REJEITADO",
+        "CANCELADO"
+      ]
+    },
+    "REJEITADO": {
+      "next": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO",
+        "VALIDADO",
+        "EM_REVISAO",
+        "CANCELADO"
+      ]
+    },
+    "APROVADO": {
+      "next": [
+        "ASSINADO",
+        "EM_REVISAO",
+        "CANCELADO"
+      ]
+    },
+    "ASSINADO": {
+      "next": [
+        "PUBLICADO",
+        "CANCELADO"
+      ],
+      "immutable_content": true
+    },
+    "PUBLICADO": {
+      "next": [],
+      "immutable_content": true
+    },
+    "CANCELADO": {
+      "next": []
+    }
+  },
+  "numeric_policy": {
+    "money_type": "decimal",
+    "rate_type": "decimal",
+    "internal_precision_digits": 34,
+    "rate_storage_scale_minimum": 16,
+    "display_money_scale": 2,
+    "display_rate_scale": 6,
+    "final_cet_display_scale": 2,
+    "rounding_mode": "HALF_EVEN",
+    "date_standard": "ISO-8601",
+    "day_basis_cet": 365,
+    "tolerances": {
+      "money_absolute": "0.01",
+      "root_residual_absolute": "0.000000000001",
+      "cet_npv_absolute": "0.01",
+      "rate_comparison_absolute": "0.00000001"
+    },
+    "rules": [
+      "Não utilizar binary float para valores monetários finais.",
+      "Não recalcular a linha seguinte a partir de valores exibidos e arredondados.",
+      "Registrar qualquer ajuste da última parcela.",
+      "Guardar valor bruto e valor formatado separadamente.",
+      "Guardar a unidade de toda taxa."
+    ]
+  },
+  "enums": {
+    "borrower_type": [
+      "PF",
+      "PJ"
+    ],
+    "resource_type": [
+      "LIVRES",
+      "DIRECIONADOS",
+      "NAO_IDENTIFICADO"
+    ],
+    "amortization_method": [
+      "PRICE",
+      "SAC",
+      "SAM",
+      "BULLET",
+      "CUSTOM"
+    ],
+    "periodicity": [
+      "DIARIA",
+      "SEMANAL",
+      "QUINZENAL",
+      "MENSAL",
+      "BIMESTRAL",
+      "TRIMESTRAL",
+      "SEMESTRAL",
+      "ANUAL",
+      "IRREGULAR"
+    ],
+    "field_status": [
+      "EXTRAIDO",
+      "CONFIRMADO",
+      "DIVERGENTE",
+      "AUSENTE",
+      "INFERIDO",
+      "NAO_APLICAVEL"
+    ],
+    "check_status": [
+      "APROVADO",
+      "REPROVADO",
+      "ATENCAO",
+      "NAO_EXECUTADO",
+      "NAO_APLICAVEL"
+    ],
+    "calculation_status": [
+      "SUCESSO",
+      "DADOS_INSUFICIENTES",
+      "DADOS_INVALIDOS",
+      "SEM_CONVERGENCIA",
+      "SEM_RAIZ",
+      "MULTIPLAS_RAIZES",
+      "ERRO_INTERNO"
+    ]
+  },
+  "case_schema": {
+    "required": [
+      "case_id",
+      "version",
+      "state",
+      "document",
+      "professional",
+      "scope",
+      "sources",
+      "contract",
+      "credit",
+      "cash",
+      "terms",
+      "rates",
+      "amortization",
+      "calculations",
+      "checks",
+      "audit"
+    ],
+    "properties": {
+      "case_id": {
+        "type": "string",
+        "pattern": "^CASO-[A-Z0-9-]{6,64}$"
+      },
+      "version": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "state": {
+        "type": "string"
+      },
+      "document": {
+        "type": "object",
+        "required": [
+          "type",
+          "number",
+          "version",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "process_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "contractor": {
+            "type": "string"
+          },
+          "parties": {
+            "type": "array"
+          }
+        }
+      },
+      "professional": {
+        "type": "object",
+        "required": [
+          "name",
+          "category",
+          "crc",
+          "function",
+          "regularity_verified"
+        ],
+        "properties": {
+          "name": {
+            "const": "VITOR PENATTI FERRI"
+          },
+          "category": {
+            "const": "CONTADOR"
+          },
+          "crc": {
+            "const": "CRC-SP nº 1SP344559/O-0"
+          },
+          "function": {
+            "type": "string"
+          },
+          "cnpc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "regularity_verified": {
+            "type": "boolean"
+          },
+          "regularity_certificate_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "conflict_check_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "scope": {
+        "type": "object",
+        "required": [
+          "object",
+          "objective",
+          "included",
+          "excluded",
+          "limitations"
+        ]
+      },
+      "sources": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "source_id",
+            "kind",
+            "name",
+            "sha256",
+            "ingested_at"
+          ],
+          "properties": {
+            "source_id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{64}$"
+            },
+            "page_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "ingested_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "contract": {
+        "type": "object",
+        "required": [
+          "number",
+          "date",
+          "creditor"
+        ]
+      },
+      "credit": {
+        "type": "object",
+        "required": [
+          "product",
+          "borrower_type",
+          "resource_type"
+        ]
+      },
+      "cash": {
+        "type": "object",
+        "required": [
+          "net_disbursement",
+          "financed_principal",
+          "components"
+        ],
+        "properties": {
+          "net_disbursement": {
+            "type": "string"
+          },
+          "financed_principal": {
+            "type": "string"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "component_id",
+                "category",
+                "description",
+                "amount",
+                "financed",
+                "paid_upfront",
+                "deducted_from_disbursement",
+                "source_ref"
+              ]
+            }
+          }
+        }
+      },
+      "terms": {
+        "type": "object",
+        "required": [
+          "installments",
+          "payment",
+          "first_due_date",
+          "periodicity"
+        ]
+      },
+      "rates": {
+        "type": "object",
+        "required": [
+          "periodic_declared",
+          "periodic_unit",
+          "annual_declared",
+          "cet_annual_declared"
+        ]
+      },
+      "amortization": {
+        "type": "object",
+        "required": [
+          "method"
+        ]
+      },
+      "calculations": {
+        "type": "array"
+      },
+      "checks": {
+        "type": "array"
+      },
+      "audit": {
+        "type": "array"
+      }
+    }
+  },
+  "field_provenance_schema": {
+    "required": [
+      "field_id",
+      "value",
+      "value_type",
+      "unit",
+      "status",
+      "source_ref"
+    ],
+    "properties": {
+      "field_id": {
+        "type": "string"
+      },
+      "value": {},
+      "value_type": {
+        "type": "string"
+      },
+      "unit": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "confidence": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "minimum": 0,
+        "maximum": 1
+      },
+      "source_ref": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "page",
+          "excerpt"
+        ]
+      },
+      "confirmed_by": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "confirmed_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "date-time"
+      }
+    }
+  },
+  "calculation_formulas": {
+    "PRICE_PAYMENT": {
+      "formula": "PMT = PV * i / (1 - (1 + i)^(-n))",
+      "zero_rate": "PMT = PV / n"
+    },
+    "PRICE_ROW": {
+      "formula": "J_k = SD_(k-1) * i; A_k = PMT_k - J_k; SD_k = SD_(k-1) - A_k"
+    },
+    "PRICE_CLOSED_FORM_BALANCE": {
+      "formula": "SD_k = PV*(1+i)^k - PMT*((1+i)^k - 1)/i"
+    },
+    "SAC": {
+      "formula": "A = PV/n; J_k = SD_(k-1)*i; PMT_k = A + J_k; SD_k = SD_(k-1) - A"
+    },
+    "ANNUAL_EQUIVALENCE": {
+      "formula": "i_annual = (1 + i_periodic)^periods_per_year - 1"
+    },
+    "PERIODIC_EQUIVALENCE": {
+      "formula": "i_periodic = (1 + i_annual)^(1/periods_per_year) - 1"
+    },
+    "IMPLICIT_RATE_REGULAR": {
+      "equation": "PV - sum(PMT_k/(1+i)^k, k=1..n) = 0",
+      "preferred_solver": "BRENT",
+      "fallback_solver": "BISECTION"
+    },
+    "CET_ACTUAL_DATES": {
+      "equation": "FC_0 - sum(FC_j/(1+CET)^((d_j-d_0)/365), j=1..N) = 0",
+      "output_unit": "effective_annual"
+    },
+    "PRINCIPAL_RECONCILIATION": {
+      "formula": "PV_reconciled = asset_or_credit - down_payment + sum(financed_costs) + sum(financed_taxes)"
+    }
+  },
+  "benchmark_catalog": {
+    "provider": "BANCO_CENTRAL_DO_BRASIL",
+    "selection_is_manual_or_rule_assisted": true,
+    "automatic_legal_conclusion": false,
+    "series_examples": [
+      {
+        "code": "20749",
+        "description": "Taxa média anual — pessoas físicas — aquisição de veículos — recursos livres",
+        "borrower_type": "PF",
+        "product": "VEICULO",
+        "resource_type": "LIVRES",
+        "unit": "percent_per_year",
+        "url": "https://dadosabertos.bcb.gov.br/dataset/20749-taxa-media-de-juros-das-operacoes-de-credito-com-recursos-livres---pessoas-fisicas---aquisica"
+      },
+      {
+        "code": "20742",
+        "description": "Taxa média anual — pessoas físicas — crédito pessoal não consignado — recursos livres",
+        "borrower_type": "PF",
+        "product": "CREDITO_PESSOAL_NAO_CONSIGNADO",
+        "resource_type": "LIVRES",
+        "unit": "percent_per_year",
+        "url": "https://dadosabertos.bcb.gov.br/dataset/20742"
+      },
+      {
+        "code": "20772",
+        "description": "Taxa média anual — pessoas físicas — financiamento imobiliário com taxas de mercado",
+        "borrower_type": "PF",
+        "product": "IMOBILIARIO_TAXAS_MERCADO",
+        "resource_type": "NAO_IDENTIFICADO",
+        "unit": "percent_per_year",
+        "url": "https://dadosabertos.bcb.gov.br/dataset/20772"
+      }
+    ],
+    "required_output_metadata": [
+      "series_code",
+      "official_description",
+      "reference_period",
+      "value",
+      "unit",
+      "consulted_at",
+      "source_url",
+      "response_sha256",
+      "comparability_justification",
+      "validated_by"
+    ]
+  },
+  "controls": [
+    {
+      "id": "CHK-001",
+      "name": "RECONCILIACAO_PRINCIPAL",
+      "criterion": "abs(financed_principal - reconciled_principal) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-002",
+      "name": "PRESTACAO_PRICE",
+      "criterion": "abs(contract_payment - theoretical_payment) <= money_absolute or justified_rounding",
+      "blocking": true
+    },
+    {
+      "id": "CHK-003",
+      "name": "RESIDUO_TAXA_IMPLICITA",
+      "criterion": "abs(rate_equation_residual) <= root_residual_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-004",
+      "name": "EQUIVALENCIA_TAXAS",
+      "criterion": "abs(annual_recalculated - annual_from_periodic) <= rate_comparison_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-005",
+      "name": "SALDO_FINAL",
+      "criterion": "abs(final_balance) <= money_absolute or explicit_final_adjustment",
+      "blocking": true
+    },
+    {
+      "id": "CHK-006",
+      "name": "SOMA_AMORTIZACOES",
+      "criterion": "abs(sum_amortization - financed_principal) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-007",
+      "name": "IDENTIDADE_MEMORIA",
+      "criterion": "abs(sum_payments - sum_interest - sum_amortization) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-008",
+      "name": "RESIDUO_CET",
+      "criterion": "abs(cet_npv) <= cet_npv_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-009",
+      "name": "COMPLETUDE_FLUXOS_CET",
+      "criterion": "all flows have date, signed amount, description and source",
+      "blocking": true
+    },
+    {
+      "id": "CHK-010",
+      "name": "COMPARABILIDADE_BENCHMARK",
+      "criterion": "series, period, unit and classification validated",
+      "blocking_when_benchmark_used": true
+    },
+    {
+      "id": "CHK-011",
+      "name": "TOKENS_PENDENTES",
+      "criterion": "final_document_unresolved_token_count == 0",
+      "blocking": true
+    },
+    {
+      "id": "CHK-012",
+      "name": "REGULARIDADE_PROFISSIONAL",
+      "criterion": "regularity_verified == true and certificate_is_current == true",
+      "blocking": true
+    },
+    {
+      "id": "CHK-013",
+      "name": "VERSAO_ASSINADA",
+      "criterion": "signed_hash == approved_pdf_sha256",
+      "blocking": true
+    }
+  ],
+  "blocked_automatic_language": [
+    "contrato abusivo",
+    "juros ilegais",
+    "nulidade",
+    "fraude",
+    "valor incontroverso",
+    "valor a receber",
+    "valor a restituir",
+    "autorizado pelo Banco Central",
+    "Banco Central limita a taxa",
+    "perito do juízo"
+  ],
+  "commands": {
+    "CRIAR_CASO": {
+      "allowed_from": [
+        null
+      ],
+      "result_state": "RASCUNHO",
+      "required_payload": [
+        "document_type",
+        "document_number",
+        "contractor",
+        "professional"
+      ],
+      "side_effects": [
+        "create_case_id",
+        "set_numeric_policy",
+        "create_audit_event"
+      ]
+    },
+    "INGESTAR_DOCUMENTO": {
+      "allowed_from": [
+        "RASCUNHO",
+        "DADOS_EXTRAIDOS"
+      ],
+      "result_state": "RASCUNHO",
+      "required_payload": [
+        "file_name",
+        "mime_type",
+        "binary_reference"
+      ],
+      "side_effects": [
+        "preserve_original",
+        "calculate_sha256",
+        "render_pages",
+        "run_ocr_if_needed",
+        "create_source_record"
+      ]
+    },
+    "EXTRAIR_DADOS": {
+      "allowed_from": [
+        "RASCUNHO",
+        "DADOS_EXTRAIDOS"
+      ],
+      "result_state": "DADOS_EXTRAIDOS",
+      "required_payload": [
+        "source_ids",
+        "extraction_profile"
+      ],
+      "output": [
+        "field_candidates",
+        "confidence",
+        "source_references",
+        "warnings"
+      ],
+      "rules": [
+        "Do not overwrite confirmed fields.",
+        "Do not infer a missing contractual value without marking status INFERIDO.",
+        "Every candidate must have source id, page and excerpt."
+      ]
+    },
+    "CONFIRMAR_DADOS": {
+      "allowed_from": [
+        "DADOS_EXTRAIDOS"
+      ],
+      "result_state": "DADOS_CONFIRMADOS",
+      "required_payload": [
+        "field_confirmations"
+      ],
+      "preconditions": [
+        "all critical fields resolved",
+        "conflicts explicitly resolved"
+      ]
+    },
+    "RECONCILIAR_PRINCIPAL": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "principal_field_id",
+        "component_ids",
+        "tolerance_policy"
+      ],
+      "output": [
+        "reconciled_principal",
+        "difference",
+        "components",
+        "CHK-001"
+      ]
+    },
+    "CALCULAR_PRICE": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "principal",
+        "periodic_rate",
+        "installments",
+        "payment_mode",
+        "first_due_date",
+        "periodicity"
+      ],
+      "payment_mode_values": [
+        "CALCULATE_THEORETICAL",
+        "REPRODUCE_CONTRACT_PAYMENT"
+      ],
+      "output": [
+        "theoretical_payment",
+        "used_payment",
+        "schedule_full",
+        "totals",
+        "residuals",
+        "checks"
+      ]
+    },
+    "CALCULAR_SAC": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "principal",
+        "periodic_rate",
+        "installments",
+        "first_due_date",
+        "periodicity"
+      ],
+      "output": [
+        "constant_amortization",
+        "schedule_full",
+        "totals",
+        "checks"
+      ]
+    },
+    "CALCULAR_TAXA_IMPLICITA": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "dated_cash_flows_or_regular_series",
+        "solver",
+        "bracket",
+        "tolerances"
+      ],
+      "output": [
+        "periodic_rate",
+        "annual_equivalent_rate",
+        "solver",
+        "iterations",
+        "bracket_final",
+        "residual",
+        "calculation_status"
+      ],
+      "rules": [
+        "Detect non-conventional flows.",
+        "Do not silently choose among multiple roots.",
+        "Do not return success without residual."
+      ]
+    },
+    "CALCULAR_CET": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "dated_cash_flows",
+        "solver",
+        "tolerances"
+      ],
+      "output": [
+        "cet_effective_annual",
+        "dated_cash_flows",
+        "npv_residual",
+        "solver",
+        "iterations",
+        "calculation_status",
+        "CHK-008",
+        "CHK-009"
+      ]
+    },
+    "CONSULTAR_BENCHMARK": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "borrower_type",
+        "product",
+        "resource_type",
+        "contract_reference_period"
+      ],
+      "output": [
+        "candidate_series",
+        "selected_series",
+        "official_description",
+        "reference_period",
+        "value",
+        "unit",
+        "source_url",
+        "consulted_at",
+        "response_sha256",
+        "comparability_justification",
+        "CHK-010"
+      ],
+      "rules": [
+        "If classification is ambiguous, return NEEDS_PROFESSIONAL_SELECTION.",
+        "Never describe the rate as a legal ceiling.",
+        "Use the contract reference period."
+      ]
+    },
+    "CRIAR_CENARIO": {
+      "allowed_from": [
+        "CALCULADO",
+        "VALIDADO"
+      ],
+      "result_state": "CALCULADO",
+      "required_payload": [
+        "scenario_id",
+        "name",
+        "justification",
+        "author",
+        "changed_fields"
+      ],
+      "output": [
+        "scenario_version",
+        "base_case_version",
+        "changed_fields",
+        "unchanged_fields",
+        "calculations",
+        "checks"
+      ],
+      "rules": [
+        "Do not mutate BASE.",
+        "Identify every changed premise.",
+        "Do not convert scenario difference into amount due or receivable."
+      ]
+    },
+    "EXECUTAR_CONTROLES": {
+      "allowed_from": [
+        "CALCULADO",
+        "VALIDADO"
+      ],
+      "result_state": "VALIDADO",
+      "required_payload": [
+        "control_profile"
+      ],
+      "preconditions": [
+        "all required calculations completed"
+      ],
+      "output": [
+        "checks",
+        "blocking_failures",
+        "warnings",
+        "validation_summary"
+      ],
+      "rules": [
+        "Result state VALIDADO is permitted only when there are no blocking failures."
+      ]
+    },
+    "GERAR_MINUTA": {
+      "allowed_from": [
+        "VALIDADO"
+      ],
+      "result_state": "MINUTA_GERADA",
+      "required_payload": [
+        "template_version",
+        "calculation_ids",
+        "scenario_ids",
+        "source_ids"
+      ],
+      "output": [
+        "docx_reference",
+        "preliminary_pdf_reference",
+        "unresolved_tokens",
+        "generation_manifest",
+        "sha256"
+      ],
+      "rules": [
+        "All numbers must come from calculation ids.",
+        "The preliminary document must state that it is unsigned.",
+        "Do not insert a signature image.",
+        "Generate every schedule row and repeat table headers."
+      ]
+    },
+    "SUBMETER_REVISAO": {
+      "allowed_from": [
+        "MINUTA_GERADA",
+        "EM_REVISAO"
+      ],
+      "result_state": "EM_REVISAO",
+      "required_payload": [
+        "document_version",
+        "reviewer_professional_id"
+      ],
+      "preconditions": [
+        "unresolved_tokens == 0",
+        "blocking_checks == 0"
+      ]
+    },
+    "REGISTRAR_CORRECAO": {
+      "allowed_from": [
+        "EM_REVISAO",
+        "REJEITADO"
+      ],
+      "result_state": "EM_REVISAO",
+      "required_payload": [
+        "corrections",
+        "reason",
+        "reviewer_professional_id"
+      ],
+      "side_effects": [
+        "increment_document_version",
+        "invalidate_previous_approval",
+        "regenerate_affected_sections",
+        "create_audit_event"
+      ]
+    },
+    "APROVAR_TECNICAMENTE": {
+      "allowed_from": [
+        "EM_REVISAO"
+      ],
+      "result_state": "APROVADO",
+      "required_payload": [
+        "professional_id",
+        "document_version",
+        "full_review_declaration",
+        "authentication_proof"
+      ],
+      "preconditions": [
+        "professional regularity is current",
+        "conflict check is complete",
+        "unresolved_tokens == 0",
+        "blocking_checks == 0",
+        "document hash matches review hash"
+      ],
+      "output": [
+        "approval_id",
+        "approved_at",
+        "approved_pdf_sha256"
+      ]
+    },
+    "ASSINAR_DOCUMENTO": {
+      "allowed_from": [
+        "APROVADO"
+      ],
+      "result_state": "ASSINADO",
+      "required_payload": [
+        "approval_id",
+        "approved_pdf_reference",
+        "signature_provider",
+        "signature_policy"
+      ],
+      "output": [
+        "signed_pdf_reference",
+        "signed_pdf_sha256",
+        "certificate_serial",
+        "certificate_authority",
+        "signed_at",
+        "validation_reference"
+      ],
+      "rules": [
+        "Sign exactly the approved PDF.",
+        "A pasted image is not a digital signature.",
+        "Any content change after signing creates a new version."
+      ]
+    },
+    "VALIDAR_ASSINATURA": {
+      "allowed_from": [
+        "ASSINADO",
+        "PUBLICADO"
+      ],
+      "result_state": "ASSINADO",
+      "required_payload": [
+        "signed_pdf_reference"
+      ],
+      "output": [
+        "authorship_valid",
+        "integrity_valid",
+        "certificate_chain_valid",
+        "timestamp_valid",
+        "validation_report_reference"
+      ]
+    },
+    "PUBLICAR_PDF_FINAL": {
+      "allowed_from": [
+        "ASSINADO"
+      ],
+      "result_state": "PUBLICADO",
+      "required_payload": [
+        "signed_pdf_reference",
+        "validation_report_reference",
+        "public_validation_code"
+      ],
+      "preconditions": [
+        "authorship_valid == true",
+        "integrity_valid == true",
+        "signed_pdf_sha256 is stored",
+        "CHK-013 == APROVADO"
+      ],
+      "side_effects": [
+        "make_version_immutable",
+        "publish_validation_page",
+        "create_audit_event"
+      ]
+    }
+  },
+  "command_envelope": {
+    "request_example": {
+      "command": "CALCULAR_PRICE",
+      "case_id": "CASO-EXEMPLO-001",
+      "actor": {
+        "id": "MOTOR-01",
+        "role": "MOTOR_CALCULO"
+      },
+      "expected_version": 7,
+      "idempotency_key": "CASO-EXEMPLO-001-CALCULAR_PRICE-7",
+      "payload": {
+        "principal": "17635.41",
+        "periodic_rate": "0.0421",
+        "rate_unit": "per_month",
+        "installments": 48,
+        "payment_mode": "CALCULATE_THEORETICAL",
+        "first_due_date": "2026-01-29",
+        "periodicity": "MENSAL"
+      }
+    },
+    "success_response_example": {
+      "ok": true,
+      "case_id": "CASO-EXEMPLO-001",
+      "previous_version": 7,
+      "new_version": 8,
+      "state": "CALCULADO",
+      "result": {
+        "calculation_id": "CALC-PRICE-0001",
+        "theoretical_payment": "861.4610923605933",
+        "display_payment": "861.46",
+        "schedule_row_count": 48,
+        "final_balance": "0.0000000000000"
+      },
+      "checks": [
+        {
+          "id": "CHK-005",
+          "status": "APROVADO"
+        }
+      ],
+      "audit_id": "AUD-00000008"
+    },
+    "error_response_example": {
+      "ok": false,
+      "case_id": "CASO-EXEMPLO-001",
+      "error": {
+        "code": "FIELD_NOT_CONFIRMED",
+        "message": "O principal financiado ainda não foi confirmado.",
+        "fields": [
+          "cash.financed_principal"
+        ],
+        "corrective_action": "Execute CONFIRMAR_DADOS antes do cálculo."
+      },
+      "audit_id": "AUD-00000009"
+    }
+  },
+  "acceptance_case": {
+    "warning": "Dados exclusivamente destinados a teste do motor; não constituem conclusão sobre cliente ou contrato.",
+    "input": {
+      "net_disbursement": "14000.00",
+      "components": [
+        {
+          "description": "Tarifa de cadastro",
+          "amount": "950.00",
+          "financed": true
+        },
+        {
+          "description": "Avaliação",
+          "amount": "680.00",
+          "financed": true
+        },
+        {
+          "description": "Registro",
+          "amount": "698.40",
+          "financed": true
+        },
+        {
+          "description": "Seguro",
+          "amount": "1240.00",
+          "financed": true
+        },
+        {
+          "description": "IOF",
+          "amount": "67.01",
+          "financed": true
+        }
+      ],
+      "financed_principal": "17635.41",
+      "installments": 48,
+      "periodic_rate": "0.0421",
+      "contract_payment": "861.38",
+      "disbursement_date": "2025-12-29",
+      "first_due_date": "2026-01-29"
+    },
+    "expected": {
+      "reconciled_principal": "17635.41",
+      "price_theoretical_payment": "861.4610923605933",
+      "implicit_monthly_rate": "0.0420942494197753",
+      "implicit_annual_rate": "0.640151600470606",
+      "contract_total_payments": "41346.24",
+      "cet_annual_on_net_disbursement_actual_dates_approx": "0.951476616186205",
+      "annual_equivalent_from_regular_monthly_rate_approx": "0.951143515958076"
+    }
+  },
+  "document_generation": {
+    "template_file": "01_Modelo_Profissional_Laudo_Parecer_Vitor_V01.docx",
+    "token_pattern": "\\{\\{[A-Z0-9_]+\\}\\}",
+    "rules": [
+      "Expandir tabelas de memória para a quantidade exata de linhas.",
+      "Repetir cabeçalho nas quebras de página.",
+      "Não resumir nem ocultar linhas.",
+      "Exibir a política de arredondamento.",
+      "Exibir IDs de cálculo, cenário e controle no manifesto técnico.",
+      "Bloquear a versão final se existir qualquer token não resolvido.",
+      "A versão preliminar deve ser claramente identificada como não assinada."
+    ],
+    "required_sections": [
+      "FOLHA_IDENTIFICACAO",
+      "RESPONSAVEL_TECNICO",
+      "DECLARACOES_PROFISSIONAIS",
+      "IDENTIFICACAO_PROCEDIMENTO",
+      "SINTESE",
+      "OBJETO_OBJETIVO",
+      "QUESITOS",
+      "DOCUMENTOS_DILIGENCIAS",
+      "ESCOPO_LIMITACOES",
+      "FUNDAMENTACAO_METODO",
+      "DADOS_CONTRATUAIS",
+      "RECONCILIACAO",
+      "RESULTADOS",
+      "CET",
+      "BENCHMARK",
+      "CENARIOS",
+      "MEMORIAS_COMPLETAS",
+      "CONSTATACOES",
+      "RESPOSTAS",
+      "CONCLUSAO",
+      "ENCERRAMENTO",
+      "ANEXOS_APENDICES",
+      "REFERENCIAS",
+      "REVISAO_ASSINATURA"
+    ]
+  },
+  "audit_event_schema": {
+    "required": [
+      "audit_id",
+      "timestamp",
+      "actor_id",
+      "actor_role",
+      "action",
+      "case_id",
+      "version_before",
+      "version_after",
+      "result"
+    ],
+    "properties": {
+      "audit_id": {
+        "type": "string"
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "actor_id": {
+        "type": "string"
+      },
+      "actor_role": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      },
+      "case_id": {
+        "type": "string"
+      },
+      "version_before": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "version_after": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "input_sha256": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "output_sha256": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "result": {
+        "type": "string"
+      }
+    }
+  }
+}

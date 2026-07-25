@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modelo Profissional de Laudo ou Parecer Pericial Contábil — V02</title>
+<style>
+  @page { size: A4; margin: 2.1cm 1.8cm 1.8cm 1.8cm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #172338; font-family: Aptos, Arial, sans-serif; font-size: 10.5pt; line-height: 1.38; }
+  h1, h2, h3 { color: #15385c; page-break-after: avoid; }
+  h1 { font-size: 23pt; line-height: 1.1; margin: 0 0 10pt; letter-spacing: .2pt; }
+  h2 { font-size: 15pt; border-bottom: 2px solid #c7a45a; padding-bottom: 4pt; margin: 0 0 10pt; }
+  h3 { font-size: 11.5pt; margin: 12pt 0 5pt; }
+  p { margin: 0 0 7pt; text-align: justify; }
+  ul { margin: 3pt 0 8pt 18pt; padding: 0; }
+  li { margin-bottom: 3pt; }
+  table { width: 100%; border-collapse: collapse; margin: 7pt 0 12pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th { background: #15385c; color: #fff; font-weight: 700; text-align: left; }
+  td, th { border: 1px solid #b9c3cf; padding: 5pt 6pt; vertical-align: top; }
+  .cover { min-height: 23.7cm; padding-top: 1.8cm; }
+  .cover-rule { width: 2.4cm; border-top: 5px solid #c7a45a; margin: 18pt 0 24pt; }
+  .eyebrow { color: #9a7430; font-size: 9pt; font-weight: 700; letter-spacing: 1.5pt; text-transform: uppercase; }
+  .subtitle { font-size: 14pt; color: #49627c; margin-bottom: 30pt; }
+  .cover-box { margin-top: 34pt; padding: 15pt; border-left: 5px solid #c7a45a; background: #f1f4f7; }
+  .meta { color: #5c6d7e; font-size: 9pt; }
+  .page { page-break-before: always; }
+  .callout { background: #f4f6f8; border-left: 4px solid #c7a45a; padding: 9pt 11pt; margin: 9pt 0 12pt; }
+  .signature { margin-top: 32pt; text-align: center; }
+  .signature-line { width: 70%; margin: 36pt auto 8pt; border-top: 1px solid #172338; }
+  .small { font-size: 8.5pt; color: #536576; }
+  .status { display: inline-block; padding: 4pt 8pt; border: 1px solid #c7a45a; background: #fff9e8; font-weight: 700; }
+</style>
+</head>
+<body>
+  <section class="cover">
+    <div class="eyebrow">Documento técnico contábil</div>
+    <div class="cover-rule"></div>
+    <h1>{{TIPO_DOCUMENTO}}</h1>
+    <p class="subtitle">{{OBJETO_PERICIA}}</p>
+    <div class="cover-box">
+      <table>
+        <tr><td><strong>Documento</strong></td><td>{{NUMERO_DOCUMENTO}} · {{VERSAO_DOCUMENTO}}</td></tr>
+        <tr><td><strong>Processo/procedimento</strong></td><td>{{NUMERO_PROCESSO_OU_PROCEDIMENTO}}</td></tr>
+        <tr><td><strong>Órgão, foro ou câmara</strong></td><td>{{ORGAO_FORO_CAMARA}}</td></tr>
+        <tr><td><strong>Contratante</strong></td><td>{{CONTRATANTE}}</td></tr>
+        <tr><td><strong>Partes interessadas</strong></td><td>{{PARTES_INTERESSADAS}}</td></tr>
+        <tr><td><strong>Data-base</strong></td><td>{{DATA_BASE}}</td></tr>
+      </table>
+      <p><span class="status">{{STATUS_DOCUMENTO}}</span></p>
+    </div>
+    <p style="margin-top:45pt"><strong>Perito(s) responsável(is)</strong><br>
+      {{RESPONSAVEIS_TECNICOS_RESUMO}}</p>
+    <p class="meta">{{LOCAL_EMISSAO}} · {{DATA_EMISSAO}}</p>
+  </section>
+
+  <section class="page">
+    <h2>1. Identificação dos peritos responsáveis</h2>
+    <table>
+      <tr><th>Nome</th><th>Categoria</th><th>CRC</th><th>Função no trabalho</th><th>CNPC, se informado</th></tr>
+      <tr><td colspan="5">{{RESPONSAVEIS_TECNICOS_ROWS}}</td></tr>
+    </table>
+    <h3>1.1 Identificação do trabalho</h3>
+    <table>
+      <tr><th>Campo</th><th>Informação</th></tr>
+      <tr><td>Tipo do documento</td><td>{{TIPO_DOCUMENTO}}</td></tr>
+      <tr><td>Número e versão</td><td>{{NUMERO_DOCUMENTO}} · {{VERSAO_DOCUMENTO}}</td></tr>
+      <tr><td>Processo/procedimento</td><td>{{NUMERO_PROCESSO_OU_PROCEDIMENTO}}</td></tr>
+      <tr><td>Órgão, foro ou câmara</td><td>{{ORGAO_FORO_CAMARA}}</td></tr>
+      <tr><td>Contrato examinado</td><td>{{NUMERO_CONTRATO}}, celebrado em {{DATA_CONTRATACAO}}, credor {{CREDOR}}</td></tr>
+      <tr><td>Período examinado</td><td>{{PERIODO_EXAMINADO}}</td></tr>
+    </table>
+    <h3>1.2 Apresentação</h3>
+    <p>O(s) profissional(is) acima identificado(s) apresenta(m) o presente trabalho pericial contábil, elaborado com base nos elementos efetivamente disponibilizados e nas delimitações registradas neste documento. As conclusões estão vinculadas aos documentos, premissas, métodos e data-base declarados, sem extrapolação para fatos não examinados.</p>
+  </section>
+
+  <section class="page">
+    <h2>2. Objeto, objetivo e escopo</h2>
+    <h3>2.1 Objeto</h3>
+    <p>{{OBJETO_PERICIA}}</p>
+    <h3>2.2 Objetivo</h3>
+    <p>{{OBJETIVO_PERICIA}}</p>
+    <h3>2.3 Síntese do caso</h3>
+    <p>{{SINTESE_CASO}}</p>
+    <h3>2.4 Escopo incluído</h3>
+    <p>{{ESCOPO_INCLUIDO}}</p>
+    <h3>2.5 Escopo excluído</h3>
+    <p>{{ESCOPO_EXCLUIDO}}</p>
+    <h3>2.6 Limitações e ressalvas</h3>
+    <table>
+      <tr><th>Identificação</th><th>Limitação/ressalva</th><th>Efeito no trabalho</th></tr>
+      <tr><td colspan="3">{{LIMITACOES_ROWS}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>3. Elementos examinados e cronologia</h2>
+    <h3>3.1 Documentos e evidências</h3>
+    <table>
+      <tr><th>ID</th><th>Documento/evidência</th><th>Data</th><th>Origem</th><th>Referência</th></tr>
+      <tr><td colspan="5">{{DOCUMENTOS_ROWS}}</td></tr>
+    </table>
+    <h3>3.2 Cronologia relevante</h3>
+    <table>
+      <tr><th>Data</th><th>Evento</th><th>Fonte</th><th>Observação</th></tr>
+      <tr><td colspan="4">{{CRONOLOGIA_ROWS}}</td></tr>
+    </table>
+    <h3>3.3 Diligências realizadas</h3>
+    <p>{{DILIGENCIAS_REALIZADAS}}</p>
+  </section>
+
+  <section class="page">
+    <h2>4. Procedimentos, metodologia e critérios</h2>
+    <h3>4.1 Metodologia aplicada</h3>
+    <p>{{METODOLOGIA_APLICADA}}</p>
+    <h3>4.2 Base normativa e técnica</h3>
+    <p>{{BASE_NORMATIVA_APLICAVEL}}</p>
+    <h3>4.3 Política computacional</h3>
+    <table>
+      <tr><td><strong>Versão do motor</strong></td><td>{{VERSAO_MOTOR}}</td></tr>
+      <tr><td><strong>Precisão e arredondamento</strong></td><td>{{POLITICA_PRECISAO}}</td></tr>
+      <tr><td><strong>Data-base</strong></td><td>{{DATA_BASE}}</td></tr>
+    </table>
+    <p>Os cálculos persistem valores em precisão decimal; arredondamentos de apresentação não alimentam etapas posteriores. Taxas informadas com casas decimais limitadas são avaliadas também pelo intervalo de precisão declarado. Ajustes de última parcela, quando existentes, são identificados de forma autônoma e rastreável.</p>
+  </section>
+
+  <section class="page">
+    <h2>5. Dados contratuais e reconciliação</h2>
+    <table>
+      <tr><th>Campo</th><th>Valor</th><th>Fonte</th></tr>
+      <tr><td colspan="3">{{DADOS_CONTRATUAIS_ROWS}}</td></tr>
+    </table>
+    <h3>5.1 Componentes do principal e crédito líquido</h3>
+    <table>
+      <tr><th>Componente</th><th>Natureza</th><th>Valor</th><th>Tratamento</th><th>Fonte</th></tr>
+      <tr><td colspan="5">{{COMPONENTES_PRINCIPAL_ROWS}}</td></tr>
+    </table>
+    <table>
+      <tr><td><strong>Valor financiado</strong></td><td>{{VALOR_FINANCIADO}}</td></tr>
+      <tr><td><strong>Crédito líquido</strong></td><td>{{CREDITO_LIQUIDO}}</td></tr>
+      <tr><td><strong>Número de parcelas</strong></td><td>{{NUMERO_PARCELAS}}</td></tr>
+      <tr><td><strong>Prestação contratual</strong></td><td>{{PRESTACAO_CONTRATUAL}}</td></tr>
+      <tr><td><strong>Desembolso / primeiro vencimento</strong></td><td>{{DATA_DESEMBOLSO}} / {{DATA_PRIMEIRO_VENCIMENTO}}</td></tr>
+      <tr><td><strong>Periodicidade / método</strong></td><td>{{PERIODICIDADE}} / {{METODO_AMORTIZACAO}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>6. Resultados dos cálculos</h2>
+    <table>
+      <tr><th>Resultado</th><th>Valor</th><th>Critério</th><th>Controle</th></tr>
+      <tr><td colspan="4">{{RESULTADOS_ROWS}}</td></tr>
+    </table>
+    <h3>6.1 Reconciliação das taxas e prestação</h3>
+    <table>
+      <tr><td>Taxa contratual periódica</td><td>{{TAXA_CONTRATUAL_PERIODICA}}</td></tr>
+      <tr><td>Taxa contratual anual equivalente</td><td>{{TAXA_CONTRATUAL_ANUAL}}</td></tr>
+      <tr><td>Prestação teórica pela taxa declarada</td><td>{{PRESTACAO_TEORICA}}</td></tr>
+      <tr><td>Diferença entre prestação contratual e teórica</td><td>{{DIFERENCA_PRESTACAO}}</td></tr>
+      <tr><td>Taxa implícita periódica pela prestação contratual</td><td>{{TAXA_IMPLICITA_PERIODICA}}</td></tr>
+      <tr><td>Taxa implícita anual equivalente</td><td>{{TAXA_IMPLICITA_ANUAL}}</td></tr>
+    </table>
+    <h3>6.2 Custo do fluxo</h3>
+    <table>
+      <tr><td>{{ROTULO_CET_OU_TAXA_FLUXO}}</td><td>{{CET_RECALCULADO}}</td></tr>
+      <tr><td>CET declarado</td><td>{{CET_DECLARADO}}</td></tr>
+      <tr><td>Resíduo do fluxo</td><td>{{RESIDUO_CET}}</td></tr>
+      <tr><td>Total das parcelas</td><td>{{TOTAL_PARCELAS}}</td></tr>
+      <tr><td>Total de juros</td><td>{{TOTAL_JUROS}}</td></tr>
+      <tr><td>Saldo final</td><td>{{SALDO_FINAL}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>7. Referência externa e cenários</h2>
+    <h3>7.1 Série de referência</h3>
+    <table>
+      <tr><td>Código</td><td>{{CODIGO_SERIE_BCB}}</td></tr>
+      <tr><td>Descrição</td><td>{{DESCRICAO_SERIE_BCB}}</td></tr>
+      <tr><td>Competência e taxa</td><td>{{COMPETENCIA_BCB}} · {{TAXA_BCB}}</td></tr>
+      <tr><td>URL oficial</td><td>{{URL_SERIE_BCB}}</td></tr>
+      <tr><td>Data da consulta</td><td>{{DATA_CONSULTA_BCB}}</td></tr>
+    </table>
+    <p><strong>Justificativa de comparabilidade:</strong> {{JUSTIFICATIVA_COMPARABILIDADE}}</p>
+    <table>
+      <tr><th>Série</th><th>Segmento</th><th>Modalidade</th><th>Recursos</th><th>Competência</th><th>Taxa</th></tr>
+      <tr><td colspan="6">{{BENCHMARK_ROWS}}</td></tr>
+    </table>
+    <h3>7.2 Cenários</h3>
+    <table>
+      <tr><th>Cenário</th><th>Premissa</th><th>Prestação</th><th>Total</th><th>Diferença</th></tr>
+      <tr><td colspan="5">{{CENARIOS_ROWS}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>8. Memórias de cálculo e controles</h2>
+    <h3>8.1 Sistema de amortização</h3>
+    <table>
+      <tr><th>Parcela</th><th>Data</th><th>Saldo inicial</th><th>Juros</th><th>Amortização</th><th>Prestação</th><th>Saldo final</th></tr>
+      <tr><td colspan="7">{{MEMORIA_ROWS}}</td></tr>
+    </table>
+    <h3>8.2 Fluxos do custo efetivo/taxa econômica</h3>
+    <table>
+      <tr><th>Evento</th><th>Data</th><th>Dias</th><th>Fluxo</th><th>Fator</th><th>Valor presente</th></tr>
+      <tr><td colspan="6">{{CET_FLUXOS_ROWS}}</td></tr>
+    </table>
+    <h3>8.3 Controles de qualidade</h3>
+    <table>
+      <tr><th>ID</th><th>Controle</th><th>Resultado</th><th>Evidência</th></tr>
+      <tr><td colspan="4">{{CONTROLES_ROWS}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>9. Constatações e respostas</h2>
+    <p>{{CONSTATACOES_SINTESE}}</p>
+    <table>
+      <tr><th>ID</th><th>Constatação</th><th>Fundamento/evidência</th><th>Impacto</th></tr>
+      <tr><td colspan="4">{{CONSTATACOES_ROWS}}</td></tr>
+    </table>
+    <h3>9.1 Respostas a quesitos</h3>
+    <table>
+      <tr><th>Quesito</th><th>Resposta objetiva</th><th>Fundamento</th></tr>
+      <tr><td colspan="3">{{QUESITOS_ROWS}}</td></tr>
+    </table>
+  </section>
+
+  <section class="page">
+    <h2>10. Conclusão técnica</h2>
+    <p>{{CONCLUSAO_TECNICA}}</p>
+    <div class="callout">
+      A conclusão deve ser lida em conjunto com o objeto, o escopo, as limitações, as fontes e as memórias apresentadas. Eventual alteração do conjunto documental ou das premissas poderá exigir nova versão do trabalho.
+    </div>
+    <h3>11. Encerramento</h3>
+    <p>Este documento contém {{NUMERO_PAGINAS}} páginas e {{NUMERO_ANEXOS}} anexos, incluindo as memórias e evidências listadas abaixo.</p>
+    <table>
+      <tr><th>Anexo</th><th>Descrição</th><th>Identificador/referência</th></tr>
+      <tr><td colspan="3">{{ANEXOS_ROWS}}</td></tr>
+    </table>
+    <p>{{LOCAL_EMISSAO}}, {{DATA_EMISSAO}}.</p>
+    <h3>12. Assinatura e carimbo dos peritos responsáveis</h3>
+    <p>O documento deve ser impresso e assinado pelos profissionais abaixo identificados. Reservar um bloco individual para cada perito responsável.</p>
+    <table>
+      <tr><th>Perito responsável</th><th>Assinatura e carimbo</th></tr>
+      <tr style="height:95pt"><td colspan="2">{{ASSINATURAS_CARIMBOS_ROWS}}</td></tr>
+    </table>
+  </section>
+</body>
+</html>

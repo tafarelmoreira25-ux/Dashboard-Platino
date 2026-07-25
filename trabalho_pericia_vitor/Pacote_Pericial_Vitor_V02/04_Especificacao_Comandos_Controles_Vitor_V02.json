@@ -1,0 +1,697 @@
+{
+  "specification": "motor-pericial-contabil-financeiro-vitor",
+  "specification_version": "2.0.0",
+  "case_schema_file": "03_Schema_Caso_Pericial_Vitor_V02.json",
+  "consolidated_at": "2026-07-25",
+  "locale": "pt-BR",
+  "currency": "BRL",
+  "numeric_policy": {
+    "money_storage": "arbitrary_precision_decimal",
+    "rate_storage": "arbitrary_precision_decimal",
+    "internal_precision_digits_minimum": 34,
+    "rounding_mode": "HALF_EVEN",
+    "display_money_scale": 2,
+    "display_rate_scale_default": 6,
+    "date_standard": "ISO-8601",
+    "cet_day_basis": 365,
+    "tolerances": {
+      "money_absolute": "0.01",
+      "root_function_residual_absolute": "0.00000001",
+      "root_rate_interval_width": "0.000000000001",
+      "cet_npv_absolute": "0.01",
+      "exact_rate_equivalence_absolute": "0.000000000001",
+      "declared_rate_comparison": "derive_half_ulp_from_declared_precision"
+    },
+    "rules": [
+      "Nunca usar binary float para resultados financeiros persistidos.",
+      "Persistir valor bruto e valor de apresentação separadamente.",
+      "Não encadear a memória a partir de valores exibidos e arredondados.",
+      "Qualquer ajuste de última parcela deve ser explícito e rastreável.",
+      "Taxa declarada arredondada deve ser tratada como intervalo de precisão; divergência de prestação dentro desse intervalo exige justificativa, não o rótulo genérico de arredondamento da parcela."
+    ]
+  },
+  "document_type_rules": {
+    "LAUDO_JUDICIAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO_DO_JUIZO",
+      "required_evidence": [
+        "ATO_NOMEACAO",
+        "ACEITACAO_ENCARGO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_CONSENSUAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO_ESCOLHIDO_PELAS_PARTES",
+      "required_evidence": [
+        "REQUERIMENTO_ESCOLHA_PARTES",
+        "TERMO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_ARBITRAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO_ARBITRAL",
+      "required_evidence": [
+        "ATO_NOMEACAO_ARBITRAL",
+        "TERMO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_OFICIAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL",
+      "professional_function": "PERITO_OFICIAL",
+      "required_evidence": [
+        "ATO_INVESTIDURA",
+        "TERMO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "LAUDO_EXTRAJUDICIAL": {
+      "title": "LAUDO PERICIAL CONTÁBIL EXTRAJUDICIAL",
+      "professional_function": "PERITO_CONTABIL_CONTRATADO",
+      "required_evidence": [
+        "CONTRATO_PRESTACAO_SERVICOS",
+        "TERMO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    },
+    "PARECER_TECNICO_CONTABIL": {
+      "title": "PARECER TÉCNICO CONTÁBIL",
+      "professional_function": "ASSISTENTE_TECNICO",
+      "required_evidence": [
+        "INDICACAO_OU_CONTRATO_ASSISTENCIA",
+        "TERMO_ESCOPO",
+        "CERTIDAO_REGULARIDADE"
+      ]
+    }
+  },
+  "roles": {
+    "ANALISTA": [
+      "CRIAR_CASO",
+      "INGESTAR_DOCUMENTO",
+      "EXTRAIR_DADOS",
+      "GERAR_MINUTA"
+    ],
+    "REVISOR_DADOS": [
+      "CONFIRMAR_DADOS",
+      "REJEITAR_DADO",
+      "EXECUTAR_CONTROLES",
+      "SUBMETER_REVISAO"
+    ],
+    "MOTOR_CALCULO": [
+      "RECONCILIAR_PRINCIPAL",
+      "CALCULAR_PRICE",
+      "CALCULAR_SAC",
+      "CALCULAR_TAXA_IMPLICITA",
+      "CALCULAR_CET",
+      "CRIAR_CENARIO",
+      "PROCESSAR_HISTORICO_PAGAMENTOS"
+    ],
+    "RESPONSAVEL_TECNICO": [
+      "REGISTRAR_CORRECAO",
+      "APROVAR_JUSTIFICATIVA",
+      "APROVAR_TECNICAMENTE",
+      "REJEITAR_MINUTA",
+      "AUTORIZAR_ASSINATURA"
+    ],
+    "SERVICO_ASSINATURA": [
+      "ASSINAR_DOCUMENTO",
+      "VALIDAR_ASSINATURA"
+    ],
+    "PUBLICADOR": [
+      "PUBLICAR_PDF_FINAL"
+    ]
+  },
+  "states": {
+    "RASCUNHO": [
+      "DADOS_EXTRAIDOS",
+      "CANCELADO"
+    ],
+    "DADOS_EXTRAIDOS": [
+      "DADOS_CONFIRMADOS",
+      "RASCUNHO",
+      "CANCELADO"
+    ],
+    "DADOS_CONFIRMADOS": [
+      "CALCULADO",
+      "DADOS_EXTRAIDOS",
+      "CANCELADO"
+    ],
+    "CALCULADO": [
+      "VALIDADO",
+      "DADOS_CONFIRMADOS",
+      "CANCELADO"
+    ],
+    "VALIDADO": [
+      "MINUTA_GERADA",
+      "CALCULADO",
+      "CANCELADO"
+    ],
+    "MINUTA_GERADA": [
+      "EM_REVISAO",
+      "VALIDADO",
+      "CANCELADO"
+    ],
+    "EM_REVISAO": [
+      "EM_REVISAO",
+      "APROVADO",
+      "REJEITADO",
+      "CANCELADO"
+    ],
+    "REJEITADO": [
+      "DADOS_CONFIRMADOS",
+      "CALCULADO",
+      "VALIDADO",
+      "EM_REVISAO",
+      "CANCELADO"
+    ],
+    "APROVADO": [
+      "ASSINADO",
+      "EM_REVISAO",
+      "CANCELADO"
+    ],
+    "ASSINADO": [
+      "PUBLICADO",
+      "CANCELADO"
+    ],
+    "PUBLICADO": [],
+    "CANCELADO": []
+  },
+  "commands": {
+    "CRIAR_CASO": {
+      "allowed_from": [],
+      "result_state": "RASCUNHO",
+      "allowed_roles": [
+        "ANALISTA"
+      ],
+      "required_payload": [
+        "document.type",
+        "document.number",
+        "document.contractor",
+        "professional"
+      ]
+    },
+    "INGESTAR_DOCUMENTO": {
+      "allowed_from": [
+        "RASCUNHO",
+        "DADOS_EXTRAIDOS",
+        "DADOS_CONFIRMADOS"
+      ],
+      "result_state": "same",
+      "allowed_roles": [
+        "ANALISTA"
+      ],
+      "required_payload": [
+        "file_name",
+        "mime_type",
+        "binary_reference"
+      ],
+      "output": [
+        "source_id",
+        "sha256",
+        "page_count"
+      ]
+    },
+    "EXTRAIR_DADOS": {
+      "allowed_from": [
+        "RASCUNHO",
+        "DADOS_EXTRAIDOS"
+      ],
+      "result_state": "DADOS_EXTRAIDOS",
+      "allowed_roles": [
+        "ANALISTA"
+      ],
+      "required_payload": [
+        "source_ids",
+        "extraction_profile"
+      ]
+    },
+    "CONFIRMAR_DADOS": {
+      "allowed_from": [
+        "DADOS_EXTRAIDOS",
+        "DADOS_CONFIRMADOS"
+      ],
+      "result_state": "DADOS_CONFIRMADOS",
+      "allowed_roles": [
+        "REVISOR_DADOS"
+      ],
+      "required_payload": [
+        "field_confirmations"
+      ]
+    },
+    "RECONCILIAR_PRINCIPAL": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "principal_field_id",
+        "component_ids",
+        "tolerance_policy"
+      ]
+    },
+    "CALCULAR_PRICE": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "principal",
+        "periodic_rate",
+        "installments",
+        "payment_timing",
+        "schedule_mode",
+        "first_due_date",
+        "periodicity"
+      ],
+      "schedule_mode_values": [
+        "DECLARED_RATE_THEORETICAL_PAYMENT",
+        "CONTRACT_PAYMENT_IMPLICIT_RATE"
+      ],
+      "rule": "Os dois modos geram cálculos distintos e devem possuir calculation_id distintos."
+    },
+    "CALCULAR_SAC": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "principal",
+        "periodic_rate",
+        "installments",
+        "first_due_date",
+        "periodicity"
+      ]
+    },
+    "CALCULAR_TAXA_IMPLICITA": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "cash_flows",
+        "solver",
+        "bracket",
+        "tolerances"
+      ],
+      "solver_preference": [
+        "BRENT",
+        "BISECTION"
+      ]
+    },
+    "CALCULAR_CET": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "dated_cash_flows",
+        "regulatory_scope",
+        "solver",
+        "tolerances"
+      ],
+      "rule": "Se regulatory_scope for OUT_OF_SCOPE_RES_CMN_4881, o resultado deve ser rotulado como taxa efetiva anual do fluxo econômico, sem afirmar enquadramento regulatório no CET."
+    },
+    "CONSULTAR_BENCHMARK": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "REVISOR_DADOS",
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "borrower_type",
+        "product",
+        "resource_type",
+        "contract_reference_period"
+      ]
+    },
+    "CRIAR_CENARIO": {
+      "allowed_from": [
+        "CALCULADO",
+        "VALIDADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "scenario_id",
+        "name",
+        "purpose",
+        "justification",
+        "author",
+        "changed_fields",
+        "preserved_fields"
+      ]
+    },
+    "PROCESSAR_HISTORICO_PAGAMENTOS": {
+      "allowed_from": [
+        "DADOS_CONFIRMADOS",
+        "CALCULADO"
+      ],
+      "result_state": "CALCULADO",
+      "allowed_roles": [
+        "MOTOR_CALCULO"
+      ],
+      "required_payload": [
+        "payment_events",
+        "imputation_rule_source_id",
+        "data_base"
+      ]
+    },
+    "EXECUTAR_CONTROLES": {
+      "allowed_from": [
+        "CALCULADO",
+        "VALIDADO"
+      ],
+      "result_state": "VALIDADO",
+      "allowed_roles": [
+        "REVISOR_DADOS"
+      ],
+      "required_payload": [
+        "control_profile"
+      ],
+      "rule": "Só resulta em VALIDADO quando não houver REPROVADO, NAO_EXECUTADO obrigatório ou ATENCAO sem justificativa aprovada."
+    },
+    "GERAR_MINUTA": {
+      "allowed_from": [
+        "VALIDADO"
+      ],
+      "result_state": "MINUTA_GERADA",
+      "allowed_roles": [
+        "ANALISTA"
+      ],
+      "required_payload": [
+        "template_version",
+        "calculation_ids",
+        "scenario_ids",
+        "source_ids"
+      ],
+      "rule": "A minuta pode ser gerada com certidão PENDENTE somente se estiver marcada MINUTA_NAO_ASSINADA; aprovação e assinatura permanecem bloqueadas."
+    },
+    "SUBMETER_REVISAO": {
+      "allowed_from": [
+        "MINUTA_GERADA"
+      ],
+      "result_state": "EM_REVISAO",
+      "allowed_roles": [
+        "REVISOR_DADOS"
+      ],
+      "required_payload": [
+        "document_version",
+        "reviewer_professional_id"
+      ]
+    },
+    "REGISTRAR_CORRECAO": {
+      "allowed_from": [
+        "EM_REVISAO",
+        "REJEITADO",
+        "APROVADO"
+      ],
+      "result_state": "EM_REVISAO",
+      "allowed_roles": [
+        "RESPONSAVEL_TECNICO"
+      ],
+      "required_payload": [
+        "corrections",
+        "reason",
+        "reviewer_professional_id"
+      ],
+      "rule": "Correção posterior à aprovação invalida approval_id anterior e incrementa document.version."
+    },
+    "APROVAR_JUSTIFICATIVA": {
+      "allowed_from": [
+        "CALCULADO",
+        "VALIDADO",
+        "EM_REVISAO"
+      ],
+      "result_state": "same",
+      "allowed_roles": [
+        "RESPONSAVEL_TECNICO"
+      ],
+      "required_payload": [
+        "check_id",
+        "justification",
+        "evidence_ids"
+      ]
+    },
+    "APROVAR_TECNICAMENTE": {
+      "allowed_from": [
+        "EM_REVISAO"
+      ],
+      "result_state": "APROVADO",
+      "allowed_roles": [
+        "RESPONSAVEL_TECNICO"
+      ],
+      "required_payload": [
+        "professional_id",
+        "document_version",
+        "pdf_sha256",
+        "full_review_declaration",
+        "strong_authentication"
+      ]
+    },
+    "ASSINAR_DOCUMENTO": {
+      "allowed_from": [
+        "APROVADO"
+      ],
+      "result_state": "ASSINADO",
+      "allowed_roles": [
+        "SERVICO_ASSINATURA"
+      ],
+      "required_payload": [
+        "approval_id",
+        "approved_pdf_reference",
+        "approved_pdf_sha256",
+        "signature_provider",
+        "signature_type"
+      ]
+    },
+    "VALIDAR_ASSINATURA": {
+      "allowed_from": [
+        "ASSINADO"
+      ],
+      "result_state": "ASSINADO",
+      "allowed_roles": [
+        "SERVICO_ASSINATURA"
+      ],
+      "required_payload": [
+        "signed_pdf_reference"
+      ]
+    },
+    "PUBLICAR_PDF_FINAL": {
+      "allowed_from": [
+        "ASSINADO"
+      ],
+      "result_state": "PUBLICADO",
+      "allowed_roles": [
+        "PUBLICADOR"
+      ],
+      "required_payload": [
+        "signed_pdf_reference",
+        "validation_report_reference",
+        "public_validation_reference"
+      ]
+    }
+  },
+  "controls": [
+    {
+      "id": "CHK-001",
+      "name": "CAMPOS_CRITICOS_CONFIRMADOS",
+      "criterion": "all critical inputs are CONFIRMADO or INFERIDO with formula and confirmed inputs",
+      "blocking": true
+    },
+    {
+      "id": "CHK-002",
+      "name": "RECONCILIACAO_PRINCIPAL",
+      "criterion": "abs(financed_principal - reconciled_principal) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-003",
+      "name": "PRESTACAO_E_PRECISAO_TAXA_DECLARADA",
+      "criterion": "contract_payment equals theoretical payment within money tolerance OR lies inside payment interval implied by declared-rate precision with approved justification",
+      "blocking": true
+    },
+    {
+      "id": "CHK-004",
+      "name": "RESIDUO_TAXA_IMPLICITA",
+      "criterion": "abs(rate_equation_residual) <= root_function_residual_absolute and bracket_width <= root_rate_interval_width",
+      "blocking": true
+    },
+    {
+      "id": "CHK-005",
+      "name": "EQUIVALENCIA_TAXAS",
+      "criterion": "exact equivalence within exact_rate_equivalence_absolute; comparison with declared rounded rate uses declared precision",
+      "blocking": true
+    },
+    {
+      "id": "CHK-006",
+      "name": "SALDO_FINAL",
+      "criterion": "abs(final_balance) <= money_absolute or explicit_final_adjustment",
+      "blocking": true
+    },
+    {
+      "id": "CHK-007",
+      "name": "SOMA_AMORTIZACOES",
+      "criterion": "abs(sum_amortization - financed_principal) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-008",
+      "name": "IDENTIDADE_MEMORIA",
+      "criterion": "abs(sum_payments - sum_interest - sum_amortization - sum_other_events) <= money_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-009",
+      "name": "APLICABILIDADE_E_COMPLETUDE_CET",
+      "criterion": "regulatory scope assessed and all economic flows have date, signed amount, description and source",
+      "blocking": true
+    },
+    {
+      "id": "CHK-010",
+      "name": "RESIDUO_CET",
+      "criterion": "abs(cet_npv) <= cet_npv_absolute",
+      "blocking": true
+    },
+    {
+      "id": "CHK-011",
+      "name": "COMPARABILIDADE_BENCHMARK",
+      "criterion": "not used OR official description, series code, unit, reference period, borrower, product, resource type, query time, source URL, response hash and validator are present",
+      "blocking": true
+    },
+    {
+      "id": "CHK-012",
+      "name": "RENDERIZACAO_E_TOKENS",
+      "criterion": "zero unresolved scalar tokens; every dynamic table expanded; no INTERNAL_ONLY block in final artifact",
+      "blocking": true
+    },
+    {
+      "id": "CHK-013",
+      "name": "HABILITACAO_E_REGULARIDADE",
+      "criterion": "CRC verified, regularity certificate VIGENTE attached, professional function compatible, conflict check approved",
+      "blocking": true
+    },
+    {
+      "id": "CHK-014",
+      "name": "REVISAO_APROVACAO_HASH",
+      "criterion": "full review declaration true and approval pdf_sha256 equals exact artifact hash",
+      "blocking": true
+    },
+    {
+      "id": "CHK-015",
+      "name": "VALIDACAO_ASSINATURA",
+      "criterion": "signature validation is VALIDA and signed PDF hash matches published artifact",
+      "blocking": true
+    }
+  ],
+  "benchmark_catalog_examples": [
+    {
+      "code": "20749",
+      "description": "Taxa média de juros das operações de crédito com recursos livres - Pessoas físicas - Aquisição de veículos",
+      "borrower_type": "PF",
+      "product": "AQUISICAO_VEICULOS",
+      "resource_type": "LIVRES",
+      "unit": "PERCENT_PER_YEAR"
+    },
+    {
+      "code": "20742",
+      "description": "Taxa média de juros das operações de crédito com recursos livres - Pessoas físicas - Crédito pessoal não consignado",
+      "borrower_type": "PF",
+      "product": "CREDITO_PESSOAL_NAO_CONSIGNADO",
+      "resource_type": "LIVRES",
+      "unit": "PERCENT_PER_YEAR"
+    },
+    {
+      "code": "20772",
+      "description": "Taxa média de juros das operações de crédito com recursos direcionados - Pessoas físicas - Financiamento imobiliário com taxas de mercado",
+      "borrower_type": "PF",
+      "product": "FINANCIAMENTO_IMOBILIARIO_TAXAS_MERCADO",
+      "resource_type": "DIRECIONADOS",
+      "unit": "PERCENT_PER_YEAR"
+    }
+  ],
+  "acceptance_cases": [
+    {
+      "case_id": "ACCEPT-PRICE-CET-001",
+      "warning": "Caso sintético exclusivo para homologação matemática.",
+      "input": {
+        "net_disbursement": "14000.00",
+        "financed_principal": "17635.41",
+        "installments": 48,
+        "periodic_rate_declared": "0.0421",
+        "periodic_rate_declared_precision_decimal_places_percent": 2,
+        "contract_payment": "861.38",
+        "disbursement_date": "2025-12-29",
+        "first_due_date": "2026-01-29"
+      },
+      "expected": {
+        "price_theoretical_payment_at_declared_rate": "861.4610923605933",
+        "contract_payment_inside_declared_rate_precision_interval": true,
+        "implicit_monthly_rate": "0.0420942494197753",
+        "implicit_annual_effective_rate": "0.640151600470606",
+        "contract_total_payments": "41346.24",
+        "cet_annual_actual_dates_approx": "0.951476616186205",
+        "annual_equivalent_from_regular_monthly_cet_rate_approx": "0.951143515958076"
+      }
+    },
+    {
+      "case_id": "ACCEPT-ZERO-RATE-002",
+      "input": {
+        "principal": "1200.00",
+        "periodic_rate": "0",
+        "installments": 12
+      },
+      "expected": {
+        "payment": "100.00",
+        "final_balance": "0.00"
+      }
+    },
+    {
+      "case_id": "ACCEPT-CET-SCOPE-003",
+      "input": {
+        "borrower_type": "PJ",
+        "pj_classification": "OUTRA_PJ"
+      },
+      "expected": {
+        "cet_regulatory_scope": "OUT_OF_SCOPE_RES_CMN_4881",
+        "label_if_calculated": "TAXA_EFETIVA_ANUAL_DO_FLUXO_ECONOMICO"
+      }
+    }
+  ],
+  "legacy_v01_corrections": [
+    "PARECER TÉCNICO-CONTÁBIL foi substituído pela terminologia da NBC TP 01 (R2): PARECER TÉCNICO CONTÁBIL.",
+    "A taxa anual efetiva da taxa implícita do caso de aceitação é 64,0151600471% a.a., e não 64,0082% a.a.",
+    "A série SGS 20772 foi classificada como recursos DIRECIONADOS.",
+    "Os IDs CHK-011 a CHK-013 foram realinhados; V02 possui 15 controles canônicos.",
+    "A tolerância da prestação não é R$ 0,10 por padrão. A divergência deve ser explicada pelo intervalo decorrente da precisão da taxa declarada.",
+    "A geração de minuta e a autorização de emissão foram separadas: certidão pendente permite somente MINUTA_NAO_ASSINADA.",
+    "O arquivo V01 que usava $schema no topo não era um JSON Schema completo; V02 separa schema válido e especificação operacional."
+  ]
+}

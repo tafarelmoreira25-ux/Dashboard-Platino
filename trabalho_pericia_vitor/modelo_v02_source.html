@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modelo Profissional Laudo Parecer Vitor V02</title>
+<style>
+  @page { size: A4; margin: 2.2cm 2.0cm 2.0cm 2.0cm; }
+  body { font-family: Arial, sans-serif; font-size: 10.5pt; line-height: 1.25; color: #172033; margin: 0; }
+  h1 { font-size: 17pt; color: #174f78; margin: 14pt 0 7pt; }
+  h2 { font-size: 13pt; color: #174f78; margin: 12pt 0 6pt; }
+  h3 { font-size: 11pt; color: #24435c; margin: 9pt 0 4pt; }
+  p { margin: 0 0 6pt; }
+  .cover { text-align: center; padding-top: 70pt; }
+  .kicker { color: #b47a16; font-size: 9pt; font-weight: bold; letter-spacing: 0.7pt; text-transform: uppercase; }
+  .title { color: #174f78; font-size: 25pt; font-weight: bold; line-height: 1.05; margin: 20pt 0 9pt; }
+  .subtitle { color: #536374; font-size: 12.5pt; margin-bottom: 28pt; }
+  .identity { display: inline-block; width: 82%; background: #123e5d; color: white; padding: 16pt 20pt; text-align: left; margin-top: 28pt; }
+  .identity strong { font-size: 13pt; }
+  .draft { margin: 34pt auto 0; width: 82%; border-left: 4pt solid #c28a2c; background: #fff8e8; padding: 10pt 13pt; text-align: left; color: #5d4821; }
+  .meta { color: #7a5a00; font-size: 8.5pt; margin-top: 36pt; font-weight: bold; }
+  .page-break { page-break-before: always; }
+  .section-no { color: #b47a16; font-size: 8.5pt; font-weight: bold; margin-top: 0; }
+  .lead { color: #536374; font-size: 9.5pt; margin-bottom: 10pt; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; table-layout: fixed; }
+  th { background: #123e5d; color: white; font-weight: bold; text-align: left; padding: 5pt; border: 0.6pt solid #123e5d; }
+  td { padding: 5pt; border: 0.6pt solid #c7d0d8; vertical-align: middle; }
+  .kv td:first-child { width: 31%; background: #eef2f5; font-weight: bold; color: #31485a; }
+  .note { background: #f4f7f9; border-left: 3pt solid #6e879a; padding: 8pt 10pt; margin: 8pt 0 10pt; }
+  .warning { background: #fff8e8; border-left: 3pt solid #c28a2c; padding: 8pt 10pt; margin: 8pt 0 10pt; }
+  .success { background: #eef8f2; border-left: 3pt solid #2e7d57; padding: 8pt 10pt; margin: 8pt 0 10pt; }
+  .token { color: #095a9a; font-weight: bold; }
+  .small { font-size: 8.5pt; color: #5c6976; }
+  .formula { background: #f1f3f5; color: #293846; padding: 7pt 9pt; font-family: "Courier New", monospace; font-size: 9pt; margin: 5pt 0 8pt; }
+  .signature { text-align: center; margin-top: 24pt; }
+  .line { width: 72%; border-top: 0.8pt solid #34495e; margin: 42pt auto 7pt; }
+  ul, ol { margin: 4pt 0 8pt 20pt; padding: 0; }
+  li { margin: 0 0 3pt; }
+  .keep { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">Documento técnico-contábil</div>
+  <div class="title"><span class="token">{{TIPO_DOCUMENTO}}</span></div>
+  <div class="subtitle">Exame contábil-financeiro de operação de crédito<br><span class="token">{{NUMERO_CONTRATO}}</span></div>
+
+  <div class="identity">
+    <strong>VITOR PENATTI FERRI</strong><br>
+    CONTADOR &nbsp;|&nbsp; CRC-SP nº 1SP344559/O-0<br>
+    <span class="token">{{FUNCAO_PERICIAL}}</span>
+  </div>
+
+  <div class="draft">
+    <strong>MINUTA NÃO ASSINADA</strong><br>
+    Documento destinado à revisão integral do responsável técnico. Não deve ser
+    protocolado, apresentado a terceiros ou tratado como laudo ou parecer final
+    antes da aprovação e assinatura do arquivo exato.
+  </div>
+
+  <div class="meta">
+    DOCUMENTO <span class="token">{{NUMERO_DOCUMENTO}}</span>
+    &nbsp;•&nbsp; VERSÃO <span class="token">{{VERSAO_DOCUMENTO}}</span>
+    &nbsp;•&nbsp; <span class="token">{{STATUS_DOCUMENTO}}</span>
+  </div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-no">01</div>
+<h1>Identificação e responsabilidade técnica</h1>
+<p class="lead">Identificação do trabalho, do procedimento e do contador responsável.</p>
+
+<table class="kv">
+  <tr><td>Documento</td><td><span class="token">{{TIPO_DOCUMENTO}}</span></td></tr>
+  <tr><td>Número / versão</td><td><span class="token">{{NUMERO_DOCUMENTO}}</span> / <span class="token">{{VERSAO_DOCUMENTO}}</span></td></tr>
+  <tr><td>Processo ou procedimento</td><td><span class="token">{{NUMERO_PROCESSO_OU_PROCEDIMENTO}}</span></td></tr>
+  <tr><td>Órgão, foro ou câmara</td><td><span class="token">{{ORGAO_FORO_CAMARA}}</span></td></tr>
+  <tr><td>Contratante</td><td><span class="token">{{CONTRATANTE}}</span></td></tr>
+  <tr><td>Partes / interessados</td><td><span class="token">{{PARTES_INTERESSADAS}}</span></td></tr>
+  <tr><td>Contrato examinado</td><td><span class="token">{{NUMERO_CONTRATO}}</span>, de <span class="token">{{DATA_CONTRATACAO}}</span></td></tr>
+  <tr><td>Credor</td><td><span class="token">{{CREDOR}}</span></td></tr>
+  <tr><td>Data-base</td><td><span class="token">{{DATA_BASE}}</span></td></tr>
+</table>
+
+<h2>1.1 Responsável técnico e habilitação</h2>
+<table class="kv">
+  <tr><td>Nome</td><td>VITOR PENATTI FERRI</td></tr>
+  <tr><td>Categoria</td><td>CONTADOR</td></tr>
+  <tr><td>Registro profissional</td><td>CRC-SP nº 1SP344559/O-0</td></tr>
+  <tr><td>Função</td><td><span class="token">{{FUNCAO_PERICIAL}}</span></td></tr>
+  <tr><td>CNPC</td><td><span class="token">{{CNPC_LINHA_OU_OMITIR}}</span></td></tr>
+  <tr><td>Certidão de regularidade</td><td><span class="token">{{CERTIDAO_REGULARIDADE_ID}}</span> &nbsp;•&nbsp; validade <span class="token">{{CERTIDAO_VALIDADE}}</span></td></tr>
+</table>
+
+<p>O responsável técnico declara que aceita a função indicada neste documento,
+possui conhecimento técnico-científico compatível com o objeto e assume
+responsabilidade pessoal pelos procedimentos, valores apurados, respostas e
+conclusões.</p>
+
+<h2>1.2 Independência, impedimento e suspeição</h2>
+<p><span class="token">{{DECLARACAO_INDEPENDENCIA}}</span></p>
+<div class="note">A Certidão de Regularidade Profissional atualizada deve
+acompanhar o laudo pericial contábil ou o parecer técnico contábil. O CNPC é
+exibido somente quando comprovado.</div>
+
+<div class="page-break"></div>
+<div class="section-no">02</div>
+<h1>Síntese, objeto e escopo</h1>
+
+<h2>2.1 Síntese do caso</h2>
+<p><span class="token">{{SINTESE_CASO}}</span></p>
+
+<h2>2.2 Objeto</h2>
+<p><span class="token">{{OBJETO_PERICIA}}</span></p>
+
+<h2>2.3 Objetivo</h2>
+<p><span class="token">{{OBJETIVO_PERICIA}}</span></p>
+
+<h2>2.4 Delimitação</h2>
+<table class="kv">
+  <tr><td>Incluído</td><td><span class="token">{{ESCOPO_INCLUIDO}}</span></td></tr>
+  <tr><td>Excluído</td><td><span class="token">{{ESCOPO_EXCLUIDO}}</span></td></tr>
+  <tr><td>Período examinado</td><td><span class="token">{{PERIODO_EXAMINADO}}</span></td></tr>
+  <tr><td>Data-base</td><td><span class="token">{{DATA_BASE}}</span></td></tr>
+</table>
+
+<h2>2.5 Cronologia essencial</h2>
+<table>
+  <tr><th style="width:16%">Data</th><th style="width:30%">Evento</th><th style="width:22%">Fonte</th><th>Observação</th></tr>
+  <tr><td colspan="4"><span class="token">{{CRONOLOGIA_ROWS}}</span></td></tr>
+</table>
+
+<h2>2.6 Limitações e tratamentos</h2>
+<table>
+  <tr><th style="width:12%">ID</th><th style="width:34%">Limitação</th><th style="width:25%">Efeito</th><th>Tratamento</th></tr>
+  <tr><td colspan="4"><span class="token">{{LIMITACOES_ROWS}}</span></td></tr>
+</table>
+
+<div class="warning">Quando a insuficiência documental impedir resposta segura,
+a conclusão correspondente deve ser indicada como inconclusiva, com descrição
+precisa do elemento faltante.</div>
+
+<div class="page-break"></div>
+<div class="section-no">03</div>
+<h1>Documentos, diligências e método</h1>
+
+<h2>3.1 Documentos examinados</h2>
+<table>
+  <tr><th style="width:12%">ID</th><th style="width:28%">Documento</th><th style="width:16%">Data/versão</th><th style="width:16%">Origem</th><th>Hash / localização</th></tr>
+  <tr><td colspan="5"><span class="token">{{DOCUMENTOS_ROWS}}</span></td></tr>
+</table>
+
+<h2>3.2 Diligências e comunicações</h2>
+<p><span class="token">{{DILIGENCIAS_REALIZADAS}}</span></p>
+
+<h2>3.3 Fundamentação técnico-científica</h2>
+<p><span class="token">{{BASE_NORMATIVA_APLICAVEL}}</span></p>
+<p><span class="token">{{METODOLOGIA_APLICADA}}</span></p>
+
+<div class="keep">
+  <h3>Fórmulas nucleares, quando aplicáveis</h3>
+  <div class="formula">PRICE: PMT = PV × i / [1 − (1+i)^(-n)]</div>
+  <div class="formula">MEMÓRIA: Jk = SD(k−1) × i; Ak = PMTk − Jk; SDk = SD(k−1) − Ak</div>
+  <div class="formula">CET / FLUXO DATADO: FC0 = Σ FCj / (1+CET)^((dj−d0)/365)</div>
+</div>
+
+<table class="kv">
+  <tr><td>Versão do motor</td><td><span class="token">{{VERSAO_MOTOR}}</span></td></tr>
+  <tr><td>Política de precisão</td><td><span class="token">{{POLITICA_PRECISAO}}</span></td></tr>
+</table>
+
+<div class="note">O exame é contábil-financeiro. Não substitui decisão judicial
+nem emite qualificação jurídica sobre validade, nulidade, abusividade ou
+ilicitude.</div>
+
+<div class="page-break"></div>
+<div class="section-no">04</div>
+<h1>Dados contratuais e reconciliação</h1>
+
+<h2>4.1 Dados confirmados</h2>
+<table>
+  <tr><th style="width:28%">Campo</th><th style="width:19%">Valor</th><th style="width:25%">Fonte</th><th>Status</th></tr>
+  <tr><td colspan="4"><span class="token">{{DADOS_CONTRATUAIS_ROWS}}</span></td></tr>
+</table>
+
+<h2>4.2 Composição do principal</h2>
+<table>
+  <tr><th style="width:28%">Componente</th><th style="width:18%">Valor</th><th style="width:16%">Tratamento</th><th style="width:19%">Fonte</th><th>Classificação</th></tr>
+  <tr><td colspan="5"><span class="token">{{COMPONENTES_PRINCIPAL_ROWS}}</span></td></tr>
+</table>
+
+<table class="kv">
+  <tr><td>Crédito líquido</td><td><span class="token">{{CREDITO_LIQUIDO}}</span></td></tr>
+  <tr><td>Principal financiado</td><td><span class="token">{{VALOR_FINANCIADO}}</span></td></tr>
+  <tr><td>Parcelas</td><td><span class="token">{{NUMERO_PARCELAS}}</span></td></tr>
+  <tr><td>Prestação contratual</td><td><span class="token">{{PRESTACAO_CONTRATUAL}}</span></td></tr>
+  <tr><td>Método</td><td><span class="token">{{METODO_AMORTIZACAO}}</span></td></tr>
+</table>
+
+<div class="success">A reconciliação somente é considerada aprovada quando o
+principal declarado coincide com a soma algébrica dos componentes dentro da
+tolerância registrada.</div>
+
+<div class="page-break"></div>
+<div class="section-no">05</div>
+<h1>Resultados matemáticos</h1>
+
+<table>
+  <tr><th style="width:28%">Indicador</th><th style="width:20%">Resultado</th><th style="width:19%">Cálculo</th><th style="width:15%">Controle</th><th>Interpretação</th></tr>
+  <tr><td colspan="5"><span class="token">{{RESULTADOS_ROWS}}</span></td></tr>
+</table>
+
+<h2>5.1 Reprodução e taxa implícita</h2>
+<table class="kv">
+  <tr><td>Prestação teórica</td><td><span class="token">{{PRESTACAO_TEORICA}}</span></td></tr>
+  <tr><td>Diferença para a prestação contratual</td><td><span class="token">{{DIFERENCA_PRESTACAO}}</span></td></tr>
+  <tr><td>Taxa periódica declarada</td><td><span class="token">{{TAXA_CONTRATUAL_PERIODICA}}</span></td></tr>
+  <tr><td>Taxa periódica implícita</td><td><span class="token">{{TAXA_IMPLICITA_PERIODICA}}</span></td></tr>
+  <tr><td>Taxa anual efetiva implícita</td><td><span class="token">{{TAXA_IMPLICITA_ANUAL}}</span></td></tr>
+  <tr><td>Total nominal das parcelas</td><td><span class="token">{{TOTAL_PARCELAS}}</span></td></tr>
+</table>
+
+<h2>5.2 Custo efetivo do fluxo</h2>
+<table class="kv">
+  <tr><td>Enquadramento</td><td><span class="token">{{ROTULO_CET_OU_TAXA_FLUXO}}</span></td></tr>
+  <tr><td>CET declarado</td><td><span class="token">{{CET_DECLARADO}}</span></td></tr>
+  <tr><td>Taxa anual recalculada</td><td><span class="token">{{CET_RECALCULADO}}</span></td></tr>
+  <tr><td>Resíduo do VPL</td><td><span class="token">{{RESIDUO_CET}}</span></td></tr>
+</table>
+
+<div class="warning">A Resolução CMN nº 4.881/2020 possui âmbito de aplicação
+específico. Fora dele, eventual taxa calculada deve ser rotulada como taxa
+efetiva anual do fluxo econômico reconstruído, sem afirmação de CET regulatório.</div>
+
+<div class="page-break"></div>
+<div class="section-no">06</div>
+<h1>Benchmark e cenários</h1>
+
+<h2>6.1 Referência estatística do Banco Central</h2>
+<table class="kv">
+  <tr><td>Série</td><td><span class="token">{{CODIGO_SERIE_BCB}}</span> — <span class="token">{{DESCRICAO_SERIE_BCB}}</span></td></tr>
+  <tr><td>Competência</td><td><span class="token">{{COMPETENCIA_BCB}}</span></td></tr>
+  <tr><td>Valor</td><td><span class="token">{{TAXA_BCB}}</span></td></tr>
+  <tr><td>Consulta</td><td><span class="token">{{DATA_CONSULTA_BCB}}</span></td></tr>
+  <tr><td>URL</td><td><span class="token">{{URL_SERIE_BCB}}</span></td></tr>
+  <tr><td>Hash do retorno</td><td><span class="token">{{HASH_RETORNO_BCB}}</span></td></tr>
+  <tr><td>Comparabilidade</td><td><span class="token">{{JUSTIFICATIVA_COMPARABILIDADE}}</span></td></tr>
+</table>
+
+<p>A série é utilizada como referência estatística comparativa. A média do
+Banco Central não constitui, isoladamente, teto automático nem conclusão de
+abusividade.</p>
+
+<h2>6.2 Cenários condicionais</h2>
+<table>
+  <tr><th style="width:11%">ID</th><th style="width:24%">Finalidade / premissa</th><th style="width:18%">Variáveis mantidas</th><th style="width:18%">Resultado</th><th>Limitação</th></tr>
+  <tr><td colspan="5"><span class="token">{{CENARIOS_ROWS}}</span></td></tr>
+</table>
+
+<div class="note">Cenários não alteram os fatos contratuais. Sem histórico de
+pagamentos e regra de imputação confirmados, não se apura saldo atual, pagamento
+a maior, valor a receber ou valor a restituir.</div>
+
+<div class="page-break"></div>
+<div class="section-no">07</div>
+<h1>Memórias e controles</h1>
+
+<h2>7.1 Memória de amortização</h2>
+<table>
+  <tr><th style="width:7%">Parc.</th><th style="width:14%">Vencimento</th><th style="width:17%">Saldo inicial</th><th style="width:14%">Juros</th><th style="width:15%">Amortização</th><th style="width:14%">Prestação</th><th>Saldo final</th></tr>
+  <tr><td colspan="7"><span class="token">{{MEMORIA_ROWS}}</span></td></tr>
+</table>
+
+<h2>7.2 Fluxos do CET / taxa do fluxo</h2>
+<table>
+  <tr><th style="width:8%">Seq.</th><th style="width:15%">Data</th><th style="width:28%">Descrição</th><th style="width:15%">Entrada</th><th style="width:15%">Saída</th><th>Fonte</th></tr>
+  <tr><td colspan="6"><span class="token">{{CET_FLUXOS_ROWS}}</span></td></tr>
+</table>
+
+<h2>7.3 Totais</h2>
+<table class="kv">
+  <tr><td>Total de juros</td><td><span class="token">{{TOTAL_JUROS}}</span></td></tr>
+  <tr><td>Total de prestações</td><td><span class="token">{{TOTAL_PARCELAS}}</span></td></tr>
+  <tr><td>Saldo final</td><td><span class="token">{{SALDO_FINAL}}</span></td></tr>
+</table>
+
+<h2>7.4 Controles executados</h2>
+<table>
+  <tr><th style="width:12%">ID</th><th style="width:30%">Controle</th><th style="width:15%">Status</th><th>Resultado / justificativa</th></tr>
+  <tr><td colspan="4"><span class="token">{{CONTROLES_ROWS}}</span></td></tr>
+</table>
+
+<div class="page-break"></div>
+<div class="section-no">08</div>
+<h1>Constatações, quesitos e conclusão</h1>
+
+<h2>8.1 Constatações</h2>
+<p><span class="token">{{CONSTATACOES_SINTESE}}</span></p>
+<table>
+  <tr><th style="width:12%">ID</th><th style="width:42%">Constatação</th><th style="width:27%">Evidência</th><th>Controle</th></tr>
+  <tr><td colspan="4"><span class="token">{{CONSTATACOES_ROWS}}</span></td></tr>
+</table>
+
+<h2>8.2 Quesitos e respostas</h2>
+<table>
+  <tr><th style="width:9%">Nº</th><th style="width:31%">Quesito</th><th style="width:34%">Resposta objetiva</th><th>Fundamento / limitação</th></tr>
+  <tr><td colspan="4"><span class="token">{{QUESITOS_ROWS}}</span></td></tr>
+</table>
+
+<h2>8.3 Conclusão</h2>
+<p><span class="token">{{CONCLUSAO_TECNICA}}</span></p>
+
+<div class="page-break"></div>
+<div class="section-no">09</div>
+<h1>Encerramento, anexos e assinatura</h1>
+
+<p>O presente <span class="token">{{TIPO_DOCUMENTO}}</span> contém
+<span class="token">{{NUMERO_PAGINAS}}</span> páginas e
+<span class="token">{{NUMERO_ANEXOS}}</span> anexos, relacionados a seguir.
+Foi encerrado em <span class="token">{{LOCAL_EMISSAO}}</span>, em
+<span class="token">{{DATA_EMISSAO}}</span>.</p>
+
+<h2>9.1 Anexos e apêndices</h2>
+<table>
+  <tr><th style="width:12%">ID</th><th style="width:16%">Tipo</th><th style="width:37%">Descrição</th><th style="width:15%">Páginas</th><th>Hash</th></tr>
+  <tr><td colspan="5"><span class="token">{{ANEXOS_ROWS}}</span></td></tr>
+</table>
+
+<h2>9.2 Declaração de revisão</h2>
+<p>Declaro que revisei integralmente a identificação, o objeto, o escopo, os
+documentos, as premissas, as fórmulas, as memórias, os controles, os cenários,
+as respostas e a conclusão deste documento. A aprovação deve estar vinculada
+ao arquivo PDF cujo SHA-256 é <span class="token">{{HASH_PDF_APROVADO}}</span>.</p>
+
+<div class="signature">
+  <div class="warning"><strong>ÁREA RESERVADA À ASSINATURA</strong><br>
+  Esta cópia é uma minuta não assinada. Não inserir imagem de assinatura.</div>
+  <div class="line"></div>
+  <strong>VITOR PENATTI FERRI</strong><br>
+  CONTADOR &nbsp;•&nbsp; CRC-SP nº 1SP344559/O-0<br>
+  <span class="token">{{FUNCAO_PERICIAL}}</span>
+</div>
+
+<table class="kv" style="margin-top:18pt">
+  <tr><td>Tipo de assinatura</td><td><span class="token">{{TIPO_ASSINATURA}}</span></td></tr>
+  <tr><td>Data e hora</td><td><span class="token">{{DATA_HORA_ASSINATURA}}</span></td></tr>
+  <tr><td>Autoridade certificadora</td><td><span class="token">{{AUTORIDADE_CERTIFICADORA}}</span></td></tr>
+  <tr><td>Serial do certificado</td><td><span class="token">{{SERIAL_CERTIFICADO}}</span></td></tr>
+  <tr><td>Validação</td><td><span class="token">{{URL_VALIDACAO}}</span></td></tr>
+</table>
+
+<p class="small">Após a assinatura, qualquer alteração exige nova versão,
+novo hash, nova aprovação e nova assinatura. QR Code e hash auxiliam a
+validação, mas não substituem a assinatura.</p>
+
+<p class="small">Referências-base: NBC TP 01 (R2); NBC PP 01 (R2); Código de
+Processo Civil, art. 473, quando aplicável; Resolução CMN nº 4.881/2020 e
+Instrução Normativa BCB nº 83/2021, dentro de seus âmbitos de aplicação; normas
+vigentes da ICP-Brasil e serviço VALIDAR do ITI.</p>
+
+<div class="warning">Esta versão é uma minuta não assinada, gerada para revisão
+integral, correção, aprovação e assinatura pessoal do responsável técnico. Não
+deve ser apresentada como laudo ou parecer final antes da conclusão desse
+fluxo.</div>
+
+</body>
+</html>

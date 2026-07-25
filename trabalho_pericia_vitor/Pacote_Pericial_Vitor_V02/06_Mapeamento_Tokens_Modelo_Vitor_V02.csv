@@ -1,0 +1,87 @@
+token,kind,json_path,data_type,required_when,origin,validation,final_behavior
+{{TIPO_DOCUMENTO}},scalar,document.title,string,always,workflow,Must match document.type rule,replace
+{{NUMERO_DOCUMENTO}},scalar,document.number,string,always,workflow,Non-empty and versioned,replace
+{{VERSAO_DOCUMENTO}},scalar,document.version,string,always,workflow,Pattern VNN,replace
+{{STATUS_DOCUMENTO}},scalar,document.status,string,always,workflow,MINUTA_NAO_ASSINADA before approval,replace
+{{NUMERO_PROCESSO_OU_PROCEDIMENTO}},scalar,document.process_number|string:NAO_APLICAVEL,string,judicial_consensual_arbitral,confirmed_document,Do not leave blank,replace
+{{ORGAO_FORO_CAMARA}},scalar,document.court_or_chamber|string:NAO_APLICAVEL,string,judicial_consensual_arbitral,confirmed_document,Do not infer,replace
+{{CONTRATANTE}},scalar,document.contractor,string,always,confirmed_document,Non-empty,replace
+{{PARTES_INTERESSADAS}},scalar,document.parties,string_list,always,confirmed_document,Join without changing names,replace
+{{NUMERO_CONTRATO}},scalar,contract.number,string,always,confirmed_document,Source reference required,replace
+{{DATA_CONTRATACAO}},scalar,contract.date,date,always,confirmed_document,ISO input and dd/mm/yyyy display,replace
+{{CREDOR}},scalar,contract.creditor,string,always,confirmed_document,Source reference required,replace
+{{DATA_BASE}},scalar,scope.data_base,date,always,workflow,ISO input and dd/mm/yyyy display,replace
+{{PERIODO_EXAMINADO}},scalar,scope.examined_period,date_range,always,workflow,From must be less than or equal to to,replace
+{{NOME_PROFISSIONAL}},scalar,professional.name,string,always,professional_record,Must equal VITOR PENATTI FERRI,replace
+{{CATEGORIA_PROFISSIONAL}},scalar,professional.category,string,always,professional_record,Must equal CONTADOR,replace
+{{CRC_PROFISSIONAL}},scalar,professional.crc,string,always,professional_record,Must equal configured CRC and crc_verified before approval,replace
+{{FUNCAO_PERICIAL}},scalar,professional.function,enum,always,workflow,Compatible with document.type,replace_with_display_label
+{{CNPC_LINHA_OU_OMITIR}},scalar,professional.cnpc,conditional_string,when_verified,professional_record,Do not display without source and status,replace_or_remove_line
+{{CERTIDAO_REGULARIDADE_ID}},scalar,professional.regularity.certificate_id,string,before_approval,professional_record,Status VIGENTE and source required,replace
+{{CERTIDAO_VALIDADE}},scalar,professional.regularity.valid_until,date,before_approval,professional_record,Must be current at signature time,replace
+{{DECLARACAO_INDEPENDENCIA}},scalar,professional.conflict_check,string,always,professional_review,No IMPEDIDO SUSPEITO or PENDENTE at approval,replace
+{{OBJETO_PERICIA}},scalar,scope.object,string,always,professional_review,Within engagement evidence,replace
+{{OBJETIVO_PERICIA}},scalar,scope.objective,string,always,professional_review,Within object,replace
+{{ESCOPO_INCLUIDO}},scalar,scope.included,string_list,always,professional_review,Non-empty,replace
+{{ESCOPO_EXCLUIDO}},scalar,scope.excluded,string_list,always,professional_review,Explicit list or NAO_HA,replace
+{{SINTESE_CASO}},scalar,narrative.case_summary,string,always,reviewed_narrative,Facts must cite sources,replace
+{{DILIGENCIAS_REALIZADAS}},scalar,narrative.diligences_summary,string,always,reviewed_narrative,Use NAO_REALIZADAS when applicable,replace
+{{METODOLOGIA_APLICADA}},scalar,narrative.methodology,string,always,reviewed_narrative,Compatible with calculation kinds,replace
+{{BASE_NORMATIVA_APLICAVEL}},scalar,narrative.normative_basis,string,always,reviewed_narrative,Use current official sources,replace
+{{VERSAO_MOTOR}},scalar,engine.calculation_version,string,when_calculation_exists,calculation_engine,Must match calculation.algorithm_version,replace
+{{POLITICA_PRECISAO}},scalar,engine.precision_policy,string,when_calculation_exists,calculation_engine,Must match persisted policy,replace
+{{VALOR_FINANCIADO}},scalar,cash.financed_principal.display_value,money,always,confirmed_document,Raw value and source required,replace
+{{CREDITO_LIQUIDO}},scalar,cash.net_disbursement.display_value,money,always,confirmed_document,Raw value and source required,replace
+{{NUMERO_PARCELAS}},scalar,terms.installments,integer,when_credit_schedule,confirmed_document,Positive integer,replace
+{{PRESTACAO_CONTRATUAL}},scalar,terms.payment.display_value,money,when_credit_schedule,confirmed_document,Raw value and source required,replace
+{{DATA_DESEMBOLSO}},scalar,terms.disbursement_date,date,when_cet_or_dated_flows,confirmed_document,ISO input,replace
+{{DATA_PRIMEIRO_VENCIMENTO}},scalar,terms.first_due_date,date,when_credit_schedule,confirmed_document,ISO input,replace
+{{PERIODICIDADE}},scalar,terms.periodicity,enum,when_credit_schedule,confirmed_document,Must match schedule,replace_with_display_label
+{{METODO_AMORTIZACAO}},scalar,amortization.method,enum,always,confirmed_document,Source required,replace
+{{TAXA_CONTRATUAL_PERIODICA}},scalar,rates.periodic_declared.display_value,rate,when_declared,confirmed_document,Value unit nature and precision required,replace
+{{TAXA_CONTRATUAL_ANUAL}},scalar,rates.annual_declared.display_value,rate,when_declared,confirmed_document,Value unit and nature required,replace
+{{CET_DECLARADO}},scalar,rates.cet_annual_declared.display_value,rate,when_declared,confirmed_document,Regulatory scope assessed,replace
+{{PRESTACAO_TEORICA}},scalar,calculations[kind=PRICE_DECLARED_RATE].outputs.payment.display_value,money,when_price,calculation_engine,Calculation status SUCESSO,replace
+{{DIFERENCA_PRESTACAO}},scalar,calculations[kind=PRICE_DECLARED_RATE].outputs.payment_difference.display_value,money,when_price,calculation_engine,CHK-003 required,replace
+{{TAXA_IMPLICITA_PERIODICA}},scalar,calculations[kind=IMPLICIT_RATE].outputs.periodic_rate.display_value,rate,when_implicit_rate,calculation_engine,CHK-004 approved,replace
+{{TAXA_IMPLICITA_ANUAL}},scalar,calculations[kind=IMPLICIT_RATE].outputs.annual_rate.display_value,rate,when_implicit_rate,calculation_engine,CHK-004 and CHK-005 approved,replace
+{{CET_RECALCULADO}},scalar,calculations[kind=CET_ACTUAL_DATES].outputs.annual_rate.display_value,rate,when_cet,calculation_engine,CHK-009 and CHK-010 approved,replace
+{{ROTULO_CET_OU_TAXA_FLUXO}},scalar,credit.cet_regulatory_scope,conditional_string,when_dated_flow_rate,workflow,Use CET only when IN_SCOPE_RES_CMN_4881,replace_with_display_label
+{{RESIDUO_CET}},scalar,calculations[kind=CET_ACTUAL_DATES].residuals.npv.display_value,money,when_cet,calculation_engine,CHK-010 approved,replace
+{{TOTAL_PARCELAS}},scalar,calculations.outputs.total_payments.display_value,money,when_credit_schedule,calculation_engine,Calculation ID required,replace
+{{TOTAL_JUROS}},scalar,calculations.outputs.total_interest.display_value,money,when_credit_schedule,calculation_engine,Calculation ID required,replace
+{{SALDO_FINAL}},scalar,calculations.outputs.final_balance.display_value,money,when_schedule,calculation_engine,CHK-006 approved,replace
+{{CODIGO_SERIE_BCB}},scalar,benchmark.series_code,string,when_benchmark,official_external_source,CHK-011 approved,replace
+{{DESCRICAO_SERIE_BCB}},scalar,benchmark.official_description,string,when_benchmark,official_external_source,Exact official description,replace
+{{COMPETENCIA_BCB}},scalar,benchmark.reference_period,year_month,when_benchmark,official_external_source,Contract reference period,replace
+{{TAXA_BCB}},scalar,benchmark.value,rate,when_benchmark,official_external_source,Unit required,replace
+{{URL_SERIE_BCB}},scalar,benchmark.source_url,url,when_benchmark,official_external_source,Official URL,replace
+{{DATA_CONSULTA_BCB}},scalar,benchmark.consulted_at,datetime,when_benchmark,official_external_source,ISO input,replace
+{{HASH_RETORNO_BCB}},scalar,benchmark.response_sha256,sha256,when_benchmark,official_external_source,64 lowercase hex,replace
+{{JUSTIFICATIVA_COMPARABILIDADE}},scalar,benchmark.comparability_justification,string,when_benchmark,professional_review,CHK-011 approved,replace
+{{CONSTATACOES_SINTESE}},scalar,narrative.findings_summary,string,always,reviewed_narrative,Every finding links evidence and check,replace
+{{CONCLUSAO_TECNICA}},scalar,narrative.conclusion,string,always,professional_review,Within object and no blocked language,replace
+{{LOCAL_EMISSAO}},scalar,document.issue_place,string,before_approval,workflow,Non-empty,replace
+{{DATA_EMISSAO}},scalar,document.issue_date,date,before_approval,workflow,ISO input,replace
+{{NUMERO_PAGINAS}},scalar,artifact.page_count,integer,final_pdf,renderer,Recompute after final render,replace
+{{NUMERO_ANEXOS}},scalar,artifact.annex_count,integer,final_pdf,renderer,Must match annex rows,replace
+{{HASH_PDF_APROVADO}},scalar,approvals[-1].pdf_sha256,sha256,approved_or_later,workflow,Must match exact approved PDF,replace
+{{TIPO_ASSINATURA}},scalar,signature.type,string,signed,signature_service,Do not populate in draft,replace
+{{DATA_HORA_ASSINATURA}},scalar,signature.signed_at,datetime,signed,signature_service,Do not populate in draft,replace
+{{AUTORIDADE_CERTIFICADORA}},scalar,signature.certificate_authority,string,signed_digital,signature_service,Validation report required,replace
+{{SERIAL_CERTIFICADO}},scalar,signature.certificate_serial,string,signed_digital,signature_service,Validation report required,replace
+{{URL_VALIDACAO}},scalar,signature.validation_url,url,signed,signature_service,Do not treat QR as signature,replace
+{{DOCUMENTOS_ROWS}},dynamic_rows,sources,array,always,confirmed_document,One row per source with hash and locator,expand_table_rows
+{{CRONOLOGIA_ROWS}},dynamic_rows,narrative.chronology,array,when_events_exist,confirmed_document,Chronological order,expand_table_rows
+{{LIMITACOES_ROWS}},dynamic_rows,limitations,array,always,professional_review,One row per limitation,expand_table_rows
+{{DADOS_CONTRATUAIS_ROWS}},dynamic_rows,render.contract_data_rows,array,always,renderer,Derived only from confirmed data,expand_table_rows
+{{COMPONENTES_PRINCIPAL_ROWS}},dynamic_rows,cash.components,array,always,confirmed_document,One row per component with source,expand_table_rows
+{{RESULTADOS_ROWS}},dynamic_rows,render.result_rows,array,when_calculation_exists,calculation_engine,Calculation ID and check ID required,expand_table_rows
+{{BENCHMARK_ROWS}},dynamic_rows,render.benchmark_rows,array,when_benchmark,official_external_source,Remove entire section when not used,expand_table_rows_or_remove_section
+{{CENARIOS_ROWS}},dynamic_rows,scenarios,array,when_scenarios_exist,calculation_engine,Only VALIDATED scenarios,expand_table_rows_or_remove_section
+{{MEMORIA_ROWS}},dynamic_rows,calculations.schedule,array,when_schedule,calculation_engine,Exactly one row per period and repeating header,expand_table_rows
+{{CET_FLUXOS_ROWS}},dynamic_rows,calculations[kind=CET_ACTUAL_DATES].inputs.cash_flows,array,when_cet,calculation_engine,Every flow has date sign description and source,expand_table_rows
+{{CONSTATACOES_ROWS}},dynamic_rows,narrative.findings,array,always,reviewed_narrative,Evidence and check per row,expand_table_rows
+{{QUESITOS_ROWS}},dynamic_rows,questions,array,when_questions_exist,professional_review,Preserve question text and order,expand_table_rows
+{{CONTROLES_ROWS}},dynamic_rows,checks,array,always,calculation_engine,One row per applicable control,expand_table_rows
+{{ANEXOS_ROWS}},dynamic_rows,render.annex_rows,array,always,renderer,IDs descriptions pages and hashes,expand_table_rows

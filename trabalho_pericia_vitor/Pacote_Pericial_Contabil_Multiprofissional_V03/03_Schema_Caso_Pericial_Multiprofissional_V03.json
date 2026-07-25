@@ -1,0 +1,1188 @@
+{
+    "$schema":  "https://json-schema.org/draft/2020-12/schema",
+    "$id":  "https://sistema.local/schemas/caso-pericial-multiprofissional-v3.json",
+    "title":  "Caso Pericial ContÃ¡bil-Financeiro Multiprofissional - V03",
+    "description":  "Contrato de dados do gerador pericial multiprofissional. Valores monetÃ¡rios e taxas sÃ£o strings decimais.",
+    "type":  "object",
+    "additionalProperties":  false,
+    "required":  [
+                     "case_id",
+                     "case_version",
+                     "state",
+                     "document",
+                     "scope",
+                     "sources",
+                     "contract",
+                     "credit",
+                     "cash",
+                     "terms",
+                     "rates",
+                     "amortization",
+                     "questions",
+                     "limitations",
+                     "calculations",
+                     "checks",
+                     "technical_responsibles"
+                 ],
+    "properties":  {
+                       "case_id":  {
+                                       "type":  "string",
+                                       "pattern":  "^CASO-[A-Z0-9][A-Z0-9-]{5,63}$"
+                                   },
+                       "case_version":  {
+                                            "type":  "integer",
+                                            "minimum":  1
+                                        },
+                       "state":  {
+                                     "$ref":  "#/$defs/case_state"
+                                 },
+                       "document":  {
+                                        "$ref":  "#/$defs/document"
+                                    },
+                       "scope":  {
+                                     "$ref":  "#/$defs/scope"
+                                 },
+                       "sources":  {
+                                       "type":  "array",
+                                       "minItems":  1,
+                                       "items":  {
+                                                     "$ref":  "#/$defs/source"
+                                                 }
+                                   },
+                       "contract":  {
+                                        "$ref":  "#/$defs/contract"
+                                    },
+                       "credit":  {
+                                      "$ref":  "#/$defs/credit"
+                                  },
+                       "cash":  {
+                                    "$ref":  "#/$defs/cash"
+                                },
+                       "terms":  {
+                                     "$ref":  "#/$defs/terms"
+                                 },
+                       "rates":  {
+                                     "$ref":  "#/$defs/rates"
+                                 },
+                       "amortization":  {
+                                            "$ref":  "#/$defs/amortization"
+                                        },
+                       "questions":  {
+                                         "type":  "array",
+                                         "items":  {
+                                                       "$ref":  "#/$defs/question"
+                                                   }
+                                     },
+                       "limitations":  {
+                                           "type":  "array",
+                                           "items":  {
+                                                         "$ref":  "#/$defs/limitation"
+                                                     }
+                                       },
+                       "benchmark":  {
+                                         "oneOf":  [
+                                                       {
+                                                           "$ref":  "#/$defs/benchmark"
+                                                       },
+                                                       {
+                                                           "type":  "null"
+                                                       }
+                                                   ]
+                                     },
+                       "scenarios":  {
+                                         "type":  "array",
+                                         "items":  {
+                                                       "$ref":  "#/$defs/scenario"
+                                                   },
+                                         "default":  [
+
+                                                     ]
+                                     },
+                       "payment_history":  {
+                                               "type":  "array",
+                                               "items":  {
+                                                             "$ref":  "#/$defs/payment_event"
+                                                         },
+                                               "default":  [
+
+                                                           ]
+                                           },
+                       "calculations":  {
+                                            "type":  "array",
+                                            "items":  {
+                                                          "$ref":  "#/$defs/calculation"
+                                                      }
+                                        },
+                       "checks":  {
+                                      "type":  "array",
+                                      "items":  {
+                                                    "$ref":  "#/$defs/check"
+                                                }
+                                  },
+                       "technical_responsibles":  {
+                                                      "type":  "array",
+                                                      "minItems":  1,
+                                                      "items":  {
+                                                                    "$ref":  "#/$defs/professional"
+                                                                }
+                                                  }
+                   },
+    "$defs":  {
+                  "decimal":  {
+                                  "type":  "string",
+                                  "pattern":  "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                              },
+                  "nonnegative_decimal":  {
+                                              "type":  "string",
+                                              "pattern":  "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+                                          },
+                  "date":  {
+                               "type":  "string",
+                               "format":  "date"
+                           },
+                  "datetime":  {
+                                   "type":  "string",
+                                   "format":  "date-time"
+                               },
+                  "case_state":  {
+                                     "type":  "string",
+                                     "enum":  [
+                                                  "RASCUNHO",
+                                                  "DADOS_EXTRAIDOS",
+                                                  "DADOS_CONFIRMADOS",
+                                                  "CALCULADO",
+                                                  "VALIDADO",
+                                                  "DOCUMENTO_GERADO",
+                                                  "EM_REVISAO",
+                                                  "LIBERADO_PARA_IMPRESSAO",
+                                                  "CANCELADO"
+                                              ]
+                                 },
+                  "field_status":  {
+                                       "type":  "string",
+                                       "enum":  [
+                                                    "EXTRAIDO",
+                                                    "CONFIRMADO",
+                                                    "DIVERGENTE",
+                                                    "AUSENTE",
+                                                    "INFERIDO",
+                                                    "NAO_APLICAVEL"
+                                                ]
+                                   },
+                  "source_ref":  {
+                                     "type":  "object",
+                                     "additionalProperties":  false,
+                                     "required":  [
+                                                      "source_id"
+                                                  ],
+                                     "properties":  {
+                                                        "source_id":  {
+                                                                          "type":  "string"
+                                                                      },
+                                                        "page":  {
+                                                                     "type":  [
+                                                                                  "integer",
+                                                                                  "null"
+                                                                              ],
+                                                                     "minimum":  1
+                                                                 },
+                                                        "excerpt":  {
+                                                                        "type":  [
+                                                                                     "string",
+                                                                                     "null"
+                                                                                 ],
+                                                                        "maxLength":  2000
+                                                                    },
+                                                        "locator":  {
+                                                                        "type":  [
+                                                                                     "string",
+                                                                                     "null"
+                                                                                 ]
+                                                                    }
+                                                    }
+                                 },
+                  "provenanced_decimal":  {
+                                              "type":  "object",
+                                              "additionalProperties":  false,
+                                              "required":  [
+                                                               "raw_value",
+                                                               "display_value",
+                                                               "unit",
+                                                               "status",
+                                                               "source_ref"
+                                                           ],
+                                              "properties":  {
+                                                                 "raw_value":  {
+                                                                                   "$ref":  "#/$defs/decimal"
+                                                                               },
+                                                                 "display_value":  {
+                                                                                       "type":  "string"
+                                                                                   },
+                                                                 "unit":  {
+                                                                              "type":  "string"
+                                                                          },
+                                                                 "status":  {
+                                                                                "$ref":  "#/$defs/field_status"
+                                                                            },
+                                                                 "source_ref":  {
+                                                                                    "$ref":  "#/$defs/source_ref"
+                                                                                },
+                                                                 "confirmed_by":  {
+                                                                                      "type":  [
+                                                                                                   "string",
+                                                                                                   "null"
+                                                                                               ]
+                                                                                  },
+                                                                 "confirmed_at":  {
+                                                                                      "oneOf":  [
+                                                                                                    {
+                                                                                                        "$ref":  "#/$defs/datetime"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "type":  "null"
+                                                                                                    }
+                                                                                                ]
+                                                                                  }
+                                                             }
+                                          },
+                  "document":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "type",
+                                                    "title",
+                                                    "number",
+                                                    "version",
+                                                    "status"
+                                                ],
+                                   "properties":  {
+                                                      "type":  {
+                                                                   "type":  "string",
+                                                                   "enum":  [
+                                                                                "LAUDO_JUDICIAL",
+                                                                                "LAUDO_CONSENSUAL",
+                                                                                "LAUDO_ARBITRAL",
+                                                                                "LAUDO_OFICIAL",
+                                                                                "LAUDO_EXTRAJUDICIAL",
+                                                                                "PARECER_TECNICO_CONTABIL"
+                                                                            ]
+                                                               },
+                                                      "title":  {
+                                                                    "type":  "string",
+                                                                    "enum":  [
+                                                                                 "LAUDO PERICIAL CONTÁBIL",
+                                                                                 "LAUDO PERICIAL CONTÁBIL EXTRAJUDICIAL",
+                                                                                 "PARECER TÉCNICO CONTÁBIL"
+                                                                             ]
+                                                                },
+                                                      "number":  {
+                                                                     "type":  "string",
+                                                                     "minLength":  1
+                                                                 },
+                                                      "version":  {
+                                                                      "type":  "string",
+                                                                      "pattern":  "^V[0-9]{2,}$"
+                                                                  },
+                                                      "status":  {
+                                                                     "type":  "string",
+                                                                     "enum":  [
+                                                                                  "DOCUMENTO_GERADO",
+                                                                                  "LIBERADO_PARA_IMPRESSAO"
+                                                                              ]
+                                                                 },
+                                                      "process_number":  {
+                                                                             "type":  [
+                                                                                          "string",
+                                                                                          "null"
+                                                                                      ]
+                                                                         },
+                                                      "procedure":  {
+                                                                        "type":  [
+                                                                                     "string",
+                                                                                     "null"
+                                                                                 ]
+                                                                    },
+                                                      "court_or_chamber":  {
+                                                                               "type":  [
+                                                                                            "string",
+                                                                                            "null"
+                                                                                        ]
+                                                                           },
+                                                      "contractor":  {
+                                                                         "type":  "string"
+                                                                     },
+                                                      "parties":  {
+                                                                      "type":  "array",
+                                                                      "items":  {
+                                                                                    "type":  "string"
+                                                                                }
+                                                                  },
+                                                      "required_evidence_source_ids":  {
+                                                                                           "type":  "array",
+                                                                                           "items":  {
+                                                                                                         "type":  "string"
+                                                                                                     }
+                                                                                       },
+                                                      "issue_place":  {
+                                                                          "type":  [
+                                                                                       "string",
+                                                                                       "null"
+                                                                                   ]
+                                                                      },
+                                                      "issue_date":  {
+                                                                         "oneOf":  [
+                                                                                       {
+                                                                                           "$ref":  "#/$defs/date"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ]
+                                                                     },
+                                                      "page_count":  {
+                                                                         "type":  [
+                                                                                      "integer",
+                                                                                      "null"
+                                                                                  ],
+                                                                         "minimum":  1
+                                                                     },
+                                                      "annex_count":  {
+                                                                          "type":  [
+                                                                                       "integer",
+                                                                                       "null"
+                                                                                   ],
+                                                                          "minimum":  0
+                                                                      }
+                                                  }
+                               },
+                  "professional":  {
+                                       "type":  "object",
+                                       "additionalProperties":  false,
+                                       "required":  [
+                                                        "professional_id",
+                                                        "name",
+                                                        "category",
+                                                        "crc",
+                                                        "function"
+                                                    ],
+                                       "properties":  {
+                                                          "professional_id":  {
+                                                                                  "type":  "string",
+                                                                                  "minLength":  1
+                                                                              },
+                                                          "name":  {
+                                                                       "type":  "string",
+                                                                       "minLength":  1
+                                                                   },
+                                                          "category":  {
+                                                                           "type":  "string",
+                                                                           "enum":  [
+                                                                                        "CONTADOR"
+                                                                                    ]
+                                                                       },
+                                                          "crc":  {
+                                                                      "type":  "string",
+                                                                      "minLength":  1
+                                                                  },
+                                                          "function":  {
+                                                                           "type":  "string",
+                                                                           "enum":  [
+                                                                                        "PERITO_DO_JUIZO",
+                                                                                        "PERITO_ESCOLHIDO_PELAS_PARTES",
+                                                                                        "PERITO_ARBITRAL",
+                                                                                        "PERITO_OFICIAL",
+                                                                                        "PERITO_CONTABIL_CONTRATADO",
+                                                                                        "ASSISTENTE_TECNICO"
+                                                                                    ]
+                                                                       },
+                                                          "cnpc":  {
+                                                                       "type":  [
+                                                                                    "string",
+                                                                                    "null"
+                                                                                ]
+                                                                   }
+                                                      }
+                                   },
+                  "scope":  {
+                                "type":  "object",
+                                "additionalProperties":  false,
+                                "required":  [
+                                                 "object",
+                                                 "objective",
+                                                 "included",
+                                                 "excluded",
+                                                 "data_base",
+                                                 "examined_period"
+                                             ],
+                                "properties":  {
+                                                   "object":  {
+                                                                  "type":  "string"
+                                                              },
+                                                   "objective":  {
+                                                                     "type":  "string"
+                                                                 },
+                                                   "included":  {
+                                                                    "type":  "array",
+                                                                    "items":  {
+                                                                                  "type":  "string"
+                                                                              }
+                                                                },
+                                                   "excluded":  {
+                                                                    "type":  "array",
+                                                                    "items":  {
+                                                                                  "type":  "string"
+                                                                              }
+                                                                },
+                                                   "data_base":  {
+                                                                     "$ref":  "#/$defs/date"
+                                                                 },
+                                                   "examined_period":  {
+                                                                           "type":  "object",
+                                                                           "required":  [
+                                                                                            "from",
+                                                                                            "to"
+                                                                                        ],
+                                                                           "properties":  {
+                                                                                              "from":  {
+                                                                                                           "$ref":  "#/$defs/date"
+                                                                                                       },
+                                                                                              "to":  {
+                                                                                                         "$ref":  "#/$defs/date"
+                                                                                                     }
+                                                                                          }
+                                                                       }
+                                               }
+                            },
+                  "source":  {
+                                 "type":  "object",
+                                 "additionalProperties":  false,
+                                 "required":  [
+                                                  "source_id",
+                                                  "kind",
+                                                  "name",
+                                                  "mime_type",
+                                                  "ingested_at"
+                                              ],
+                                 "properties":  {
+                                                    "source_id":  {
+                                                                      "type":  "string"
+                                                                  },
+                                                    "kind":  {
+                                                                 "type":  "string"
+                                                             },
+                                                    "name":  {
+                                                                 "type":  "string"
+                                                             },
+                                                    "mime_type":  {
+                                                                      "type":  "string"
+                                                                  },
+                                                    "page_count":  {
+                                                                       "type":  [
+                                                                                    "integer",
+                                                                                    "null"
+                                                                                ],
+                                                                       "minimum":  1
+                                                                   },
+                                                    "ingested_at":  {
+                                                                        "$ref":  "#/$defs/datetime"
+                                                                    }
+                                                }
+                             },
+                  "contract":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "number",
+                                                    "date",
+                                                    "creditor"
+                                                ],
+                                   "properties":  {
+                                                      "number":  {
+                                                                     "type":  "string"
+                                                                 },
+                                                      "date":  {
+                                                                   "$ref":  "#/$defs/date"
+                                                               },
+                                                      "creditor":  {
+                                                                       "type":  "string"
+                                                                   },
+                                                      "instrument_type":  {
+                                                                              "type":  [
+                                                                                           "string",
+                                                                                           "null"
+                                                                                       ]
+                                                                          }
+                                                  }
+                               },
+                  "credit":  {
+                                 "type":  "object",
+                                 "additionalProperties":  false,
+                                 "required":  [
+                                                  "product",
+                                                  "borrower_type",
+                                                  "resource_type",
+                                                  "cet_regulatory_scope"
+                                              ],
+                                 "properties":  {
+                                                    "product":  {
+                                                                    "type":  "string"
+                                                                },
+                                                    "borrower_type":  {
+                                                                          "type":  "string",
+                                                                          "enum":  [
+                                                                                       "PF",
+                                                                                       "EMPRESARIO_INDIVIDUAL",
+                                                                                       "PJ"
+                                                                                   ]
+                                                                      },
+                                                    "pj_classification":  {
+                                                                              "type":  [
+                                                                                           "string",
+                                                                                           "null"
+                                                                                       ],
+                                                                              "enum":  [
+                                                                                           "ME",
+                                                                                           "EPP",
+                                                                                           "OUTRA_PJ",
+                                                                                           "NAO_IDENTIFICADA",
+                                                                                           null
+                                                                                       ]
+                                                                          },
+                                                    "resource_type":  {
+                                                                          "type":  "string",
+                                                                          "enum":  [
+                                                                                       "LIVRES",
+                                                                                       "DIRECIONADOS",
+                                                                                       "NAO_IDENTIFICADO"
+                                                                                   ]
+                                                                      },
+                                                    "cet_regulatory_scope":  {
+                                                                                 "type":  "string",
+                                                                                 "enum":  [
+                                                                                              "IN_SCOPE_RES_CMN_4881",
+                                                                                              "OUT_OF_SCOPE_RES_CMN_4881",
+                                                                                              "NOT_ASSESSED"
+                                                                                          ]
+                                                                             },
+                                                    "cet_scope_justification":  {
+                                                                                    "type":  "string"
+                                                                                }
+                                                }
+                             },
+                  "cash":  {
+                               "type":  "object",
+                               "additionalProperties":  false,
+                               "required":  [
+                                                "net_disbursement",
+                                                "financed_principal",
+                                                "components"
+                                            ],
+                               "properties":  {
+                                                  "net_disbursement":  {
+                                                                           "$ref":  "#/$defs/provenanced_decimal"
+                                                                       },
+                                                  "financed_principal":  {
+                                                                             "$ref":  "#/$defs/provenanced_decimal"
+                                                                         },
+                                                  "components":  {
+                                                                     "type":  "array",
+                                                                     "items":  {
+                                                                                   "type":  "object",
+                                                                                   "additionalProperties":  false,
+                                                                                   "required":  [
+                                                                                                    "component_id",
+                                                                                                    "category",
+                                                                                                    "description",
+                                                                                                    "amount",
+                                                                                                    "financed",
+                                                                                                    "paid_upfront",
+                                                                                                    "deducted_from_disbursement",
+                                                                                                    "source_ref"
+                                                                                                ],
+                                                                                   "properties":  {
+                                                                                                      "component_id":  {
+                                                                                                                           "type":  "string"
+                                                                                                                       },
+                                                                                                      "category":  {
+                                                                                                                       "type":  "string"
+                                                                                                                   },
+                                                                                                      "description":  {
+                                                                                                                          "type":  "string"
+                                                                                                                      },
+                                                                                                      "amount":  {
+                                                                                                                     "$ref":  "#/$defs/nonnegative_decimal"
+                                                                                                                 },
+                                                                                                      "financed":  {
+                                                                                                                       "type":  "boolean"
+                                                                                                                   },
+                                                                                                      "paid_upfront":  {
+                                                                                                                           "type":  "boolean"
+                                                                                                                       },
+                                                                                                      "deducted_from_disbursement":  {
+                                                                                                                                         "type":  "boolean"
+                                                                                                                                     },
+                                                                                                      "source_ref":  {
+                                                                                                                         "$ref":  "#/$defs/source_ref"
+                                                                                                                     }
+                                                                                                  }
+                                                                               }
+                                                                 }
+                                              }
+                           },
+                  "terms":  {
+                                "type":  "object",
+                                "additionalProperties":  false,
+                                "required":  [
+                                                 "installments",
+                                                 "payment",
+                                                 "disbursement_date",
+                                                 "first_due_date",
+                                                 "periodicity"
+                                             ],
+                                "properties":  {
+                                                   "installments":  {
+                                                                        "type":  "integer",
+                                                                        "minimum":  1,
+                                                                        "maximum":  1200
+                                                                    },
+                                                   "payment":  {
+                                                                   "$ref":  "#/$defs/provenanced_decimal"
+                                                               },
+                                                   "disbursement_date":  {
+                                                                             "$ref":  "#/$defs/date"
+                                                                         },
+                                                   "first_due_date":  {
+                                                                          "$ref":  "#/$defs/date"
+                                                                      },
+                                                   "periodicity":  {
+                                                                       "type":  "string",
+                                                                       "enum":  [
+                                                                                    "DIARIA",
+                                                                                    "SEMANAL",
+                                                                                    "QUINZENAL",
+                                                                                    "MENSAL",
+                                                                                    "BIMESTRAL",
+                                                                                    "TRIMESTRAL",
+                                                                                    "SEMESTRAL",
+                                                                                    "ANUAL",
+                                                                                    "IRREGULAR"
+                                                                                ]
+                                                                   },
+                                                   "payment_timing":  {
+                                                                          "type":  "string",
+                                                                          "enum":  [
+                                                                                       "END_OF_PERIOD",
+                                                                                       "BEGINNING_OF_PERIOD",
+                                                                                       "DATED_CASH_FLOW"
+                                                                                   ]
+                                                                      }
+                                               }
+                            },
+                  "rate":  {
+                               "type":  "object",
+                               "additionalProperties":  false,
+                               "required":  [
+                                                "raw_value",
+                                                "display_value",
+                                                "unit",
+                                                "nature",
+                                                "status",
+                                                "source_ref"
+                                            ],
+                               "properties":  {
+                                                  "raw_value":  {
+                                                                    "$ref":  "#/$defs/decimal"
+                                                                },
+                                                  "display_value":  {
+                                                                        "type":  "string"
+                                                                    },
+                                                  "unit":  {
+                                                               "type":  "string",
+                                                               "enum":  [
+                                                                            "PER_DAY",
+                                                                            "PER_MONTH",
+                                                                            "PER_PERIOD",
+                                                                            "PER_YEAR"
+                                                                        ]
+                                                           },
+                                                  "nature":  {
+                                                                 "type":  "string",
+                                                                 "enum":  [
+                                                                              "NOMINAL",
+                                                                              "EFFECTIVE",
+                                                                              "NOT_DECLARED"
+                                                                          ]
+                                                             },
+                                                  "declared_precision_decimal_places":  {
+                                                                                            "type":  [
+                                                                                                         "integer",
+                                                                                                         "null"
+                                                                                                     ],
+                                                                                            "minimum":  0,
+                                                                                            "maximum":  16
+                                                                                        },
+                                                  "status":  {
+                                                                 "$ref":  "#/$defs/field_status"
+                                                             },
+                                                  "source_ref":  {
+                                                                     "$ref":  "#/$defs/source_ref"
+                                                                 }
+                                              }
+                           },
+                  "rates":  {
+                                "type":  "object",
+                                "additionalProperties":  false,
+                                "required":  [
+                                                 "periodic_declared",
+                                                 "annual_declared",
+                                                 "cet_annual_declared"
+                                             ],
+                                "properties":  {
+                                                   "periodic_declared":  {
+                                                                             "oneOf":  [
+                                                                                           {
+                                                                                               "$ref":  "#/$defs/rate"
+                                                                                           },
+                                                                                           {
+                                                                                               "type":  "null"
+                                                                                           }
+                                                                                       ]
+                                                                         },
+                                                   "annual_declared":  {
+                                                                           "oneOf":  [
+                                                                                         {
+                                                                                             "$ref":  "#/$defs/rate"
+                                                                                         },
+                                                                                         {
+                                                                                             "type":  "null"
+                                                                                         }
+                                                                                     ]
+                                                                       },
+                                                   "cet_annual_declared":  {
+                                                                               "oneOf":  [
+                                                                                             {
+                                                                                                 "$ref":  "#/$defs/rate"
+                                                                                             },
+                                                                                             {
+                                                                                                 "type":  "null"
+                                                                                             }
+                                                                                         ]
+                                                                           }
+                                               }
+                            },
+                  "amortization":  {
+                                       "type":  "object",
+                                       "additionalProperties":  false,
+                                       "required":  [
+                                                        "method"
+                                                    ],
+                                       "properties":  {
+                                                          "method":  {
+                                                                         "type":  "string",
+                                                                         "enum":  [
+                                                                                      "PRICE",
+                                                                                      "SAC",
+                                                                                      "SAM",
+                                                                                      "BULLET",
+                                                                                      "CUSTOM"
+                                                                                  ]
+                                                                     },
+                                                          "contract_rule_source_ref":  {
+                                                                                           "oneOf":  [
+                                                                                                         {
+                                                                                                             "$ref":  "#/$defs/source_ref"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "type":  "null"
+                                                                                                         }
+                                                                                                     ]
+                                                                                       }
+                                                      }
+                                   },
+                  "question":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "question_id",
+                                                    "text",
+                                                    "author"
+                                                ],
+                                   "properties":  {
+                                                      "question_id":  {
+                                                                          "type":  "string"
+                                                                      },
+                                                      "text":  {
+                                                                   "type":  "string"
+                                                               },
+                                                      "author":  {
+                                                                     "type":  "string"
+                                                                 },
+                                                      "answer":  {
+                                                                     "type":  [
+                                                                                  "string",
+                                                                                  "null"
+                                                                              ]
+                                                                 },
+                                                      "calculation_ids":  {
+                                                                              "type":  "array",
+                                                                              "items":  {
+                                                                                            "type":  "string"
+                                                                                        }
+                                                                          },
+                                                      "source_ids":  {
+                                                                         "type":  "array",
+                                                                         "items":  {
+                                                                                       "type":  "string"
+                                                                                   }
+                                                                     },
+                                                      "limitation_ids":  {
+                                                                             "type":  "array",
+                                                                             "items":  {
+                                                                                           "type":  "string"
+                                                                                       }
+                                                                         }
+                                                  }
+                               },
+                  "limitation":  {
+                                     "type":  "object",
+                                     "additionalProperties":  false,
+                                     "required":  [
+                                                      "limitation_id",
+                                                      "description",
+                                                      "effect",
+                                                      "treatment"
+                                                  ],
+                                     "properties":  {
+                                                        "limitation_id":  {
+                                                                              "type":  "string"
+                                                                          },
+                                                        "description":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                        "effect":  {
+                                                                       "type":  "string"
+                                                                   },
+                                                        "treatment":  {
+                                                                          "type":  "string"
+                                                                      }
+                                                    }
+                                 },
+                  "benchmark":  {
+                                    "type":  "object",
+                                    "additionalProperties":  false,
+                                    "required":  [
+                                                     "series_code",
+                                                     "official_description",
+                                                     "reference_period",
+                                                     "value",
+                                                     "unit",
+                                                     "consulted_at",
+                                                     "source_url",
+                                                     "comparability_justification",
+                                                     "validated_by"
+                                                 ],
+                                    "properties":  {
+                                                       "series_code":  {
+                                                                           "type":  "string"
+                                                                       },
+                                                       "official_description":  {
+                                                                                    "type":  "string"
+                                                                                },
+                                                       "reference_period":  {
+                                                                                "type":  "string",
+                                                                                "pattern":  "^[0-9]{4}-[0-9]{2}$"
+                                                                            },
+                                                       "value":  {
+                                                                     "$ref":  "#/$defs/decimal"
+                                                                 },
+                                                       "unit":  {
+                                                                    "type":  "string"
+                                                                },
+                                                       "consulted_at":  {
+                                                                            "$ref":  "#/$defs/datetime"
+                                                                        },
+                                                       "source_url":  {
+                                                                          "type":  "string",
+                                                                          "format":  "uri"
+                                                                      },
+                                                       "comparability_justification":  {
+                                                                                           "type":  "string",
+                                                                                           "minLength":  20
+                                                                                       },
+                                                       "validated_by":  {
+                                                                            "type":  "string"
+                                                                        }
+                                                   }
+                                },
+                  "scenario":  {
+                                   "type":  "object",
+                                   "additionalProperties":  false,
+                                   "required":  [
+                                                    "scenario_id",
+                                                    "name",
+                                                    "purpose",
+                                                    "justification",
+                                                    "author",
+                                                    "created_at",
+                                                    "changed_fields",
+                                                    "preserved_fields",
+                                                    "calculation_ids",
+                                                    "status"
+                                                ],
+                                   "properties":  {
+                                                      "scenario_id":  {
+                                                                          "type":  "string"
+                                                                      },
+                                                      "name":  {
+                                                                   "type":  "string"
+                                                               },
+                                                      "purpose":  {
+                                                                      "type":  "string"
+                                                                  },
+                                                      "justification":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                      "author":  {
+                                                                     "type":  "string"
+                                                                 },
+                                                      "created_at":  {
+                                                                         "$ref":  "#/$defs/datetime"
+                                                                     },
+                                                      "changed_fields":  {
+                                                                             "type":  "array",
+                                                                             "items":  {
+                                                                                           "type":  "object",
+                                                                                           "required":  [
+                                                                                                            "path",
+                                                                                                            "before",
+                                                                                                            "after"
+                                                                                                        ],
+                                                                                           "properties":  {
+                                                                                                              "path":  {
+                                                                                                                           "type":  "string"
+                                                                                                                       },
+                                                                                                              "before":  {
+
+                                                                                                                         },
+                                                                                                              "after":  {
+
+                                                                                                                        }
+                                                                                                          }
+                                                                                       }
+                                                                         },
+                                                      "preserved_fields":  {
+                                                                               "type":  "array",
+                                                                               "items":  {
+                                                                                             "type":  "string"
+                                                                                         }
+                                                                           },
+                                                      "calculation_ids":  {
+                                                                              "type":  "array",
+                                                                              "items":  {
+                                                                                            "type":  "string"
+                                                                                        }
+                                                                          },
+                                                      "status":  {
+                                                                     "type":  "string",
+                                                                     "enum":  [
+                                                                                  "DRAFT",
+                                                                                  "VALIDATED",
+                                                                                  "REJECTED"
+                                                                              ]
+                                                                 }
+                                                  }
+                               },
+                  "payment_event":  {
+                                        "type":  "object",
+                                        "additionalProperties":  false,
+                                        "required":  [
+                                                         "event_id",
+                                                         "due_date",
+                                                         "payment_date",
+                                                         "amount",
+                                                         "source_ref"
+                                                     ],
+                                        "properties":  {
+                                                           "event_id":  {
+                                                                            "type":  "string"
+                                                                        },
+                                                           "due_date":  {
+                                                                            "$ref":  "#/$defs/date"
+                                                                        },
+                                                           "payment_date":  {
+                                                                                "oneOf":  [
+                                                                                              {
+                                                                                                  "$ref":  "#/$defs/date"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "null"
+                                                                                              }
+                                                                                          ]
+                                                                            },
+                                                           "amount":  {
+                                                                          "$ref":  "#/$defs/decimal"
+                                                                      },
+                                                           "principal_component":  {
+                                                                                       "oneOf":  [
+                                                                                                     {
+                                                                                                         "$ref":  "#/$defs/decimal"
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "type":  "null"
+                                                                                                     }
+                                                                                                 ]
+                                                                                   },
+                                                           "interest_component":  {
+                                                                                      "oneOf":  [
+                                                                                                    {
+                                                                                                        "$ref":  "#/$defs/decimal"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "type":  "null"
+                                                                                                    }
+                                                                                                ]
+                                                                                  },
+                                                           "late_fees":  {
+                                                                             "oneOf":  [
+                                                                                           {
+                                                                                               "$ref":  "#/$defs/decimal"
+                                                                                           },
+                                                                                           {
+                                                                                               "type":  "null"
+                                                                                           }
+                                                                                       ]
+                                                                         },
+                                                           "source_ref":  {
+                                                                              "$ref":  "#/$defs/source_ref"
+                                                                          }
+                                                       }
+                                    },
+                  "calculation":  {
+                                      "type":  "object",
+                                      "additionalProperties":  false,
+                                      "required":  [
+                                                       "calculation_id",
+                                                       "kind",
+                                                       "algorithm_version",
+                                                       "precision_policy",
+                                                       "status",
+                                                       "outputs",
+                                                       "residuals",
+                                                       "created_at"
+                                                   ],
+                                      "properties":  {
+                                                         "calculation_id":  {
+                                                                                "type":  "string"
+                                                                            },
+                                                         "kind":  {
+                                                                      "type":  "string",
+                                                                      "enum":  [
+                                                                                   "PRINCIPAL_RECONCILIATION",
+                                                                                   "PRICE_DECLARED_RATE",
+                                                                                   "PRICE_IMPLICIT_RATE",
+                                                                                   "SAC",
+                                                                                   "CUSTOM_SCHEDULE",
+                                                                                   "IMPLICIT_RATE",
+                                                                                   "CET_ACTUAL_DATES",
+                                                                                   "SCENARIO",
+                                                                                   "PAYMENT_HISTORY"
+                                                                               ]
+                                                                  },
+                                                         "algorithm_version":  {
+                                                                                   "type":  "string"
+                                                                               },
+                                                         "precision_policy":  {
+                                                                                  "type":  "string"
+                                                                              },
+                                                         "status":  {
+                                                                        "type":  "string",
+                                                                        "enum":  [
+                                                                                     "SUCESSO",
+                                                                                     "DADOS_INVALIDOS",
+                                                                                     "SEM_CONVERGENCIA",
+                                                                                     "SEM_RAIZ",
+                                                                                     "MULTIPLAS_RAIZES",
+                                                                                     "ERRO_INTERNO",
+                                                                                     "EXECUTADO_COM_DADOS_DISPONIVEIS"
+                                                                                 ]
+                                                                    },
+                                                         "inputs":  {
+                                                                        "type":  "object"
+                                                                    },
+                                                         "outputs":  {
+                                                                         "type":  "object"
+                                                                     },
+                                                         "residuals":  {
+                                                                           "type":  "object"
+                                                                       },
+                                                         "schedule":  {
+                                                                          "type":  "array",
+                                                                          "items":  {
+                                                                                        "type":  "object"
+                                                                                    }
+                                                                      },
+                                                         "created_at":  {
+                                                                            "$ref":  "#/$defs/datetime"
+                                                                        }
+                                                     }
+                                  },
+                  "check":  {
+                                "type":  "object",
+                                "additionalProperties":  false,
+                                "required":  [
+                                                 "check_id",
+                                                 "name",
+                                                 "status",
+                                                 "blocking",
+                                                 "actual",
+                                                 "expected",
+                                                 "tolerance",
+                                                 "message",
+                                                 "executed_at"
+                                             ],
+                                "properties":  {
+                                                   "check_id":  {
+                                                                    "type":  "string",
+                                                                    "pattern":  "^CHK-[0-9]{3}$"
+                                                                },
+                                                   "name":  {
+                                                                "type":  "string"
+                                                            },
+                                                   "status":  {
+                                                                  "type":  "string",
+                                                                  "enum":  [
+                                                                               "APROVADO",
+                                                                               "REPROVADO",
+                                                                               "ATENCAO",
+                                                                               "NAO_EXECUTADO",
+                                                                               "NAO_APLICAVEL"
+                                                                           ]
+                                                              },
+                                                   "blocking":  {
+                                                                    "type":  "boolean"
+                                                                },
+                                                   "actual":  {
+
+                                                              },
+                                                   "expected":  {
+
+                                                                },
+                                                   "tolerance":  {
+
+                                                                 },
+                                                   "message":  {
+                                                                   "type":  "string"
+                                                               },
+                                                   "justification_id":  {
+                                                                            "type":  [
+                                                                                         "string",
+                                                                                         "null"
+                                                                                     ]
+                                                                        },
+                                                   "executed_at":  {
+                                                                       "$ref":  "#/$defs/datetime"
+                                                                   }
+                                               }
+                            }
+              }
+}
