@@ -34,6 +34,46 @@ function texto(value, fallback = "Não informado") {
   return String(value ?? "").trim() || fallback;
 }
 
+function possuiConteudo(value) {
+  return String(value ?? "").trim().length > 0;
+}
+
+function normalizarPeritos(value) {
+  const entries = Array.isArray(value)
+    ? value
+    : String(value ?? "")
+        .split(/\r?\n/)
+        .map(item => item.trim())
+        .filter(Boolean);
+
+  return entries.map((entry) => {
+    if (entry && typeof entry === "object") {
+      return {
+        nome: texto(entry.nome, ""),
+        categoria: texto(entry.categoria || entry.titulo, ""),
+        registro: texto(entry.registro || entry.crc, ""),
+        funcao: texto(entry.funcao, ""),
+        cnpc: texto(entry.cnpc, ""),
+      };
+    }
+
+    const [nome = "", categoria = "", registro = "", funcao = "", cnpc = ""] = String(entry)
+      .split("|")
+      .map(item => item.trim());
+    return { nome, categoria, registro, funcao, cnpc };
+  });
+}
+
+function identificacaoPerito(perito) {
+  const detalhes = [
+    perito.categoria,
+    perito.registro,
+    perito.funcao,
+    perito.cnpc ? `CNPC ${perito.cnpc}` : "",
+  ].filter(Boolean);
+  return detalhes.join(" • ") || "Qualificação profissional a preencher";
+}
+
 function normalizarMetodo(value) {
   const method = String(value || "").toUpperCase();
   if (method.includes("SAC")) return "SAC";
@@ -178,6 +218,68 @@ function tabela(ctx, rows, options = {}) {
   ctx.y -= 14;
 }
 
+function blocoAssinaturaCarimbo(ctx, perito = {}) {
+  garantir(ctx, 104);
+  const larguraAssinatura = 310;
+  const intervalo = 24;
+  const larguraCarimbo = LARGURA - larguraAssinatura - intervalo;
+  const xAssinatura = MARGEM;
+  const xCarimbo = MARGEM + larguraAssinatura + intervalo;
+  const topo = ctx.y;
+  const base = topo - 72;
+
+  ctx.page.drawText("ASSINATURA DO RESPONSÁVEL TÉCNICO", {
+    x: xAssinatura,
+    y: topo,
+    size: 7.3,
+    font: ctx.fonts.bold,
+    color: CINZA,
+  });
+  ctx.page.drawLine({
+    start: { x: xAssinatura, y: topo - 25 },
+    end: { x: xAssinatura + larguraAssinatura, y: topo - 25 },
+    thickness: 0.7,
+    color: PRETO,
+  });
+
+  const nome = texto(perito.nome, "NOME DO RESPONSÁVEL TÉCNICO");
+  const identificacao = identificacaoPerito(perito);
+  ctx.page.drawText(nome, {
+    x: xAssinatura,
+    y: topo - 40,
+    size: 8.4,
+    font: ctx.fonts.bold,
+    color: PRETO,
+  });
+  quebrar(identificacao, ctx.fonts.normal, 7.5, larguraAssinatura)
+    .slice(0, 2)
+    .forEach((line, index) => ctx.page.drawText(line, {
+      x: xAssinatura,
+      y: topo - 53 - index * 10,
+      size: 7.5,
+      font: ctx.fonts.normal,
+      color: CINZA,
+    }));
+
+  ctx.page.drawRectangle({
+    x: xCarimbo,
+    y: base,
+    width: larguraCarimbo,
+    height: 72,
+    borderWidth: 0.7,
+    borderColor: CINZA,
+  });
+  const rotuloCarimbo = "ESPAÇO PARA CARIMBO";
+  ctx.page.drawText(rotuloCarimbo, {
+    x: xCarimbo + (larguraCarimbo - ctx.fonts.bold.widthOfTextAtSize(rotuloCarimbo, 7)) / 2,
+    y: base + 31,
+    size: 7,
+    font: ctx.fonts.bold,
+    color: CINZA,
+  });
+  ctx.y = base - 24;
+}
+
 function nomeMetodo(method) {
   return {
     PRICE_TARIFAS: "Tabela Price - Expurgo das Tarifas",
@@ -189,6 +291,8 @@ function nomeMetodo(method) {
 
 export async function gerarLaudoPericialContabilPdf(dados = {}) {
   const calc = calcularCenarios(dados);
+  const peritosInformados = normalizarPeritos(dados.peritosResponsaveis || dados.peritos);
+  const peritosParaAssinatura = peritosInformados.length ? peritosInformados : [{}];
   const pdf = await PDFDocument.create();
   const ctx = {
     pdf,
@@ -214,12 +318,18 @@ export async function gerarLaudoPericialContabilPdf(dados = {}) {
     ["Data-base", dados.dataBaseCalculo],
   ]);
 
-  titulo(ctx, "2. Objeto e metodologia");
+  titulo(ctx, "2. Responsável(is) técnico(s)");
+  tabela(ctx, peritosParaAssinatura.map((perito, index) => [
+    `Responsável técnico ${index + 1}`,
+    `${texto(perito.nome, "A preencher")} • ${identificacaoPerito(perito)}`,
+  ]));
+
+  titulo(ctx, "3. Objeto e metodologia");
   paragrafo(ctx, `Objeto: ${texto(dados.objetoContrato, "Análise técnica do contrato de financiamento de veículo informado, com recálculo das prestações e apuração das diferenças econômicas.")}`);
   paragrafo(ctx, `Método empregado: ${nomeMetodo(calc.metodo)}. Os cálculos consideram os valores fornecidos no contrato e precisão interna, com apresentação monetária em duas casas decimais.`);
 
-  titulo(ctx, "3. Resumo técnico");
-  tabela(ctx, [
+  titulo(ctx, "4. Resumo técnico");
+  const resumoTecnico = [
     ["Objeto do Contrato", texto(dados.objetoContrato, "Financiamento de veículo")],
     ["Nº do Contrato", dados.contrato],
     ["Data do Contrato", dados.dataContrato],
@@ -247,9 +357,19 @@ export async function gerarLaudoPericialContabilPdf(dados = {}) {
     ["Tarifa a Devolver em Dobro", moeda(calc.tarifaDobro)],
     ["A Mais no Recálculo (Devolução / Compensação)", moeda(calc.devolucaoCompensacao)],
     ["Total Final (Proveito Econômico)", moeda(calc.proveito)],
-  ]);
+  ];
+  if (possuiConteudo(dados.valorIncontroverso)) {
+    resumoTecnico.push(["Valor incontroverso", moeda(dados.valorIncontroverso)]);
+  }
+  if (possuiConteudo(dados.valorReceber)) {
+    resumoTecnico.push(["Valor a receber", moeda(dados.valorReceber)]);
+  }
+  if (possuiConteudo(dados.referenciaBancoCentral)) {
+    resumoTecnico.push(["Referência ao Banco Central", dados.referenciaBancoCentral]);
+  }
+  tabela(ctx, resumoTecnico);
 
-  titulo(ctx, "4. Memória de cálculo");
+  titulo(ctx, "5. Memória de cálculo");
   tabela(ctx, [
     ["Principal considerado", moeda(calc.pv)],
     ["Método", nomeMetodo(calc.metodo)],
@@ -266,16 +386,12 @@ export async function gerarLaudoPericialContabilPdf(dados = {}) {
     paragrafo(ctx, `A memória completa contempla ${calc.memoria.length} parcelas. O quadro apresenta as 12 primeiras para conferência objetiva.`, { size: 8.5 });
   }
 
-  titulo(ctx, "5. Conclusão");
-  paragrafo(ctx, `A prestação recalculada é de ${moeda(calc.pmt)}, resultando em diferença de ${moeda(calc.diferencaMensal)} por prestação e proveito econômico total estimado de ${moeda(calc.proveito)}.`);
+  titulo(ctx, "6. Conclusão");
+  const conclusaoPadrao = `A prestação recalculada é de ${moeda(calc.pmt)}, resultando em diferença de ${moeda(calc.diferencaMensal)} por prestação e proveito econômico total estimado de ${moeda(calc.proveito)}.`;
+  paragrafo(ctx, texto(dados.conclusaoTecnica, conclusaoPadrao));
   if (texto(dados.justificativaRestituicao, "")) paragrafo(ctx, `Justificativa: ${dados.justificativaRestituicao}`);
-  ctx.y -= 25;
-  garantir(ctx, 70);
-  const signature = "DENIS HENRIQUE DA SILVA";
-  const role = "Perito Contador • CRC SP 298257/O-2";
-  ctx.page.drawLine({ start: { x: 170, y: ctx.y }, end: { x: A4[0] - 170, y: ctx.y }, thickness: 0.7, color: PRETO });
-  ctx.page.drawText(signature, { x: (A4[0] - ctx.fonts.bold.widthOfTextAtSize(signature, 9)) / 2, y: ctx.y - 17, size: 9, font: ctx.fonts.bold, color: PRETO });
-  ctx.page.drawText(role, { x: (A4[0] - ctx.fonts.normal.widthOfTextAtSize(role, 8)) / 2, y: ctx.y - 31, size: 8, font: ctx.fonts.normal, color: CINZA });
+  ctx.y -= 16;
+  peritosParaAssinatura.forEach(perito => blocoAssinaturaCarimbo(ctx, perito));
   return pdf.save();
 }
 

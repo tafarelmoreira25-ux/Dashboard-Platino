@@ -7700,11 +7700,13 @@
                 source: 'Modelo_Laudo_Pericial_Contabil_Financiamento.docx',
                 fields: [
                     'contratoTexto', 'cliente', 'cpf', 'banco', 'cnpjBanco', 'contrato', 'cidadeEstado',
+                    'peritosResponsaveis',
                     'dataContrato', 'dataBaseCalculo', 'descricaoBem', 'valorBem', 'valorEntrada',
                     'valorFinanciadoBruto', 'valorPrestacaoContratual', 'quantidadeParcelas',
                     'parcelasPagas', 'taxaJurosMensal', 'valorTarifaCadastro', 'valorRegistroContrato',
                     'valorAvaliacaoBem', 'valorSeguro', 'valorIof', 'valorIofAdicional',
-                    'metodoCalculo', 'multiplicadorRestituicao', 'justificativaRestituicao'
+                    'metodoCalculo', 'multiplicadorRestituicao', 'justificativaRestituicao',
+                    'valorIncontroverso', 'valorReceber', 'referenciaBancoCentral', 'conclusaoTecnica'
                 ],
                 requiredFields: [
                     'cliente', 'cpf', 'banco', 'contrato', 'valorFinanciadoBruto',
@@ -7714,6 +7716,7 @@
                     contratoTexto: 'Importação automática',
                     cliente: 'Dados do Cliente', cpf: 'Dados do Cliente', banco: 'Dados do Cliente',
                     cnpjBanco: 'Dados do Cliente', contrato: 'Dados do Cliente', cidadeEstado: 'Dados do Cliente',
+                    peritosResponsaveis: 'Responsabilidade Técnica',
                     dataContrato: 'Dados do Cliente', dataBaseCalculo: 'Dados do Cliente',
                     descricaoBem: 'Dados do Financiamento', valorBem: 'Dados do Financiamento',
                     valorEntrada: 'Dados do Financiamento', valorFinanciadoBruto: 'Dados do Financiamento',
@@ -7722,12 +7725,15 @@
                     valorTarifaCadastro: 'Tarifas', valorRegistroContrato: 'Tarifas',
                     valorAvaliacaoBem: 'Tarifas', valorSeguro: 'Tarifas', valorIof: 'Tarifas',
                     valorIofAdicional: 'Tarifas', metodoCalculo: 'Recálculo',
-                    multiplicadorRestituicao: 'Recálculo', justificativaRestituicao: 'Recálculo'
+                    multiplicadorRestituicao: 'Recálculo', justificativaRestituicao: 'Recálculo',
+                    valorIncontroverso: 'Conclusão Profissional', valorReceber: 'Conclusão Profissional',
+                    referenciaBancoCentral: 'Conclusão Profissional', conclusaoTecnica: 'Conclusão Profissional'
                 },
                 customLabels: {
                     contratoTexto: 'Cole aqui o contrato.',
                     cliente: 'Contratante / cliente', cpf: 'CPF ou CNPJ do cliente', banco: 'Instituição financeira',
                     cnpjBanco: 'CNPJ da instituição financeira', contrato: 'Número do contrato', cidadeEstado: 'Cidade / UF da emissão',
+                    peritosResponsaveis: 'Responsável(is) técnico(s)',
                     dataContrato: 'Data da contratação', dataBaseCalculo: 'Data-base do cálculo', descricaoBem: 'Veículo / bem financiado',
                     valorBem: 'Valor à vista do bem (R$)', valorEntrada: 'Entrada / recursos próprios (R$)',
                     valorFinanciadoBruto: 'Valor financiado bruto (R$)', valorPrestacaoContratual: 'Prestação contratual (R$)',
@@ -7736,12 +7742,17 @@
                     valorTarifaCadastro: 'Tarifa de cadastro (R$)', valorRegistroContrato: 'Registro de contrato (R$)',
                     valorAvaliacaoBem: 'Avaliação do bem (R$)', valorSeguroPrestamista: 'Seguro prestamista (R$)',
                     valorSeguro: 'Seguro (R$)', valorIof: 'IOF (R$)', valorIofAdicional: 'IOF adicional (R$)',
-                    multiplicadorRestituicao: 'Multiplicador', justificativaRestituicao: 'Justificativa'
+                    multiplicadorRestituicao: 'Multiplicador', justificativaRestituicao: 'Justificativa',
+                    valorIncontroverso: 'Valor incontroverso (R$)', valorReceber: 'Valor a receber (R$)',
+                    referenciaBancoCentral: 'Referência / autorização do Banco Central',
+                    conclusaoTecnica: 'Conclusão técnica profissional'
                 },
                 fieldTypes: {
                     contratoTexto: 'textarea', dataContrato: 'date', dataBaseCalculo: 'date',
                     metodoCalculo: 'select', multiplicadorRestituicao: 'select',
-                    quantidadeParcelas: 'number', parcelasPagas: 'number', justificativaRestituicao: 'textarea'
+                    quantidadeParcelas: 'number', parcelasPagas: 'number',
+                    peritosResponsaveis: 'textarea', justificativaRestituicao: 'textarea',
+                    referenciaBancoCentral: 'textarea', conclusaoTecnica: 'textarea'
                 },
                 fieldOptions: {
                     metodoCalculo: [
@@ -7760,7 +7771,11 @@
                     contratoTexto: 'Cole o texto completo extraído do PDF ou OCR. O sistema localizará os dados automaticamente.',
                     descricaoBem: 'Ex.: Volkswagen T-Cross 2022', valorFinanciadoBruto: 'Ex.: 85.000,00',
                     valorPrestacaoContratual: 'Ex.: 2.145,80', taxaJurosMensal: 'Ex.: 1,89',
-                    quantidadeParcelas: 'Ex.: 48', parcelasPagas: 'Ex.: 12'
+                    quantidadeParcelas: 'Ex.: 48', parcelasPagas: 'Ex.: 12',
+                    peritosResponsaveis: 'Um profissional por linha: Nome | Categoria profissional | CRC/registro | Função | CNPC (opcional)',
+                    valorIncontroverso: 'Ex.: 42.500,00', valorReceber: 'Ex.: 8.740,35',
+                    referenciaBancoCentral: 'Informe a norma, autorização ou referência específica, quando aplicável.',
+                    conclusaoTecnica: 'Redija a conclusão profissional. Pode incluir “valor incontroverso”, “valor a receber” e referência ao Banco Central.'
                 },
                 blocks: []
             }

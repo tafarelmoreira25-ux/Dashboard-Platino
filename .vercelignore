@@ -1,0 +1,6 @@
+.vercel
+.env*
+node_modules/
+tmp/
+trabalho_pericia_vitor/qa_teste_pdf_*/
+trabalho_pericia_vitor/qa_teste_pdf_*_contact.png

@@ -214,13 +214,11 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       }, {
         assinaturaBytes: await asset("assinatura-manuscrita-rafael.png").catch(() => null),
       }),
-    "laudo-pericial-contabil": async () => gerarLaudoPericialContabilPdf({
+    "laudo-pericial-contabil": () => gerarLaudoPericialContabilPdf({
       ...data,
       numeroDocumento: texto(data.numeroDocumento),
       dataEmissao: texto(data.data) || comum.dataEmissao,
       cidadeEstado: texto(data.cidadeEstado) || "São Paulo/SP",
-    }, {
-      assinaturaBytes: await asset("perito-denis-assinatura.png"),
     }),
   };
 
