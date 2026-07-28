@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node server.mjs",
     "audit:buttons": "node tests/button-interaction-audit.mjs",
+    "test:auth": "node tests/auth-login-security-test.mjs",
+    "test:documents-ui": "node tests/documents-ui-test.mjs",
     "test:laudo": "node tests/laudo-pericial-contabil-test.mjs"
   },
   "dependencies": {

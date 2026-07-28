@@ -2093,6 +2093,352 @@
             }
         }
 
+        /* Identidade clara e editorial exclusiva da Central de Documentos. */
+        #section-documentos {
+            background: #f8f6f3;
+        }
+
+        .documents-central,
+        .documents-central * {
+            font-family: "Times New Roman", Times, serif !important;
+        }
+
+        .documents-central {
+            --docs-ink: #282321;
+            --docs-muted: #756d68;
+            --docs-accent: #bd382f;
+            --docs-accent-dark: #8f2822;
+            --docs-accent-soft: #fff4f2;
+            --docs-line: #e8e1dc;
+            border-color: var(--docs-line);
+            background: #ffffff;
+            color: var(--docs-ink);
+            box-shadow: 0 24px 60px rgba(55, 43, 37, 0.09);
+        }
+
+        .documents-hero {
+            border-bottom-color: var(--docs-line);
+            background: linear-gradient(135deg, #ffffff 0%, #fffdfc 68%, #fff5f3 100%);
+        }
+
+        .documents-hero::after {
+            right: -7rem;
+            top: -9rem;
+            background: rgba(189, 56, 47, 0.07);
+            filter: blur(20px);
+        }
+
+        .documents-hero-copy {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 1.1rem;
+        }
+
+        .documents-pdf-hero-icon {
+            width: 5.25rem;
+            height: 5.25rem;
+            flex: 0 0 auto;
+            border: 1px solid #eee7e2;
+            border-radius: 1.2rem;
+            background: #ffffff;
+            object-fit: contain;
+            box-shadow: 0 12px 28px rgba(132, 44, 36, 0.11);
+        }
+
+        .documents-hero-aside {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+        }
+
+        .documents-content {
+            background: #fbfaf8;
+        }
+
+        .documents-eyebrow,
+        .documents-category-label {
+            color: var(--docs-accent-dark);
+        }
+
+        .documents-central h2,
+        .documents-central h3,
+        .documents-central .text-white {
+            color: var(--docs-ink);
+        }
+
+        .documents-central .text-blue-100\/70,
+        .documents-central .text-blue-100\/60,
+        .documents-central .text-blue-100\/55,
+        .documents-central .text-blue-200\/60,
+        .documents-central .text-blue-200\/75,
+        .documents-central .text-blue-100\/50 {
+            color: var(--docs-muted);
+        }
+
+        .documents-central .text-sky-300,
+        .documents-central .text-blue-300 {
+            color: var(--docs-accent);
+        }
+
+        .documents-central .text-blue-100 {
+            color: #514843;
+        }
+
+        .documents-central .bg-blue-600 {
+            background: var(--docs-accent);
+        }
+
+        .documents-central .bg-blue-600:hover,
+        .documents-central .hover\:bg-blue-500:hover {
+            background: var(--docs-accent-dark);
+        }
+
+        .documents-central .border-emerald-300\/20 {
+            border-color: #cfe2d3;
+        }
+
+        .documents-central .bg-emerald-400\/10 {
+            background: #f2f8f3;
+        }
+
+        .documents-central .text-emerald-200 {
+            color: #356c43;
+        }
+
+        .documents-central .text-amber-300 {
+            color: #9b671b;
+        }
+
+        .documents-central .text-emerald-300 {
+            color: #35744a;
+        }
+
+        .documents-local-indicator {
+            border-color: #d9e7dd;
+            background: #f4faf6;
+            color: #316340;
+            box-shadow: 0 6px 16px rgba(49, 99, 64, 0.06);
+        }
+
+        .documents-local-indicator::before {
+            background: #5b9a69;
+            box-shadow: 0 0 0 0.3rem rgba(91, 154, 105, 0.12);
+        }
+
+        .documents-library-toolbar,
+        .documents-form-toolbar {
+            border-color: var(--docs-line);
+            background: #ffffff;
+            box-shadow: 0 10px 24px rgba(55, 43, 37, 0.05);
+        }
+
+        .documents-search i {
+            color: #9d332c;
+        }
+
+        .documents-search input {
+            border-color: #ded6d1;
+            background: #fffdfc;
+            color: var(--docs-ink);
+        }
+
+        .documents-search input::placeholder {
+            color: #998f88;
+        }
+
+        .documents-search input:focus {
+            border-color: #c9574f;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(189, 56, 47, 0.09);
+        }
+
+        .documents-category-filter {
+            border-color: #e2dad5;
+            background: #fffdfc;
+            color: #625a55;
+            box-shadow: 0 2px 5px rgba(55, 43, 37, 0.03);
+        }
+
+        .documents-category-filter:hover,
+        .documents-category-filter[aria-pressed="true"] {
+            border-color: #cf625a;
+            background: var(--docs-accent-soft);
+            color: var(--docs-accent-dark);
+        }
+
+        .documents-template-card {
+            border-color: #e5ddd8;
+            background: #ffffff;
+            color: var(--docs-ink);
+            box-shadow: 0 8px 22px rgba(55, 43, 37, 0.045);
+        }
+
+        .documents-template-card:hover {
+            border-color: #d49a94;
+            box-shadow: 0 16px 30px rgba(80, 54, 47, 0.09);
+        }
+
+        .documents-template-card[aria-selected="true"] {
+            border-color: #cf625a;
+            background: linear-gradient(145deg, #fff9f7, #ffffff);
+            box-shadow: inset 4px 0 var(--docs-accent), 0 16px 30px rgba(112, 42, 35, 0.09);
+        }
+
+        .documents-template-icon {
+            border-color: #f0d4d0;
+            background: var(--docs-accent-soft);
+            color: var(--docs-accent);
+        }
+
+        .documents-template-action {
+            background: #f8f2ef;
+            color: #a43a32;
+        }
+
+        .documents-form-shell {
+            border-color: var(--docs-line);
+            background: #ffffff;
+            box-shadow: 0 14px 36px rgba(55, 43, 37, 0.06);
+        }
+
+        .documents-form-header {
+            border-bottom-color: var(--docs-line);
+            background: linear-gradient(135deg, #fffdfc, #fff7f5);
+        }
+
+        .documents-back-button {
+            border-color: #ddd4cf;
+            background: #ffffff;
+            color: #4b423d;
+        }
+
+        .documents-back-button:hover,
+        .documents-secondary-button:hover {
+            border-color: #cf625a;
+            color: var(--docs-accent-dark);
+        }
+
+        .documents-progress .text-blue-100\/70 {
+            color: #6f6560;
+        }
+
+        .documents-progress-track {
+            background: #ece6e2;
+        }
+
+        .documents-progress-fill {
+            background: linear-gradient(90deg, var(--docs-accent-dark), #e26960);
+        }
+
+        .documents-form-body {
+            background: #fbfaf8;
+        }
+
+        .documents-meta-grid,
+        .documents-step {
+            border-color: #e7dfda;
+            background: #ffffff;
+            box-shadow: 0 6px 18px rgba(55, 43, 37, 0.035);
+        }
+
+        .documents-field-label {
+            color: #514843;
+        }
+
+        .documents-required {
+            color: #c83830;
+        }
+
+        .documents-field-help,
+        .documents-draft-status {
+            color: #817670;
+        }
+
+        .documents-summary-item {
+            border-color: #e6ddd8;
+            background: #faf7f5;
+        }
+
+        .documents-summary-item span {
+            color: #82766f;
+        }
+
+        .documents-summary-item strong {
+            color: #302a27;
+        }
+
+        .documents-form-footer {
+            border-top-color: var(--docs-line);
+            background: #ffffff;
+        }
+
+        .documents-secondary-button {
+            border-color: #ddd4cf;
+            background: #ffffff;
+            color: #4b423d;
+        }
+
+        .documents-primary-button {
+            background: #4d4743;
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(54, 48, 44, 0.14);
+        }
+
+        .documents-primary-button:hover {
+            background: #37322f;
+        }
+
+        .documents-generate-button {
+            background: linear-gradient(135deg, var(--docs-accent-dark), #d94a40);
+            color: #ffffff;
+            box-shadow: 0 12px 24px rgba(177, 49, 41, 0.2);
+        }
+
+        .documents-central .adm-pdf-control {
+            border-color: #ddd5d0;
+            background: #ffffff;
+            color: #302a27;
+            box-shadow: inset 0 1px 2px rgba(55, 43, 37, 0.025);
+        }
+
+        .documents-central .adm-pdf-control::placeholder {
+            color: #a09690;
+        }
+
+        .documents-central .adm-pdf-control:focus {
+            border-color: #c9574f;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(189, 56, 47, 0.08);
+        }
+
+        .documents-central .adm-pdf-control:read-only {
+            background: #f5f2ef;
+            color: #706660;
+        }
+
+        .documents-empty-state {
+            border-color: #ddd4cf;
+            background: #ffffff;
+            color: #776d67;
+        }
+
+        @media (max-width: 639px) {
+            .documents-hero-copy {
+                align-items: flex-start;
+            }
+
+            .documents-pdf-hero-icon {
+                width: 4rem;
+                height: 4rem;
+                border-radius: 1rem;
+            }
+
+            .documents-hero-aside {
+                padding-left: 5.1rem;
+            }
+        }
+
         .ranking-filter-button[aria-pressed="true"] {
             border-color: rgba(147, 197, 253, 0.75);
             background: rgba(59, 130, 246, 0.28);
@@ -2433,12 +2779,17 @@
             </div>
           </div>
 
-          <div class="space-y-4">
+          <form id="login-form" class="space-y-4" autocomplete="on">
             <div>
               <label class="block text-sm text-slate-300 mb-2">E-mail</label>
               <input
                 id="login-email"
+                name="email"
                 type="email"
+                autocomplete="username"
+                autocapitalize="none"
+                spellcheck="false"
+                required
                 class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
                 placeholder="Digite seu e-mail"
               />
@@ -2448,7 +2799,10 @@
               <label class="block text-sm text-slate-300 mb-2">Senha</label>
               <input
                 id="login-password"
+                name="password"
                 type="password"
+                autocomplete="current-password"
+                required
                 class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
                 placeholder="Digite sua senha"
               />
@@ -2456,7 +2810,7 @@
 
             <button
               id="login-button"
-              type="button"
+              type="submit"
               class="metal-login-button w-full py-3.5 rounded-2xl font-bold transition focus:outline-none focus:ring-4 focus:ring-blue-500/25"
             >
               Entrar
@@ -2471,7 +2825,11 @@
             </button>
 
             <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
-          </div>
+            <p class="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-blue-100/70">
+              <i class="ph ph-lock-key mt-0.5 text-sm text-blue-200" aria-hidden="true"></i>
+              <span>A senha salva pode ser preenchida pelo navegador, mas o acesso só é liberado após confirmar em Entrar.</span>
+            </p>
+          </form>
 
         </div>
 
@@ -2978,12 +3336,17 @@
                 <div class="documents-central max-w-7xl mx-auto">
                     <header class="documents-hero">
                         <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                            <div>
-                                <p class="documents-eyebrow"><i class="ph ph-squares-four mr-1"></i> Central operacional</p>
-                                <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Central de Documentos</h2>
-                                <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Gere, organize e acompanhe seus documentos com praticidade</p>
+                            <div class="documents-hero-copy">
+                                <img src="assets/pdf-document-icon.png" alt="" class="documents-pdf-hero-icon" aria-hidden="true">
+                                <div>
+                                    <p class="documents-eyebrow"><i class="ph ph-squares-four mr-1"></i> Documentos padronizados</p>
+                                    <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Gerador Inteligente de PDF</h2>
+                                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Gere, organize e utilize os documentos padronizados. Fica pronto em menos de 1 minuto.</p>
+                                </div>
                             </div>
-                            <span class="documents-local-indicator"><i class="ph ph-lock-key"></i> Geração local e segura</span>
+                            <div class="documents-hero-aside">
+                                <span class="documents-local-indicator"><i class="ph ph-lock-key"></i> Geração local e segura</span>
+                            </div>
                         </div>
                     </header>
 
@@ -8690,24 +9053,24 @@
         }
 
         const admTemplateCatalog = {
-            'chargeback': { category: 'Defesa Financeira', icon: 'ph-credit-card', description: 'Contestação formal de cobrança ou transação.', purpose: 'Defender uma cobrança contestada.' },
+            'chargeback': { category: 'Defesa', icon: 'ph-credit-card', description: 'Contestação formal de cobrança ou transação.', purpose: 'Defender uma cobrança contestada.' },
             'citacao-intimacao-extrajudicial': { category: 'Extrajudicial', icon: 'ph-envelope-open', description: 'Comunicação formal sem processo judicial.', purpose: 'Notificar a instituição de forma extrajudicial.' },
             'citacao-judicial': { category: 'Judicial', icon: 'ph-gavel', description: 'Documento destinado a procedimento judicial.', purpose: 'Impulsionar o andamento do processo.' },
-            'contestacao-taxas-email': { category: 'Defesa Financeira', icon: 'ph-at', description: 'Contestação objetiva de taxas por e-mail.', purpose: 'Solicitar a revisão de encargos contratuais.' },
+            'contestacao-taxas-email': { category: 'Extrajudicial', icon: 'ph-at', description: 'Contestação objetiva de taxas por e-mail.', purpose: 'Solicitar a revisão de encargos contratuais.' },
             'declaracao-ausencia-carteira-trabalho': { category: 'Declarações', icon: 'ph-identification-card', description: 'Declaração trabalhista de ausência de CTPS.', purpose: 'Formalizar a inexistência de carteira de trabalho.' },
             'declaracao-hipossuficiencia': { category: 'Declarações', icon: 'ph-file-text', description: 'Declaração para pedido de gratuidade.', purpose: 'Apoiar a solicitação de justiça gratuita.' },
             'declaracao-isencao-irpf': { category: 'Declarações', icon: 'ph-receipt', description: 'Declaração de isenção do imposto de renda.', purpose: 'Comprovar a condição de isento do IRPF.' },
             'notificacao-extrajudicial-platino': { category: 'Extrajudicial', icon: 'ph-megaphone', description: 'Notificação extrajudicial institucional Platino.', purpose: 'Formalizar uma comunicação institucional.' },
-            'procuracao-dra-juliane': { category: 'Representação', icon: 'ph-seal-check', description: 'Instrumento de mandato e representação.', purpose: 'Conceder poderes para atuação jurídica.' },
-            'termo-ciencia-autorizacao-seguranca': { category: 'Termos e Autorizações', icon: 'ph-shield-check', description: 'Ciência e autorização sobre segurança.', purpose: 'Registrar autorização e ciência do cliente.' },
-            'termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-handshake', description: 'Formalização de compromisso de pagamento.', purpose: 'Registrar uma obrigação de pagamento.' },
-            'modelo-termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-files', description: 'Modelo-base de compromisso de pagamento.', purpose: 'Formalizar o pagamento de um produto ou custo.' },
-            'recibo-prestacao-servicos': { category: 'Financeiro', icon: 'ph-receipt', description: 'Recibo institucional de pagamento por serviços.', purpose: 'Comprovar o recebimento de uma prestação de serviços.' },
-            'termo-recompra': { category: 'Defesa Financeira', icon: 'ph-arrows-clockwise', description: 'Termo de reconhecimento, recompra e desistência.', purpose: 'Registrar a recompra após contestação de pagamento.' },
-            'relatorio-negociacao-acordo-homologacao': { category: 'Acordos', icon: 'ph-handshake', description: 'Relatório das tratativas para acordo de homologação.', purpose: 'Atualizar valores, proposta e manifestação do cliente.' },
+            'procuracao-dra-juliane': { category: 'Procurações', icon: 'ph-seal-check', description: 'Instrumento de mandato e representação.', purpose: 'Conceder poderes para atuação jurídica.' },
+            'termo-ciencia-autorizacao-seguranca': { category: 'Termos', icon: 'ph-shield-check', description: 'Ciência e autorização sobre segurança.', purpose: 'Registrar autorização e ciência do cliente.' },
+            'termo-compromisso-pagamento': { category: 'Termos', icon: 'ph-handshake', description: 'Formalização de compromisso de pagamento.', purpose: 'Registrar uma obrigação de pagamento.' },
+            'modelo-termo-compromisso-pagamento': { category: 'Termos', icon: 'ph-files', description: 'Modelo-base de compromisso de pagamento.', purpose: 'Formalizar o pagamento de um produto ou custo.' },
+            'recibo-prestacao-servicos': { category: 'Termos', icon: 'ph-receipt', description: 'Recibo institucional de pagamento por serviços.', purpose: 'Comprovar o recebimento de uma prestação de serviços.' },
+            'termo-recompra': { category: 'Termos', icon: 'ph-arrows-clockwise', description: 'Termo de reconhecimento, recompra e desistência.', purpose: 'Registrar a recompra após contestação de pagamento.' },
+            'relatorio-negociacao-acordo-homologacao': { category: 'Homologação', icon: 'ph-handshake', description: 'Relatório das tratativas para acordo de homologação.', purpose: 'Atualizar valores, proposta e manifestação do cliente.' },
             'certidao-diligencia-contato-profissional': { category: 'Extrajudicial', icon: 'ph-certificate', description: 'Certidão de diligência e contato profissional.', purpose: 'Registrar a diligência e os esclarecimentos processuais.' },
             'relatorio-atualizacao-processo-judicial': { category: 'Judicial', icon: 'ph-briefcase', description: 'Relatório de andamento e movimentações.', purpose: 'Atualizar o cliente sobre o processo judicial.' },
-            'laudo-pericial-contabil': { category: 'Perícia Contábil', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.', purpose: 'Documentar a análise técnica e os cálculos.' }
+            'laudo-pericial-contabil': { category: 'Perícia', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.', purpose: 'Documentar a análise técnica e os cálculos.' }
         };
 
         function getAdmTemplateInfo(value) {
@@ -8757,7 +9120,12 @@
             const container = document.getElementById('documents-category-filters');
             const select = document.getElementById('adm-pdf-template');
             if (!container || !select) return;
-            const categories = ['Todos', ...new Set(Array.from(select.options).map(option => getAdmTemplateInfo(option.value).category))];
+            const availableCategories = new Set(Array.from(select.options).map(option => getAdmTemplateInfo(option.value).category));
+            const categoryOrder = ['Todos', 'Defesa', 'Extrajudicial', 'Termos', 'Procurações', 'Declarações', 'Judicial', 'Homologação', 'Perícia'];
+            const categories = [
+                ...categoryOrder.filter(category => category === 'Todos' || availableCategories.has(category)),
+                ...Array.from(availableCategories).filter(category => !categoryOrder.includes(category))
+            ];
             container.innerHTML = categories.map(category => `
                 <button type="button" class="documents-category-filter" aria-pressed="${category === documentsActiveCategory}" onclick="setDocumentsCategory('${escapeHtml(category)}')">
                     ${escapeHtml(category)}
@@ -8803,7 +9171,7 @@
                         ? `<button type="button" class="documents-template-action" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')"><i class="ph ph-pencil-simple"></i></button>`
                         : `<span class="documents-template-action"><i class="ph ${selected ? 'ph-check-circle' : 'ph-caret-right'}"></i></span>`}
                 </div>`;
-            }).join('') : `<div class="col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-2 block text-3xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
+            }).join('') : `<div class="documents-empty-state col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed px-4 text-center text-sm font-semibold"><span><i class="ph ph-file-magnifying-glass mb-2 block text-3xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
         }
 
         async function renameAdmTemplate(event, value) {
@@ -9817,7 +10185,8 @@
       import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-ai.js";
       import {
         EmailAuthProvider,
-        getAuth,
+        inMemoryPersistence,
+        initializeAuth,
         onAuthStateChanged,
         reauthenticateWithCredential,
         signInWithEmailAndPassword,
@@ -10517,6 +10886,7 @@
 
       const loginScreen = document.getElementById("login-screen");
       const appContent = document.getElementById("app-content");
+      const loginForm = document.getElementById("login-form");
       const loginButton = document.getElementById("login-button");
       const loginResetPassword = document.getElementById("login-reset-password");
       const loginEmail = document.getElementById("login-email");
@@ -10532,6 +10902,7 @@
       const passwordNew = document.getElementById("password-new");
       const passwordConfirm = document.getElementById("password-confirm");
       const passwordStatus = document.getElementById("password-status");
+      let loginAuthorizedForPage = false;
 
       function showLoginError(message) {
         loginError.textContent = message;
@@ -10571,7 +10942,8 @@
 
       setLoginReady(false);
 
-      loginButton.addEventListener("click", async () => {
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
         const email = loginEmail.value.trim();
         const password = loginPassword.value.trim();
 
@@ -10592,19 +10964,15 @@
         try {
           loginButton.disabled = true;
           loginButton.textContent = "Entrando...";
+          loginAuthorizedForPage = true;
           await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
+          loginAuthorizedForPage = false;
           showLoginError(getAuthErrorMessage(error));
           console.error(error);
         } finally {
           loginButton.disabled = false;
           loginButton.textContent = "Entrar";
-        }
-      });
-
-      loginPassword.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          loginButton.click();
         }
       });
 
@@ -10765,9 +11133,11 @@
         try {
           const firebaseConfig = await loadFirebaseConfig();
           const app = initializeApp(firebaseConfig);
+          auth = initializeAuth(app, {
+            persistence: inMemoryPersistence
+          });
           startFirebaseAppCheck(app);
           startFirebaseAi(app);
-          auth = getAuth(app);
           db = getFirestore(app);
           avisosRef = doc(db, "appContent", "centralAvisos");
           rankingRef = doc(db, "appContent", "ranking");
@@ -10775,7 +11145,11 @@
           feedbacksRef = collection(db, "feedbacks");
           sdrRef = collection(db, "sdrLeads");
 
-          onAuthStateChanged(auth, (user) => {
+          onAuthStateChanged(auth, async (user) => {
+        if (user && !loginAuthorizedForPage) {
+          await signOut(auth);
+          return;
+        }
         if (user) {
           loginScreen.classList.add("hidden");
           appContent.classList.remove("hidden");
@@ -10849,8 +11223,15 @@
       }
 
       window.logoutPlatino = async function () {
+        loginAuthorizedForPage = false;
         if (auth) await signOut(auth);
       };
+
+      window.addEventListener("pageshow", event => {
+        if (!event.persisted || !auth?.currentUser) return;
+        loginAuthorizedForPage = false;
+        signOut(auth).catch(error => console.error("Não foi possível encerrar a sessão restaurada.", error));
+      });
 
       startFirebase();
     </script>
