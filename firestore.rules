@@ -10,22 +10,25 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
 
+    function hasUserProfile() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
     function tokenRole() {
       return signedIn() ? request.auth.token.get('role', '') : '';
     }
 
     function operationalRole() {
-      return signedIn()
+      return hasUserProfile()
         ? userProfile().get('operationalRole', userProfile().get('role', tokenRole()))
-        : '';
+        : tokenRole();
     }
 
     function isManagement() {
       return signedIn()
         && (
-          tokenRole() in ['admin', 'manager']
-          || operationalRole() in ['admin', 'manager', 'gestor', 'supervisor']
-          || request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
+          request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
           || request.auth.token.email in [
             'gestao@platino.com',
             'tafarel@platino.com',
@@ -37,6 +40,8 @@ service cloud.firestore {
             'isabela@platino.com',
             'vanessa@platino.com'
           ]
+          || tokenRole() in ['admin', 'manager']
+          || operationalRole() in ['admin', 'manager', 'gestor', 'supervisor']
         );
     }
 
@@ -73,8 +78,7 @@ service cloud.firestore {
     function isSdrUser() {
       return signedIn()
         && (
-          operationalRole() in ['sdr', 'SDR']
-          || request.auth.token.email in [
+          request.auth.token.email in [
             'roberta@platino.com',
             'gabriel@platino.com',
             'janaina@platino.com',
@@ -84,24 +88,25 @@ service cloud.firestore {
             'geovanna@platino.com',
             'mayara@platino.com'
           ]
+          || operationalRole() in ['sdr', 'SDR']
         );
     }
 
     function isConsultantUser() {
       return signedIn()
         && (
-          operationalRole() in [
+          request.auth.token.email in [
+            'giullian@platino.com',
+            'nicolas@platino.com',
+            'tabata@platino.com',
+            'elaine@platino.com'
+          ]
+          || operationalRole() in [
             'consultant',
             'consultor',
             'consultor_comercial',
             'analyst',
             'analista'
-          ]
-          || request.auth.token.email in [
-            'giullian@platino.com',
-            'nicolas@platino.com',
-            'tabata@platino.com',
-            'elaine@platino.com'
           ]
         );
     }
