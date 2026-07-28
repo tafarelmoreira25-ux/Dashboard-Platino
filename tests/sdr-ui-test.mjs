@@ -58,6 +58,8 @@ assert.match(moduleSource, /arquivo não foi armazenado/i);
 assert.match(moduleSource, /localStorage/);
 assert.match(moduleSource, /navigator\.onLine/);
 assert.match(moduleSource, /onSnapshot/);
+assert.match(moduleSource, /if \(!canAccessSdr\(\)\) \{[\s\S]*?return;[\s\S]*?\}[\s\S]*?mount\(\);[\s\S]*?subscribeLeads\(\);/);
+assert.doesNotMatch(moduleSource, /sector\.includes\("comercial"\)/);
 assert.match(css, /@media \(max-width: 699px\)/);
 assert.match(css, /\.sdr-stepper/);
 assert.match(css, /\.sdr-modal/);

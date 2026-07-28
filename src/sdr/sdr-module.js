@@ -55,15 +55,13 @@ function resolveRole(profile = {}) {
   const role = normalizeSearch(profile.operationalRole || profile.role);
   if (["admin", "manager", "sdr", "consultant", "analyst"].includes(role)) return role;
   if (["gestor", "supervisor"].includes(role) || window.platinoUserRole === "gestor") return "manager";
-  const sector = normalizeSearch(profile.sector || window.platinoUserSector);
-  if (sector.includes("sdr") || sector.includes("comercial")) return "sdr";
-  if (sector.includes("jurid") || sector.includes("consult")) return "consultant";
   return "collaborator";
 }
 
 function canManage() { return ["admin", "manager"].includes(state.role); }
 function canSdr() { return canManage() || state.role === "sdr"; }
 function canConsult() { return canManage() || ["consultant", "analyst"].includes(state.role); }
+function canAccessSdr() { return canSdr() || canConsult(); }
 
 async function api(action, payload = {}) {
   if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
@@ -962,10 +960,13 @@ async function boot(context) {
   state.role = resolveRole(state.profile);
   window.platinoUserOperationalRole = state.role;
   window.sdrApplyAccess = () => {
-    const allowed = ["sdr", "consultant", "analyst", "manager", "admin"].includes(state.role);
-    document.getElementById("nav-sdr")?.classList.toggle("hidden", !allowed);
+    document.getElementById("nav-sdr")?.classList.toggle("hidden", !canAccessSdr());
   };
   window.sdrApplyAccess();
+  if (!canAccessSdr()) {
+    root.innerHTML = "";
+    return;
+  }
   mount();
   subscribeLeads();
 }
