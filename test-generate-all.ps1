@@ -17,7 +17,11 @@ $templates = @(
   'termo-ciencia-autorizacao-seguranca',
   'termo-compromisso-pagamento',
   'modelo-termo-compromisso-pagamento',
-  'relatorio-atualizacao-processo-judicial'
+  'relatorio-atualizacao-processo-judicial',
+  'recibo-prestacao-servicos',
+  'termo-recompra',
+  'relatorio-negociacao-acordo-homologacao',
+  'certidao-diligencia-contato-profissional'
 )
 
 $sampleImageBytes = [IO.File]::ReadAllBytes((Join-Path $PSScriptRoot 'modelos\contestacao-taxas-email-fundo.jpg'))
@@ -91,6 +95,30 @@ $sampleData = @{
   advogadoResponsavel = 'a Dra. Juliana Cristina Galzo'
   linkProcesso = 'https://www.tjsp.jus.br/'
   imagemProcesso = $sampleImage
+  modalidadePagamento = 'cartão de crédito'
+  parcelas = '3'
+  horaPagamento = '14:35'
+  tipoTransacao = 'Crédito'
+  bandeiraCartao = 'Visa'
+  codigoAutorizacao = '123456'
+  tipoVenda = 'Parcelada'
+  dataUltimoContato = '15/07/2026'
+  valorParcelasAtraso = '2.500,00'
+  valorParcelasAtrasoExtenso = 'dois mil e quinhentos reais'
+  valorQuitacaoAtual = '28.000,00'
+  valorQuitacaoAtualExtenso = 'vinte e oito mil reais'
+  saldoDevedorAtualizado = '30.000,00'
+  saldoDevedorAtualizadoExtenso = 'trinta mil reais'
+  valorQuitacaoDesconto = '22.000,00'
+  valorQuitacaoDescontoExtenso = 'vinte e dois mil reais'
+  quantidadeParcelasAtraso = '2'
+  valorTotalParcelasAtraso = '2.500,00'
+  valorTotalParcelasAtrasoExtenso = 'dois mil e quinhentos reais'
+  dataPropostaFinanceira = '15/07/2026'
+  prazoValidadeProposta = '5 dias úteis'
+  manifestacaoCliente = 'interesse-quitacao'
+  consultor = 'Fernanda Ramos'
+  horaAssinatura = '14:35:20'
 }
 
 $summary = foreach ($template in $templates) {

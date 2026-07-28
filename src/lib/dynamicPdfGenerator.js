@@ -11,6 +11,12 @@ import {
 import { gerarIntimacaoExtrajudicialPdf } from "./dynamicPdf/intimacaoExtrajudicialPdf.js";
 import { gerarModeloTermoCompromissoPagamentoPdf } from "./dynamicPdf/modeloTermoCompromissoPagamentoPdf.js";
 import { gerarNotificacaoExtrajudicialPdf } from "./dynamicPdf/notificacaoExtrajudicialPdf.js";
+import {
+  gerarCertidaoDiligenciaContatoProfissionalPdf,
+  gerarReciboPrestacaoServicosPdf,
+  gerarRelatorioNegociacaoHomologacaoPdf,
+  gerarTermoRecompraPdf,
+} from "./dynamicPdf/novosDocumentosPdf.js";
 import { gerarProcuracaoPdf } from "./dynamicPdf/procuracaoPdf.js";
 import { gerarRelatorioAtualizacaoProcessoPdf } from "./dynamicPdf/relatorioAtualizacaoProcessoPdf.js";
 import { gerarLaudoPericialContabilPdf } from "./dynamicPdf/laudoPericialContabilPdf.js";
@@ -202,6 +208,40 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
         valorTotal: texto(data.valor),
         valorTotalExtenso: texto(data.valorExtenso),
         dataPagamento: texto(data.dataPagamento),
+      }),
+    "recibo-prestacao-servicos": async () =>
+      gerarReciboPrestacaoServicosPdf({
+        ...data,
+        ...comum,
+      }, {
+        assinaturaBytes: await asset("documentos-institucionais-assinatura.png"),
+        carimboBytes: await asset("recibo-prestacao-servicos-carimbo.png"),
+      }),
+    "termo-recompra": async () =>
+      gerarTermoRecompraPdf({
+        ...data,
+        ...comum,
+      }, {
+        assinaturaBytes: await asset("documentos-institucionais-assinatura.png"),
+        carimboBytes: await asset("documentos-institucionais-carimbo.png"),
+      }),
+    "relatorio-negociacao-acordo-homologacao": async () =>
+      gerarRelatorioNegociacaoHomologacaoPdf({
+        ...data,
+        ...comum,
+      }, {
+        assinaturaBytes: await asset("documentos-institucionais-assinatura.png"),
+        carimboBytes: await asset("documentos-institucionais-carimbo.png"),
+      }),
+    "certidao-diligencia-contato-profissional": async () =>
+      gerarCertidaoDiligenciaContatoProfissionalPdf({
+        ...data,
+        ...comum,
+      }, {
+        assinaturaPlatinoBytes: await asset("certidao-diligencia-assinatura-platino.png"),
+        clicksignBytes: await asset("certidao-diligencia-clicksign.png"),
+        seloReproducaoBytes: await asset("certidao-diligencia-selo-reproducao.png"),
+        icpBrasilBytes: await asset("certidao-diligencia-icp-brasil.png"),
       }),
     "relatorio-atualizacao-processo-judicial": async () =>
       gerarRelatorioAtualizacaoProcessoPdf({

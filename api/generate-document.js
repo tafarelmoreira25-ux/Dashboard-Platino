@@ -14,6 +14,10 @@ const TEMPLATE_TITLES = {
   "termo-ciencia-autorizacao-seguranca": "Termo de Ciência e Autorização de Segurança",
   "termo-compromisso-pagamento": "Termo de Compromisso de Pagamento",
   "modelo-termo-compromisso-pagamento": "Modelo - Termo de Compromisso de Pagamento",
+  "recibo-prestacao-servicos": "Recibo de Prestação de Serviços",
+  "termo-recompra": "Termo de Recompra",
+  "relatorio-negociacao-acordo-homologacao": "Relatório de Negociação - Acordo de Homologação",
+  "certidao-diligencia-contato-profissional": "Certidão de Diligência e Contato Profissional",
   "relatorio-atualizacao-processo-judicial": "Relatório de Atualização do Processo Judicial",
   "laudo-pericial-contabil": "Laudo Pericial Contábil",
 };

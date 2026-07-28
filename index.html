@@ -1629,6 +1629,470 @@
             }
         }
 
+        .documents-central {
+            --docs-navy: #06152b;
+            --docs-panel: #0b2142;
+            --docs-panel-soft: #102b52;
+            --docs-line: rgba(125, 174, 235, 0.18);
+            min-height: calc(100vh - 10rem);
+            overflow: hidden;
+            border: 1px solid var(--docs-line);
+            border-radius: 1.75rem;
+            background:
+                radial-gradient(circle at 92% 2%, rgba(37, 99, 235, 0.25), transparent 30rem),
+                linear-gradient(145deg, #081a34 0%, var(--docs-navy) 54%, #071a35 100%);
+            box-shadow: 0 28px 70px rgba(15, 23, 42, 0.22);
+        }
+
+        .documents-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--docs-line);
+        }
+
+        .documents-hero::after {
+            content: "";
+            position: absolute;
+            width: 15rem;
+            height: 15rem;
+            right: -5rem;
+            top: -8rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.13);
+            filter: blur(16px);
+            pointer-events: none;
+        }
+
+        .documents-content {
+            padding: 1.25rem;
+        }
+
+        .documents-eyebrow,
+        .documents-category-label {
+            color: #7dd3fc;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+        }
+
+        .documents-local-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            width: fit-content;
+            padding: 0.55rem 0.8rem;
+            border: 1px solid rgba(52, 211, 153, 0.23);
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #a7f3d0;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .documents-local-indicator::before {
+            content: "";
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 999px;
+            background: #34d399;
+            box-shadow: 0 0 0 0.3rem rgba(52, 211, 153, 0.12);
+        }
+
+        .documents-library-toolbar,
+        .documents-form-toolbar {
+            display: grid;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--docs-line);
+            border-radius: 1.25rem;
+            background: rgba(10, 31, 61, 0.78);
+            box-shadow: inset 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .documents-search {
+            position: relative;
+        }
+
+        .documents-search i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #60a5fa;
+            font-size: 1.15rem;
+        }
+
+        .documents-search input {
+            width: 100%;
+            min-height: 3.2rem;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid rgba(125, 174, 235, 0.24);
+            border-radius: 0.95rem;
+            background: rgba(3, 15, 35, 0.72);
+            color: #ffffff;
+            outline: none;
+        }
+
+        .documents-search input::placeholder {
+            color: #7f96b7;
+        }
+
+        .documents-search input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+        }
+
+        .documents-categories {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.2rem;
+            scrollbar-width: thin;
+        }
+
+        .documents-category-filter {
+            flex: 0 0 auto;
+            min-height: 2.4rem;
+            padding: 0.55rem 0.8rem;
+            border: 1px solid rgba(125, 174, 235, 0.18);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.04);
+            color: #b7c9e4;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        .documents-category-filter:hover,
+        .documents-category-filter[aria-pressed="true"] {
+            border-color: rgba(96, 165, 250, 0.68);
+            background: rgba(37, 99, 235, 0.22);
+            color: #ffffff;
+        }
+
+        .documents-template-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .documents-template-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 3rem minmax(0, 1fr) auto;
+            gap: 0.9rem;
+            align-items: start;
+            min-height: 9.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(125, 174, 235, 0.16);
+            border-radius: 1.15rem;
+            background:
+                linear-gradient(145deg, rgba(17, 46, 87, 0.84), rgba(8, 28, 57, 0.9));
+            color: #ffffff;
+            text-align: left;
+            transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .documents-template-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(96, 165, 250, 0.58);
+            box-shadow: 0 18px 32px rgba(2, 8, 23, 0.26);
+        }
+
+        .documents-template-card[aria-selected="true"] {
+            border-color: #60a5fa;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.18), transparent 48%),
+                linear-gradient(145deg, rgba(30, 72, 132, 0.96), rgba(10, 38, 76, 0.96));
+            box-shadow: inset 4px 0 #38bdf8, 0 18px 34px rgba(2, 8, 23, 0.28);
+        }
+
+        .documents-template-icon {
+            display: grid;
+            width: 3rem;
+            height: 3rem;
+            place-items: center;
+            border: 1px solid rgba(125, 211, 252, 0.2);
+            border-radius: 0.9rem;
+            background: rgba(14, 165, 233, 0.11);
+            color: #7dd3fc;
+            font-size: 1.35rem;
+        }
+
+        .documents-template-action {
+            display: grid;
+            width: 2rem;
+            height: 2rem;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(96, 165, 250, 0.12);
+            color: #93c5fd;
+        }
+
+        .documents-form-shell {
+            overflow: hidden;
+            border: 1px solid var(--docs-line);
+            border-radius: 1.4rem;
+            background: rgba(7, 25, 52, 0.84);
+        }
+
+        .documents-form-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1.15rem;
+            border-bottom: 1px solid var(--docs-line);
+            background: linear-gradient(135deg, rgba(18, 54, 101, 0.78), rgba(8, 31, 64, 0.78));
+        }
+
+        .documents-back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            width: fit-content;
+            min-height: 2.6rem;
+            padding: 0.6rem 0.85rem;
+            border: 1px solid rgba(147, 197, 253, 0.22);
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #dbeafe;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .documents-progress {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .documents-progress-track {
+            height: 0.4rem;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.17);
+        }
+
+        .documents-progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #2563eb, #38bdf8);
+            transition: width 180ms ease;
+        }
+
+        .documents-form-body {
+            padding: 1rem;
+        }
+
+        .documents-meta-grid {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            padding: 1rem;
+            border: 1px solid rgba(125, 174, 235, 0.14);
+            border-radius: 1rem;
+            background: rgba(4, 18, 39, 0.46);
+        }
+
+        .documents-meta-grid > label:last-child {
+            grid-column: 1 / -1;
+        }
+
+        .documents-step {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(125, 174, 235, 0.14);
+            border-radius: 1rem;
+            background: rgba(12, 38, 73, 0.54);
+        }
+
+        .documents-step.is-active {
+            display: block;
+            animation: fadeIn 180ms ease-out;
+        }
+
+        .documents-step-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.9rem;
+        }
+
+        .documents-field-label {
+            display: grid;
+            gap: 0.45rem;
+            color: #b9cbea;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+        }
+
+        .documents-required {
+            color: #fda4af;
+        }
+
+        .documents-field-help {
+            color: #8198ba;
+            font-size: 0.69rem;
+            font-weight: 600;
+            line-height: 1.45;
+        }
+
+        .documents-step-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .documents-summary-item {
+            min-width: 0;
+            padding: 0.75rem;
+            border: 1px solid rgba(125, 174, 235, 0.12);
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .documents-summary-item span {
+            display: block;
+            color: #7f96b7;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .documents-summary-item strong {
+            display: block;
+            overflow: hidden;
+            margin-top: 0.3rem;
+            color: #eef6ff;
+            font-size: 0.78rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .documents-form-footer {
+            display: grid;
+            gap: 0.8rem;
+            padding: 1rem;
+            border-top: 1px solid var(--docs-line);
+            background: rgba(3, 15, 34, 0.7);
+        }
+
+        .documents-step-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: flex-end;
+        }
+
+        .documents-secondary-button,
+        .documents-primary-button,
+        .documents-generate-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            min-height: 2.8rem;
+            padding: 0.65rem 1rem;
+            border-radius: 0.85rem;
+            font-size: 0.78rem;
+            font-weight: 900;
+        }
+
+        .documents-secondary-button {
+            border: 1px solid rgba(147, 197, 253, 0.2);
+            background: rgba(255, 255, 255, 0.045);
+            color: #dbeafe;
+        }
+
+        .documents-primary-button {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .documents-generate-button {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: #ffffff;
+            box-shadow: 0 12px 24px rgba(220, 38, 38, 0.2);
+        }
+
+        .documents-draft-status {
+            min-height: 1.1rem;
+            color: #8fa6c8;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        @media (min-width: 760px) {
+            .documents-hero,
+            .documents-content {
+                padding: 1.75rem;
+            }
+
+            .documents-library-toolbar {
+                grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
+                align-items: center;
+            }
+
+            .documents-form-header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .documents-progress {
+                min-width: 17rem;
+            }
+
+            .documents-form-body,
+            .documents-form-footer {
+                padding: 1.25rem;
+            }
+
+            .documents-form-footer {
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .documents-meta-grid {
+                grid-template-columns: 0.7fr 0.8fr 1.5fr;
+            }
+
+            .documents-meta-grid > label:last-child {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 759px) {
+            .documents-template-options,
+            .documents-step-grid,
+            .documents-step-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .documents-template-card {
+                min-height: 8.5rem;
+            }
+
+            .documents-meta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .documents-meta-grid > label:last-child {
+                grid-column: auto;
+            }
+
+            .documents-step-actions > button {
+                flex: 1 1 auto;
+            }
+        }
+
         .ranking-filter-button[aria-pressed="true"] {
             border-color: rgba(147, 197, 253, 0.75);
             background: rgba(59, 130, 246, 0.28);
@@ -2061,6 +2525,9 @@
 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pt-5 pb-2">Recursos</div>
 
+                <button id="nav-documentos" onclick="navigateTo('documentos')" class="nav-btn">
+                    <i class="ph ph-files"></i> Documentos
+                </button>
                 <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn">
                     <i class="ph ph-books"></i> Treinamentos
                 </button>
@@ -2507,100 +2974,139 @@
                 </div>
             </section>
 
+            <section id="section-documentos" class="content-section hidden animate-fade-in">
+                <div class="documents-central max-w-7xl mx-auto">
+                    <header class="documents-hero">
+                        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div>
+                                <p class="documents-eyebrow"><i class="ph ph-squares-four mr-1"></i> Central operacional</p>
+                                <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Central de Documentos</h2>
+                                <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Gere, organize e acompanhe seus documentos com praticidade</p>
+                            </div>
+                            <span class="documents-local-indicator"><i class="ph ph-lock-key"></i> Geração local e segura</span>
+                        </div>
+                    </header>
+
+                    <div class="documents-content">
+                        <div id="documents-library-view">
+                            <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                                <div>
+                                    <p class="documents-category-label">Escolha do modelo</p>
+                                    <h3 class="mt-1 text-xl font-black text-white"><i class="ph ph-books mr-1 text-sky-300"></i> Biblioteca de modelos</h3>
+                                    <p class="mt-1 text-sm text-blue-100/60">Selecione o documento adequado para abrir o formulário correspondente.</p>
+                                </div>
+                                <span id="adm-template-count" class="text-xs font-bold text-blue-200/60">Modelos disponíveis</span>
+                            </div>
+
+                            <div class="documents-library-toolbar">
+                                <div class="documents-search">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                    <input id="adm-template-search" type="search" placeholder="Buscar por nome, área ou finalidade..." autocomplete="off" oninput="renderAdmTemplateOptions(this.value)">
+                                </div>
+                                <div id="documents-category-filters" class="documents-categories" aria-label="Filtrar modelos por categoria"></div>
+                            </div>
+
+                            <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="sr-only" aria-hidden="true" tabindex="-1">
+                                <option value="chargeback">Chargeback</option>
+                                <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
+                                <option value="citacao-judicial">Citação Judicial</option>
+                                <option value="contestacao-taxas-email">Contestação de Taxas por E-mail</option>
+                                <option value="declaracao-ausencia-carteira-trabalho">Declaração de Ausência de Carteira de Trabalho</option>
+                                <option value="declaracao-hipossuficiencia">Declaração de Hipossuficiência</option>
+                                <option value="declaracao-isencao-irpf">Declaração de Isenção de IRPF</option>
+                                <option value="notificacao-extrajudicial-platino">Notificação Extrajudicial Platino</option>
+                                <option value="procuracao-dra-juliane">Procuração Dra. Juliane</option>
+                                <option value="termo-ciencia-autorizacao-seguranca">Termo de Ciência e Autorização de Segurança</option>
+                                <option value="termo-compromisso-pagamento">Termo de Compromisso de Pagamento</option>
+                                <option value="modelo-termo-compromisso-pagamento">Modelo - Termo de Compromisso de Pagamento</option>
+                                <option value="recibo-prestacao-servicos">Recibo de Prestação de Serviços</option>
+                                <option value="termo-recompra">Termo de Recompra</option>
+                                <option value="relatorio-negociacao-acordo-homologacao">Relatório de Negociação — Acordo de Homologação</option>
+                                <option value="certidao-diligencia-contato-profissional">Certidão de Diligência e Contato Profissional</option>
+                                <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
+                                <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
+                            </select>
+                            <div id="adm-template-options" class="documents-template-options" role="listbox" aria-label="Modelos de documentos disponíveis"></div>
+                        </div>
+
+                        <div id="documents-form-view" class="hidden">
+                            <div class="documents-form-shell">
+                                <div class="documents-form-header">
+                                    <div class="flex min-w-0 items-center gap-3">
+                                        <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
+                                            <i class="ph ph-arrow-left"></i> <span class="hidden sm:inline">Biblioteca</span>
+                                        </button>
+                                        <span class="documents-template-icon flex-shrink-0"><i id="documents-selected-icon" class="ph ph-file-text"></i></span>
+                                        <div class="min-w-0">
+                                            <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
+                                            <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
+                                            <p id="adm-template-picker-description" class="mt-0.5 truncate text-xs text-blue-100/60">Preencha os dados solicitados.</p>
+                                        </div>
+                                    </div>
+                                    <div class="documents-progress">
+                                        <div class="flex items-center justify-between gap-4 text-[11px] font-bold text-blue-100/70">
+                                            <span id="documents-step-label">Etapa 1 de 1</span>
+                                            <span id="documents-progress-value">0%</span>
+                                        </div>
+                                        <div class="documents-progress-track"><div id="documents-progress-fill" class="documents-progress-fill"></div></div>
+                                    </div>
+                                </div>
+
+                                <form id="adm-pdf-form" onsubmit="event.preventDefault(); generateAdmPdf(event)">
+                                    <div class="documents-form-body">
+                                        <div class="documents-meta-grid">
+                                            <label class="documents-field-label">
+                                                Data do documento
+                                                <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold">
+                                            </label>
+                                            <label class="documents-field-label">
+                                                Número do documento
+                                                <input id="adm-pdf-number" type="text" readonly class="adm-pdf-control px-4 py-3 text-sm font-black">
+                                            </label>
+                                            <label class="documents-field-label">
+                                                Nome do arquivo
+                                                <div class="relative">
+                                                    <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
+                                                    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">.pdf</span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div id="adm-pdf-fields"></div>
+                                    </div>
+
+                                    <div class="documents-form-footer">
+                                        <div>
+                                            <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
+                                            <p id="documents-draft-status" class="documents-draft-status"></p>
+                                        </div>
+                                        <div class="documents-step-actions">
+                                            <button id="documents-clear-button" type="button" onclick="resetAdmPdfForm()" class="documents-secondary-button">
+                                                <i class="ph ph-trash"></i> Limpar
+                                            </button>
+                                            <button id="documents-prev-button" type="button" onclick="changeDocumentsStep(-1)" class="documents-secondary-button">
+                                                <i class="ph ph-arrow-left"></i> Voltar
+                                            </button>
+                                            <button id="documents-next-button" type="button" onclick="changeDocumentsStep(1)" class="documents-primary-button">
+                                                Avançar <i class="ph ph-arrow-right"></i>
+                                            </button>
+                                            <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="documents-generate-button hidden">
+                                                <i class="ph ph-download-simple"></i> <span>Gerar documento</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="section-adm" class="content-section hidden animate-fade-in">
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-8">
                         <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-folders text-blue-500"></i> Setor Administrativo</h2>
                         <p class="text-slate-500 mt-1">Clique nas etapas abaixo para expandir e visualizar as tarefas.</p>
-                    </div>
-                    <div class="adm-pdf-panel mb-6 dark-panel rounded-2xl border border-white/10 p-5 shadow-sm">
-                        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                            <div>
-                                <p class="metallic-kicker text-[10px]">Central de documentos</p>
-                                <h3 class="mt-1 flex items-center gap-2 text-xl font-black text-white"><i class="ph ph-file-pdf text-red-400"></i> Gerador inteligente de PDF</h3>
-                                <p class="mt-1 text-sm text-blue-100/70">Preencha os dados e acompanhe a composição do documento em tempo real.</p>
-                            </div>
-                            <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold text-emerald-200">
-                                <i class="ph ph-lock-key"></i> Geração local
-                            </span>
-                        </div>
-
-                        <form id="adm-pdf-form" class="grid gap-4" onsubmit="event.preventDefault(); generateAdmPdf(event)">
-                            <div class="grid gap-3">
-                                <div class="adm-template-picker grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
-                                    <span>1. Escolha o modelo do documento</span>
-                                    <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="sr-only" aria-hidden="true" tabindex="-1">
-                                        <option value="chargeback">Chargeback</option>
-                                        <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
-                                        <option value="citacao-judicial">Citação Judicial</option>
-                                        <option value="contestacao-taxas-email">Contestação de Taxas por E-mail</option>
-                                        <option value="declaracao-ausencia-carteira-trabalho">Declaração de Ausência de Carteira de Trabalho</option>
-                                        <option value="declaracao-hipossuficiencia">Declaração de Hipossuficiência</option>
-                                        <option value="declaracao-isencao-irpf">Declaração de Isenção de IRPF</option>
-                                        <option value="notificacao-extrajudicial-platino">Notificação Extrajudicial Platino</option>
-                                        <option value="procuracao-dra-juliane">Procuração Dra. Juliane</option>
-                                        <option value="termo-ciencia-autorizacao-seguranca">Termo de Ciência e Autorização de Segurança</option>
-                                        <option value="termo-compromisso-pagamento">Termo de Compromisso de Pagamento</option>
-                                        <option value="modelo-termo-compromisso-pagamento">Modelo - Termo de Compromisso de Pagamento</option>
-                                        <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
-                                        <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
-                                    </select>
-                                    <button id="adm-template-picker-button" type="button" class="adm-template-picker-trigger normal-case tracking-normal" aria-haspopup="listbox" aria-expanded="false" aria-controls="adm-template-picker-panel" onclick="toggleAdmTemplatePicker()">
-                                        <span class="adm-template-picker-icon"><i class="ph ph-scales"></i></span>
-                                        <span class="min-w-0">
-                                            <span id="adm-template-picker-category" class="block text-[0.65rem] font-black uppercase tracking-[0.14em] text-blue-600">Documento jurídico</span>
-                                            <span id="adm-template-picker-title" class="mt-0.5 block truncate text-sm font-black text-slate-900">Selecione um modelo</span>
-                                            <span id="adm-template-picker-description" class="mt-0.5 block truncate text-xs font-medium text-slate-500">Escolha na biblioteca de documentos</span>
-                                        </span>
-                                        <i class="ph ph-caret-down text-lg text-slate-500 transition-transform" data-picker-chevron></i>
-                                    </button>
-                                    <div id="adm-template-picker-panel" class="adm-template-picker-panel normal-case tracking-normal" hidden>
-                                        <div class="adm-template-picker-tools">
-                                            <div class="flex items-center justify-between gap-3 pb-2">
-                                                <span class="text-sm font-black text-white"><i class="ph ph-books mr-1 text-blue-300"></i> Biblioteca de modelos</span>
-                                                <span id="adm-template-count" class="text-[0.65rem] font-bold uppercase tracking-wider text-blue-200/60">Modelos disponíveis</span>
-                                            </div>
-                                            <div class="adm-template-search-wrap">
-                                                <i class="ph ph-magnifying-glass text-lg"></i>
-                                                <input id="adm-template-search" type="search" class="adm-template-search" placeholder="Buscar por nome, área ou finalidade..." autocomplete="off" oninput="renderAdmTemplateOptions(this.value)">
-                                            </div>
-                                        </div>
-                                        <div id="adm-template-options" class="adm-template-options" role="listbox" aria-label="Modelos jurídicos disponíveis"></div>
-                                    </div>
-                                </div>
-                                <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-[0.7fr_0.8fr_1.5fr]">
-                                    <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
-                                        Data do documento
-                                        <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal">
-                                    </label>
-                                    <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
-                                        Número do documento
-                                        <input id="adm-pdf-number" type="text" readonly class="adm-pdf-control px-4 py-3 text-sm font-black normal-case tracking-normal">
-                                    </label>
-                                    <label class="grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70 sm:col-span-2 lg:col-span-1">
-                                        Nome do arquivo
-                                        <div class="relative">
-                                            <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold normal-case tracking-normal" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
-                                            <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black normal-case tracking-normal text-slate-400">.pdf</span>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div id="adm-pdf-fields" class="adm-pdf-fields grid gap-3 sm:grid-cols-2"></div>
-
-                            <div class="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
-                                <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
-                                <div class="adm-pdf-actions">
-                                    <button type="button" onclick="resetAdmPdfForm()" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-2 text-sm font-bold text-blue-100 transition hover:bg-white/10">
-                                        <i class="ph ph-arrow-counter-clockwise"></i> Limpar
-                                    </button>
-                                    <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-2 text-sm font-black text-white shadow-lg transition hover:bg-red-700 active:scale-[0.98]">
-                                        <i class="ph ph-download-simple"></i> <span>Gerar PDF</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                     <div class="space-y-4" id="adm-accordions"></div>
                 </div>
@@ -4755,6 +5261,7 @@
             sdr: 'SDR',
             rh: 'RH',
             financeiro: 'Financeiro',
+            documentos: 'Documentos',
             drive: 'Drive',
             treinamentos: 'Treinamentos',
             perfil: 'Perfil e Tarefas',
@@ -5181,7 +5688,8 @@
                 'Início: comunicados internos, equipe e atualizações gerais.',
                 'Central de vendas: resultados, ranking Comercial e Jurídico, chargebacks, hunters e linha do tempo de vendas.',
                 'Comercial: manual de conversão, atendimento, fechamento e contratos.',
-                'Administrativo: GOV.BR, documentos, laudos e gerador de PDF.',
+                'Administrativo: GOV.BR, conferência e rotinas administrativas.',
+                'Documentos: biblioteca de modelos, formulários e geração local de documentos em PDF.',
                 'Jurídico: fluxo processual, citações, audiências e homologação.',
                 'RH: comunicados, frequência, treinamentos, calendário e solicitações.',
                 'Treinamentos: biblioteca oficial de PDFs, manuais e conteúdos interativos.',
@@ -7408,7 +7916,31 @@
             anexosProcesso: 'Link dos anexos/documentos do processo',
             advogadoResponsavel: 'Representante responsável pelo acompanhamento',
             linkProcesso: 'Link para consulta das movimentações',
-            imagemProcesso: 'Captura de tela do processo (opcional)'
+            imagemProcesso: 'Captura de tela do processo (opcional)',
+            modalidadePagamento: 'Modalidade de pagamento',
+            parcelas: 'Quantidade de parcelas',
+            horaPagamento: 'Horário do pagamento',
+            tipoTransacao: 'Tipo da transação',
+            bandeiraCartao: 'Bandeira do cartão',
+            codigoAutorizacao: 'Código de autorização',
+            tipoVenda: 'Tipo da venda',
+            dataUltimoContato: 'Data do último contato',
+            valorParcelasAtraso: 'Valor das parcelas em atraso',
+            valorParcelasAtrasoExtenso: 'Valor das parcelas em atraso por extenso',
+            valorQuitacaoAtual: 'Proposta de quitação atual',
+            valorQuitacaoAtualExtenso: 'Proposta de quitação atual por extenso',
+            saldoDevedorAtualizado: 'Saldo devedor total atualizado',
+            saldoDevedorAtualizadoExtenso: 'Saldo devedor total atualizado por extenso',
+            valorQuitacaoDesconto: 'Valor atual para quitação com desconto',
+            valorQuitacaoDescontoExtenso: 'Valor para quitação com desconto por extenso',
+            quantidadeParcelasAtraso: 'Quantidade de parcelas em atraso',
+            valorTotalParcelasAtraso: 'Valor total das parcelas em atraso',
+            valorTotalParcelasAtrasoExtenso: 'Valor total das parcelas em atraso por extenso',
+            dataPropostaFinanceira: 'Data da proposta informada pela financeira',
+            prazoValidadeProposta: 'Prazo de validade da proposta',
+            manifestacaoCliente: 'Manifestação do cliente',
+            consultor: 'Nome do consultor',
+            horaAssinatura: 'Horário da assinatura'
         };
 
         const admPdfTemplates = {
@@ -7650,6 +8182,211 @@
                     'Declaro que me comprometo a realizar o pagamento do valor de R$ {{valor}} ({{valorExtenso}}.) à vista, na data {{dataPagamento}}.'
                 ],
                 signature: ['{{cliente}}', 'CPF: {{cpf}}']
+            },
+            'recibo-prestacao-servicos': {
+                title: 'Recibo de Prestação de Serviços',
+                source: 'recibo-prestacao-servicos.docx',
+                fields: [
+                    'cliente', 'cpf', 'valor', 'valorExtenso', 'modalidadePagamento', 'parcelas',
+                    'dataPagamento', 'horaPagamento', 'tipoTransacao', 'bandeiraCartao',
+                    'codigoAutorizacao'
+                ],
+                requiredFields: [
+                    'cliente', 'cpf', 'valor', 'valorExtenso', 'modalidadePagamento', 'parcelas',
+                    'dataPagamento', 'horaPagamento', 'tipoTransacao', 'bandeiraCartao',
+                    'codigoAutorizacao'
+                ],
+                groups: {
+                    cliente: 'Identificação do cliente', cpf: 'Identificação do cliente',
+                    valor: 'Dados do pagamento', valorExtenso: 'Dados do pagamento',
+                    modalidadePagamento: 'Dados do pagamento', parcelas: 'Dados do pagamento',
+                    dataPagamento: 'Dados da transação', horaPagamento: 'Dados da transação',
+                    tipoTransacao: 'Dados da transação', bandeiraCartao: 'Dados da transação',
+                    codigoAutorizacao: 'Dados da transação'
+                },
+                customLabels: {
+                    cliente: 'Nome do cliente',
+                    cpf: 'CPF do cliente',
+                    valor: 'Valor recebido (R$)',
+                    valorExtenso: 'Valor recebido por extenso',
+                    modalidadePagamento: 'Modalidade (crédito ou débito)',
+                    parcelas: 'Quantidade de parcelas',
+                    dataPagamento: 'Data do pagamento',
+                    horaPagamento: 'Horário do pagamento',
+                    tipoTransacao: 'Tipo da transação',
+                    bandeiraCartao: 'Bandeira do cartão',
+                    codigoAutorizacao: 'Código de autorização'
+                },
+                fieldTypes: {
+                    dataPagamento: 'date',
+                    horaPagamento: 'time',
+                    parcelas: 'number'
+                },
+                placeholders: {
+                    valor: 'Ex.: 1.234,56',
+                    valorExtenso: 'Ex.: mil duzentos e trinta e quatro reais e cinquenta e seis centavos',
+                    modalidadePagamento: 'Ex.: Crédito',
+                    parcelas: 'Ex.: 7',
+                    tipoTransacao: 'Ex.: Crédito Parcelado (7x)',
+                    bandeiraCartao: 'Ex.: Visa',
+                    codigoAutorizacao: 'Informe o código da transação'
+                },
+                blocks: []
+            },
+            'termo-recompra': {
+                title: 'Termo de Recompra',
+                source: 'termo-recompra.docx',
+                fields: ['cliente', 'cpf', 'valor', 'valorExtenso', 'modalidadePagamento'],
+                requiredFields: ['cliente', 'cpf', 'valor', 'valorExtenso', 'modalidadePagamento'],
+                groups: {
+                    cliente: 'Identificação do cliente', cpf: 'Identificação do cliente',
+                    valor: 'Condições da recompra', valorExtenso: 'Condições da recompra',
+                    modalidadePagamento: 'Condições da recompra'
+                },
+                customLabels: {
+                    cliente: 'Nome do cliente',
+                    cpf: 'CPF do cliente',
+                    valor: 'Valor da recompra (R$)',
+                    valorExtenso: 'Valor da recompra por extenso',
+                    modalidadePagamento: 'Modalidade de pagamento'
+                },
+                placeholders: {
+                    valor: 'Ex.: 1.234,56',
+                    valorExtenso: 'Ex.: mil duzentos e trinta e quatro reais e cinquenta e seis centavos',
+                    modalidadePagamento: 'Ex.: Cartão de crédito em 7 parcelas'
+                },
+                blocks: []
+            },
+            'certidao-diligencia-contato-profissional': {
+                title: 'Certidão de Diligência e Contato Profissional',
+                source: 'certidao-diligencia-contato-profissional.docx',
+                fields: [
+                    'cliente', 'genero', 'nacionalidade', 'estadoCivil', 'profissao',
+                    'cpf', 'estado', 'banco', 'consultor', 'horaAssinatura'
+                ],
+                requiredFields: [
+                    'cliente', 'genero', 'nacionalidade', 'estadoCivil', 'profissao',
+                    'cpf', 'estado', 'banco', 'consultor', 'horaAssinatura'
+                ],
+                groups: {
+                    cliente: 'Identificação do cliente',
+                    genero: 'Identificação do cliente',
+                    nacionalidade: 'Identificação do cliente',
+                    estadoCivil: 'Identificação do cliente',
+                    profissao: 'Identificação do cliente',
+                    cpf: 'Identificação do cliente',
+                    estado: 'Dados da diligência',
+                    banco: 'Dados da diligência',
+                    consultor: 'Responsáveis e assinatura',
+                    horaAssinatura: 'Responsáveis e assinatura'
+                },
+                customLabels: {
+                    cliente: 'Nome do cliente',
+                    genero: 'Gênero para flexão do texto',
+                    cpf: 'CPF do cliente',
+                    estado: 'Estado / Cidade da comarca',
+                    banco: 'Instituição financeira',
+                    consultor: 'Nome do consultor',
+                    horaAssinatura: 'Horário da assinatura (com segundos)'
+                },
+                fieldTypes: {
+                    genero: 'select'
+                },
+                fieldOptions: {
+                    genero: [
+                        { value: '', label: 'Selecione o gênero gramatical' },
+                        { value: 'feminino', label: 'Feminino' },
+                        { value: 'masculino', label: 'Masculino' },
+                        { value: 'neutro', label: 'Neutro' }
+                    ]
+                },
+                placeholders: {
+                    estado: 'Ex.: São Paulo/SP',
+                    banco: 'Informe a instituição financeira',
+                    consultor: 'Informe o nome do consultor',
+                    horaAssinatura: 'Ex.: 14:35:20'
+                },
+                blocks: []
+            },
+            'relatorio-negociacao-acordo-homologacao': {
+                title: 'Relatório de Negociação — Acordo de Homologação',
+                source: 'relatorio-negociacao-acordo-homologacao.docx',
+                fields: [
+                    'cliente', 'cpf', 'dataUltimoContato', 'valorParcelasAtraso',
+                    'valorParcelasAtrasoExtenso', 'valorQuitacaoAtual',
+                    'valorQuitacaoAtualExtenso', 'protocolo', 'saldoDevedorAtualizado',
+                    'saldoDevedorAtualizadoExtenso', 'valorQuitacaoDesconto',
+                    'valorQuitacaoDescontoExtenso', 'quantidadeParcelasAtraso',
+                    'valorTotalParcelasAtraso', 'valorTotalParcelasAtrasoExtenso',
+                    'dataPropostaFinanceira', 'prazoValidadeProposta', 'manifestacaoCliente'
+                ],
+                requiredFields: [
+                    'cliente', 'cpf', 'dataUltimoContato', 'valorParcelasAtraso',
+                    'valorParcelasAtrasoExtenso', 'valorQuitacaoAtual',
+                    'valorQuitacaoAtualExtenso', 'protocolo', 'saldoDevedorAtualizado',
+                    'saldoDevedorAtualizadoExtenso', 'valorQuitacaoDesconto',
+                    'valorQuitacaoDescontoExtenso', 'quantidadeParcelasAtraso',
+                    'valorTotalParcelasAtraso', 'valorTotalParcelasAtrasoExtenso',
+                    'dataPropostaFinanceira', 'prazoValidadeProposta', 'manifestacaoCliente'
+                ],
+                groups: {
+                    cliente: 'Identificação do cliente', cpf: 'Identificação do cliente',
+                    dataUltimoContato: 'Último contato e proposta',
+                    valorParcelasAtraso: 'Último contato e proposta',
+                    valorParcelasAtrasoExtenso: 'Último contato e proposta',
+                    valorQuitacaoAtual: 'Último contato e proposta',
+                    valorQuitacaoAtualExtenso: 'Último contato e proposta',
+                    protocolo: 'Informações atualizadas da negociação',
+                    saldoDevedorAtualizado: 'Informações atualizadas da negociação',
+                    saldoDevedorAtualizadoExtenso: 'Informações atualizadas da negociação',
+                    valorQuitacaoDesconto: 'Informações atualizadas da negociação',
+                    valorQuitacaoDescontoExtenso: 'Informações atualizadas da negociação',
+                    quantidadeParcelasAtraso: 'Informações atualizadas da negociação',
+                    valorTotalParcelasAtraso: 'Informações atualizadas da negociação',
+                    valorTotalParcelasAtrasoExtenso: 'Informações atualizadas da negociação',
+                    dataPropostaFinanceira: 'Informações atualizadas da negociação',
+                    prazoValidadeProposta: 'Informações atualizadas da negociação',
+                    manifestacaoCliente: 'Manifestação do cliente'
+                },
+                customLabels: {
+                    cliente: 'Nome do cliente',
+                    cpf: 'CPF do cliente',
+                    valorParcelasAtraso: 'Valor informado das parcelas em atraso (R$)',
+                    valorParcelasAtrasoExtenso: 'Valor das parcelas em atraso por extenso',
+                    valorQuitacaoAtual: 'Proposta de quitação atual (R$)',
+                    valorQuitacaoAtualExtenso: 'Proposta de quitação atual por extenso',
+                    saldoDevedorAtualizado: 'Saldo devedor total atualizado (R$)',
+                    saldoDevedorAtualizadoExtenso: 'Saldo devedor atualizado por extenso',
+                    valorQuitacaoDesconto: 'Valor para quitação com desconto (R$)',
+                    valorQuitacaoDescontoExtenso: 'Valor para quitação com desconto por extenso',
+                    valorTotalParcelasAtraso: 'Valor total das parcelas em atraso (R$)',
+                    valorTotalParcelasAtrasoExtenso: 'Valor total das parcelas em atraso por extenso'
+                },
+                fieldTypes: {
+                    dataUltimoContato: 'date',
+                    dataPropostaFinanceira: 'date',
+                    quantidadeParcelasAtraso: 'number',
+                    manifestacaoCliente: 'select'
+                },
+                fieldOptions: {
+                    manifestacaoCliente: [
+                        { value: '', label: 'Selecione a manifestação registrada' },
+                        { value: 'interesse-quitacao', label: 'Possui interesse na quitação pelo valor apresentado' },
+                        { value: 'aguardar-negociacao', label: 'Deseja aguardar nova tentativa de negociação' },
+                        { value: 'sem-interesse', label: 'Não possui interesse na proposta atual' },
+                        { value: 'nova-analise', label: 'Solicita nova análise ou atualização dos valores' }
+                    ]
+                },
+                placeholders: {
+                    valorParcelasAtraso: 'Ex.: 4.500,00',
+                    valorQuitacaoAtual: 'Ex.: 28.000,00',
+                    protocolo: 'Informe o número de protocolo',
+                    saldoDevedorAtualizado: 'Ex.: 42.000,00',
+                    valorQuitacaoDesconto: 'Ex.: 28.000,00',
+                    valorTotalParcelasAtraso: 'Ex.: 4.500,00',
+                    prazoValidadeProposta: 'Ex.: 5 dias ou não informado'
+                },
+                blocks: []
             },
             'relatorio-atualizacao-processo-judicial': {
                 title: 'Relatório de Atualização do Processo Judicial',
@@ -7953,24 +8690,28 @@
         }
 
         const admTemplateCatalog = {
-            'chargeback': { category: 'Defesa financeira', icon: 'ph-credit-card', description: 'Contestação formal de cobrança ou transação.' },
-            'citacao-intimacao-extrajudicial': { category: 'Extrajudicial', icon: 'ph-envelope-open', description: 'Comunicação formal sem processo judicial.' },
-            'citacao-judicial': { category: 'Judicial', icon: 'ph-gavel', description: 'Documento destinado a procedimento judicial.' },
-            'contestacao-taxas-email': { category: 'Defesa financeira', icon: 'ph-at', description: 'Contestação objetiva de taxas por e-mail.' },
-            'declaracao-ausencia-carteira-trabalho': { category: 'Declarações', icon: 'ph-identification-card', description: 'Declaração trabalhista de ausência de CTPS.' },
-            'declaracao-hipossuficiencia': { category: 'Declarações', icon: 'ph-file-text', description: 'Declaração para pedido de gratuidade.' },
-            'declaracao-isencao-irpf': { category: 'Declarações', icon: 'ph-receipt', description: 'Declaração de isenção do imposto de renda.' },
-            'notificacao-extrajudicial-platino': { category: 'Extrajudicial', icon: 'ph-megaphone', description: 'Notificação extrajudicial institucional Platino.' },
-            'procuracao-dra-juliane': { category: 'Representação', icon: 'ph-seal-check', description: 'Instrumento de mandato e representação.' },
-            'termo-ciencia-autorizacao-seguranca': { category: 'Termos e autorizações', icon: 'ph-shield-check', description: 'Ciência e autorização sobre segurança.' },
-            'termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-handshake', description: 'Formalização de compromisso de pagamento.' },
-            'modelo-termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-files', description: 'Modelo-base de compromisso de pagamento.' },
-            'relatorio-atualizacao-processo-judicial': { category: 'Judicial', icon: 'ph-briefcase', description: 'Relatório de andamento e movimentações.' },
-            'laudo-pericial-contabil': { category: 'Perícia contábil', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.' }
+            'chargeback': { category: 'Defesa Financeira', icon: 'ph-credit-card', description: 'Contestação formal de cobrança ou transação.', purpose: 'Defender uma cobrança contestada.' },
+            'citacao-intimacao-extrajudicial': { category: 'Extrajudicial', icon: 'ph-envelope-open', description: 'Comunicação formal sem processo judicial.', purpose: 'Notificar a instituição de forma extrajudicial.' },
+            'citacao-judicial': { category: 'Judicial', icon: 'ph-gavel', description: 'Documento destinado a procedimento judicial.', purpose: 'Impulsionar o andamento do processo.' },
+            'contestacao-taxas-email': { category: 'Defesa Financeira', icon: 'ph-at', description: 'Contestação objetiva de taxas por e-mail.', purpose: 'Solicitar a revisão de encargos contratuais.' },
+            'declaracao-ausencia-carteira-trabalho': { category: 'Declarações', icon: 'ph-identification-card', description: 'Declaração trabalhista de ausência de CTPS.', purpose: 'Formalizar a inexistência de carteira de trabalho.' },
+            'declaracao-hipossuficiencia': { category: 'Declarações', icon: 'ph-file-text', description: 'Declaração para pedido de gratuidade.', purpose: 'Apoiar a solicitação de justiça gratuita.' },
+            'declaracao-isencao-irpf': { category: 'Declarações', icon: 'ph-receipt', description: 'Declaração de isenção do imposto de renda.', purpose: 'Comprovar a condição de isento do IRPF.' },
+            'notificacao-extrajudicial-platino': { category: 'Extrajudicial', icon: 'ph-megaphone', description: 'Notificação extrajudicial institucional Platino.', purpose: 'Formalizar uma comunicação institucional.' },
+            'procuracao-dra-juliane': { category: 'Representação', icon: 'ph-seal-check', description: 'Instrumento de mandato e representação.', purpose: 'Conceder poderes para atuação jurídica.' },
+            'termo-ciencia-autorizacao-seguranca': { category: 'Termos e Autorizações', icon: 'ph-shield-check', description: 'Ciência e autorização sobre segurança.', purpose: 'Registrar autorização e ciência do cliente.' },
+            'termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-handshake', description: 'Formalização de compromisso de pagamento.', purpose: 'Registrar uma obrigação de pagamento.' },
+            'modelo-termo-compromisso-pagamento': { category: 'Acordos', icon: 'ph-files', description: 'Modelo-base de compromisso de pagamento.', purpose: 'Formalizar o pagamento de um produto ou custo.' },
+            'recibo-prestacao-servicos': { category: 'Financeiro', icon: 'ph-receipt', description: 'Recibo institucional de pagamento por serviços.', purpose: 'Comprovar o recebimento de uma prestação de serviços.' },
+            'termo-recompra': { category: 'Defesa Financeira', icon: 'ph-arrows-clockwise', description: 'Termo de reconhecimento, recompra e desistência.', purpose: 'Registrar a recompra após contestação de pagamento.' },
+            'relatorio-negociacao-acordo-homologacao': { category: 'Acordos', icon: 'ph-handshake', description: 'Relatório das tratativas para acordo de homologação.', purpose: 'Atualizar valores, proposta e manifestação do cliente.' },
+            'certidao-diligencia-contato-profissional': { category: 'Extrajudicial', icon: 'ph-certificate', description: 'Certidão de diligência e contato profissional.', purpose: 'Registrar a diligência e os esclarecimentos processuais.' },
+            'relatorio-atualizacao-processo-judicial': { category: 'Judicial', icon: 'ph-briefcase', description: 'Relatório de andamento e movimentações.', purpose: 'Atualizar o cliente sobre o processo judicial.' },
+            'laudo-pericial-contabil': { category: 'Perícia Contábil', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.', purpose: 'Documentar a análise técnica e os cálculos.' }
         };
 
         function getAdmTemplateInfo(value) {
-            return admTemplateCatalog[value] || { category: 'Documento jurídico', icon: 'ph-file-text', description: 'Modelo disponível para geração.' };
+            return admTemplateCatalog[value] || { category: 'Documento jurídico', icon: 'ph-file-text', description: 'Modelo disponível para geração.', purpose: 'Gerar um documento padronizado.' };
         }
 
         function applyAdmTemplateNames() {
@@ -7992,7 +8733,7 @@
             const titleElement = document.getElementById('adm-template-picker-title');
             const categoryElement = document.getElementById('adm-template-picker-category');
             const descriptionElement = document.getElementById('adm-template-picker-description');
-            const iconElement = document.querySelector('#adm-template-picker-button .adm-template-picker-icon i');
+            const iconElement = document.getElementById('documents-selected-icon');
             if (titleElement) titleElement.textContent = title;
             if (categoryElement) categoryElement.textContent = info.category;
             if (descriptionElement) descriptionElement.textContent = info.description;
@@ -8007,34 +8748,62 @@
             input.dataset.edited = 'false';
         }
 
+        let documentsActiveCategory = 'Todos';
+        let documentsCurrentStep = 0;
+        let documentsDraftTimer = null;
+        const DOCUMENTS_DRAFTS_KEY = 'platinoDocumentDraftsV1';
+
+        function renderDocumentsCategoryFilters() {
+            const container = document.getElementById('documents-category-filters');
+            const select = document.getElementById('adm-pdf-template');
+            if (!container || !select) return;
+            const categories = ['Todos', ...new Set(Array.from(select.options).map(option => getAdmTemplateInfo(option.value).category))];
+            container.innerHTML = categories.map(category => `
+                <button type="button" class="documents-category-filter" aria-pressed="${category === documentsActiveCategory}" onclick="setDocumentsCategory('${escapeHtml(category)}')">
+                    ${escapeHtml(category)}
+                </button>
+            `).join('');
+        }
+
+        function setDocumentsCategory(category) {
+            documentsActiveCategory = category || 'Todos';
+            renderDocumentsCategoryFilters();
+            renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+        }
+
         function renderAdmTemplateOptions(query = '') {
             const select = document.getElementById('adm-pdf-template');
             const container = document.getElementById('adm-template-options');
             if (!select || !container) return;
             applyAdmTemplateNames();
+            renderDocumentsCategoryFilters();
             const normalizedQuery = String(query).trim().toLocaleLowerCase('pt-BR');
             const allOptions = Array.from(select.options);
-            const count = document.getElementById('adm-template-count');
-            if (count) count.textContent = `${allOptions.length} ${allOptions.length === 1 ? 'documento' : 'documentos'}`;
             const options = allOptions.filter(option => {
                 const info = getAdmTemplateInfo(option.value);
-                return `${option.text} ${info.category} ${info.description}`.toLocaleLowerCase('pt-BR').includes(normalizedQuery);
+                const matchesCategory = documentsActiveCategory === 'Todos' || info.category === documentsActiveCategory;
+                const matchesQuery = `${option.text} ${info.category} ${info.description} ${info.purpose}`.toLocaleLowerCase('pt-BR').includes(normalizedQuery);
+                return matchesCategory && matchesQuery;
             });
+            const count = document.getElementById('adm-template-count');
+            if (count) count.textContent = `${options.length} de ${allOptions.length} ${allOptions.length === 1 ? 'modelo' : 'modelos'}`;
             container.innerHTML = options.length ? options.map(option => {
                 const info = getAdmTemplateInfo(option.value);
                 const selected = option.value === select.value;
-                return `<div class="adm-template-option" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
-                    <span class="adm-template-option-icon"><i class="ph ${escapeHtml(info.icon)}"></i></span>
+                return `<div class="documents-template-card" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
+                    <span class="documents-template-icon"><i class="ph ${escapeHtml(info.icon)}"></i></span>
                     <button type="button" class="min-w-0 text-left" onclick="selectAdmTemplate(this.closest('[data-template-value]').dataset.templateValue)">
-                        <span class="block text-[0.62rem] font-black uppercase tracking-[0.12em] text-blue-300">${escapeHtml(info.category)}</span>
-                        <span class="mt-0.5 block text-sm font-black leading-snug text-white">${escapeHtml(option.text)}</span>
-                        <span class="mt-1 block text-xs font-medium leading-snug text-slate-400">${escapeHtml(info.description)}</span>
+                        <span class="documents-category-label">${escapeHtml(info.category)}</span>
+                        <span class="mt-1 block text-base font-black leading-snug text-white">${escapeHtml(option.text)}</span>
+                        <span class="mt-2 block text-xs font-medium leading-relaxed text-blue-100/55">${escapeHtml(info.description)}</span>
+                        <span class="mt-2 block text-[11px] font-semibold leading-relaxed text-blue-200/75"><strong class="text-sky-300">Finalidade:</strong> ${escapeHtml(info.purpose)}</span>
+                        <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-black text-sky-300">Preencher documento <i class="ph ph-arrow-right"></i></span>
                     </button>
                     ${isGestorUser()
-                        ? `<button type="button" class="adm-template-option-edit" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')"><i class="ph ph-pencil-simple text-lg"></i></button>`
-                        : `<i class="ph ${selected ? 'ph-check-circle text-blue-300' : 'ph-caret-right text-slate-500'} text-lg"></i>`}
+                        ? `<button type="button" class="documents-template-action" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')"><i class="ph ph-pencil-simple"></i></button>`
+                        : `<span class="documents-template-action"><i class="ph ${selected ? 'ph-check-circle' : 'ph-caret-right'}"></i></span>`}
                 </div>`;
-            }).join('') : `<div class="col-span-full grid min-h-28 place-items-center rounded-xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-1 block text-2xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
+            }).join('') : `<div class="col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed border-white/15 px-4 text-center text-sm font-semibold text-slate-400"><span><i class="ph ph-file-magnifying-glass mb-2 block text-3xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
         }
 
         async function renameAdmTemplate(event, value) {
@@ -8075,8 +8844,23 @@
             select.value = value;
             syncAdmPdfFileName(true);
             renderAdmPdfFields();
-            toggleAdmTemplatePicker(false);
-            document.getElementById('adm-template-picker-button')?.focus();
+            showDocumentsForm();
+            restoreDocumentsDraft();
+        }
+
+        function showDocumentsForm() {
+            document.getElementById('documents-library-view')?.classList.add('hidden');
+            document.getElementById('documents-form-view')?.classList.remove('hidden');
+            document.getElementById('documents-form-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            updateDocumentsStep(0);
+        }
+
+        function showDocumentsLibrary() {
+            saveDocumentsDraft();
+            document.getElementById('documents-form-view')?.classList.add('hidden');
+            document.getElementById('documents-library-view')?.classList.remove('hidden');
+            renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+            document.getElementById('adm-template-search')?.focus({ preventScroll: true });
         }
 
         document.addEventListener('keydown', event => {
@@ -8153,77 +8937,347 @@
             }
         }
 
+        function isAdmPdfFieldRequired(template, field, index) {
+            return Array.isArray(template.requiredFields)
+                ? template.requiredFields.includes(field)
+                : index === 0 || ['cliente', 'cpf', 'banco'].includes(field);
+        }
+
+        function buildDocumentsSections(template, templateKey) {
+            if (templateKey === 'relatorio-atualizacao-processo-judicial') {
+                return [
+                    { title: 'Identificação do documento', description: 'Cole o resumo integral para separar as informações já disponíveis.', icon: 'ph-file-magnifying-glass', fields: ['resumoProcesso'] },
+                    { title: 'Dados do processo', description: 'Identifique o processo, sua origem, natureza e condições processuais.', icon: 'ph-gavel', fields: ['numeroProcesso', 'origem', 'sigilo', 'justicaGratuita', 'dataDistribuicao', 'assunto'] },
+                    { title: 'Dados do cliente', description: 'Confira a parte autora e sua representação.', icon: 'ph-user-circle', fields: ['cliente', 'advogadoCliente'] },
+                    { title: 'Dados da instituição financeira', description: 'Informe a parte ré e o responsável por sua representação.', icon: 'ph-bank', fields: ['banco', 'advogadoBanco'] },
+                    { title: 'Situação atual', description: 'Registre o cenário apresentado ao cliente de forma objetiva.', icon: 'ph-activity', fields: ['statusAtual'] },
+                    { title: 'Última movimentação', description: 'Detalhe a movimentação processual mais recente.', icon: 'ph-clock-counter-clockwise', fields: ['dataUltimaMovimentacao', 'descricaoUltimaMovimentacao'] },
+                    { title: 'Consulta processual', description: 'Documente quando e onde a consulta foi realizada.', icon: 'ph-magnifying-glass', fields: ['dataConsulta', 'horaConsulta', 'linkProcesso'] },
+                    { title: 'Próximos passos', description: 'Descreva as ações previstas para continuidade do acompanhamento.', icon: 'ph-path', fields: ['proximosPassos'] },
+                    { title: 'Links e responsáveis', description: 'Centralize anexos e identifique o responsável pelo acompanhamento.', icon: 'ph-link', fields: ['anexosProcesso', 'advogadoResponsavel'] },
+                    { title: 'Anexos e geração do relatório', description: 'Inclua a captura, revise o resumo e gere o relatório.', icon: 'ph-check-square-offset', fields: ['imagemProcesso'], summary: true }
+                ];
+            }
+
+            if (template.groups) {
+                const grouped = [];
+                template.fields.forEach(field => {
+                    const title = template.groups[field] || 'Informações complementares';
+                    let group = grouped.find(item => item.title === title);
+                    if (!group) {
+                        group = { title, description: 'Preencha e confira os dados desta seção.', icon: 'ph-folder-open', fields: [] };
+                        grouped.push(group);
+                    }
+                    group.fields.push(field);
+                });
+                grouped.push({ title: 'Revisão e geração', description: 'Confira os dados preenchidos antes de gerar o documento.', icon: 'ph-check-square-offset', fields: [], summary: true });
+                return grouped;
+            }
+
+            const sectionCount = Math.max(1, Math.ceil(template.fields.length / 5));
+            const size = Math.ceil(template.fields.length / sectionCount);
+            const titles = ['Dados principais', 'Informações do documento', 'Dados complementares', 'Local e assinatura'];
+            const sections = [];
+            for (let index = 0; index < template.fields.length; index += size) {
+                const order = sections.length;
+                sections.push({
+                    title: titles[order] || `Informações — parte ${order + 1}`,
+                    description: order === 0 ? 'Comece pelos dados principais do documento.' : 'Complete as informações exigidas pelo modelo original.',
+                    icon: order === 0 ? 'ph-identification-card' : 'ph-note-pencil',
+                    fields: template.fields.slice(index, index + size)
+                });
+            }
+            sections.push({ title: 'Revisão e geração', description: 'Confira os dados preenchidos antes de gerar o documento.', icon: 'ph-check-square-offset', fields: [], summary: true });
+            return sections;
+        }
+
+        function getDocumentsInputMode(field, type) {
+            if (type === 'number') return 'numeric';
+            if (['cpf', 'cnpjBanco', 'cep', 'quantidadeParcelas', 'parcelasPagas'].includes(field)) return 'numeric';
+            if (/^(valor|seguro|estorno|reducao|parcela|tarifa|iof)/i.test(field)) return 'decimal';
+            return '';
+        }
+
+        function renderDocumentsField(template, field) {
+            const index = template.fields.indexOf(field);
+            const label = getAdmPdfFieldLabel(template, field);
+            const required = isAdmPdfFieldRequired(template, field, index);
+            const type = getAdmPdfInputType(field, template);
+            const span = ['endereco', 'enderecoBanco'].includes(field) || type === 'textarea' || type === 'file' ? 'sm:col-span-2' : '';
+            const placeholder = template.placeholders?.[field] || label;
+            const inputMode = getDocumentsInputMode(field, type);
+            const common = `id="adm-field-${escapeHtml(field)}" data-document-field="${escapeHtml(field)}" ${required ? 'required' : ''}`;
+            const control = type === 'textarea'
+                ? `<textarea ${common} rows="${['resumoProcesso', 'contratoTexto'].includes(field) ? '11' : '5'}" class="adm-pdf-control resize-y px-4 py-3 text-sm font-semibold" placeholder="${escapeHtml(placeholder)}"></textarea>`
+                : type === 'select'
+                    ? `<select ${common} class="adm-pdf-control adm-pdf-select px-4 py-3 text-sm font-semibold">${(template.fieldOptions?.[field] || []).map(option => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`).join('')}</select>`
+                    : type === 'file'
+                        ? `<input ${common} type="file" accept="image/png,image/jpeg" class="adm-pdf-control px-4 py-3 text-sm font-semibold">`
+                        : `<input ${common} type="${type}" ${inputMode ? `inputmode="${inputMode}"` : ''} class="adm-pdf-control px-4 py-3 text-sm font-semibold" placeholder="${escapeHtml(placeholder)}">`;
+            const extractButton = field === 'resumoProcesso'
+                ? `<button type="button" onclick="extractAdmProcessSummary(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Separar informações do resumo</button>`
+                : field === 'contratoTexto'
+                    ? `<button type="button" onclick="extractLaudoContract(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-black text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Organizar dados do contrato</button>`
+                    : '';
+            const methodHelp = field === 'metodoCalculo'
+                ? `<div class="documents-field-help mt-2 grid gap-1.5">
+                    <span><strong class="text-blue-100">Expurgo das Tarifas:</strong> retirar somente tarifas.</span>
+                    <span><strong class="text-blue-100">Expurgo das Tarifas e Seguros:</strong> usar quando também houver seguros financiados.</span>
+                    <span><strong class="text-blue-100">Tabela Price Completa:</strong> reconstruir todo o financiamento.</span>
+                    <span><strong class="text-blue-100">Sistema SAC:</strong> somente para contrato original com amortização SAC.</span>
+                   </div>`
+                : '';
+            const maskHelp = ['cpf', 'cnpjBanco', 'cep'].includes(field)
+                ? '<span class="documents-field-help">A formatação será aplicada automaticamente.</span>'
+                : '';
+            return `
+                <label class="${span} documents-field-label" for="adm-field-${escapeHtml(field)}">
+                    <span>${escapeHtml(label)}${required ? ' <span class="documents-required" aria-label="obrigatório">*</span>' : ''}</span>
+                    ${control}
+                    ${maskHelp}
+                    ${extractButton}
+                    ${methodHelp}
+                </label>
+            `;
+        }
+
+        function renderDocumentsSummary(template) {
+            return `<div class="sm:col-span-2 mt-2">
+                <div class="mb-3 flex items-center justify-between gap-3">
+                    <div>
+                        <p class="documents-category-label">Resumo final</p>
+                        <h5 class="mt-1 text-sm font-black text-white">Revise antes da geração</h5>
+                    </div>
+                    <span class="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-black text-emerald-200">Dados preservados</span>
+                </div>
+                <div id="documents-final-summary" class="documents-step-summary">
+                    ${template.fields.map(field => `<div class="documents-summary-item" data-summary-field="${escapeHtml(field)}"><span>${escapeHtml(getAdmPdfFieldLabel(template, field))}</span><strong>Não informado</strong></div>`).join('')}
+                </div>
+            </div>`;
+        }
+
+        function formatDocumentsMaskedField(input) {
+            const field = input?.dataset?.documentField;
+            if (!field || !['cpf', 'cnpjBanco', 'cep'].includes(field)) return;
+            const digits = input.value.replace(/\D/g, '');
+            if (field === 'cep') {
+                input.value = digits.slice(0, 8).replace(/^(\d{5})(\d)/, '$1-$2');
+                return;
+            }
+            if (field === 'cnpjBanco' || digits.length > 11) {
+                input.value = digits.slice(0, 14)
+                    .replace(/^(\d{2})(\d)/, '$1.$2')
+                    .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+                    .replace(/\.(\d{3})(\d)/, '.$1/$2')
+                    .replace(/(\d{4})(\d)/, '$1-$2');
+                return;
+            }
+            input.value = digits.slice(0, 11)
+                .replace(/^(\d{3})(\d)/, '$1.$2')
+                .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+                .replace(/\.(\d{3})(\d)/, '.$1-$2');
+        }
+
+        function getDocumentsDrafts() {
+            try {
+                return JSON.parse(localStorage.getItem(DOCUMENTS_DRAFTS_KEY) || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function saveDocumentsDraft() {
+            const select = document.getElementById('adm-pdf-template');
+            const form = document.getElementById('adm-pdf-form');
+            if (!select || !form) return;
+            const fields = {};
+            form.querySelectorAll('[data-document-field]').forEach(input => {
+                if (input.type !== 'file') fields[input.dataset.documentField] = input.value;
+            });
+            const drafts = getDocumentsDrafts();
+            drafts[select.value] = {
+                fields,
+                date: document.getElementById('adm-pdf-date')?.value || '',
+                number: document.getElementById('adm-pdf-number')?.value || '',
+                fileName: document.getElementById('adm-pdf-file-name')?.value || '',
+                step: documentsCurrentStep,
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem(DOCUMENTS_DRAFTS_KEY, JSON.stringify(drafts));
+            const status = document.getElementById('documents-draft-status');
+            if (status) status.textContent = `Rascunho salvo temporariamente às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}.`;
+        }
+
+        function scheduleDocumentsDraftSave() {
+            window.clearTimeout(documentsDraftTimer);
+            documentsDraftTimer = window.setTimeout(saveDocumentsDraft, 250);
+        }
+
+        function restoreDocumentsDraft() {
+            const templateKey = document.getElementById('adm-pdf-template')?.value;
+            const draft = templateKey ? getDocumentsDrafts()[templateKey] : null;
+            if (!draft) return false;
+            Object.entries(draft.fields || {}).forEach(([field, value]) => {
+                const input = document.getElementById(`adm-field-${field}`);
+                if (input && input.type !== 'file') input.value = value ?? '';
+            });
+            const date = document.getElementById('adm-pdf-date');
+            const number = document.getElementById('adm-pdf-number');
+            const fileName = document.getElementById('adm-pdf-file-name');
+            if (date && draft.date) date.value = draft.date;
+            if (number && draft.number) number.value = draft.number;
+            if (fileName && draft.fileName) fileName.value = draft.fileName;
+            documentsCurrentStep = Number.isInteger(draft.step) ? draft.step : 0;
+            updateDocumentsStep(documentsCurrentStep);
+            const status = document.getElementById('documents-draft-status');
+            if (status) status.textContent = 'Rascunho temporário restaurado neste navegador.';
+            return true;
+        }
+
+        function clearDocumentsDraft() {
+            const templateKey = document.getElementById('adm-pdf-template')?.value;
+            if (!templateKey) return;
+            const drafts = getDocumentsDrafts();
+            delete drafts[templateKey];
+            localStorage.setItem(DOCUMENTS_DRAFTS_KEY, JSON.stringify(drafts));
+        }
+
+        function updateDocumentsSummary() {
+            const template = getAdmPdfTemplate();
+            document.querySelectorAll('[data-summary-field]').forEach(item => {
+                const field = item.dataset.summaryField;
+                const input = document.getElementById(`adm-field-${field}`);
+                let value = input?.type === 'file' ? input.files?.[0]?.name : input?.value;
+                value = String(value || '').trim();
+                item.querySelector('strong').textContent = value || 'Não informado';
+                item.querySelector('strong').title = value || 'Não informado';
+            });
+            const filled = template.fields.filter(field => {
+                const input = document.getElementById(`adm-field-${field}`);
+                return input?.type === 'file' ? input.files?.length : String(input?.value || '').trim();
+            }).length;
+            const progressValue = document.getElementById('documents-progress-value');
+            if (progressValue) progressValue.title = `${filled} de ${template.fields.length} campos preenchidos`;
+        }
+
+        function updateDocumentsStep(requestedIndex = documentsCurrentStep) {
+            const steps = Array.from(document.querySelectorAll('#adm-pdf-fields .documents-step'));
+            if (!steps.length) return;
+            documentsCurrentStep = Math.max(0, Math.min(requestedIndex, steps.length - 1));
+            steps.forEach((step, index) => step.classList.toggle('is-active', index === documentsCurrentStep));
+            const current = steps[documentsCurrentStep];
+            const percent = Math.round(((documentsCurrentStep + 1) / steps.length) * 100);
+            const label = document.getElementById('documents-step-label');
+            const value = document.getElementById('documents-progress-value');
+            const fill = document.getElementById('documents-progress-fill');
+            if (label) label.textContent = `Etapa ${documentsCurrentStep + 1} de ${steps.length} · ${current.dataset.stepTitle}`;
+            if (value) value.textContent = `${percent}%`;
+            if (fill) fill.style.width = `${percent}%`;
+            const previous = document.getElementById('documents-prev-button');
+            const next = document.getElementById('documents-next-button');
+            const generate = document.getElementById('adm-pdf-generate-button');
+            if (previous) {
+                previous.disabled = documentsCurrentStep === 0;
+                previous.classList.toggle('opacity-40', documentsCurrentStep === 0);
+            }
+            next?.classList.toggle('hidden', documentsCurrentStep === steps.length - 1);
+            generate?.classList.toggle('hidden', documentsCurrentStep !== steps.length - 1);
+            updateDocumentsSummary();
+        }
+
+        function validateDocumentsStep(step = document.querySelector('#adm-pdf-fields .documents-step.is-active')) {
+            if (!step) return true;
+            const invalid = Array.from(step.querySelectorAll('input, textarea, select')).find(input => !input.checkValidity());
+            if (!invalid) return true;
+            invalid.reportValidity();
+            invalid.focus({ preventScroll: true });
+            invalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const status = document.getElementById('adm-pdf-status');
+            if (status) {
+                status.className = 'min-h-5 text-xs font-semibold text-amber-300';
+                status.textContent = 'Preencha os campos obrigatórios desta etapa antes de avançar.';
+            }
+            return false;
+        }
+
+        function changeDocumentsStep(direction) {
+            if (direction > 0 && !validateDocumentsStep()) return;
+            saveDocumentsDraft();
+            updateDocumentsStep(documentsCurrentStep + direction);
+            document.getElementById('documents-form-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showDocumentsInvalidField() {
+            const form = document.getElementById('adm-pdf-form');
+            const invalid = Array.from(form?.querySelectorAll('input, textarea, select') || []).find(input => !input.checkValidity());
+            if (!invalid) return;
+            const step = invalid.closest('.documents-step');
+            const steps = Array.from(document.querySelectorAll('#adm-pdf-fields .documents-step'));
+            const index = steps.indexOf(step);
+            if (index >= 0) updateDocumentsStep(index);
+            window.setTimeout(() => invalid.reportValidity(), 40);
+        }
+
         function renderAdmPdfFields() {
             syncAdmTemplatePicker();
             syncAdmPdfFileName();
             const template = getAdmPdfTemplate();
+            const templateKey = document.getElementById('adm-pdf-template')?.value || 'chargeback';
             const fieldsContainer = document.getElementById('adm-pdf-fields');
             const status = document.getElementById('adm-pdf-status');
             if (!fieldsContainer) return;
 
-            let currentGroup = '';
-            fieldsContainer.innerHTML = template.fields.map((field, index) => {
-                const label = getAdmPdfFieldLabel(template, field);
-                const required = Array.isArray(template.requiredFields)
-                    ? template.requiredFields.includes(field)
-                    : index === 0 || ['cliente', 'cpf', 'banco'].includes(field);
-                const type = getAdmPdfInputType(field, template);
-                const span = ['endereco', 'enderecoBanco'].includes(field) || type === 'textarea' || type === 'file' ? 'sm:col-span-2' : '';
-                const placeholder = template.placeholders?.[field] || label;
-                const control = type === 'textarea'
-                    ? `<textarea id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} rows="${['resumoProcesso', 'contratoTexto'].includes(field) ? '10' : '4'}" class="adm-pdf-control resize-y px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}"></textarea>`
-                    : type === 'select'
-                        ? `<select id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} class="adm-pdf-control adm-pdf-select px-4 py-3 text-sm font-semibold normal-case tracking-normal">${(template.fieldOptions?.[field] || []).map(option => `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`).join('')}</select>`
-                    : type === 'file'
-                        ? `<input id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} type="file" accept="image/png,image/jpeg" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal">`
-                        : `<input id="adm-field-${escapeHtml(field)}" ${required ? 'required' : ''} type="${type}" class="adm-pdf-control px-4 py-3 text-sm font-semibold normal-case tracking-normal" placeholder="${escapeHtml(placeholder)}">`;
-                const extractButton = field === 'resumoProcesso'
-                    ? `<button type="button" onclick="extractAdmProcessSummary()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black normal-case tracking-normal text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Separar informações do resumo</button>`
-                    : field === 'contratoTexto'
-                        ? `<button type="button" onclick="extractLaudoContract()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-black normal-case tracking-normal text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Organizar dados do contrato</button>`
-                    : '';
-                const group = template.groups?.[field] || '';
-                const groupHeader = group && group !== currentGroup
-                    ? `<div class="sm:col-span-2 mt-3 border-b border-white/10 pb-2"><h4 class="text-sm font-black normal-case tracking-normal text-white">${escapeHtml(group)}</h4></div>`
-                    : '';
-                if (group) currentGroup = group;
-                const methodHelp = field === 'metodoCalculo'
-                    ? `<div class="mt-2 grid gap-1.5 normal-case tracking-normal text-[11px] font-medium leading-relaxed text-blue-100/65">
-                        <span><strong class="text-blue-100">Expurgo das Tarifas:</strong> retirar somente tarifas.</span>
-                        <span><strong class="text-blue-100">Expurgo das Tarifas e Seguros:</strong> usar quando também houver seguros financiados.</span>
-                        <span><strong class="text-blue-100">Tabela Price Completa:</strong> reconstruir todo o financiamento.</span>
-                        <span><strong class="text-blue-100">Sistema SAC:</strong> somente para contrato original com amortização SAC.</span>
-                       </div>`
-                    : '';
-                return `
-                    ${groupHeader}
-                    <label class="${span} grid gap-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-100/70">
-                        ${escapeHtml(label)}${required ? ' *' : ''}
-                        ${control}
-                        ${extractButton}
-                        ${methodHelp}
-                    </label>
-                `;
-            }).join('');
+            const sections = buildDocumentsSections(template, templateKey);
+            fieldsContainer.innerHTML = sections.map((section, index) => `
+                <section class="documents-step${index === 0 ? ' is-active' : ''}" data-step-index="${index}" data-step-title="${escapeHtml(section.title)}">
+                    <div class="mb-4 flex items-start gap-3">
+                        <span class="documents-template-icon flex-shrink-0"><i class="ph ${escapeHtml(section.icon)}"></i></span>
+                        <div>
+                            <p class="documents-category-label">Etapa ${index + 1}</p>
+                            <h4 class="mt-1 text-lg font-black text-white">${escapeHtml(section.title)}</h4>
+                            <p class="mt-1 text-xs leading-relaxed text-blue-100/55">${escapeHtml(section.description)}</p>
+                        </div>
+                    </div>
+                    <div class="documents-step-grid">
+                        ${section.fields.map(field => renderDocumentsField(template, field)).join('')}
+                        ${section.summary ? renderDocumentsSummary(template) : ''}
+                    </div>
+                </section>
+            `).join('');
 
             const consultationDate = document.getElementById('adm-field-dataConsulta');
-            if (consultationDate && !consultationDate.value) {
-                consultationDate.valueAsDate = new Date();
-            }
+            if (consultationDate && !consultationDate.value) consultationDate.valueAsDate = new Date();
             const calculationDate = document.getElementById('adm-field-dataBaseCalculo');
             if (calculationDate && !calculationDate.value) calculationDate.valueAsDate = new Date();
             const restitutionMultiplier = document.getElementById('adm-field-multiplicadorRestituicao');
             if (restitutionMultiplier && !restitutionMultiplier.value) restitutionMultiplier.value = '0';
 
+            fieldsContainer.oninput = event => {
+                formatDocumentsMaskedField(event.target);
+                updateDocumentsSummary();
+                scheduleDocumentsDraftSave();
+            };
+            fieldsContainer.onchange = () => {
+                updateDocumentsSummary();
+                scheduleDocumentsDraftSave();
+            };
+            ['adm-pdf-date', 'adm-pdf-file-name'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.oninput = scheduleDocumentsDraftSave;
+            });
+
+            documentsCurrentStep = 0;
+            updateDocumentsStep(0);
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-100/60';
                 status.innerText = template === admPdfTemplates['laudo-pericial-contabil']
                     ? 'Cole o contrato, organize os dados, confira os campos e gere o PDF.'
-                    : 'Modelo carregado. Preencha os campos destacados do documento original.';
+                    : 'Modelo carregado. Os campos obrigatórios estão indicados com asterisco.';
             }
         }
 
         function resetAdmPdfForm() {
+            clearDocumentsDraft();
             const form = document.getElementById('adm-pdf-form');
             if (form) form.reset();
             const date = document.getElementById('adm-pdf-date');
@@ -8231,6 +9285,8 @@
             ensureAdmPdfNumber(true);
             const fileName = document.getElementById('adm-pdf-file-name');
             if (fileName) fileName.dataset.edited = 'false';
+            const draftStatus = document.getElementById('documents-draft-status');
+            if (draftStatus) draftStatus.textContent = 'Formulário limpo. Um novo rascunho será criado ao preencher.';
             renderAdmPdfFields();
         }
 
@@ -8515,7 +9571,7 @@
             if (button?.disabled) return;
 
             if (!form?.checkValidity()) {
-                form?.reportValidity();
+                showDocumentsInvalidField();
                 if (status) {
                     status.className = 'min-h-5 text-xs font-semibold text-amber-300';
                     status.innerText = 'Preencha os campos obrigatórios destacados para gerar o PDF.';
@@ -8568,7 +9624,7 @@
             } finally {
                 if (button) {
                     button.disabled = false;
-                    button.innerHTML = '<i class="ph ph-download-simple"></i> <span>Gerar PDF</span>';
+                    button.innerHTML = '<i class="ph ph-download-simple"></i> <span>Gerar documento</span>';
                 }
             }
         }
@@ -8738,6 +9794,7 @@
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
             resetAdmPdfForm();
+            renderAdmTemplateOptions();
             checkAdmPdfGeneratorAvailability();
             loadRhNotes();
             renderRhMiniMural();
