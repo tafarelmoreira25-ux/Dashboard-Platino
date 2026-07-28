@@ -19,7 +19,7 @@
     }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
         
         /* Ocultar scrollbar mas manter funcionalidade */
@@ -2093,38 +2093,43 @@
             }
         }
 
-        /* Identidade clara e editorial exclusiva da Central de Documentos. */
+        /* Identidade branca, azul e prata exclusiva da Central de Documentos. */
         #section-documentos {
-            background: #f8f6f3;
+            background: #ffffff;
         }
 
         .documents-central,
         .documents-central * {
-            font-family: "Times New Roman", Times, serif !important;
+            font-family: "Inter", Arial, sans-serif !important;
+        }
+
+        .documents-central :is(h2, h3, h4, h5),
+        .documents-central :is(button, .documents-eyebrow, .documents-category-label, .documents-template-title) {
+            font-family: "Montserrat", "Inter", Arial, sans-serif !important;
         }
 
         .documents-central {
-            --docs-ink: #282321;
-            --docs-muted: #756d68;
-            --docs-accent: #bd382f;
-            --docs-accent-dark: #8f2822;
-            --docs-accent-soft: #fff4f2;
-            --docs-line: #e8e1dc;
+            --docs-ink: #173a5e;
+            --docs-muted: #657585;
+            --docs-accent: #0878bd;
+            --docs-accent-dark: #15507c;
+            --docs-accent-soft: #edf7fc;
+            --docs-line: #cbd4dc;
             border-color: var(--docs-line);
             background: #ffffff;
             color: var(--docs-ink);
-            box-shadow: 0 24px 60px rgba(55, 43, 37, 0.09);
+            box-shadow: 0 24px 60px rgba(23, 58, 94, 0.1);
         }
 
         .documents-hero {
             border-bottom-color: var(--docs-line);
-            background: linear-gradient(135deg, #ffffff 0%, #fffdfc 68%, #fff5f3 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #fbfdff 68%, #eef7fc 100%);
         }
 
         .documents-hero::after {
             right: -7rem;
             top: -9rem;
-            background: rgba(189, 56, 47, 0.07);
+            background: rgba(8, 120, 189, 0.1);
             filter: blur(20px);
         }
 
@@ -2139,11 +2144,11 @@
             width: 5.25rem;
             height: 5.25rem;
             flex: 0 0 auto;
-            border: 1px solid #eee7e2;
+            border: 1px solid #cbd4dc;
             border-radius: 1.2rem;
             background: #ffffff;
             object-fit: contain;
-            box-shadow: 0 12px 28px rgba(132, 44, 36, 0.11);
+            box-shadow: 0 12px 28px rgba(20, 78, 119, 0.13);
         }
 
         .documents-hero-aside {
@@ -2153,7 +2158,7 @@
         }
 
         .documents-content {
-            background: #fbfaf8;
+            background: #fcfdfe;
         }
 
         .documents-eyebrow,
@@ -2182,7 +2187,7 @@
         }
 
         .documents-central .text-blue-100 {
-            color: #514843;
+            color: #3e5870;
         }
 
         .documents-central .bg-blue-600 {
@@ -2195,15 +2200,15 @@
         }
 
         .documents-central .border-emerald-300\/20 {
-            border-color: #cfe2d3;
+            border-color: #b8d8ea;
         }
 
         .documents-central .bg-emerald-400\/10 {
-            background: #f2f8f3;
+            background: #edf8fd;
         }
 
         .documents-central .text-emerald-200 {
-            color: #356c43;
+            color: #155b87;
         }
 
         .documents-central .text-amber-300 {
@@ -2215,135 +2220,138 @@
         }
 
         .documents-local-indicator {
-            border-color: #d9e7dd;
-            background: #f4faf6;
-            color: #316340;
-            box-shadow: 0 6px 16px rgba(49, 99, 64, 0.06);
+            border-color: #a9d4ea;
+            background: #edf8fd;
+            color: #155b87;
+            box-shadow: 0 6px 16px rgba(8, 120, 189, 0.08);
         }
 
         .documents-local-indicator::before {
-            background: #5b9a69;
-            box-shadow: 0 0 0 0.3rem rgba(91, 154, 105, 0.12);
+            background: var(--docs-accent);
+            box-shadow: 0 0 0 0.3rem rgba(8, 120, 189, 0.12);
         }
 
         .documents-library-toolbar,
         .documents-form-toolbar {
             border-color: var(--docs-line);
             background: #ffffff;
-            box-shadow: 0 10px 24px rgba(55, 43, 37, 0.05);
+            box-shadow: 0 10px 24px rgba(23, 58, 94, 0.06);
         }
 
         .documents-search i {
-            color: #9d332c;
+            color: var(--docs-accent);
         }
 
         .documents-search input {
-            border-color: #ded6d1;
-            background: #fffdfc;
+            border-color: #cbd4dc;
+            background: #ffffff;
             color: var(--docs-ink);
         }
 
         .documents-search input::placeholder {
-            color: #998f88;
+            color: #82909d;
         }
 
         .documents-search input:focus {
-            border-color: #c9574f;
+            border-color: var(--docs-accent);
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(189, 56, 47, 0.09);
+            box-shadow: 0 0 0 4px rgba(8, 120, 189, 0.11);
         }
 
         .documents-category-filter {
-            border-color: #e2dad5;
-            background: #fffdfc;
-            color: #625a55;
-            box-shadow: 0 2px 5px rgba(55, 43, 37, 0.03);
+            position: relative;
+            border-color: #cbd4dc;
+            background: #ffffff;
+            color: #51697e;
+            box-shadow: 0 2px 5px rgba(23, 58, 94, 0.035);
         }
 
         .documents-category-filter:hover,
         .documents-category-filter[aria-pressed="true"] {
-            border-color: #cf625a;
+            border-color: #8dc7e5;
             background: var(--docs-accent-soft);
-            color: var(--docs-accent-dark);
+            color: var(--docs-accent);
+            box-shadow: inset 0 -3px var(--docs-accent);
         }
 
         .documents-template-card {
-            border-color: #e5ddd8;
+            border-color: #cbd4dc;
             background: #ffffff;
             color: var(--docs-ink);
-            box-shadow: 0 8px 22px rgba(55, 43, 37, 0.045);
+            box-shadow: 0 8px 22px rgba(23, 58, 94, 0.055);
         }
 
         .documents-template-card:hover {
-            border-color: #d49a94;
-            box-shadow: 0 16px 30px rgba(80, 54, 47, 0.09);
+            border-color: #79b9dd;
+            box-shadow: 0 16px 30px rgba(23, 83, 126, 0.11);
         }
 
         .documents-template-card[aria-selected="true"] {
-            border-color: #cf625a;
-            background: linear-gradient(145deg, #fff9f7, #ffffff);
-            box-shadow: inset 4px 0 var(--docs-accent), 0 16px 30px rgba(112, 42, 35, 0.09);
+            border-color: #58a9d5;
+            background: linear-gradient(145deg, #f2f9fd, #ffffff);
+            box-shadow: inset 4px 0 var(--docs-accent), 0 16px 30px rgba(23, 83, 126, 0.11);
         }
 
         .documents-template-icon {
-            border-color: #f0d4d0;
-            background: var(--docs-accent-soft);
-            color: var(--docs-accent);
+            border-color: #9bcce5;
+            background: var(--docs-accent);
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(8, 120, 189, 0.18);
         }
 
         .documents-template-action {
-            background: #f8f2ef;
-            color: #a43a32;
+            background: #edf5f9;
+            color: var(--docs-accent);
         }
 
         .documents-form-shell {
             border-color: var(--docs-line);
             background: #ffffff;
-            box-shadow: 0 14px 36px rgba(55, 43, 37, 0.06);
+            box-shadow: 0 14px 36px rgba(23, 58, 94, 0.07);
         }
 
         .documents-form-header {
             border-bottom-color: var(--docs-line);
-            background: linear-gradient(135deg, #fffdfc, #fff7f5);
+            background: linear-gradient(135deg, #ffffff, #eef7fc);
         }
 
         .documents-back-button {
-            border-color: #ddd4cf;
+            border-color: #c5d0d9;
             background: #ffffff;
-            color: #4b423d;
+            color: var(--docs-accent-dark);
         }
 
         .documents-back-button:hover,
         .documents-secondary-button:hover {
-            border-color: #cf625a;
-            color: var(--docs-accent-dark);
+            border-color: #69afd4;
+            color: var(--docs-accent);
         }
 
         .documents-progress .text-blue-100\/70 {
-            color: #6f6560;
+            color: #5d7183;
         }
 
         .documents-progress-track {
-            background: #ece6e2;
+            background: #dfe6eb;
         }
 
         .documents-progress-fill {
-            background: linear-gradient(90deg, var(--docs-accent-dark), #e26960);
+            background: linear-gradient(90deg, var(--docs-accent-dark), #20a4dc);
         }
 
         .documents-form-body {
-            background: #fbfaf8;
+            background: #fcfdfe;
         }
 
         .documents-meta-grid,
         .documents-step {
-            border-color: #e7dfda;
+            border-color: #ccd5dd;
             background: #ffffff;
-            box-shadow: 0 6px 18px rgba(55, 43, 37, 0.035);
+            box-shadow: 0 6px 18px rgba(23, 58, 94, 0.045);
         }
 
         .documents-field-label {
-            color: #514843;
+            color: #314e68;
         }
 
         .documents-required {
@@ -2352,20 +2360,20 @@
 
         .documents-field-help,
         .documents-draft-status {
-            color: #817670;
+            color: #728494;
         }
 
         .documents-summary-item {
-            border-color: #e6ddd8;
-            background: #faf7f5;
+            border-color: #ced7df;
+            background: #f7fafc;
         }
 
         .documents-summary-item span {
-            color: #82766f;
+            color: #718292;
         }
 
         .documents-summary-item strong {
-            color: #302a27;
+            color: var(--docs-ink);
         }
 
         .documents-form-footer {
@@ -2374,53 +2382,53 @@
         }
 
         .documents-secondary-button {
-            border-color: #ddd4cf;
+            border-color: #c5d0d9;
             background: #ffffff;
-            color: #4b423d;
+            color: var(--docs-accent-dark);
         }
 
         .documents-primary-button {
-            background: #4d4743;
+            background: var(--docs-accent);
             color: #ffffff;
-            box-shadow: 0 8px 18px rgba(54, 48, 44, 0.14);
+            box-shadow: 0 8px 18px rgba(8, 120, 189, 0.2);
         }
 
         .documents-primary-button:hover {
-            background: #37322f;
+            background: var(--docs-accent-dark);
         }
 
         .documents-generate-button {
-            background: linear-gradient(135deg, var(--docs-accent-dark), #d94a40);
+            background: linear-gradient(135deg, var(--docs-accent-dark), var(--docs-accent));
             color: #ffffff;
-            box-shadow: 0 12px 24px rgba(177, 49, 41, 0.2);
+            box-shadow: 0 12px 24px rgba(8, 120, 189, 0.22);
         }
 
         .documents-central .adm-pdf-control {
-            border-color: #ddd5d0;
+            border-color: #c8d2da;
             background: #ffffff;
-            color: #302a27;
-            box-shadow: inset 0 1px 2px rgba(55, 43, 37, 0.025);
+            color: #263f56;
+            box-shadow: inset 0 1px 2px rgba(23, 58, 94, 0.03);
         }
 
         .documents-central .adm-pdf-control::placeholder {
-            color: #a09690;
+            color: #8997a3;
         }
 
         .documents-central .adm-pdf-control:focus {
-            border-color: #c9574f;
+            border-color: var(--docs-accent);
             background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(189, 56, 47, 0.08);
+            box-shadow: 0 0 0 4px rgba(8, 120, 189, 0.1);
         }
 
         .documents-central .adm-pdf-control:read-only {
-            background: #f5f2ef;
-            color: #706660;
+            background: #f1f5f8;
+            color: #617385;
         }
 
         .documents-empty-state {
-            border-color: #ddd4cf;
+            border-color: #c8d2da;
             background: #ffffff;
-            color: #776d67;
+            color: #657787;
         }
 
         @media (max-width: 639px) {
@@ -2827,7 +2835,7 @@
             <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
             <p class="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-blue-100/70">
               <i class="ph ph-lock-key mt-0.5 text-sm text-blue-200" aria-hidden="true"></i>
-              <span>A senha salva pode ser preenchida pelo navegador, mas o acesso só é liberado após confirmar em Entrar.</span>
+              <strong>Criptografia SSL de Ponta a Ponta</strong>
             </p>
           </form>
 
@@ -3287,6 +3295,7 @@
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Origem dos clientes</p>
                                         <h4 class="metallic-title text-lg font-black">Hunters</h4>
+                                        <p id="ranking-hunters-source" class="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-200">HUNTER DO MÊS ATUAL</p>
                                     </div>
                                     <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
                                 </div>
@@ -3399,7 +3408,7 @@
                                         <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
                                             <i class="ph ph-arrow-left"></i> <span class="hidden sm:inline">Biblioteca</span>
                                         </button>
-                                        <span class="documents-template-icon flex-shrink-0"><i id="documents-selected-icon" class="ph ph-file-text"></i></span>
+                                        <span class="documents-template-icon flex-shrink-0"><i id="documents-selected-icon" class="ph-fill ph-file-text"></i></span>
                                         <div class="min-w-0">
                                             <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
                                             <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
@@ -6572,6 +6581,7 @@
                 teamTotals: {},
                 history: normalizeHistory(sourceValue.history),
                 hunters: normalizeHunters(sourceValue.hunters),
+                hunterSheet: String(sourceValue.hunterSheet || `HUNTER ${getCurrentOperationalMonthKey()}`).trim(),
                 paidClients: normalizePaidClients(sourceValue.paidClients),
                 potentialClients: normalizePotentialClients(sourceValue.potentialClients),
                 source: sourceValue.source || 'manual',
@@ -6790,7 +6800,10 @@
             const statsContainer = document.getElementById('ranking-hunters-stats');
             if (!container) return;
 
-            const items = [...(rankingData.hunters || [])].sort((a, b) => (b.paidClients || 0) - (a.paidClients || 0) || (b.value || 0) - (a.value || 0));
+            const items = [...(rankingData.hunters || [])]
+                .sort((a, b) => (b.paidClients || 0) - (a.paidClients || 0) || (b.value || 0) - (a.value || 0));
+            const source = document.getElementById('ranking-hunters-source');
+            if (source) source.textContent = rankingData.hunterSheet || `HUNTER ${getCurrentOperationalMonthKey()}`;
             const totals = items.reduce((acc, item) => {
                 acc.convertedClients += Number(item.convertedClients) || 0;
                 acc.potentialClients += Number(item.potentialClients) || 0;
@@ -7342,6 +7355,7 @@
                     teamTotals: normalized.teamTotals,
                     history: normalized.history,
                     hunters: normalized.hunters,
+                    hunterSheet: normalized.hunterSheet,
                     paidClients: normalized.paidClients,
                     potentialClients: normalized.potentialClients
                 });
@@ -9100,7 +9114,7 @@
             if (titleElement) titleElement.textContent = title;
             if (categoryElement) categoryElement.textContent = info.category;
             if (descriptionElement) descriptionElement.textContent = info.description;
-            if (iconElement) iconElement.className = `ph ${info.icon}`;
+            if (iconElement) iconElement.className = `ph-fill ${info.icon}`;
         }
 
         function syncAdmPdfFileName(force = false) {
@@ -9159,10 +9173,10 @@
                 const info = getAdmTemplateInfo(option.value);
                 const selected = option.value === select.value;
                 return `<div class="documents-template-card" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
-                    <span class="documents-template-icon"><i class="ph ${escapeHtml(info.icon)}"></i></span>
+                    <span class="documents-template-icon"><i class="ph-fill ${escapeHtml(info.icon)}"></i></span>
                     <button type="button" class="min-w-0 text-left" onclick="selectAdmTemplate(this.closest('[data-template-value]').dataset.templateValue)">
                         <span class="documents-category-label">${escapeHtml(info.category)}</span>
-                        <span class="mt-1 block text-base font-black leading-snug text-white">${escapeHtml(option.text)}</span>
+                        <span class="documents-template-title mt-1 block text-base font-black leading-snug text-white">${escapeHtml(option.text)}</span>
                         <span class="mt-2 block text-xs font-medium leading-relaxed text-blue-100/55">${escapeHtml(info.description)}</span>
                         <span class="mt-2 block text-[11px] font-semibold leading-relaxed text-blue-200/75"><strong class="text-sky-300">Finalidade:</strong> ${escapeHtml(info.purpose)}</span>
                         <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-black text-sky-300">Preencher documento <i class="ph ph-arrow-right"></i></span>
@@ -9599,7 +9613,7 @@
             fieldsContainer.innerHTML = sections.map((section, index) => `
                 <section class="documents-step${index === 0 ? ' is-active' : ''}" data-step-index="${index}" data-step-title="${escapeHtml(section.title)}">
                     <div class="mb-4 flex items-start gap-3">
-                        <span class="documents-template-icon flex-shrink-0"><i class="ph ${escapeHtml(section.icon)}"></i></span>
+                        <span class="documents-template-icon flex-shrink-0"><i class="ph-fill ${escapeHtml(section.icon)}"></i></span>
                         <div>
                             <p class="documents-category-label">Etapa ${index + 1}</p>
                             <h4 class="mt-1 text-lg font-black text-white">${escapeHtml(section.title)}</h4>

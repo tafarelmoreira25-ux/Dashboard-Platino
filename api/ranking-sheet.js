@@ -29,7 +29,6 @@ const DEFAULT_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
 const DEFAULT_RANKING_SHEET_GID = "945522157";
 const DEFAULT_HUNTER_SPREADSHEET_ID = "1CfFR1wjF74xXea4bYrjkea8qaQxsjwoQ13KsiWh2cIE";
 const DEFAULT_HUNTER_SHEET_NAME = "HUNTER";
-const DEFAULT_INDICATORS_SHEET_NAME = "INDICADORES";
 const DEFAULT_HUNTER_NAME = "Giullian Gabriellen";
 const DEFAULT_TEAM_GOALS = {
   comercial: 150000,
@@ -90,18 +89,14 @@ function getDefaultSheetCsvUrlFor(sheetName) {
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 }
 
+function getCurrentHunterSheetName() {
+  return process.env.HUNTER_SHEET_NAME || `${DEFAULT_HUNTER_SHEET_NAME} ${getCurrentPortugueseMonthName()}`;
+}
+
 function getHunterSheetCsvUrl() {
   if (process.env.HUNTER_SHEET_CSV_URL) return process.env.HUNTER_SHEET_CSV_URL;
   const spreadsheetId = process.env.HUNTER_SPREADSHEET_ID || DEFAULT_HUNTER_SPREADSHEET_ID;
-  const sheetName = process.env.HUNTER_SHEET_NAME || `${DEFAULT_HUNTER_SHEET_NAME} ${getCurrentPortugueseMonthName()}`;
-  const encodedSheet = encodeURIComponent(sheetName);
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
-}
-
-function getIndicatorsSheetCsvUrl() {
-  if (process.env.HUNTER_INDICATORS_SHEET_CSV_URL) return process.env.HUNTER_INDICATORS_SHEET_CSV_URL;
-  const spreadsheetId = process.env.HUNTER_SPREADSHEET_ID || DEFAULT_HUNTER_SPREADSHEET_ID;
-  const sheetName = process.env.HUNTER_INDICATORS_SHEET_NAME || DEFAULT_INDICATORS_SHEET_NAME;
+  const sheetName = getCurrentHunterSheetName();
   const encodedSheet = encodeURIComponent(sheetName);
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodedSheet}`;
 }
@@ -509,44 +504,6 @@ function extractHunterDataFromCsv(text) {
   };
 }
 
-function mergeHunterData(datasets) {
-  const hunterTotals = new Map();
-  const paidClients = [];
-  const potentialClients = [];
-
-  for (const data of datasets) {
-    for (const item of data.hunters || []) {
-      const key = item.name || DEFAULT_HUNTER_NAME;
-      const current = hunterTotals.get(key) || {
-        name: key,
-        convertedClients: 0,
-        potentialClients: 0,
-        paidClients: 0,
-        notPaidClients: 0,
-        projections: 0,
-        value: 0
-      };
-
-      current.convertedClients += Number(item.convertedClients) || 0;
-      current.potentialClients += Number(item.potentialClients) || 0;
-      current.paidClients += Number(item.paidClients) || 0;
-      current.notPaidClients += Number(item.notPaidClients) || 0;
-      current.projections += Number(item.projections) || 0;
-      current.value += Number(item.value) || 0;
-      hunterTotals.set(key, current);
-    }
-
-    paidClients.push(...(data.paidClients || []));
-    potentialClients.push(...(data.potentialClients || []));
-  }
-
-  return {
-    hunters: Array.from(hunterTotals.values()),
-    paidClients,
-    potentialClients
-  };
-}
-
 function detectSideBySideSections(headers) {
   const sections = [];
 
@@ -805,6 +762,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     teamTotals: {},
     history: Array.isArray(supplemental.history) ? supplemental.history : [],
     hunters: Array.isArray(supplemental.hunters) ? supplemental.hunters : [],
+    hunterSheet: String(supplemental.hunterSheet || getCurrentHunterSheetName()),
     paidClients: Array.isArray(supplemental.paidClients) ? supplemental.paidClients : [],
     potentialClients: Array.isArray(supplemental.potentialClients) ? supplemental.potentialClients : [],
     metrics: {
@@ -943,22 +901,18 @@ export default async function handler(request, response) {
       }
     }
 
+    supplemental.hunterSheet = getCurrentHunterSheetName();
+    supplemental.hunters = [];
+    supplemental.paidClients = [];
+    supplemental.potentialClients = [];
     try {
-      const hunterDatasets = [];
-      const hunterSources = await Promise.allSettled([
-        fetchCsv(getIndicatorsSheetCsvUrl()),
-        fetchCsv(getHunterSheetCsvUrl())
-      ]);
-      hunterSources.forEach(result => {
-        if (result.status === "fulfilled") hunterDatasets.push(extractHunterDataFromCsv(result.value));
-      });
-      if (!hunterDatasets.length) throw new Error("Nenhuma aba de Hunter pôde ser carregada.");
-      const hunterData = mergeHunterData(hunterDatasets);
-      if (hunterData.hunters.length) supplemental.hunters = hunterData.hunters;
-      if (hunterData.paidClients.length) supplemental.paidClients = hunterData.paidClients;
-      if (hunterData.potentialClients.length) supplemental.potentialClients = hunterData.potentialClients;
+      const hunterCsv = await fetchCsv(getHunterSheetCsvUrl());
+      const hunterData = extractHunterDataFromCsv(hunterCsv);
+      supplemental.hunters = hunterData.hunters;
+      supplemental.paidClients = hunterData.paidClients;
+      supplemental.potentialClients = hunterData.potentialClients;
     } catch (hunterError) {
-      console.warn("Nao foi possivel sincronizar a planilha de indicadores/Hunter.", hunterError);
+      console.warn(`Nao foi possivel sincronizar a aba ${supplemental.hunterSheet}.`, hunterError);
     }
 
     response.setHeader("Cache-Control", "no-store");
@@ -975,3 +929,9 @@ export default async function handler(request, response) {
     });
   }
 }
+
+export {
+  extractHunterDataFromCsv,
+  getCurrentHunterSheetName,
+  getHunterSheetCsvUrl
+};

@@ -21,8 +21,15 @@ assert.match(documentsSection, /assets\/pdf-document-icon\.png/);
 assert.ok(icon.size > 1000, 'O ícone de PDF deve estar disponível.');
 assert.match(
   html,
-  /\.documents-central,\s*\.documents-central \*\s*\{\s*font-family: "Times New Roman"/
+  /\.documents-central,\s*\.documents-central \*\s*\{\s*font-family: "Inter"/
 );
+assert.match(html, /\.documents-central :is\(h2, h3, h4, h5\)[\s\S]*?font-family: "Montserrat"/);
+assert.match(html, /--docs-ink: #173a5e;/);
+assert.match(html, /--docs-accent: #0878bd;/);
+assert.match(html, /--docs-line: #cbd4dc;/);
+assert.doesNotMatch(html, /Times New Roman/);
+assert.match(html, /documents-template-icon"><i class="ph-fill/);
+assert.match(html, /box-shadow: inset 0 -3px var\(--docs-accent\)/);
 assert.match(html, /\.documents-central\s*\{[\s\S]*?background: #ffffff;/);
 assert.match(html, /const categoryOrder = \['Todos', 'Defesa', 'Extrajudicial', 'Termos', 'Procurações', 'Declarações', 'Judicial', 'Homologação', 'Perícia'\]/);
 
