@@ -32,6 +32,19 @@ export default function handler(request, response) {
     });
   }
 
+  const invalidKeys = [];
+  if (!/^AIza[0-9A-Za-z_-]{20,}$/.test(String(firebaseConfig.apiKey))) invalidKeys.push("apiKey");
+  if (!/^[a-z0-9-]+\.firebaseapp\.com$/i.test(String(firebaseConfig.authDomain))) invalidKeys.push("authDomain");
+  if (!/^[a-z0-9-]{4,}$/i.test(String(firebaseConfig.projectId))) invalidKeys.push("projectId");
+  if (firebaseConfig.messagingSenderId && !/^\d{6,}$/.test(String(firebaseConfig.messagingSenderId))) invalidKeys.push("messagingSenderId");
+  if (firebaseConfig.appId && !/^1:\d+:web:[0-9A-Za-z]+$/.test(String(firebaseConfig.appId))) invalidKeys.push("appId");
+  if (invalidKeys.length) {
+    return response.status(500).json({
+      error: "Firebase configuration is invalid.",
+      invalid: invalidKeys
+    });
+  }
+
   response.setHeader("Cache-Control", "no-store");
   return response.status(200).json(
     Object.fromEntries(Object.entries(firebaseConfig).filter(([, value]) => Boolean(value)))
