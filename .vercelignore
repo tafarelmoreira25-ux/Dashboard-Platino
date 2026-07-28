@@ -2,5 +2,9 @@
 .env*
 node_modules/
 tmp/
+tests/
+output/
+migrations/
+docs/
 trabalho_pericia_vitor/qa_teste_pdf_*/
 trabalho_pericia_vitor/qa_teste_pdf_*_contact.png

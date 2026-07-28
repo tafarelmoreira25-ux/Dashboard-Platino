@@ -2,6 +2,8 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
+    // Mantido apenas para a foto de perfil já existente no sistema.
+    // O módulo SDR não envia contratos nem PDFs para o Storage.
     match /users/{uid}/profile/{fileName} {
       allow read: if request.auth != null;
       allow create, update: if request.auth != null

@@ -1,0 +1,982 @@
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  limit,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  setDoc,
+  where
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import {
+  SDR_STEPS,
+  calculateInterestScore,
+  calculateRemainingInstallments,
+  formatCpfCnpj,
+  formatMoney,
+  formatPhone,
+  getForwardingMissingFields,
+  maskPhone,
+  normalizeDigits,
+  normalizeSearch,
+  parsePtBrMoney,
+  sanitizeText,
+  validateLeadRegistration
+} from "./sdr-core.js";
+
+const root = document.getElementById("sdr-root");
+const CACHE_KEY = "platinoSdrWorkspaceV2";
+const state = {
+  app: null, auth: null, db: null, user: null, profile: null, role: "collaborator",
+  leads: [], notifications: [], banks: [], rules: [], assignableUsers: [], events: [], comments: [],
+  activeId: "", step: 0, view: "sdr", metricFilter: "", saveTimer: 0,
+  stop: [], detailStops: [], booted: false, duplicatePayload: null
+};
+
+const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+}[char]));
+
+const getPath = (object, path) => path.split(".").reduce((value, key) => value?.[key], object);
+const setPath = (object, path, value) => {
+  const keys = path.split(".");
+  let target = object;
+  keys.slice(0, -1).forEach(key => { target[key] ||= {}; target = target[key]; });
+  target[keys.at(-1)] = value;
+};
+
+function currentLead() {
+  return state.leads.find(item => item.id === state.activeId) || loadLocalDraft() || null;
+}
+
+function resolveRole(profile = {}) {
+  const role = normalizeSearch(profile.operationalRole || profile.role);
+  if (["admin", "manager", "sdr", "consultant", "analyst"].includes(role)) return role;
+  if (["gestor", "supervisor"].includes(role) || window.platinoUserRole === "gestor") return "manager";
+  const sector = normalizeSearch(profile.sector || window.platinoUserSector);
+  if (sector.includes("sdr") || sector.includes("comercial")) return "sdr";
+  if (sector.includes("jurid") || sector.includes("consult")) return "consultant";
+  return "collaborator";
+}
+
+function canManage() { return ["admin", "manager"].includes(state.role); }
+function canSdr() { return canManage() || state.role === "sdr"; }
+function canConsult() { return canManage() || ["consultant", "analyst"].includes(state.role); }
+
+async function api(action, payload = {}) {
+  if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
+  if (!navigator.onLine) throw new Error("Sem conexão. O rascunho permanece salvo neste dispositivo.");
+  const token = await state.auth.currentUser.getIdToken();
+  const response = await fetch("/api/sdr", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ action, payload })
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "Não foi possível concluir a operação.");
+  return result;
+}
+
+function cache() {
+  try {
+    return JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+  } catch { return {}; }
+}
+
+function saveLocalDraft(lead) {
+  if (!lead) return;
+  const data = cache();
+  data[lead.id || "new"] = { lead, step: state.step, savedAt: new Date().toISOString() };
+  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+}
+
+function loadLocalDraft() {
+  const data = cache();
+  return data[state.activeId || "new"]?.lead || null;
+}
+
+function clearLocalDraft(id) {
+  const data = cache();
+  delete data[id || "new"];
+  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+}
+
+function emptyLead() {
+  return {
+    id: "", status: "Rascunho", fullName: "", phone: "", cpfCnpj: "", email: "", state: "", city: "",
+    origin: "", sourceChannel: "", campaign: "", marketingCompany: "", externalCode: "",
+    nextContactAt: "", preferredContactTime: "", preferredChannel: "", initialObservation: "",
+    marketingStatus: "APROVADO", marketingAnalysisDate: "", marketingAnalyst: "", marketingSummary: "",
+    marketingFindings: [], commercialScore: 0, commercialClassification: "Frio",
+    qualification: { answers: [{}, {}, {}, {}], communicationProfile: [] },
+    contract: { hasContract: "Não informado", totalInstallments: "", paidInstallments: "", remainingInstallments: "" },
+    analysis: {}, analysisDocument: {}, consent: {}, assignment: {}, outcome: {}
+  };
+}
+
+function mount() {
+  root.innerHTML = `
+    <div class="sdr-shell space-y-4">
+      <header class="sdr-topbar">
+        <div><h2 class="sdr-title">SDR — Qualificação de Leads</h2><p class="sdr-subtitle">Fila de contatos, qualificação completa e encaminhamento integrado ao Comercial.</p></div>
+        <div class="flex items-center gap-2">
+          <div class="sdr-notifications">
+            <button id="sdr-notification-button" class="sdr-secondary" type="button" aria-expanded="false"><i class="ph ph-bell"></i><span id="sdr-notification-count">0</span></button>
+            <div id="sdr-notification-panel" class="sdr-notification-panel" hidden></div>
+          </div>
+          <button id="sdr-new-button" class="sdr-primary" type="button"><i class="ph ph-plus"></i>Novo lead</button>
+        </div>
+      </header>
+      <nav id="sdr-view-tabs" class="sdr-view-tabs"></nav>
+      <section id="sdr-metrics" class="sdr-metrics"></section>
+      <div id="sdr-layout" class="sdr-layout">
+        <aside class="sdr-panel sdr-queue">
+          <div class="flex items-center justify-between gap-2"><h3 class="font-black text-slate-800">Fila de leads</h3><span id="sdr-list-count" class="text-xs font-bold text-slate-500">0</span></div>
+          <div class="sdr-filters mt-3">
+            <input id="sdr-search" class="sdr-control col-span-2" type="search" placeholder="Nome, telefone, CPF, protocolo, banco...">
+            <select id="sdr-status-filter" class="sdr-control"><option value="">Todos os status</option></select>
+            <select id="sdr-class-filter" class="sdr-control"><option value="">Todas as classificações</option><option>Quente</option><option>Morno</option><option>Frio</option></select>
+          </div>
+          <div id="sdr-lead-list" class="sdr-lead-list"></div>
+        </aside>
+        <main id="sdr-workspace" class="sdr-panel sdr-workspace"></main>
+      </div>
+    </div>
+    <div id="sdr-modal" class="sdr-modal" hidden><div id="sdr-modal-card" class="sdr-modal-card"></div></div>`;
+  bindShell();
+  renderViewTabs();
+  renderStatusFilter();
+  renderAll();
+}
+
+function bindShell() {
+  document.getElementById("sdr-new-button").onclick = () => startNew();
+  document.getElementById("sdr-search").oninput = renderQueue;
+  document.getElementById("sdr-status-filter").onchange = renderQueue;
+  document.getElementById("sdr-class-filter").onchange = renderQueue;
+  document.getElementById("sdr-notification-button").onclick = toggleNotifications;
+  window.addEventListener("online", () => { setSaveStatus("Conexão restaurada. Sincronizando..."); flushCurrentDraft(); });
+  window.addEventListener("offline", () => setSaveStatus("Sem conexão. Alterações protegidas neste dispositivo."));
+}
+
+function renderViewTabs() {
+  const tabs = [];
+  if (canSdr()) tabs.push(["sdr", "Central SDR"]);
+  if (canConsult()) tabs.push(["consultant", "Leads recebidos"]);
+  if (canManage()) tabs.push(["settings", "Configurações"]);
+  if (!tabs.some(([key]) => key === state.view)) state.view = tabs[0]?.[0] || "sdr";
+  document.getElementById("sdr-view-tabs").innerHTML = tabs.map(([key, label]) =>
+    `<button class="sdr-view-tab" type="button" data-view="${key}" aria-selected="${state.view === key}">${esc(label)}</button>`
+  ).join("");
+  document.querySelectorAll("[data-view]").forEach(button => button.onclick = () => {
+    state.view = button.dataset.view;
+    state.activeId = "";
+    renderViewTabs();
+    subscribeLeads();
+    renderAll();
+  });
+}
+
+const metrics = [
+  ["new", "Novos"], ["waiting", "Aguardando contato"], ["today", "Contatos de hoje"],
+  ["returns", "Retornos"], ["overdue", "Retornos vencidos"], ["qualifying", "Em qualificação"],
+  ["hot", "Quentes"], ["warm", "Mornos"], ["cold", "Frios"], ["forwarded", "Encaminhados"],
+  ["negotiation", "Em negociação"], ["approved", "Lead Aprovado"], ["rejected", "Lead Reprovado"]
+];
+
+function metricMatch(key, lead) {
+  const today = new Date().toISOString().slice(0, 10);
+  const next = String(lead.nextContactAt || "").slice(0, 10);
+  return ({
+    new: lead.status === "Novo lead",
+    waiting: ["Aguardando contato", "Aguardando informações", "Aguardando aceite"].includes(lead.status),
+    today: next === today,
+    returns: lead.status === "Retorno agendado",
+    overdue: next && next < today && !["LEAD APROVADO", "LEAD REPROVADO", "Arquivado"].includes(lead.status),
+    qualifying: lead.status === "Em qualificação",
+    hot: lead.commercialClassification === "Quente",
+    warm: lead.commercialClassification === "Morno",
+    cold: lead.commercialClassification === "Frio",
+    forwarded: ["Encaminhado", "Recebido pelo consultor"].includes(lead.status),
+    negotiation: lead.status === "Em negociação",
+    approved: lead.status === "LEAD APROVADO",
+    rejected: lead.status === "LEAD REPROVADO"
+  })[key];
+}
+
+function renderMetrics() {
+  document.getElementById("sdr-metrics").innerHTML = metrics.map(([key, label]) => `
+    <button type="button" class="sdr-metric" data-metric="${key}" aria-pressed="${state.metricFilter === key}">
+      <span>${esc(label)}</span><strong>${state.leads.filter(lead => metricMatch(key, lead)).length}</strong>
+    </button>`).join("");
+  document.querySelectorAll("[data-metric]").forEach(button => button.onclick = () => {
+    state.metricFilter = state.metricFilter === button.dataset.metric ? "" : button.dataset.metric;
+    renderMetrics();
+    renderQueue();
+  });
+}
+
+function renderStatusFilter() {
+  const statuses = ["Rascunho", "Novo lead", "Aguardando contato", "Em qualificação", "Aguardando informações", "Qualificado", "Análise em andamento", "Análise Concluída", "APROVADO", "Aguardando aceite", "Lead potencial", "Encaminhado", "Recebido pelo consultor", "Em contato", "Retorno agendado", "Em negociação", "LEAD APROVADO", "LEAD REPROVADO", "Devolvido", "Arquivado"];
+  document.getElementById("sdr-status-filter").innerHTML = `<option value="">Todos os status</option>${statuses.map(item => `<option>${item}</option>`).join("")}`;
+}
+
+function filteredLeads() {
+  const search = normalizeSearch(document.getElementById("sdr-search")?.value);
+  const status = document.getElementById("sdr-status-filter")?.value || "";
+  const classification = document.getElementById("sdr-class-filter")?.value || "";
+  return state.leads.filter(lead => {
+    if (state.metricFilter && !metricMatch(state.metricFilter, lead)) return false;
+    if (status && lead.status !== status) return false;
+    if (classification && lead.commercialClassification !== classification) return false;
+    if (search && !normalizeSearch([
+      lead.fullName, lead.phone, lead.cpfCnpj, lead.protocol, lead.externalCode,
+      lead.contract?.bankName, lead.contract?.contractType
+    ].join(" ")).includes(search)) return false;
+    return true;
+  });
+}
+
+function badgeClass(lead) {
+  if (lead.status === "LEAD APROVADO") return "approved";
+  if (lead.status === "LEAD REPROVADO") return "rejected";
+  if (["Encaminhado", "Recebido pelo consultor"].includes(lead.status)) return "forwarded";
+  return lead.commercialClassification === "Quente" ? "hot" : lead.commercialClassification === "Morno" ? "warm" : "";
+}
+
+function renderQueue() {
+  const items = filteredLeads();
+  document.getElementById("sdr-list-count").textContent = `${items.length} lead(s)`;
+  document.getElementById("sdr-lead-list").innerHTML = items.length ? items.map(lead => `
+    <button type="button" class="sdr-lead-card" data-lead="${esc(lead.id)}" aria-selected="${state.activeId === lead.id}">
+      <div class="flex items-start justify-between gap-2"><strong class="truncate text-sm text-slate-800">${esc(lead.fullName || "Sem nome")}</strong><span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span></div>
+      <p class="mt-1 text-xs text-slate-500">${esc(maskPhone(lead.phone))} · ${esc(lead.status || "Rascunho")}</p>
+      <div class="mt-2 flex flex-wrap gap-1"><span class="sdr-badge">${esc(lead.origin || "Origem não informada")}</span>${lead.assignedConsultantName ? `<span class="sdr-badge forwarded">${esc(lead.assignedConsultantName)}</span>` : ""}</div>
+      <p class="mt-2 text-[10px] text-slate-400">${esc(lead.protocol || "Protocolo ao criar")}${lead.nextContactAt ? ` · Próximo: ${esc(formatDateTime(lead.nextContactAt))}` : ""}</p>
+    </button>`).join("") : `<div class="sdr-empty"><span><i class="ph ph-users-three mb-2 block text-3xl"></i>Nenhum lead para os filtros selecionados.</span></div>`;
+  document.querySelectorAll("[data-lead]").forEach(button => button.onclick = () => openLead(button.dataset.lead));
+}
+
+function renderAll() {
+  const queue = document.querySelector(".sdr-queue");
+  if (queue) queue.style.display = "";
+  renderMetrics();
+  renderQueue();
+  if (state.view === "settings") return renderSettings();
+  const lead = currentLead();
+  if (!lead) return renderEmptyWorkspace();
+  if (state.view === "consultant") renderConsultantWorkspace(lead);
+  else renderSdrWorkspace(lead);
+}
+
+function renderEmptyWorkspace() {
+  document.getElementById("sdr-layout").classList.remove("is-editing");
+  document.getElementById("sdr-workspace").innerHTML = `<div class="sdr-empty"><span><i class="ph ph-user-focus mb-3 block text-4xl text-sky-500"></i>Selecione um lead da fila ou crie um novo cadastro.</span></div>`;
+}
+
+function startNew() {
+  if (!canSdr()) return showToast("Somente SDR ou gestão pode criar leads.", "error");
+  state.activeId = "";
+  state.step = 0;
+  saveLocalDraft(emptyLead());
+  renderAll();
+  document.getElementById("sdr-layout").classList.add("is-editing");
+}
+
+function openLead(id) {
+  state.activeId = id;
+  state.step = 0;
+  document.getElementById("sdr-layout").classList.add("is-editing");
+  subscribeLeadDetails(id);
+  renderAll();
+}
+
+function renderSdrWorkspace(lead) {
+  const step = SDR_STEPS[state.step];
+  document.getElementById("sdr-workspace").innerHTML = `
+    <header class="sdr-lead-header">
+      <button type="button" class="sdr-secondary md:hidden" data-back-list><i class="ph ph-arrow-left"></i>Fila</button>
+      <div class="min-w-0"><p class="text-[10px] font-black uppercase tracking-wider text-sky-700">${esc(lead.protocol || "Novo cadastro")}</p><h3 class="truncate font-black text-slate-800">${esc(lead.fullName || "Novo lead")}</h3><p class="text-xs text-slate-500">${esc(lead.status || "Rascunho")}</p></div>
+      <span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span>
+    </header>
+    <div class="px-4 pt-3"><nav class="sdr-stepper">${SDR_STEPS.map((item, index) => `<button type="button" class="sdr-step" data-step="${index}" aria-current="${index === state.step ? "step" : "false"}">${index + 1}. ${esc(item.label)}</button>`).join("")}</nav></div>
+    <form id="sdr-step-form">
+      <div class="sdr-form-body">${renderStep(step.key, lead)}</div>
+      <footer class="sdr-actionbar">
+        <span id="sdr-save-status" class="sdr-save-status">Rascunho protegido neste dispositivo.</span>
+        <button class="sdr-secondary" type="button" data-prev ${state.step === 0 ? "disabled" : ""}><i class="ph ph-arrow-left"></i>Voltar</button>
+        <button class="sdr-primary" type="button" data-save><i class="ph ph-floppy-disk"></i>${lead.id ? "Salvar" : "Criar lead"}</button>
+        <button class="sdr-primary" type="button" data-next ${state.step === SDR_STEPS.length - 1 ? "disabled" : ""}>Avançar<i class="ph ph-arrow-right"></i></button>
+      </footer>
+    </form>`;
+  bindWorkspace(lead);
+}
+
+function renderStep(key, lead) {
+  if (key === "registration") return registrationStep(lead);
+  if (key === "qualification") return qualificationStep(lead);
+  if (key === "contract") return contractStep(lead);
+  if (key === "analysis") return analysisStep(lead);
+  if (key === "document") return documentStep(lead);
+  if (key === "consent") return consentStep(lead);
+  return assignmentStep(lead);
+}
+
+function input(label, path, lead, options = {}) {
+  const value = getPath(lead, path) ?? "";
+  const type = options.type || "text";
+  const required = options.required ? `<span class="sdr-required">*</span>` : "";
+  const field = options.as === "textarea"
+    ? `<textarea class="sdr-control" rows="${options.rows || 3}" data-sdr-field="${path}" ${options.required ? "required" : ""} placeholder="${esc(options.placeholder || "")}">${esc(value)}</textarea>`
+    : options.options
+      ? `<select class="sdr-control" data-sdr-field="${path}" ${options.required ? "required" : ""}>${options.options.map(item => `<option value="${esc(item)}" ${String(value) === item ? "selected" : ""}>${esc(item || "Selecione")}</option>`).join("")}</select>`
+      : `<input class="sdr-control" type="${type}" value="${esc(value)}" data-sdr-field="${path}" ${options.required ? "required" : ""} placeholder="${esc(options.placeholder || "")}">`;
+  return `<label class="sdr-field">${esc(label)} ${required}${field}${options.help ? `<span class="sdr-help">${esc(options.help)}</span>` : ""}</label>`;
+}
+
+function registrationStep(lead) {
+  const origins = ["", "Instagram", "Facebook", "Site", "WhatsApp", "Ligação", "Indicação", "Campanha", "Lista comercial", "Empresa de marketing", "Outro"];
+  const statuses = ["APROVADO", "Aprovado com prioridade", "Aprovado com urgência", "Aprovado aguardando documentos", "Aprovado para contato imediato"];
+  return `<section class="sdr-form-card"><h3>Novo lead</h3><p>Status inicial: Rascunho. Nome, telefone e origem são obrigatórios.</p><div class="sdr-grid two">
+    ${input("Nome completo", "fullName", lead, { required: true })}${input("Telefone/WhatsApp", "phone", lead, { required: true })}
+    ${input("CPF/CNPJ", "cpfCnpj", lead, { help: "Obrigatório ao encaminhar." })}${input("E-mail", "email", lead, { type: "email" })}
+    ${input("Estado", "state", lead)}${input("Cidade", "city", lead)}${input("Origem", "origin", lead, { options: origins, required: true })}
+    ${input("Canal de contato", "sourceChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
+    ${input("Campanha", "campaign", lead)}${input("Código externo do lead", "externalCode", lead)}
+    ${input("Próximo contato", "nextContactAt", lead, { type: "datetime-local" })}${input("Melhor horário", "preferredContactTime", lead)}
+  </div>${input("Observação inicial", "initialObservation", lead, { as: "textarea", rows: 3 })}</section>
+  <section class="sdr-form-card"><h3>Origem e aprovação do lead</h3><p>A aprovação original recebida do marketing é preservada; somente a gestão pode corrigi-la com justificativa.</p><div class="sdr-grid two">
+    ${input("Empresa de marketing responsável", "marketingCompany", lead)}${input("Data da análise inicial", "marketingAnalysisDate", lead, { type: "date" })}
+    ${input("Responsável pela análise inicial", "marketingAnalyst", lead)}${input("Status recebido", "marketingStatus", lead, { options: statuses })}
+  </div>${input("Resumo da análise", "marketingSummary", lead, { as: "textarea", rows: 4 })}</section>`;
+}
+
+const questions = [
+  { title: "Pergunta 1 — Dor principal", text: "Qual é hoje o maior problema relacionado ao seu financiamento ou empréstimo?", shortcuts: ["Parcela muito alta", "Parcelas atrasadas", "Saldo devedor elevado", "Juros elevados", "Encargos não compreendidos", "Renegociação", "Dificuldade para quitar", "Busca e apreensão", "Risco de perder o bem", "Contrato quitado", "Outro"] },
+  { title: "Pergunta 2 — Impacto no orçamento", text: "De que forma essa situação está afetando sua vida financeira ou sua rotina?", shortcuts: ["Compromete grande parte da renda", "Está atrasando outras contas", "Risco sobre o bem", "Está impedindo outros planos", "Preocupação familiar", "Precisa reduzir os gastos", "Não possui impacto urgente", "Outro"] },
+  { title: "Pergunta 3 — Objetivo esperado", text: "O que você espera conseguir por meio da análise e revisão do contrato?", shortcuts: ["Reduzir a parcela", "Reduzir o saldo devedor", "Entender os juros", "Retirar encargos", "Receber estorno", "Negociar parcelas", "Regularizar atraso", "Evitar busca e apreensão", "Quitar o contrato", "Apenas obter informações", "Outro"] },
+  { title: "Pergunta 4 — Prazo de decisão", text: "Caso a análise apresente uma possibilidade de atuação, em quanto tempo você pretende resolver essa situação?", shortcuts: ["Imediatamente", "Hoje", "Em até três dias", "Em até sete dias", "Neste mês", "Sem prazo definido", "Apenas pesquisando", "Precisa falar com outra pessoa", "Ainda não decidiu"] }
+];
+
+function qualificationStep(lead) {
+  const q = lead.qualification || {};
+  return `<section class="sdr-form-card"><h3>Perfil do Lead</h3><p>Registre as respostas informadas pelo lead durante o atendimento. Utilize as palavras do próprio cliente sempre que possível.</p></section>
+    ${questions.map((item, index) => `<section class="sdr-question"><h3>${esc(item.title)}</h3><p class="mt-1 text-sm text-slate-600">${esc(item.text)}</p><div class="sdr-shortcuts">${item.shortcuts.map(shortcut => `<button class="sdr-shortcut" type="button" data-shortcut="${index}" data-value="${esc(shortcut)}">${esc(shortcut)}</button>`).join("")}</div>${input("Resposta completa", `qualification.answers.${index}.answer`, lead, { as: "textarea", rows: 4, required: true, placeholder: "Registre a resposta completa do lead." })}${input("Observações", `qualification.answers.${index}.notes`, lead, { as: "textarea", rows: 2 })}<label class="mt-2 flex items-center gap-2 text-xs text-slate-600"><input type="checkbox" data-sdr-field="qualification.answers.${index}.notInformed" ${q.answers?.[index]?.notInformed ? "checked" : ""}> Marcar como não informado</label></section>`).join("")}
+    <section class="sdr-form-card"><h3>Campos internos de qualificação</h3><div class="sdr-grid three">
+      ${input("Dor principal", "qualification.mainPain", lead, { options: ["", "Parcela alta", "Parcelas atrasadas", "Saldo elevado", "Busca e apreensão", "Juros elevados", "Encargos", "Quitação", "Renegociação", "Outro"] })}
+      ${input("Urgência", "qualification.urgency", lead, { options: ["", "Muito alta", "Alta", "Média", "Baixa", "Sem urgência"] })}
+      ${input("Intenção de avançar", "qualification.intention", lead, { options: ["", "Muito interessado", "Interessado", "Considerando", "Apenas pesquisando", "Sem interesse no momento"] })}
+      ${input("Disponibilidade financeira", "qualification.financialAvailability", lead, { options: ["", "Possui disponibilidade imediata", "Possui disponibilidade parcial", "Precisa organizar", "Precisa falar com outra pessoa", "Não informado"] })}
+      ${input("Depende de outra pessoa?", "qualification.dependsOnOtherPerson", lead, { options: ["", "Não", "Cônjuge", "Familiar", "Sócio", "Responsável financeiro", "Outro", "Não informado"] })}
+      ${input("Principal objeção", "qualification.mainObjection", lead)}
+      ${input("Melhor canal", "qualification.preferredChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
+      ${input("Nível de confiança percebido", "qualification.confidenceLevel", lead, { options: ["", "Alto", "Médio", "Baixo"] })}
+    </div>${input("Orientação para o consultor", "qualification.consultantGuidance", lead, { as: "textarea" })}${input("Resumo editável do SDR", "qualification.sdrSummary", lead, { as: "textarea", rows: 5, required: true })}
+    <div class="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4"><span class="text-xs font-black text-sky-800">Percentual interno de interesse</span><strong id="sdr-score-preview" class="ml-3 text-xl text-sky-800">${Number(lead.commercialScore) || 0}% · ${esc(lead.commercialClassification || "Frio")}</strong></div></section>`;
+}
+
+function contractStep(lead) {
+  const types = ["", "Financiamento de veículo", "Financiamento de imóvel", "Empréstimo pessoal", "Empréstimo consignado", "Refinanciamento", "Renegociação", "Outro"];
+  return `<section class="sdr-form-card"><h3>Contrato</h3><p>Valores em reais e percentuais no formato brasileiro.</p><div class="sdr-grid three">
+    ${input("Tipo", "contract.contractType", lead, { options: types, required: true })}
+    ${input("Subtipo", "contract.contractSubtype", lead, { options: ["", "Carro", "Moto", "Caminhão", "Utilitário", "Outro"] })}
+    ${bankSelect(lead)}${input("Outra instituição", "contract.bankOther", lead)}
+    ${input("Valor da parcela atual", "contract.currentInstallment", lead, { required: true, placeholder: "R$ 0,00" })}
+    ${input("Valor financiado", "contract.financedAmount", lead, { placeholder: "R$ 0,00" })}
+    ${input("Valor da entrada", "contract.downPayment", lead, { placeholder: "R$ 0,00" })}
+    ${input("Saldo devedor", "contract.informedBalance", lead, { placeholder: "R$ 0,00" })}
+    ${input("Quantidade total de parcelas", "contract.totalInstallments", lead, { type: "number", required: true })}
+    ${input("Parcelas pagas", "contract.paidInstallments", lead, { type: "number", required: true })}
+    ${input("Parcelas restantes", "contract.remainingInstallments", lead, { type: "number" })}
+    ${input("Parcelas atrasadas", "contract.overdueInstallments", lead, { type: "number" })}
+    ${input("Data do contrato", "contract.contractDate", lead, { type: "date" })}
+    ${input("Taxa contratada ao mês", "contract.monthlyRate", lead, { placeholder: "2,19%" })}
+    ${input("Taxa contratada ao ano", "contract.annualRate", lead, { placeholder: "29,64%" })}
+    ${input("Situação", "contract.contractStatus", lead, { options: ["", "Em dia", "Parcelas atrasadas", "Quitado", "Renegociado", "Busca e apreensão", "Em negociação", "Não informado", "Outro"] })}
+    ${input("Possui contrato?", "contract.hasContract", lead, { options: ["Não informado", "Sim", "Não"] })}
+    ${input("Formato", "contract.contractFormat", lead, { options: ["", "PDF", "Físico", "Fotografado", "Não possui", "Não informado"] })}
+    ${input("Modelo do veículo", "contract.vehicleModel", lead)}${input("Ano do veículo", "contract.vehicleYear", lead, { type: "number" })}${input("Placa", "contract.vehiclePlate", lead)}
+  </div>${input("Observações", "contract.notes", lead, { as: "textarea" })}
+  <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"><i class="ph ph-info mr-1 text-sky-700"></i>O sistema registra somente as informações do contrato. Nenhum arquivo é anexado ou armazenado.</div></section>`;
+}
+
+function bankSelect(lead) {
+  const value = lead.contract?.bankId || "";
+  return `<label class="sdr-field">Banco <span class="sdr-required">*</span><select class="sdr-control" data-sdr-field="contract.bankId" required><option value="">Selecione</option>${state.banks.map(bank => `<option value="${esc(bank.id)}" data-name="${esc(bank.name)}" ${value === bank.id ? "selected" : ""}>${esc(bank.name)}</option>`).join("")}<option value="other" ${value === "other" ? "selected" : ""}>Outra instituição — escrever manualmente</option></select></label>`;
+}
+
+function analysisStep(lead) {
+  const a = lead.analysis || {};
+  return `<section class="sdr-form-card"><h3>ANÁLISE PRELIMINAR DO CONTRATO</h3><p>O cálculo e a análise utilizam tecnologia inteligente para gerar um diagnóstico baseado nas normas e diretrizes do Bacen.</p>
+    <button id="sdr-run-analysis" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}><i class="ph ph-calculator"></i>CALCULAR SIMULAÇÃO PRELIMINAR</button>
+    <div id="sdr-analysis-loading" class="mt-4 hidden"><p id="sdr-analysis-message" class="mb-2 text-xs font-bold text-sky-800">Organizando os dados do contrato</p><div class="sdr-analysis-progress"><span></span></div></div>
+    ${a.correctionNumber ? `<div class="mt-5"><p class="text-xs font-black uppercase text-emerald-700">ANÁLISE CONCLUÍDA!</p><h4 class="mt-1 text-lg font-black text-slate-800">MARGEM DE REDUÇÃO E ESTORNO DETECTADA COM SUCESSO.</h4><div class="sdr-result-grid mt-4">${[
+      ["PARCELA ATUAL", formatMoney(a.currentInstallment)], ["NOVA PARCELA ESTIMADA", formatMoney(a.estimatedInstallment)],
+      ["REDUÇÃO POR PARCELA", formatMoney(a.installmentReduction)], ["ESTORNO", formatMoney(a.estimatedRefund)],
+      ["REDUÇÃO TOTAL DO CONTRATO", formatMoney(a.totalContractReduction)], ["SITUAÇÃO", "APROVADA"]
+    ].map(([label, value]) => `<div class="sdr-result-card"><span>${label}</span><strong>${value}</strong></div>`).join("")}</div><p class="mt-3 text-xs text-slate-500">${esc(a.correctionNumber)} · Regra versão ${Number(a.ruleVersion) || 1}</p></div>` : ""}
+  </section>`;
+}
+
+function documentStep(lead) {
+  return `<section class="sdr-form-card"><h3>DOCUMENTO DE ANÁLISE APROVADA</h3><p>Revise os dados antes de gerar o PDF. O arquivo será baixado diretamente no dispositivo e não será armazenado no sistema.</p>
+    ${reviewSummary(lead)}
+    <button id="sdr-generate-pdf" type="button" class="sdr-primary mt-4" ${!lead.analysis?.correctionNumber ? "disabled" : ""}><i class="ph ph-file-pdf"></i>Gerar documento e salvar</button>
+    <p id="sdr-document-status" class="mt-2 text-xs text-slate-500">${lead.analysisDocument?.fileName ? `Geração registrada: ${esc(lead.analysisDocument.fileName)} · arquivo não armazenado` : "Nenhum documento gerado."}</p>
+  </section>`;
+}
+
+function reviewSummary(lead) {
+  const rows = [
+    ["Nome", lead.fullName], ["CPF/CNPJ", formatCpfCnpj(lead.cpfCnpj)], ["Protocolo", lead.protocol],
+    ["Banco", lead.contract?.bankName || lead.contract?.bankOther], ["Contrato", lead.contract?.contractType],
+    ["Parcela atual", formatMoney(parsePtBrMoney(lead.contract?.currentInstallment))],
+    ["Nova parcela", formatMoney(lead.analysis?.estimatedInstallment)], ["Estorno", formatMoney(lead.analysis?.estimatedRefund)]
+  ];
+  return `<div class="sdr-grid two">${rows.map(([label, value]) => `<div class="sdr-result-card"><span>${esc(label)}</span><strong>${esc(value || "Não informado")}</strong></div>`).join("")}</div>`;
+}
+
+function consentStep(lead) {
+  return `<section class="sdr-form-card"><h3>Aceite da proposta</h3><p>Registre a resposta apresentada pelo lead.</p><div class="sdr-grid two">
+    ${input("O lead aceitou a proposta?", "consent.answer", lead, { options: ["", "Sim", "Não", "Solicitou prazo", "Aguardando retorno", "Precisa consultar outra pessoa", "Não respondeu"], required: true })}
+    ${input("Data de retorno", "consent.nextContactAt", lead, { type: "datetime-local" })}
+    ${input("Motivo", "consent.reason", lead)}${input("Principal objeção", "consent.objection", lead)}
+  </div>${input("Observação", "consent.observation", lead, { as: "textarea" })}${input("Próxima ação", "consent.nextAction", lead, { as: "textarea" })}
+  <button id="sdr-record-consent" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}>Registrar aceite</button></section>`;
+}
+
+function assignmentStep(lead) {
+  return `<section class="sdr-form-card"><h3>ENCAMINHAR LEAD POTENCIAL</h3><p>Somente usuários ativos com perfil Analista, Consultor ou Gestão são apresentados.</p><div class="sdr-grid two">
+    <label class="sdr-field">Consultor responsável <span class="sdr-required">*</span><select class="sdr-control" data-sdr-field="assignment.consultantId"><option value="">Selecione</option>${state.assignableUsers.map(user => `<option value="${esc(user.id)}" ${lead.assignment?.consultantId === user.id ? "selected" : ""}>${esc(user.displayName)} · ${esc(user.operationalRole)} · ${user.activeLeads} ativo(s)</option>`).join("")}</select></label>
+    ${input("Prioridade", "assignment.priority", lead, { options: ["Normal", "Urgente", "Alta", "Baixa"] })}
+    ${input("Prazo recomendado", "assignment.deadline", lead, { type: "datetime-local" })}
+    ${input("Motivo do encaminhamento", "assignment.reason", lead)}
+  </div>${input("Orientação do SDR", "assignment.instructions", lead, { as: "textarea" })}${input("Pontos importantes", "assignment.importantPoints", lead, { as: "textarea" })}
+  <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">${getForwardingMissingFields(lead).length ? `Pendências: ${esc(getForwardingMissingFields(lead).join(", "))}` : "Todos os requisitos obrigatórios estão preenchidos."}</div>
+  <button id="sdr-assign-lead" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}>FINALIZAR E ENCAMINHAR</button></section>`;
+}
+
+function bindWorkspace(lead) {
+  document.querySelector("[data-back-list]")?.addEventListener("click", () => {
+    document.getElementById("sdr-layout").classList.remove("is-editing");
+  });
+  document.querySelectorAll("[data-step]").forEach(button => button.onclick = () => {
+    collectWorkspace(lead);
+    state.step = Number(button.dataset.step);
+    saveLocalDraft(lead);
+    renderSdrWorkspace(lead);
+  });
+  document.querySelector("[data-prev]")?.addEventListener("click", () => moveStep(-1, lead));
+  document.querySelector("[data-next]")?.addEventListener("click", () => moveStep(1, lead));
+  document.querySelector("[data-save]")?.addEventListener("click", () => saveLead(lead, true));
+  document.getElementById("sdr-step-form")?.addEventListener("input", event => onFormInput(event, lead));
+  document.getElementById("sdr-step-form")?.addEventListener("focusout", event => {
+    const field = event.target.dataset.sdrField;
+    if (field?.startsWith("contract.") && ["currentInstallment", "financedAmount", "downPayment", "informedBalance"].includes(field.split(".").at(-1)) && event.target.value.trim()) {
+      event.target.value = formatMoney(parsePtBrMoney(event.target.value));
+      collectWorkspace(lead);
+      saveLocalDraft(lead);
+    }
+  });
+  document.querySelectorAll("[data-shortcut]").forEach(button => button.onclick = () => applyShortcut(button, lead));
+  document.getElementById("sdr-run-analysis")?.addEventListener("click", () => runAnalysis(lead));
+  document.getElementById("sdr-generate-pdf")?.addEventListener("click", () => generateAnalysisPdf(lead));
+  document.getElementById("sdr-record-consent")?.addEventListener("click", () => recordConsent(lead));
+  document.getElementById("sdr-assign-lead")?.addEventListener("click", () => assignLead(lead));
+}
+
+function onFormInput(event, lead) {
+  const field = event.target.dataset.sdrField;
+  if (field === "phone") event.target.value = formatPhone(event.target.value);
+  if (field === "cpfCnpj") event.target.value = formatCpfCnpj(event.target.value);
+  if (field?.startsWith("contract.") && ["currentInstallment", "financedAmount", "downPayment", "informedBalance"].includes(field.split(".").at(-1))) {
+    // Mantém a entrada livre e converte somente ao calcular.
+  }
+  collectWorkspace(lead);
+  if (["contract.totalInstallments", "contract.paidInstallments"].includes(field)) updateRemaining(lead);
+  if (field?.startsWith("qualification.")) updateScore(lead);
+  saveLocalDraft(lead);
+  scheduleAutosave(lead);
+}
+
+function collectWorkspace(lead) {
+  document.querySelectorAll("[data-sdr-field]").forEach(field => {
+    const value = field.type === "checkbox" ? field.checked : field.value;
+    setPath(lead, field.dataset.sdrField, value);
+    if (field.dataset.sdrField === "contract.bankId") {
+      lead.contract.bankName = field.selectedOptions?.[0]?.dataset?.name || (value === "other" ? lead.contract.bankOther : "");
+    }
+  });
+  return lead;
+}
+
+function updateRemaining(lead) {
+  try {
+    const remaining = calculateRemainingInstallments(Number(lead.contract.totalInstallments), Number(lead.contract.paidInstallments));
+    lead.contract.remainingInstallments = remaining;
+    const field = document.querySelector('[data-sdr-field="contract.remainingInstallments"]');
+    if (field) field.value = remaining;
+  } catch (error) { setSaveStatus(error.message, "error"); }
+}
+
+function updateScore(lead) {
+  const q = lead.qualification || {};
+  const result = calculateInterestScore({
+    compatibility: lead.contract?.contractType ? 25 : 0,
+    pain: q.mainPain ? 20 : 0,
+    urgency: { "Muito alta": 20, Alta: 17, Média: 12, Baixa: 6 }[q.urgency] || 0,
+    intention: { "Muito interessado": 20, Interessado: 16, Considerando: 10, "Apenas pesquisando": 4 }[q.intention] || 0,
+    documents: lead.contract?.hasContract === "Sim" ? 10 : 0,
+    contact: lead.preferredChannel || q.preferredChannel ? 5 : 0
+  });
+  lead.commercialScore = result.score;
+  lead.commercialClassification = result.classification;
+  lead.qualification.scoreBreakdown = result.breakdown;
+  const preview = document.getElementById("sdr-score-preview");
+  if (preview) preview.textContent = `${result.score}% · ${result.classification}`;
+}
+
+function applyShortcut(button, lead) {
+  const index = Number(button.dataset.shortcut);
+  const field = document.querySelector(`[data-sdr-field="qualification.answers.${index}.answer"]`);
+  if (!field) return;
+  const values = new Set(field.value.split(";").map(item => item.trim()).filter(Boolean));
+  if (values.has(button.dataset.value)) values.delete(button.dataset.value); else values.add(button.dataset.value);
+  field.value = [...values].join("; ");
+  button.setAttribute("aria-pressed", String(values.has(button.dataset.value)));
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+async function moveStep(direction, lead) {
+  collectWorkspace(lead);
+  if (direction > 0 && !validateCurrentStep(lead)) return;
+  if (direction > 0 && state.step === 0 && !lead.id) {
+    const created = await saveLead(lead, true);
+    if (!created || !lead.id) return;
+  }
+  if (direction > 0 && state.step === 0 && lead.status === "Novo lead") {
+    lead.status = "Em qualificação";
+    if (!await saveLead(lead, false)) return;
+  }
+  if (direction > 0 && state.step === 1 && ["Novo lead", "Em qualificação", "Aguardando informações"].includes(lead.status)) {
+    if (lead.status === "Novo lead") {
+      lead.status = "Em qualificação";
+      if (!await saveLead(lead, false)) return;
+    }
+    lead.status = "Qualificado";
+    if (!await saveLead(lead, false)) return;
+  }
+  state.step = Math.max(0, Math.min(state.step + direction, SDR_STEPS.length - 1));
+  saveLocalDraft(lead);
+  renderSdrWorkspace(lead);
+  document.getElementById("sdr-workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function validateCurrentStep(lead) {
+  if (state.step === 0) {
+    const errors = validateLeadRegistration(lead);
+    if (errors.length) { showToast(errors.join(" "), "error"); return false; }
+  }
+  if (state.step === 1 && lead.qualification.answers.slice(0, 4).some(item => !item.answer && !item.notInformed)) {
+    showToast("Responda ou marque como não informado as quatro perguntas.", "error"); return false;
+  }
+  if (state.step === 2) {
+    try {
+      if (!lead.contract.contractType) throw new Error("Informe o tipo de contrato.");
+      if (!lead.contract.bankId) throw new Error("Selecione a instituição financeira.");
+      if (lead.contract.bankId === "other" && !lead.contract.bankOther) throw new Error("Informe o nome da outra instituição.");
+      if (!(parsePtBrMoney(lead.contract.currentInstallment) > 0)) throw new Error("Informe o valor atual da parcela.");
+      if (!(Number(lead.contract.totalInstallments) > 0)) throw new Error("Informe a quantidade total de parcelas.");
+      calculateRemainingInstallments(Number(lead.contract.totalInstallments), Number(lead.contract.paidInstallments));
+      if (Number(lead.contract.overdueInstallments) > Number(lead.contract.remainingInstallments)) throw new Error("Parcelas atrasadas não podem superar as restantes.");
+    } catch (error) { showToast(error.message, "error"); return false; }
+  }
+  return true;
+}
+
+function scheduleAutosave(lead) {
+  clearTimeout(state.saveTimer);
+  state.saveTimer = setTimeout(() => saveLead(lead, false), 900);
+}
+
+async function saveLead(lead, explicit) {
+  collectWorkspace(lead);
+  updateScore(lead);
+  saveLocalDraft(lead);
+  setSaveStatus(navigator.onLine ? "Salvando..." : "Sem conexão. Rascunho salvo localmente.");
+  try {
+    if (!lead.id) {
+      if (!explicit) return false;
+      const result = await api("lead.create", lead);
+      if (result.duplicate) {
+        showDuplicate(result.matches, lead);
+        return false;
+      }
+      clearLocalDraft("");
+      Object.assign(lead, result.lead);
+      state.activeId = lead.id;
+    } else {
+      const result = await api("lead.save", { ...lead, currentStep: SDR_STEPS[state.step].key });
+      Object.assign(lead, result.lead);
+    }
+    saveLocalDraft(lead);
+    setSaveStatus(`Alterações salvas automaticamente às ${new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}.`, "success");
+    if (explicit) showToast("Lead salvo com segurança.", "success");
+    if (explicit) renderSdrWorkspace(lead);
+    return true;
+  } catch (error) {
+    setSaveStatus(error.message, "error");
+    if (explicit) showToast(error.message, "error");
+    return false;
+  }
+}
+
+function showDuplicate(matches, lead) {
+  state.duplicatePayload = lead;
+  showModal(`<h3 class="text-lg font-black text-slate-800">Já existe um lead com esses dados.</h3><div class="mt-3 space-y-2">${matches.map(item => `<button type="button" class="sdr-lead-card" data-open-duplicate="${esc(item.id)}"><strong>${esc(item.fullName)}</strong><p class="text-xs text-slate-500">${esc(maskPhone(item.phone))} · ${esc(item.status)} · ${esc(item.ownerSdrName || "")}</p></button>`).join("")}</div>
+    <label class="sdr-field mt-4">Justificativa para continuar<textarea id="sdr-duplicate-reason" class="sdr-control" rows="3"></textarea></label><div class="mt-4 flex justify-end gap-2"><button class="sdr-secondary" data-close-modal>Cancelar</button><button class="sdr-primary" data-continue-duplicate>Continuar mesmo assim</button></div>`);
+  document.querySelectorAll("[data-open-duplicate]").forEach(button => button.onclick = () => { closeModal(); openLead(button.dataset.openDuplicate); });
+  document.querySelector("[data-continue-duplicate]").onclick = async () => {
+    const reason = document.getElementById("sdr-duplicate-reason").value.trim();
+    if (!reason) return showToast("Informe a justificativa.", "error");
+    const result = await api("lead.create", { ...lead, duplicateJustification: reason });
+    closeModal(); clearLocalDraft(""); Object.assign(lead, result.lead); state.activeId = lead.id; renderAll();
+  };
+}
+
+async function flushCurrentDraft() {
+  const lead = currentLead();
+  if (lead?.id) await saveLead(lead, false);
+}
+
+async function runAnalysis(lead) {
+  collectWorkspace(lead);
+  await saveLead(lead, false);
+  const loading = document.getElementById("sdr-analysis-loading");
+  const fill = loading?.querySelector("span");
+  const message = document.getElementById("sdr-analysis-message");
+  const button = document.getElementById("sdr-run-analysis");
+  const messages = ["Organizando os dados do contrato", "Verificando as informações financeiras", "Analisando o saldo devedor", "Calculando a margem de redução", "Calculando o estorno", "Finalizando a análise"];
+  loading?.classList.remove("hidden"); if (button) button.disabled = true;
+  for (let index = 0; index < messages.length; index += 1) {
+    if (message) message.textContent = messages[index];
+    if (fill) fill.style.width = `${((index + 1) / messages.length) * 100}%`;
+    await new Promise(resolve => setTimeout(resolve, 520));
+  }
+  try {
+    const result = await api("analysis.run", { id: lead.id });
+    lead.analysis = result.analysis; lead.status = "Análise Concluída"; saveLocalDraft(lead); renderSdrWorkspace(lead);
+  } catch (error) { showToast(error.message, "error"); if (button) button.disabled = false; }
+}
+
+async function generateAnalysisPdf(lead, options = {}) {
+  const register = options.register !== false;
+  if (!window.jspdf?.jsPDF) return showToast("Gerador PDF indisponível.", "error");
+  const button = document.getElementById("sdr-generate-pdf");
+  if (button) button.disabled = true;
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: "mm", format: "a4" });
+    const margin = 18;
+    let y = 18;
+    const line = (label, value, bold = false) => {
+      if (y > 274) { pdf.addPage(); y = 18; }
+      pdf.setFont("helvetica", bold ? "bold" : "normal");
+      pdf.setFontSize(bold ? 11 : 9);
+      pdf.setTextColor(bold ? 18 : 55, bold ? 58 : 75, bold ? 89 : 92);
+      pdf.text(`${label}${value ? `: ${value}` : ""}`, margin, y, { maxWidth: 174 });
+      y += bold ? 7 : 5.5;
+    };
+    pdf.setFillColor(18, 58, 89); pdf.rect(0, 0, 210, 34, "F");
+    pdf.setTextColor(255, 255, 255); pdf.setFont("helvetica", "bold"); pdf.setFontSize(17);
+    pdf.text("ANÁLISE PRELIMINAR APROVADA", margin, 16);
+    pdf.setFontSize(9); pdf.text("PLATINUM SOLUÇÕES FINANCEIRAS", margin, 24);
+    y = 45;
+    line("Nome", lead.fullName, true); line("CPF", formatCpfCnpj(lead.cpfCnpj)); line("Protocolo interno", lead.protocol);
+    line("Data", new Date().toLocaleDateString("pt-BR")); line("Horário", new Date().toLocaleTimeString("pt-BR"));
+    y += 4; line("FINANCIAMENTO ATUAL", "", true);
+    line("Instituição Financeira", lead.contract?.bankName || lead.contract?.bankOther);
+    line("Financiamento", lead.contract?.contractType); line("Modelo do Veículo", lead.contract?.vehicleModel);
+    line("Ano", lead.contract?.vehicleYear); line("Valor financiado", formatMoney(parsePtBrMoney(lead.contract?.financedAmount)));
+    line("Saldo devedor", formatMoney(parsePtBrMoney(lead.contract?.informedBalance)));
+    line("Número de meses", lead.contract?.totalInstallments); line("Valor da parcela", formatMoney(parsePtBrMoney(lead.contract?.currentInstallment)));
+    line("Parcelas pagas", lead.contract?.paidInstallments); line("Parcelas restantes", lead.contract?.remainingInstallments);
+    line("Parcelas atrasadas", lead.contract?.overdueInstallments); line("Situação", lead.contract?.contractStatus);
+    y += 4; line("CORREÇÃO DE FINANCIAMENTO APROVADA", "", true);
+    line("Correção nº", lead.analysis?.correctionNumber); line("Situação", "APROVADA", true);
+    line("Número de meses", lead.analysis?.installmentsUsed); line("Valor da nova parcela", formatMoney(lead.analysis?.estimatedInstallment));
+    line("Redução por parcela", formatMoney(lead.analysis?.installmentReduction));
+    line("ESTORNO", formatMoney(lead.analysis?.estimatedRefund), true);
+    line("REDUÇÃO TOTAL DO CONTRATO", formatMoney(lead.analysis?.totalContractReduction), true);
+    const pages = pdf.getNumberOfPages();
+    for (let page = 1; page <= pages; page += 1) {
+      pdf.setPage(page); pdf.setFontSize(7); pdf.setTextColor(100);
+      pdf.text("Documento gerado para registro e acompanhamento interno das tratativas realizadas pela Platinum Soluções Financeiras.", margin, 287, { maxWidth: 158 });
+      pdf.text(`${page}/${pages}`, 190, 287);
+    }
+    const blob = pdf.output("blob");
+    const hash = [...new Uint8Array(await crypto.subtle.digest("SHA-256", await blob.arrayBuffer()))].map(byte => byte.toString(16).padStart(2, "0")).join("");
+    const version = register
+      ? Number(lead.analysisDocument?.version || 0) + 1
+      : Number(lead.analysisDocument?.version || 1);
+    const fileName = lead.analysisDocument?.fileName && !register
+      ? lead.analysisDocument.fileName
+      : `analise-aprovada-${lead.protocol}-v${version}.pdf`.replace(/[^A-Za-z0-9._-]/g, "-");
+    if (register) {
+      const result = await api("document.register", { id: lead.id, fileName, fileHash: hash });
+      lead.analysisDocument = result;
+      lead.status = "APROVADO";
+      saveLocalDraft(lead);
+    }
+    pdf.save(fileName);
+    showToast(register ? "PDF gerado e registro salvo. O arquivo não foi armazenado no sistema." : "PDF gerado novamente no seu dispositivo.", "success");
+    if (register && state.view === "sdr") renderSdrWorkspace(lead);
+    return true;
+  } catch (error) {
+    showToast(error.message, "error");
+    if (button) button.disabled = false;
+    return false;
+  }
+}
+
+async function recordConsent(lead) {
+  collectWorkspace(lead);
+  try {
+    const result = await api("consent.record", { id: lead.id, ...lead.consent });
+    lead.consent = result.consent; lead.status = result.status; saveLocalDraft(lead); showToast("Aceite registrado.", "success"); renderSdrWorkspace(lead);
+  } catch (error) { showToast(error.message, "error"); }
+}
+
+async function assignLead(lead) {
+  collectWorkspace(lead);
+  try {
+    const result = await api("lead.assign", { id: lead.id, consultantId: lead.assignment.consultantId, ...lead.assignment });
+    lead.assignment = result.assignment; lead.status = "Encaminhado"; lead.assignedConsultantId = result.assignment.consultantId; showToast(`Lead encaminhado com sucesso para ${result.assignment.consultantName}.`, "success"); renderSdrWorkspace(lead);
+  } catch (error) { showToast(error.message, "error"); }
+}
+
+function renderConsultantWorkspace(lead) {
+  document.getElementById("sdr-workspace").innerHTML = `<header class="sdr-lead-header"><button type="button" class="sdr-secondary md:hidden" data-back-list><i class="ph ph-arrow-left"></i>Fila</button><div><p class="text-[10px] font-black text-sky-700">${esc(lead.protocol)}</p><h3 class="font-black">${esc(lead.fullName)}</h3><p class="text-xs text-slate-500">${esc(lead.status)}</p></div><div class="flex gap-2">${lead.status === "Encaminhado" ? `<button class="sdr-success" data-accept>Aceitar lead</button>` : ""}<button class="sdr-secondary" data-return>Devolver</button></div></header>
+    <div class="sdr-form-body"><section class="sdr-form-card"><h3>Visão geral</h3>${reviewSummary(lead)}<div class="mt-4 flex flex-wrap gap-2"><a class="sdr-primary" href="https://wa.me/55${normalizeDigits(lead.phone)}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i>Abrir WhatsApp</a><button class="sdr-secondary" data-contact>Registrar contato</button><button class="sdr-secondary" data-outcome>Registrar resultado</button>${lead.analysisDocument?.fileHash ? `<button class="sdr-secondary" data-analysis-file><i class="ph ph-file-pdf"></i>Gerar PDF</button>` : ""}</div></section>
+    <section class="sdr-form-card"><h3>Perfil e orientação</h3><p>${esc(lead.qualification?.sdrSummary || "Resumo não informado.")}</p><p class="mt-3"><strong>Dor:</strong> ${esc(lead.qualification?.mainPain || "Não informada")} · <strong>Urgência:</strong> ${esc(lead.qualification?.urgency || "Não informada")} · <strong>Objeção:</strong> ${esc(lead.qualification?.mainObjection || "Não informada")}</p></section>
+    <section class="sdr-form-card"><h3>Documento da análise</h3><p>${lead.analysisDocument?.fileHash ? `Geração registrada em ${esc(formatDateTime(lead.analysisDocument.createdAt))}. O arquivo não fica armazenado; utilize “Gerar PDF” quando precisar de uma nova cópia.` : "Nenhum PDF registrado."}</p></section>
+    <section class="sdr-form-card"><h3>Comentários internos</h3><div id="sdr-comments">${renderComments()}</div><textarea id="sdr-comment-text" class="sdr-control mt-3" rows="3" placeholder="Adicione um comentário. Use @nome para mencionar."></textarea><button class="sdr-primary mt-2" data-comment>Adicionar comentário</button></section>
+    <section class="sdr-form-card"><h3>Histórico</h3><div>${renderEvents()}</div></section></div>`;
+  document.querySelector("[data-back-list]")?.addEventListener("click", () => document.getElementById("sdr-layout").classList.remove("is-editing"));
+  document.querySelector("[data-accept]")?.addEventListener("click", () => consultantAction("lead.accept", { id: lead.id }));
+  document.querySelector("[data-return]")?.addEventListener("click", () => returnModal(lead));
+  document.querySelector("[data-contact]")?.addEventListener("click", () => contactModal(lead));
+  document.querySelector("[data-outcome]")?.addEventListener("click", () => outcomeModal(lead));
+  document.querySelector("[data-comment]")?.addEventListener("click", () => addComment(lead));
+  document.querySelector("[data-analysis-file]")?.addEventListener("click", () => generateAnalysisPdf(lead, { register: false }));
+}
+
+function renderComments() {
+  return state.comments.length ? state.comments.map(item => `<div class="mb-2 rounded-xl bg-slate-50 p-3 text-xs"><strong>${esc(item.authorName)}</strong><p class="mt-1">${esc(item.content)}</p></div>`).join("") : `<p class="text-xs text-slate-500">Nenhum comentário.</p>`;
+}
+
+function renderEvents() {
+  return state.events.length ? state.events.map(item => `<div class="mb-2 border-l-2 border-sky-300 pl-3 text-xs"><strong>${esc(item.eventType)}</strong><p class="text-slate-500">${esc(item.actorName || "")} · ${formatTimestamp(item.createdAt)}</p></div>`).join("") : `<p class="text-xs text-slate-500">Nenhum evento.</p>`;
+}
+
+async function consultantAction(action, payload) {
+  try { await api(action, payload); showToast("Ação registrada.", "success"); } catch (error) { showToast(error.message, "error"); }
+}
+
+function contactModal(lead) {
+  showModal(`<h3 class="text-lg font-black">Registrar contato</h3><div class="sdr-grid mt-4">${inputRaw("Tipo", "modal-type", ["WhatsApp", "Ligação", "Reunião", "Tentativa"])}<label class="sdr-field">Detalhes<textarea id="modal-details" class="sdr-control" rows="4"></textarea></label><label class="sdr-field">Próximo contato<input id="modal-next" type="datetime-local" class="sdr-control"></label></div><div class="mt-4 flex justify-end gap-2"><button class="sdr-secondary" data-close-modal>Cancelar</button><button class="sdr-primary" data-confirm>Salvar</button></div>`);
+  document.querySelector("[data-confirm]").onclick = async () => { await consultantAction("contact.record", { id: lead.id, type: value("modal-type"), details: value("modal-details"), nextContactAt: value("modal-next") }); closeModal(); };
+}
+
+function returnModal(lead) {
+  showModal(`<h3 class="text-lg font-black">Devolver lead ao SDR</h3><div class="sdr-grid mt-4">${textAreaRaw("Motivo", "modal-reason")}${textAreaRaw("Informação faltante", "modal-missing")}${textAreaRaw("Orientação", "modal-guidance")}<label class="sdr-field">Prazo<input id="modal-deadline" type="datetime-local" class="sdr-control"></label></div><div class="mt-4 flex justify-end gap-2"><button class="sdr-secondary" data-close-modal>Cancelar</button><button class="sdr-danger" data-confirm>Devolver</button></div>`);
+  document.querySelector("[data-confirm]").onclick = async () => { await consultantAction("lead.return", { id: lead.id, reason: value("modal-reason"), missingInformation: value("modal-missing"), guidance: value("modal-guidance"), deadline: value("modal-deadline") }); closeModal(); };
+}
+
+function outcomeModal(lead) {
+  showModal(`<h3 class="text-lg font-black">RESULTADO DA TRATATIVA</h3><div class="sdr-grid mt-4">
+    ${inputRaw("Resultado", "modal-outcome", ["LEAD APROVADO", "LEAD REPROVADO", "Em acompanhamento", "Retorno agendado", "Sem contato", "Devolvido ao SDR"])}
+    <input id="modal-service" class="sdr-control" placeholder="Serviço contratado"><input id="modal-value" class="sdr-control" type="number" min="0" step="0.01" placeholder="Valor contratado">
+    ${inputRaw("Forma de pagamento", "modal-payment", ["", "Pix", "Cartão", "Boleto", "Transferência", "Dinheiro", "Outro"])}
+    <input id="modal-loss" class="sdr-control" placeholder="Motivo da reprovação">${textAreaRaw("Dificuldade encontrada", "modal-difficulty")}${textAreaRaw("Observação obrigatória", "modal-observation")}
+  </div><div class="mt-4 flex justify-end gap-2"><button class="sdr-secondary" data-close-modal>Cancelar</button><button class="sdr-primary" data-confirm>Confirmar resultado</button></div>`);
+  document.querySelector("[data-confirm]").onclick = async () => { await consultantAction("lead.outcome", { id: lead.id, outcome: value("modal-outcome"), contractedService: value("modal-service"), contractedValue: Number(value("modal-value")), paymentMethod: value("modal-payment"), lossReason: value("modal-loss"), difficultyDescription: value("modal-difficulty"), observation: value("modal-observation") }); closeModal(); };
+}
+
+async function addComment(lead) {
+  const content = value("sdr-comment-text");
+  try { await api("comment.add", { id: lead.id, content, mentionUserIds: [] }); document.getElementById("sdr-comment-text").value = ""; } catch (error) { showToast(error.message, "error"); }
+}
+
+function renderSettings() {
+  document.getElementById("sdr-layout").classList.add("is-editing");
+  document.querySelector(".sdr-queue").style.display = "none";
+  document.getElementById("sdr-workspace").innerHTML = `<div class="sdr-form-body"><section class="sdr-form-card"><h3>Catálogo de bancos</h3><p>${state.banks.length} instituição(ões) ativa(s).</p><div class="sdr-grid two"><input id="sdr-new-bank" class="sdr-control" placeholder="Nome da instituição"><button id="sdr-add-bank" class="sdr-primary" type="button">Adicionar banco</button></div></section><section class="sdr-form-card"><h3>Regras de cálculo</h3><p>Ao salvar, a versão anterior da mesma combinação de contrato e banco é desativada e preservada para auditoria.</p><div class="sdr-grid two mt-4">
+    <input id="sdr-rule-name" class="sdr-control" placeholder="Nome da regra">
+    <select id="sdr-rule-contract" class="sdr-control"><option value="">Regra geral</option>${["Financiamento de veículo", "Financiamento de imóvel", "Empréstimo pessoal", "Empréstimo consignado", "Refinanciamento", "Renegociação", "Outro"].map(item => `<option>${item}</option>`).join("")}</select>
+    <select id="sdr-rule-bank" class="sdr-control"><option value="">Todos os bancos</option>${state.banks.map(bank => `<option value="${esc(bank.id)}">${esc(bank.name)}</option>`).join("")}</select>
+    <input id="sdr-rule-percentage" type="number" min="0.01" max="99.99" step="0.01" class="sdr-control" placeholder="Percentual de redução">
+    <input id="sdr-rule-installments" type="number" min="0" class="sdr-control" placeholder="Meses para cálculo (0 = restantes)">
+    <input id="sdr-rule-other" type="number" min="0" step="0.01" class="sdr-control" placeholder="Outras reduções">
+    <input id="sdr-rule-minimum" type="number" min="0" step="0.01" class="sdr-control" placeholder="Redução mínima">
+    <input id="sdr-rule-maximum" type="number" min="0" step="0.01" class="sdr-control" placeholder="Redução máxima (0 = sem limite)">
+    <select id="sdr-rule-rounding" class="sdr-control"><option value="cent">Centavos</option><option value="integer">Inteiro</option><option value="floor-cent">Centavos para baixo</option><option value="ceil-cent">Centavos para cima</option></select>
+    <button id="sdr-save-rule" class="sdr-primary" type="button">Salvar nova versão</button>
+  </div><div class="mt-4 space-y-2">${state.rules.length ? state.rules.map(rule => `<div class="rounded-xl border border-slate-200 p-3 text-xs"><strong>${esc(rule.name)}</strong><span class="ml-2 sdr-badge ${rule.isActive ? "hot" : ""}">v${Number(rule.version) || 1} · ${rule.isActive ? "Ativa" : "Inativa"}</span><p class="mt-1 text-slate-500">${esc(rule.contractType || "Todos os contratos")} · ${esc(state.banks.find(bank => bank.id === rule.bankId)?.name || "Todos os bancos")} · ${Number(rule.reductionPercentage) || 0}%</p></div>`).join("") : `<p class="text-sm text-amber-700">Nenhuma regra configurada. A análise permanece bloqueada até a gestão cadastrar uma regra válida.</p>`}</div></section></div>`;
+  document.getElementById("sdr-add-bank").onclick = async () => {
+    const name = value("sdr-new-bank");
+    if (!name) return;
+    await addDoc(collection(state.db, "sdrBankCatalog"), { name: sanitizeText(name, 120), isActive: true, displayOrder: state.banks.length + 1, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+  };
+  document.getElementById("sdr-save-rule").onclick = async () => {
+    try {
+      await api("rule.save", {
+        name: value("sdr-rule-name"),
+        contractType: value("sdr-rule-contract"),
+        bankId: value("sdr-rule-bank"),
+        reductionPercentage: Number(value("sdr-rule-percentage")),
+        installmentsRule: Number(value("sdr-rule-installments")),
+        otherReductions: Number(value("sdr-rule-other")),
+        minimumReduction: Number(value("sdr-rule-minimum")),
+        maximumReduction: Number(value("sdr-rule-maximum")),
+        roundingRule: value("sdr-rule-rounding")
+      });
+      showToast("Nova versão da regra ativada.", "success");
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+  };
+}
+
+function inputRaw(label, id, options) {
+  return `<label class="sdr-field">${esc(label)}<select id="${id}" class="sdr-control">${options.map(item => `<option>${esc(item)}</option>`).join("")}</select></label>`;
+}
+function textAreaRaw(label, id) { return `<label class="sdr-field">${esc(label)}<textarea id="${id}" class="sdr-control" rows="3"></textarea></label>`; }
+function value(id) { return document.getElementById(id)?.value?.trim() || ""; }
+
+function showModal(content) {
+  const modal = document.getElementById("sdr-modal");
+  document.getElementById("sdr-modal-card").innerHTML = content;
+  modal.hidden = false;
+  document.querySelectorAll("[data-close-modal]").forEach(button => button.onclick = closeModal);
+}
+function closeModal() { document.getElementById("sdr-modal").hidden = true; }
+
+function showToast(message, type = "info") {
+  const color = type === "error" ? "bg-red-700" : type === "success" ? "bg-emerald-700" : "bg-slate-800";
+  const toast = document.createElement("div");
+  toast.className = `fixed bottom-5 right-5 z-[200] max-w-sm rounded-xl ${color} px-4 py-3 text-sm font-bold text-white shadow-xl`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3600);
+}
+
+function setSaveStatus(message, type = "info") {
+  const element = document.getElementById("sdr-save-status");
+  if (!element) return;
+  element.textContent = message;
+  element.style.color = type === "error" ? "#b42318" : type === "success" ? "#177245" : "";
+}
+
+function formatDateTime(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString("pt-BR");
+}
+function formatTimestamp(value) {
+  const date = value?.toDate?.() || new Date(value || 0);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString("pt-BR");
+}
+
+function toggleNotifications() {
+  const panel = document.getElementById("sdr-notification-panel");
+  panel.hidden = !panel.hidden;
+  document.getElementById("sdr-notification-button").setAttribute("aria-expanded", String(!panel.hidden));
+  renderNotifications();
+}
+
+function renderNotifications() {
+  const panel = document.getElementById("sdr-notification-panel");
+  if (!panel) return;
+  panel.innerHTML = `<div class="mb-2 flex items-center justify-between"><strong class="text-sm">Notificações</strong><span class="text-xs text-slate-500">${state.notifications.filter(item => !item.readAt).length} não lida(s)</span></div>${state.notifications.length ? state.notifications.map(item => `<button class="sdr-notification ${item.readAt ? "" : "unread"}" data-notification="${esc(item.id)}" data-notification-lead="${esc(item.leadId)}"><strong class="text-xs">${esc(item.title)}</strong><span class="text-xs">${esc(item.message)}</span><small>${formatTimestamp(item.createdAt)}</small></button>`).join("") : `<p class="p-3 text-xs text-slate-500">Nenhuma notificação.</p>`}`;
+  document.querySelectorAll("[data-notification]").forEach(button => button.onclick = async () => {
+    await api("notification.read", { notificationId: button.dataset.notification });
+    if (button.dataset.notificationLead) openLead(button.dataset.notificationLead);
+    panel.hidden = true;
+  });
+}
+
+function subscribeLeads() {
+  state.stop.splice(0).forEach(stop => stop?.());
+  state.detailStops.splice(0).forEach(stop => stop?.());
+  if (!state.db || !state.user) return;
+  let leadsQuery = query(collection(state.db, "sdrLeads"), limit(500));
+  if (!canManage()) {
+    leadsQuery = state.view === "consultant"
+      ? query(collection(state.db, "sdrLeads"), where("assignedConsultantId", "==", state.user.uid), limit(500))
+      : query(collection(state.db, "sdrLeads"), where("ownerSdrId", "==", state.user.uid), limit(500));
+  }
+  state.stop.push(onSnapshot(leadsQuery, snapshot => {
+    state.leads = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+    renderAll();
+  }, error => showToast(`Não foi possível sincronizar a fila: ${error.message}`, "error")));
+  state.stop.push(onSnapshot(query(collection(state.db, "sdrNotifications"), where("userId", "==", state.user.uid), limit(100)), snapshot => {
+    state.notifications = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    document.getElementById("sdr-notification-count").textContent = state.notifications.filter(item => !item.readAt).length;
+    renderNotifications();
+  }));
+  state.stop.push(onSnapshot(query(collection(state.db, "sdrBankCatalog"), where("isActive", "==", true), limit(200)), snapshot => {
+    state.banks = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0) || a.name.localeCompare(b.name));
+    if (state.view === "settings" || state.step === 2) renderAll();
+  }));
+  state.stop.push(onSnapshot(query(collection(state.db, "sdrSimulationRules"), limit(200)), snapshot => {
+    state.rules = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.version || 0) - (a.version || 0));
+    if (state.view === "settings") renderAll();
+  }));
+  if (canSdr()) api("users.assignable").then(result => {
+    state.assignableUsers = result.users || [];
+    if (state.step === SDR_STEPS.length - 1 && state.view === "sdr") renderAll();
+  }).catch(() => {});
+}
+
+function subscribeLeadDetails(id) {
+  state.detailStops.splice(0).forEach(stop => stop?.());
+  const commentsStop = onSnapshot(query(collection(state.db, "sdrLeadComments"), where("leadId", "==", id), limit(200)), snapshot => {
+    state.comments = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+    if (state.view === "consultant") renderAll();
+  });
+  const eventsStop = onSnapshot(query(collection(state.db, "sdrLeadEvents"), where("leadId", "==", id), limit(300)), snapshot => {
+    state.events = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    if (state.view === "consultant") renderAll();
+  });
+  state.detailStops.push(commentsStop, eventsStop);
+}
+
+async function boot(context) {
+  if (state.booted || !root || !context?.auth?.currentUser) return;
+  state.booted = true;
+  Object.assign(state, context, { user: context.auth.currentUser });
+  const profileSnapshot = await getDoc(doc(state.db, "users", state.user.uid));
+  state.profile = profileSnapshot.data() || {};
+  state.role = resolveRole(state.profile);
+  window.platinoUserOperationalRole = state.role;
+  window.sdrApplyAccess = () => {
+    const allowed = ["sdr", "consultant", "analyst", "manager", "admin"].includes(state.role);
+    document.getElementById("nav-sdr")?.classList.toggle("hidden", !allowed);
+  };
+  window.sdrApplyAccess();
+  mount();
+  subscribeLeads();
+}
+
+window.addEventListener("platino-firebase-ready", event => boot(event.detail));
+if (window.platinoFirebaseContext?.auth?.currentUser) boot(window.platinoFirebaseContext);
+
+window.addEventListener("platino-signed-out", () => {
+  state.stop.splice(0).forEach(stop => stop?.());
+  state.detailStops.splice(0).forEach(stop => stop?.());
+  state.booted = false;
+  state.leads = [];
+  if (root) root.innerHTML = "";
+});

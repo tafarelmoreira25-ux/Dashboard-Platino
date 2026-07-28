@@ -8,7 +8,10 @@
     "test:auth": "node tests/auth-login-security-test.mjs",
     "test:documents-ui": "node tests/documents-ui-test.mjs",
     "test:hunter": "node tests/hunter-sheet-test.mjs",
-    "test:laudo": "node tests/laudo-pericial-contabil-test.mjs"
+    "test:laudo": "node tests/laudo-pericial-contabil-test.mjs",
+    "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-ui-test.mjs",
+    "test:sdr:pdf": "node tests/sdr-analysis-pdf-test.mjs",
+    "migrate:sdr": "node migrations/001-sdr-module-v1.mjs"
   },
   "dependencies": {
     "express": "^4.18.2",

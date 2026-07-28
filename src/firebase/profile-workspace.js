@@ -216,5 +216,7 @@ export function createAccountManagementApi(auth) {
     createUser: (form) => callManagementApi(auth, "/api/admin/create-user", form),
     setDisabled: (uid, disabled) =>
       callManagementApi(auth, "/api/admin/set-user-disabled", { uid, disabled }),
+    setOperationalRole: (uid, operationalRole, sector) =>
+      callManagementApi(auth, "/api/admin/set-user-operational-role", { uid, operationalRole, sector }),
   };
 }

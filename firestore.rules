@@ -6,47 +6,121 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function userProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function tokenRole() {
+      return signedIn() ? request.auth.token.get('role', '') : '';
+    }
+
+    function operationalRole() {
+      return signedIn()
+        ? userProfile().get('operationalRole', userProfile().get('role', tokenRole()))
+        : '';
+    }
+
     function isManagement() {
       return signedIn()
         && (
-          request.auth.token.get('role', '') == 'admin'
-          || request.auth.token.get('role', '') == 'manager'
-          ||
-          request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
-          || request.auth.token.email == 'gestao@platino.com'
-          || request.auth.token.email == 'tafarel@platino.com'
-          || request.auth.token.email == 'tafarel.moreira@platino.com'
-          || request.auth.token.email == 'tafarelmoreira@platino.com'
-          || request.auth.token.email == 'supervisao@platino.com'
-          || request.auth.token.email == 'diretoria@platino.com'
-          || request.auth.token.email == 'admin@platino.com'
-          || request.auth.token.email == 'isabela@platino.com'
-          || request.auth.token.email == 'vanessa@platino.com'
+          tokenRole() in ['admin', 'manager']
+          || operationalRole() in ['admin', 'manager', 'gestor', 'supervisor']
+          || request.auth.uid == 'yRW5stqXWZT7ovrQyn1Fd3WNuta2'
+          || request.auth.token.email in [
+            'gestao@platino.com',
+            'tafarel@platino.com',
+            'tafarel.moreira@platino.com',
+            'tafarelmoreira@platino.com',
+            'supervisao@platino.com',
+            'diretoria@platino.com',
+            'admin@platino.com',
+            'isabela@platino.com',
+            'vanessa@platino.com'
+          ]
         );
     }
 
     function isRhEditor() {
       return isManagement()
-        || (
-          signedIn()
-          && (
-            request.auth.token.email == 'anna@platino.com'
-            || request.auth.token.email == 'emily@platino.com'
-            || request.auth.token.email == 'emilly@platino.com'
-          )
-        );
+        || (signedIn() && request.auth.token.email in [
+          'anna@platino.com',
+          'emily@platino.com',
+          'emilly@platino.com'
+        ]);
     }
 
     function isNoticeEditor() {
       return isManagement()
+        || (signedIn() && request.auth.token.email == 'isabela@platino.com');
+    }
+
+    function isTimelineEditor() {
+      return isNoticeEditor()
         || (
           signedIn()
-          && request.auth.token.email == 'isabela@platino.com'
+          && (
+            request.auth.token.email in ['roberta@platino.com', 'nicolas@platino.com']
+            || request.auth.token.email.matches('^roberta.*@platino[.]com$')
+            || request.auth.token.email.matches('^nicolas.*@platino[.]com$')
+          )
         );
     }
 
     function isOwner(uid) {
       return signedIn() && request.auth.uid == uid;
+    }
+
+    function isSdrUser() {
+      return signedIn()
+        && (
+          operationalRole() in ['sdr', 'SDR']
+          || request.auth.token.email in [
+            'roberta@platino.com',
+            'gabriel@platino.com',
+            'janaina@platino.com',
+            'rafaela@platino.com',
+            'fernanda@platino.com',
+            'monique@platino.com',
+            'geovanna@platino.com',
+            'mayara@platino.com'
+          ]
+        );
+    }
+
+    function isConsultantUser() {
+      return signedIn()
+        && (
+          operationalRole() in [
+            'consultant',
+            'consultor',
+            'consultor_comercial',
+            'analyst',
+            'analista'
+          ]
+          || request.auth.token.email in [
+            'giullian@platino.com',
+            'nicolas@platino.com',
+            'tabata@platino.com',
+            'elaine@platino.com'
+          ]
+        );
+    }
+
+    function leadData(leadId) {
+      return get(/databases/$(database)/documents/sdrLeads/$(leadId)).data;
+    }
+
+    function canReadLeadData(data) {
+      return signedIn()
+        && (
+          isManagement()
+          || (isSdrUser() && data.ownerSdrId == request.auth.uid)
+          || (isConsultantUser() && data.assignedConsultantId == request.auth.uid)
+        );
+    }
+
+    function canReadLead(leadId) {
+      return canReadLeadData(leadData(leadId));
     }
 
     function validProfile() {
@@ -57,6 +131,11 @@ service cloud.firestore {
           'photoURL',
           'avatarDataUrl',
           'role',
+          'operationalRole',
+          'sector',
+          'isActive',
+          'availabilityStatus',
+          'lastActivityAt',
           'disabled',
           'createdAt',
           'createdBy',
@@ -70,6 +149,12 @@ service cloud.firestore {
         && data.avatarDataUrl is string
         && data.avatarDataUrl.size() <= 200000
         && data.role in ['admin', 'manager', 'collaborator']
+        && data.get('operationalRole', 'collaborator') in [
+          'admin', 'manager', 'sdr', 'consultant', 'analyst', 'collaborator'
+        ]
+        && data.get('sector', '') is string
+        && data.get('isActive', true) is bool
+        && data.get('availabilityStatus', '') is string
         && data.disabled is bool;
     }
 
@@ -98,37 +183,13 @@ service cloud.firestore {
         && data.get('notify', false) is bool;
     }
 
-    function isTimelineEditor() {
-      return isNoticeEditor()
-        || (
-          signedIn()
-          && (
-            request.auth.token.email == 'roberta@platino.com'
-            || request.auth.token.email == 'nicolas@platino.com'
-            || request.auth.token.email.matches('^roberta.*@platino[.]com$')
-            || request.auth.token.email.matches('^nicolas.*@platino[.]com$')
-          )
-        );
-    }
-
-    function isSdrAccess() {
-      return signedIn()
-        && (
-          isManagement()
-          || request.auth.token.get('role', '') in ['admin', 'manager']
-          || request.auth.token.get('sector', '') in ['SDR', 'Comercial', 'Supervisão SDR']
-        );
-    }
-
     function isValidShortText(value, maxSize) {
-      return value is string
-        && value.size() > 0
-        && value.size() <= maxSize;
+      return value is string && value.size() > 0 && value.size() <= maxSize;
     }
 
     function isValidFeedbackCreate() {
       let data = request.resource.data;
-      return request.resource.data.keys().hasOnly([
+      return data.keys().hasOnly([
           'type',
           'sector',
           'subject',
@@ -204,18 +265,70 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Todas as mutações críticas do SDR passam pela API com Admin SDK.
     match /sdrLeads/{leadId} {
-      allow read: if isSdrAccess();
-      allow create: if isSdrAccess()
-        && request.resource.data.createdBy == request.auth.token.email
-        && request.resource.data.id == leadId;
-      allow update: if isSdrAccess()
-        && request.resource.data.id == leadId;
-      allow delete: if isManagement();
+      allow read: if canReadLeadData(resource.data);
+      allow write: if false;
     }
 
-    // O documento é criado pela Cloud Function (Admin SDK). No cliente, o
-    // colaborador só pode editar os campos visuais do próprio perfil.
+    match /sdrLeadEvents/{eventId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrLeadComments/{commentId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrLeadAssignments/{assignmentId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrLeadSimulations/{simulationId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrLeadAnalysisDocuments/{documentId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrLeadOutcomes/{outcomeId} {
+      allow read: if canReadLead(resource.data.leadId);
+      allow write: if false;
+    }
+
+    match /sdrNotifications/{notificationId} {
+      allow read: if signedIn()
+        && (resource.data.userId == request.auth.uid || isManagement());
+      allow write: if false;
+    }
+
+    match /sdrBankCatalog/{bankId} {
+      allow read: if signedIn();
+      allow create, update: if isManagement();
+      allow delete: if false;
+    }
+
+    match /sdrSimulationRules/{ruleId} {
+      allow read: if signedIn();
+      allow create, update: if isManagement();
+      allow delete: if false;
+    }
+
+    match /sdrCounters/{counterId} {
+      allow read, write: if false;
+    }
+
+    match /sdrAuditLogs/{auditId} {
+      allow read: if isManagement();
+      allow write: if false;
+    }
+
+    // O documento é criado pela API. No cliente, a pessoa edita apenas seu perfil visual.
     match /users/{uid} {
       allow read: if signedIn();
       allow create: if isOwner(uid)
@@ -231,14 +344,14 @@ service cloud.firestore {
           'displayName',
           'photoURL',
           'avatarDataUrl',
-          'updatedAt'
+          'updatedAt',
+          'availabilityStatus',
+          'lastActivityAt'
         ]);
 
-      // O UID no caminho é a fronteira de segurança do workspace individual.
       match /reminders/{reminderId} {
         allow read, delete: if isOwner(uid);
-        allow create: if isOwner(uid) && validReminder();
-        allow update: if isOwner(uid) && validReminder();
+        allow create, update: if isOwner(uid) && validReminder();
       }
 
       match /monthlyGoals/{monthKey} {
@@ -258,7 +371,6 @@ service cloud.firestore {
       }
     }
 
-    // Auditoria é gravada exclusivamente pelo Admin SDK.
     match /adminAudit/{auditId} {
       allow read: if isManagement();
       allow write: if false;

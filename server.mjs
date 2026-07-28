@@ -6,6 +6,8 @@ import clientSheetHandler from './api/consultar.js';
 import createUserHandler from './api/admin/create-user.js';
 import listUsersHandler from './api/admin/list-users.js';
 import setUserDisabledHandler from './api/admin/set-user-disabled.js';
+import setUserOperationalRoleHandler from './api/admin/set-user-operational-role.js';
+import sdrHandler from './api/sdr.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +23,8 @@ app.get('/api/consultar', (req, res) => clientSheetHandler(req, res));
 app.post('/api/admin/create-user', (req, res) => createUserHandler(req, res));
 app.post('/api/admin/list-users', (req, res) => listUsersHandler(req, res));
 app.post('/api/admin/set-user-disabled', (req, res) => setUserDisabledHandler(req, res));
+app.post('/api/admin/set-user-operational-role', (req, res) => setUserOperationalRoleHandler(req, res));
+app.post('/api/sdr', (req, res) => sdrHandler(req, res));
 
 // Serve static files from project root (index.html, assets, modelos-originais)
 app.use(express.static(path.resolve(process.cwd())));
