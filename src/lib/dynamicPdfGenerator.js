@@ -27,6 +27,15 @@ function texto(valor) {
   return String(valor ?? "").trim();
 }
 
+function separarLocal(valor) {
+  const local = texto(valor);
+  const partes = local.match(/^(.*?)(?:\s*[-/]\s*)([A-Za-z]{2})$/);
+  return {
+    cidade: texto(partes?.[1] || local),
+    uf: texto(partes?.[2]).toUpperCase(),
+  };
+}
+
 function dataIso(valor, data = {}) {
   const informada = texto(valor);
   if (/^\d{4}-\d{2}-\d{2}$/.test(informada)) return informada;
@@ -44,16 +53,16 @@ function dataIso(valor, data = {}) {
 
 function dadosComuns(data) {
   const estado = texto(data.estado);
-  const partesEstado = estado.split("/");
+  const local = separarLocal(estado);
   return {
     ...data,
     nomeCliente: texto(data.cliente),
     cpfCnpj: texto(data.cpf),
     dataEmissao: dataIso(data.dataEmissao || data.data, data),
     genero: texto(data.genero) || "neutro",
-    cidade: texto(data.cidade) || partesEstado[0] || "São Paulo",
-    uf: texto(data.uf) || partesEstado[1] || "SP",
-    localEmissao: texto(data.localEmissao) || estado || "São Paulo/SP",
+    cidade: texto(data.cidade) || local.cidade,
+    uf: texto(data.uf).toUpperCase() || local.uf,
+    localEmissao: texto(data.localEmissao) || estado,
     orgaoExpedidor: texto(data.orgaoExpedidor) || "SSP/SP",
     exercicios: texto(data.exercicios) || "2023, 2024 e 2025",
   };
@@ -257,7 +266,7 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       ...data,
       numeroDocumento: texto(data.numeroDocumento),
       dataEmissao: texto(data.data) || comum.dataEmissao,
-      cidadeEstado: texto(data.cidadeEstado) || "São Paulo/SP",
+      cidadeEstado: texto(data.cidadeEstado) || texto(data.localEmissao) || texto(data.estado),
     }),
   };
 
