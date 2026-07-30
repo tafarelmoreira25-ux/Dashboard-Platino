@@ -60,7 +60,8 @@ export async function gerarDeclaracaoHipossuficienciaPdf(dados) {
           `${genero.portador} da Cédula de Identidade RG nº ${dados.rg}, ` +
           `${genero.inscrito} no CPF/MF sob nº ` +
           `${dados.cpfCnpj}, com endereço eletrônico: ${dados.email}, residente e ` +
-          `${genero.domiciliado} na ${dados.endereco}. Venho respeitosamente perante ` +
+          `${genero.domiciliado} na ${dados.endereco} - CEP: ${dados.cep}. ` +
+          "Venho respeitosamente perante " +
           "Vossa Excelência, por meio deste instrumento, declarar que não tenho " +
           "condições financeiras para custear os encargos atinentes a qualquer processo " +
           "judicial, sem prejuízo da manutenção do meu próprio sustento, requerendo, por " +

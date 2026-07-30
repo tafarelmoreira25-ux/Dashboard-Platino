@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const declaracoesPdf = await readFile(
+  new URL('../src/lib/dynamicPdf/declaracoesPdf.js', import.meta.url),
+  'utf8'
+);
 const icon = await stat(new URL('../assets/pdf-document-icon.png', import.meta.url));
 
 const documentsSection = html.match(
@@ -98,5 +102,10 @@ assert.match(html, /function selectAdmTemplate\(value\)/);
 assert.match(html, /select\.value = value;[\s\S]*?renderAdmPdfFields\(\);[\s\S]*?showDocumentsForm\(\);/);
 assert.match(html, /function showDocumentsLibrary\(\)/);
 assert.match(html, /function generateAdmPdf\(/);
+assert.match(
+  html,
+  /'declaracao-hipossuficiencia':[\s\S]*?fields: \[[^\]]*'cep'[^\]]*\]/
+);
+assert.match(declaracoesPdf, /CEP: \$\{dados\.cep\}/);
 
 console.log('Interface de Documentos: aparência clara, conteúdo e categorias validados.');
