@@ -89,7 +89,7 @@ for ($index = 0; $index -lt $pdf.PageCount; $index++) {
             $options.DestinationWidth = [uint32][math]::Round($page.Size.Width * $scale)
             $options.DestinationHeight = [uint32][math]::Round($page.Size.Height * $scale)
             Wait-WinRtAction ($page.RenderToStreamAsync($stream, $options))
-            $stream.FlushAsync() | Out-Null
+            $null = Wait-WinRtOperation ($stream.FlushAsync()) ([Boolean])
         } finally {
             $stream.Dispose()
         }

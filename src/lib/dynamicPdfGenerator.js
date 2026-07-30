@@ -262,11 +262,13 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       }, {
         assinaturaBytes: await asset("assinatura-manuscrita-rafael.png").catch(() => null),
       }),
-    "laudo-pericial-contabil": () => gerarLaudoPericialContabilPdf({
+    "laudo-pericial-contabil": async () => gerarLaudoPericialContabilPdf({
       ...data,
       numeroDocumento: texto(data.numeroDocumento),
       dataEmissao: texto(data.data) || comum.dataEmissao,
       cidadeEstado: texto(data.cidadeEstado) || texto(data.localEmissao) || texto(data.estado),
+    }, {
+      backgroundBytes: await asset("laudo-cdc-background-a4.png").catch(() => null),
     }),
   };
 
