@@ -1110,6 +1110,56 @@
                 linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%) !important;
         }
 
+        .platino-system-brand {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .platino-system-mark {
+            display: grid;
+            width: 2.35rem;
+            height: 2.35rem;
+            flex: 0 0 auto;
+            grid-template-columns: repeat(2, 0.48rem);
+            place-content: center;
+            gap: 0.22rem;
+            border: 1px solid rgba(148, 197, 255, 0.3);
+            border-radius: 0.78rem;
+            background: linear-gradient(145deg, rgba(37, 99, 235, 0.34), rgba(8, 25, 52, 0.92));
+            box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 8px 20px rgba(2, 8, 23, 0.26);
+        }
+
+        .platino-system-mark span {
+            width: 0.48rem;
+            height: 0.48rem;
+            border-radius: 0.15rem;
+            background: linear-gradient(145deg, #f8fafc, #72b8ff);
+        }
+
+        .platino-system-brand strong,
+        .platino-system-brand small {
+            display: block;
+            line-height: 1;
+        }
+
+        .platino-system-brand strong {
+            color: #f8fafc;
+            font-family: "Montserrat", "Inter", sans-serif;
+            font-size: 0.92rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+
+        .platino-system-brand small {
+            margin-top: 0.35rem;
+            color: #7f96b7;
+            font-size: 0.52rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+        }
+
         main {
             min-height: 100vh;
             min-height: 100dvh;
@@ -1746,10 +1796,10 @@
 
         .documents-categories {
             display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.2rem;
-            scrollbar-width: thin;
+            margin-top: 0.8rem;
+            overflow: visible;
         }
 
         .documents-category-filter {
@@ -1781,16 +1831,17 @@
         .documents-template-card {
             position: relative;
             display: grid;
-            grid-template-columns: 3rem minmax(0, 1fr) auto;
-            gap: 0.9rem;
+            grid-template-columns: 4.25rem minmax(0, 1fr);
+            gap: 1rem;
             align-items: start;
-            min-height: 9.5rem;
-            padding: 1rem;
+            min-height: 12rem;
+            padding: 1.15rem;
             border: 1px solid rgba(125, 174, 235, 0.16);
             border-radius: 1.15rem;
             background:
                 linear-gradient(145deg, rgba(17, 46, 87, 0.84), rgba(8, 28, 57, 0.9));
             color: #ffffff;
+            cursor: pointer;
             text-align: left;
             transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
         }
@@ -1811,8 +1862,8 @@
 
         .documents-template-icon {
             display: grid;
-            width: 3rem;
-            height: 3rem;
+            width: 4.25rem;
+            height: 4.25rem;
             overflow: hidden;
             place-items: center;
             border: 1px solid rgba(125, 211, 252, 0.2);
@@ -1823,24 +1874,92 @@
         }
 
         .documents-template-icon-image {
-            width: 118%;
+            width: 100%;
             max-width: none;
-            height: 118%;
-            object-fit: cover;
+            height: 100%;
+            object-fit: contain;
             pointer-events: none;
         }
 
         .documents-template-action {
             display: grid;
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            width: 2rem;
             min-width: 2rem;
             height: 2rem;
-            padding: 0 0.55rem;
+            padding: 0;
             place-items: center;
             border-radius: 999px;
             background: rgba(96, 165, 250, 0.12);
             color: #93c5fd;
             font-size: 0.68rem;
             font-weight: 900;
+        }
+
+        .documents-template-description,
+        .documents-template-purpose {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+        }
+
+        .documents-template-description {
+            -webkit-line-clamp: 2;
+        }
+
+        .documents-template-purpose {
+            -webkit-line-clamp: 1;
+        }
+
+        .documents-template-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-top: auto;
+        }
+
+        .documents-template-content {
+            display: flex;
+            min-width: 0;
+            min-height: 9.6rem;
+            flex-direction: column;
+            padding-right: 1.75rem;
+        }
+
+        .documents-step-number {
+            display: grid;
+            width: 2.6rem;
+            height: 2.6rem;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 1px solid #a9cbe0;
+            border-radius: 0.8rem;
+            background: linear-gradient(145deg, #f8fbfd, #e8f3fa);
+            color: var(--docs-accent-dark);
+            font-size: 0.78rem;
+            font-weight: 900;
+            box-shadow: 0 6px 14px rgba(21, 80, 124, 0.08);
+        }
+
+        .documents-search-clear {
+            position: absolute;
+            right: 0.65rem;
+            top: 50%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 0.65rem;
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .documents-search-clear:hover,
+        .documents-search-clear:focus-visible {
+            background: #edf4f8;
+            color: var(--docs-accent-dark);
         }
 
         .documents-form-shell {
@@ -2104,8 +2223,7 @@
             }
 
             .documents-library-toolbar {
-                grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
-                align-items: center;
+                display: block;
             }
 
             .documents-form-header {
@@ -2185,10 +2303,11 @@
             --docs-accent-dark: #15507c;
             --docs-accent-soft: #edf7fc;
             --docs-line: #cbd4dc;
-            border-color: var(--docs-line);
+            border-color: #d7e0e7;
+            border-radius: 1.5rem;
             background: #ffffff;
             color: var(--docs-ink);
-            box-shadow: 0 24px 60px rgba(23, 58, 94, 0.1);
+            box-shadow: 0 18px 48px rgba(23, 58, 94, 0.08);
         }
 
         .documents-hero {
@@ -2211,14 +2330,14 @@
         }
 
         .documents-pdf-hero-icon {
-            width: 5.25rem;
-            height: 5.25rem;
+            width: 5.8rem;
+            height: 5.8rem;
             flex: 0 0 auto;
-            border: 1px solid #cbd4dc;
-            border-radius: 1.2rem;
+            border: 1px solid #d6dee5;
+            border-radius: 1.25rem;
             background: #ffffff;
             object-fit: contain;
-            box-shadow: 0 12px 28px rgba(20, 78, 119, 0.13);
+            box-shadow: 0 10px 24px rgba(20, 78, 119, 0.11);
         }
 
         .documents-hero-aside {
@@ -2303,9 +2422,10 @@
 
         .documents-library-toolbar,
         .documents-form-toolbar {
-            border-color: var(--docs-line);
-            background: #ffffff;
-            box-shadow: 0 10px 24px rgba(23, 58, 94, 0.06);
+            padding: 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
         }
 
         .documents-search i {
@@ -2313,9 +2433,13 @@
         }
 
         .documents-search input {
-            border-color: #cbd4dc;
+            min-height: 3.35rem;
+            padding-right: 3.2rem;
+            border-color: #c9d5de;
+            border-radius: 0.9rem;
             background: #ffffff;
             color: var(--docs-ink);
+            box-shadow: 0 5px 16px rgba(23, 58, 94, 0.045);
         }
 
         .documents-search input::placeholder {
@@ -2330,10 +2454,13 @@
 
         .documents-category-filter {
             position: relative;
-            border-color: #cbd4dc;
-            background: #ffffff;
+            min-height: 2.25rem;
+            padding: 0.48rem 0.78rem;
+            border-color: #d4dde4;
+            border-radius: 999px;
+            background: #f8fafc;
             color: #51697e;
-            box-shadow: 0 2px 5px rgba(23, 58, 94, 0.035);
+            box-shadow: none;
         }
 
         .documents-category-filter:hover,
@@ -2341,35 +2468,53 @@
             border-color: #8dc7e5;
             background: var(--docs-accent-soft);
             color: var(--docs-accent);
-            box-shadow: inset 0 -3px var(--docs-accent);
+            box-shadow: inset 0 0 0 1px rgba(8, 120, 189, 0.12);
         }
 
         .documents-template-card {
-            border-color: #cbd4dc;
-            background: #ffffff;
+            border-color: #d5dee5;
+            background: linear-gradient(145deg, #ffffff, #fbfdff);
             color: var(--docs-ink);
-            box-shadow: 0 8px 22px rgba(23, 58, 94, 0.055);
+            box-shadow: 0 7px 20px rgba(23, 58, 94, 0.045);
         }
 
         .documents-template-card:hover {
-            border-color: #79b9dd;
-            box-shadow: 0 16px 30px rgba(23, 83, 126, 0.11);
+            transform: translateY(-2px);
+            border-color: #8ebfd9;
+            box-shadow: 0 14px 28px rgba(23, 83, 126, 0.09);
+        }
+
+        .documents-template-card:focus-visible {
+            outline: 3px solid rgba(8, 120, 189, 0.2);
+            outline-offset: 2px;
         }
 
         .documents-template-card[aria-selected="true"] {
             border-color: #58a9d5;
             background: linear-gradient(145deg, #f2f9fd, #ffffff);
-            box-shadow: inset 4px 0 var(--docs-accent), 0 16px 30px rgba(23, 83, 126, 0.11);
+            box-shadow: inset 3px 0 var(--docs-accent), 0 12px 26px rgba(23, 83, 126, 0.09);
         }
 
         .documents-template-icon {
-            border-color: #9bcce5;
-            background: var(--docs-accent);
+            overflow: visible;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
             color: #ffffff;
-            box-shadow: 0 8px 18px rgba(8, 120, 189, 0.18);
+            box-shadow: none;
         }
 
         .documents-template-action {
+            border: 1px solid transparent;
+            background: transparent;
+            color: #6c8294;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .documents-template-action:hover,
+        .documents-template-action:focus-visible {
+            border-color: #c9d9e4;
             background: #edf5f9;
             color: var(--docs-accent);
         }
@@ -2522,7 +2667,7 @@
             }
 
             .documents-hero-aside {
-                padding-left: 5.1rem;
+                padding-left: 0;
             }
         }
 
@@ -2931,7 +3076,15 @@
         <aside id="sidebar" class="bg-[#0F192C] border-r border-[#2B4870]/40 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
             
             <div class="h-20 flex items-center px-6 border-b border-[#2B4870]/40">
-                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-12 w-auto rounded-lg object-contain">
+                <div class="platino-system-brand" aria-label="Platino Operating System">
+                    <span class="platino-system-mark" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span>
+                    </span>
+                    <span>
+                        <strong>PLATINO OS</strong>
+                        <small>OPERATING SYSTEM</small>
+                    </span>
+                </div>
                 <button onclick="toggleSidebar()" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
                     <i class="ph ph-x text-xl"></i>
                 </button>
@@ -3025,7 +3178,7 @@
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
                 <div class="topbar-search-frame relative">
                     <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
-                    <input type="search" id="ai-search-input" name="platino-global-search" autocomplete="off" data-lpignore="true" data-form-type="other" aria-label="Buscar no Platino" placeholder="Busque por assunto, dúvida ou serviço." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                    <input type="search" id="global-search-input" name="document_global_search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
                 </div>
             </div>
 
@@ -3188,20 +3341,20 @@
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
                             <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
-                                <img id="avisos-highlight-photo" src="assets/equipe/mayara-cardoso-pereira.png" alt="Mayara Cardoso, destaque do mês de junho" class="h-full w-full object-cover object-top">
+                                <img id="avisos-highlight-photo" src="assets/platino-infohub-icon.png" alt="Símbolo da equipe Platino" class="h-full w-full object-cover object-center">
                             </div>
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
                                     <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
-                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque do Mês de Junho - Comercial</h3>
-                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Líder do Mês</span>
+                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque da Operação</h3>
+                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Equipe Platino</span>
                                 </div>
-                                <p id="avisos-highlight-name" class="font-black text-2xl">Mayara Cardoso</p>
-                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Maior taxa de conversão em junho!</p>
+                                <p id="avisos-highlight-name" class="font-black text-2xl">Equipe Platino</p>
+                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Resultados do mês em atualização.</p>
                             </div>
                             <div class="md:text-right">
                                     <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">R$32.344,77</p>
+                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">—</p>
                             </div>
                         </div>
                     </div>
@@ -3426,11 +3579,11 @@
                     <header class="documents-hero">
                         <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                             <div class="documents-hero-copy">
-                                <img src="assets/document-model-icon-transparent.png" alt="" class="documents-pdf-hero-icon" aria-hidden="true">
+                                <img src="assets/pdf-document-icon.png" alt="Ícone PDF do Gerador Inteligente de PDF" class="documents-pdf-hero-icon">
                                 <div>
                                     <p class="documents-eyebrow">Documentos padronizados</p>
                                     <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Gerador Inteligente de PDF</h2>
-                                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Gere, organize e utilize os documentos padronizados. Fica pronto em menos de 1 minuto.</p>
+                                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Localize um modelo, preencha os dados e gere o documento padronizado.</p>
                                 </div>
                             </div>
                             <div class="documents-hero-aside">
@@ -3445,7 +3598,7 @@
                                 <div>
                                     <p class="documents-category-label">Escolha do modelo</p>
                                     <h3 class="mt-1 text-xl font-black text-white">Biblioteca de modelos</h3>
-                                    <p class="mt-1 text-sm text-blue-100/60">Selecione o documento adequado para abrir o formulário correspondente.</p>
+                                    <p class="mt-1 text-sm text-blue-100/60">Pesquise ou filtre para encontrar rapidamente o documento.</p>
                                 </div>
                                 <span id="adm-template-count" class="text-xs font-bold text-blue-200/60">Modelos disponíveis</span>
                             </div>
@@ -3453,7 +3606,8 @@
                             <div class="documents-library-toolbar">
                                 <div class="documents-search">
                                     <i class="ph ph-magnifying-glass"></i>
-                                    <input id="adm-template-search" type="search" placeholder="Buscar por nome, área ou finalidade..." autocomplete="off" oninput="renderAdmTemplateOptions(this.value)">
+                                    <input id="adm-template-search" name="document_library_search" type="search" placeholder="Pesquisar por nome ou finalidade..." autocomplete="off" autocapitalize="none" spellcheck="false" oninput="renderAdmTemplateOptions(this.value)">
+                                    <button id="documents-search-clear" type="button" class="documents-search-clear hidden" onclick="clearDocumentsSearch()" aria-label="Limpar busca de documentos" title="Limpar busca">×</button>
                                 </div>
                                 <div id="documents-category-filters" class="documents-categories" aria-label="Filtrar modelos por categoria"></div>
                             </div>
@@ -3488,7 +3642,7 @@
                                         <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
                                             <span aria-hidden="true">←</span> <span class="hidden sm:inline">Biblioteca</span>
                                         </button>
-                                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
+                                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-library-icon-3d.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
                                         <div class="min-w-0">
                                             <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
                                             <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
@@ -4610,7 +4764,7 @@
                     <div class="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
                         <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="ph ph-hand-coins text-emerald-700"></i> Clientes pagos</h4>
                         <p class="mt-1 text-xs text-slate-500">Formato: Cliente | Valor | Data | Responsável | Status</p>
-                        <textarea id="editor-ranking-paid-clients" rows="5" class="mt-3 w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Cliente A | 2500 | 01/07/2026 | Mayara | Pago"></textarea>
+                        <textarea id="editor-ranking-paid-clients" rows="5" class="mt-3 w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" placeholder="Cliente A | 2500 | 01/07/2026 | Rafaela | Pago"></textarea>
                     </div>
                 </div>
             </div>
@@ -4973,7 +5127,6 @@
                 ],
                 saturdayScale: [
                     { date: '27/06', team: 'Administrativo', people: 'Giovana Dilena, Lucas Prado', shift: '09h às 13h' },
-                    { date: '27/06', team: 'Comercial', people: 'Mayara Cardoso, Gabriel Paes', shift: '09h às 13h' },
                     { date: '27/06', team: 'Jurídico', people: 'Nicole Martins, Elaine Costa', shift: '09h às 13h' }
                 ]
             },
@@ -6256,6 +6409,18 @@
         }
 
         // LÓGICA DA BUSCA E MODAL
+        function clearGlobalSearch() {
+            const input = document.getElementById('global-search-input');
+            if (!input) return;
+            input.value = '';
+            input.defaultValue = '';
+            input.setAttribute('value', '');
+        }
+
+        window.clearGlobalSearch = clearGlobalSearch;
+        document.addEventListener('DOMContentLoaded', clearGlobalSearch);
+        window.addEventListener('pageshow', clearGlobalSearch);
+
         async function handleSearch(event) {
             if (event.key === 'Enter') {
                 const query = event.target.value.trim();
@@ -6474,6 +6639,26 @@
             }).format(new Date()).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
         }
 
+        // Impede que registros legados desligados reapareçam em superfícies ativas.
+        const INACTIVE_TEAM_NAME_HASHES = new Set([
+            858537753, 3485962025, 736064913, 3537054721,
+            2005598203, 3141668600, 3287841597, 3863809456, 2099074238,
+            1130923606, 2114220384, 1441043149,
+            3797531292, 777676521, 570827473, 167331970, 1862907603
+        ]);
+
+        function getPersonKeyHash(name) {
+            let hash = 2166136261;
+            for (const character of normalizePersonKey(name)) {
+                hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+            }
+            return hash >>> 0;
+        }
+
+        function isInactiveTeamMember(name) {
+            return INACTIVE_TEAM_NAME_HASHES.has(getPersonKeyHash(name));
+        }
+
         const defaultRankingData = {
             monthKey: getCurrentOperationalMonthKey(),
             teamGoals: {
@@ -6485,11 +6670,9 @@
                 juridico: 0
             },
             comercial: [
-                { name: 'Mayara Cardoso Pereira', sold: 0, goal: 30000 },
                 { name: 'Rafaela Marcelino', sold: 0, goal: 30000 },
                 { name: 'Fernanda Ramos', sold: 0, goal: 30000 },
-                { name: 'Geovanna Alves Xavier', sold: 0, goal: 30000 },
-                { name: 'Monique Cristina da Silva', sold: 0, goal: 30000 }
+                { name: 'Geovanna Alves Xavier', sold: 0, goal: 30000 }
             ],
             juridico: [
                 { name: 'Tabata Rangel de Lima', sold: 0, goal: 150000 },
@@ -6586,7 +6769,11 @@
                             value: String(item?.value || '').trim()
                         };
                     })
-                    .filter(item => (item.name || item.sold || item.goal) && !normalizeClientSearchText(item.name).includes('nicole'));
+                    .filter(item =>
+                        (item.name || item.sold || item.goal)
+                        && !isInactiveTeamMember(item.name)
+                        && !normalizeClientSearchText(item.name).includes('nicole')
+                    );
             };
 
             const comercial = normalizeList(sourceValue.comercial, defaultRankingData.comercial, 'comercial');
@@ -6610,24 +6797,30 @@
                     projections: Number(item?.projections ?? item?.projecoes ?? item?.projeções ?? 0) || 0,
                     value: parseRankingValue(item?.value ?? item?.valor ?? '')
                 }))
-                .filter(item => item.name || item.convertedClients || item.potentialClients || item.paidClients || item.notPaidClients || item.projections || item.value);
+                .filter(item => (item.name || item.convertedClients || item.potentialClients || item.paidClients || item.notPaidClients || item.projections || item.value) && !isInactiveTeamMember(item.name));
             const normalizePaidClients = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.paidClients : [])
-                .map(item => ({
-                    name: String(item?.name || item?.client || item?.cliente || '').trim(),
-                    value: parseRankingValue(item?.value ?? item?.valor ?? ''),
-                    date: String(item?.date || item?.data || '').trim(),
-                    responsible: String(item?.responsible || item?.responsavel || '').trim(),
-                    status: String(item?.status || 'Pago').trim()
-                }))
+                .map(item => {
+                    const responsible = String(item?.responsible || item?.responsavel || '').trim();
+                    return {
+                        name: String(item?.name || item?.client || item?.cliente || '').trim(),
+                        value: parseRankingValue(item?.value ?? item?.valor ?? ''),
+                        date: String(item?.date || item?.data || '').trim(),
+                        responsible: isInactiveTeamMember(responsible) ? '' : responsible,
+                        status: String(item?.status || 'Pago').trim()
+                    };
+                })
                 .filter(item => item.name || item.value || item.date || item.responsible);
             const normalizePotentialClients = items => (Array.isArray(items) ? items : useFallback ? defaultRankingData.potentialClients : [])
-                .map(item => ({
-                    name: String(item?.name || item?.client || item?.cliente || '').trim(),
-                    date: String(item?.date || item?.data || '').trim(),
-                    responsible: String(item?.responsible || item?.responsavel || item?.hunter || '').trim(),
-                    status: String(item?.status || 'Potencial').trim(),
-                    product: String(item?.product || item?.produto || '').trim()
-                }))
+                .map(item => {
+                    const responsible = String(item?.responsible || item?.responsavel || item?.hunter || '').trim();
+                    return {
+                        name: String(item?.name || item?.client || item?.cliente || '').trim(),
+                        date: String(item?.date || item?.data || '').trim(),
+                        responsible: isInactiveTeamMember(responsible) ? '' : responsible,
+                        status: String(item?.status || 'Potencial').trim(),
+                        product: String(item?.product || item?.produto || '').trim()
+                    };
+                })
                 .filter(item => item.name || item.date || item.responsible || item.status || item.product);
             const normalized = {
                 comercial,
@@ -7453,7 +7646,6 @@
             { name: 'NICOLAS PERES ISSO', date: '03/01/2006', role: 'Supervisor Jurídico', photo: 'assets/equipe/nicolas-peres-isso.png', aliases: ['Nicolas Peres'] },
             { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
             { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', photo: 'assets/equipe/roberta-ines-brandao.png', photoPosition: 'center center', aliases: ['Roberta Brandão'] },
-            { name: 'GABRIEL NUNES PAES', date: '25/03/1997', role: 'Consultor financeiro - Hunter', photo: 'assets/equipe/gabriel-nunes-paes.png' },
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
             { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
             { name: 'FERNANDA RAMOS', date: '13/04/2007', role: 'Consultora financeira', photo: 'assets/equipe/fernanda-ramos.png' },
@@ -7466,15 +7658,8 @@
             { name: 'THAMIRES MILLENA', date: '02/05/2001', role: 'Setor Financeiro', photo: 'assets/equipe/thamires-millena.png', photoPosition: 'center 18%' },
             { name: 'VANESSA ILANA DE SOUZA', date: '09/10/1974', role: 'Gerente', photo: 'assets/equipe/vanessa-ilana-de-souza.png', aliases: ['Vanessa Ilana'] },
             { name: 'ELAINE APARECIDA DOS SANTOS', date: '13/10/1999', role: 'Consultora Jurídica' },
-            { name: 'MAYARA CARDOSO PEREIRA', date: '22/10/1995', role: 'Consultora financeira', photo: 'assets/equipe/mayara-cardoso-pereira.png' },
             { name: 'YASMIM NOGUEIRA', date: '29/11/2005', role: 'Departamento administrativo', photo: 'assets/equipe/yasmim-nogueira.png' }
         ];
-
-        const INACTIVE_TEAM_NAMES = ['Giovana Dilena Rocha', 'Giovanna Juliana Rocha', 'João Victor TJ', 'João Vitor TJ', 'Nicole Monteiro Faria'];
-
-        function isInactiveTeamMember(name) {
-            return INACTIVE_TEAM_NAMES.some(inactiveName => isSamePersonName(name, inactiveName));
-        }
 
         const platinoBirthdays = platinoPeople.map(person => ({
             name: person.name,
@@ -7576,11 +7761,11 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'Destaque do Mês de Junho - Comercial',
-                name: 'Mayara Cardoso',
-                subtitle: 'Maior taxa de conversão em junho!',
-                value: 'R$ 32.344,77',
-                badge: 'Líder do mês'
+                title: 'Destaque da Operação',
+                name: 'Equipe Platino',
+                subtitle: 'Resultados do mês em atualização.',
+                value: '—',
+                badge: 'Equipe Platino'
             },
             week: {
                 contracts: '0',
@@ -7705,8 +7890,9 @@
                 })).filter(item => item.category || item.title || item.text),
                 highlight: (() => {
                     const highlight = { ...defaultAvisosData.highlight, ...(value.highlight || {}) };
-                    const isLegacyMayaraHighlight = /mayara/i.test(highlight.name || '') && /mês de maio|mes de maio/i.test(highlight.title || '');
-                    return isLegacyMayaraHighlight ? { ...highlight, ...defaultAvisosData.highlight } : highlight;
+                    return isInactiveTeamMember(highlight.name)
+                        ? { ...defaultAvisosData.highlight }
+                        : highlight;
                 })(),
                 week: { ...defaultAvisosData.week, ...(monthlyValue.week || {}) },
                 chargebacks: normalizedChargebacks,
@@ -9198,7 +9384,7 @@
             const select = document.getElementById('adm-pdf-template');
             if (!container || !select) return;
             const availableCategories = new Set(Array.from(select.options).map(option => getAdmTemplateInfo(option.value).category));
-            const categoryOrder = ['Todos', 'Defesa', 'Extrajudicial', 'Termos', 'Procurações', 'Declarações', 'Judicial', 'Homologação', 'Perícia'];
+            const categoryOrder = ['Todos', 'Defesa', 'Extrajudicial', 'Judicial', 'Termos', 'Procurações', 'Declarações', 'Homologação', 'Perícia'];
             const categories = [
                 ...categoryOrder.filter(category => category === 'Todos' || availableCategories.has(category)),
                 ...Array.from(availableCategories).filter(category => !categoryOrder.includes(category))
@@ -9212,8 +9398,22 @@
 
         function setDocumentsCategory(category) {
             documentsActiveCategory = category || 'Todos';
-            renderDocumentsCategoryFilters();
             renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+        }
+
+        function clearDocumentsSearch() {
+            const search = document.getElementById('adm-template-search');
+            if (!search) return;
+            search.value = '';
+            renderAdmTemplateOptions('');
+            search.focus();
+        }
+
+        function handleAdmTemplateCardKey(event) {
+            if (event.target.closest('.documents-template-action')) return;
+            if (!['Enter', ' '].includes(event.key)) return;
+            event.preventDefault();
+            selectAdmTemplate(event.currentTarget.dataset.templateValue);
         }
 
         function renderAdmTemplateOptions(query = '') {
@@ -9231,22 +9431,28 @@
                 return matchesCategory && matchesQuery;
             });
             const count = document.getElementById('adm-template-count');
-            if (count) count.textContent = `${options.length} de ${allOptions.length} ${allOptions.length === 1 ? 'modelo' : 'modelos'}`;
+            if (count) {
+                const filtered = normalizedQuery || documentsActiveCategory !== 'Todos';
+                count.textContent = filtered
+                    ? `${options.length} ${options.length === 1 ? 'resultado' : 'resultados'}`
+                    : `${allOptions.length} modelos disponíveis`;
+            }
+            document.getElementById('documents-search-clear')?.classList.toggle('hidden', !normalizedQuery);
             container.innerHTML = options.length ? options.map(option => {
                 const info = getAdmTemplateInfo(option.value);
                 const selected = option.value === select.value;
-                return `<div class="documents-template-card" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
-                    <span class="documents-template-icon"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
-                    <button type="button" class="min-w-0 text-left" onclick="selectAdmTemplate(this.closest('[data-template-value]').dataset.templateValue)">
+                return `<div class="documents-template-card" role="option" tabindex="0" aria-selected="${selected}" aria-label="Abrir ${escapeHtml(option.text)}" data-template-value="${escapeHtml(option.value)}" onclick="selectAdmTemplate(this.dataset.templateValue)" onkeydown="handleAdmTemplateCardKey(event)">
+                    <span class="documents-template-icon"><img src="assets/document-library-icon-3d.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
+                    <div class="documents-template-content">
                         <span class="documents-category-label">${escapeHtml(info.category)}</span>
                         <span class="documents-template-title mt-1 block text-base font-black leading-snug text-white">${escapeHtml(option.text)}</span>
-                        <span class="mt-2 block text-xs font-medium leading-relaxed text-blue-100/55">${escapeHtml(info.description)}</span>
-                        <span class="mt-2 block text-[11px] font-semibold leading-relaxed text-blue-200/75"><strong class="text-sky-300">Finalidade:</strong> ${escapeHtml(info.purpose)}</span>
-                        <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-black text-sky-300">Preencher documento <span aria-hidden="true">→</span></span>
-                    </button>
+                        <span class="documents-template-description mt-2 text-xs font-medium leading-relaxed text-blue-100/55">${escapeHtml(info.description)}</span>
+                        <span class="documents-template-purpose mt-2 text-[11px] font-semibold leading-relaxed text-blue-200/75"><strong class="text-sky-300">Finalidade:</strong> ${escapeHtml(info.purpose)}</span>
+                        <span class="documents-template-cta text-[11px] font-black text-sky-300">Preencher documento <span aria-hidden="true">→</span></span>
+                    </div>
                     ${isGestorUser()
-                        ? `<button type="button" class="documents-template-action" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')">Editar</button>`
-                        : `<span class="documents-template-action" aria-hidden="true">${selected ? '✓' : '›'}</span>`}
+                        ? `<button type="button" class="documents-template-action" title="Opções do modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')">•••</button>`
+                        : ''}
                 </div>`;
             }).join('') : `<div class="documents-empty-state col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed px-4 text-center text-sm font-semibold"><span>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
         }
@@ -9832,7 +10038,7 @@
             fieldsContainer.innerHTML = sections.map((section, index) => `
                 <section class="documents-step${index === 0 ? ' is-active' : ''}" data-step-index="${index}" data-step-title="${escapeHtml(section.title)}">
                     <div class="mb-4 flex items-start gap-3">
-                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
+                        <span class="documents-step-number" aria-hidden="true">${index + 1}</span>
                         <div>
                             <p class="documents-category-label">Etapa ${index + 1}</p>
                             <h4 class="mt-1 text-lg font-black text-white">${escapeHtml(section.title)}</h4>
@@ -11283,13 +11489,10 @@
         { email: "nicolas@platino.com", name: "Nicolas Peres Isso", sector: "Supervisão Jurídica" },
         { email: "emily@platino.com", name: "Emily do Val Fernandes", sector: "Departamento Pessoal" },
         { email: "roberta@platino.com", name: "Roberta Inês Brandão", sector: "Supervisão Comercial" },
-        { email: "gabriel@platino.com", name: "Gabriel Nunes Paes", sector: "Comercial / Hunter" },
         { email: "janaina@platino.com", name: "Janaina Rodrigues Paiva", sector: "Comercial" },
         { email: "rafaela@platino.com", name: "Rafaela Marcelino", sector: "Comercial" },
         { email: "fernanda@platino.com", name: "Fernanda Ramos", sector: "Comercial" },
-        { email: "sonia@platino.com", name: "Sonia Regina Leandro", sector: "Apoio Operacional" },
         { email: "tabata@platino.com", name: "Tabata Rangel de Lima", sector: "Jurídico" },
-        { email: "monique@platino.com", name: "Monique Cristina da Silva", sector: "Comercial" },
         { email: "tafarel@platino.com", name: "Tafarel Moreira", sector: "Supervisão Administrativa", gestor: true },
         { email: "geovanna@platino.com", name: "Geovanna Alves Xavier", sector: "Comercial" },
         { email: "jonatas@platino.com", name: "Jonatas Silva Ferraz", sector: "Marketing" },
@@ -11298,7 +11501,6 @@
         { email: "thamires@platino.com", name: "Thamires Millena", sector: "Financeiro" },
         { email: "vanessa@platino.com", name: "Vanessa Ilana de Souza", sector: "Gerência", gestor: true },
         { email: "elaine@platino.com", name: "Elaine Aparecida dos Santos", sector: "Jurídico" },
-        { email: "mayara@platino.com", name: "Mayara Cardoso Pereira", sector: "Comercial" },
         { email: "yasmim@platino.com", name: "Yasmim Nogueira", sector: "Administrativo" }
       ];
 
@@ -11375,6 +11577,8 @@
         if (user) {
           loginScreen.classList.add("hidden");
           appContent.classList.remove("hidden");
+          window.clearGlobalSearch?.();
+          window.setTimeout(() => window.clearGlobalSearch?.(), 250);
           updateUserAccess(user);
           window.platinoFirebaseContext = { app, auth, db };
           window.dispatchEvent(new CustomEvent("platino-firebase-ready", {
@@ -11395,6 +11599,7 @@
         } else {
           loginScreen.classList.remove("hidden");
           appContent.classList.add("hidden");
+          window.clearGlobalSearch?.();
           window.firebaseAuthUser = null;
           window.platinoUserRole = "equipe";
           window.platinoUserCanEditRh = false;

@@ -80,13 +80,10 @@ service cloud.firestore {
         && (
           request.auth.token.email in [
             'roberta@platino.com',
-            'gabriel@platino.com',
             'janaina@platino.com',
             'rafaela@platino.com',
             'fernanda@platino.com',
-            'monique@platino.com',
-            'geovanna@platino.com',
-            'mayara@platino.com'
+            'geovanna@platino.com'
           ]
           || operationalRole() in ['sdr', 'SDR']
         );
