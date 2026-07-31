@@ -1813,6 +1813,7 @@
             display: grid;
             width: 3rem;
             height: 3rem;
+            overflow: hidden;
             place-items: center;
             border: 1px solid rgba(125, 211, 252, 0.2);
             border-radius: 0.9rem;
@@ -1821,14 +1822,25 @@
             font-size: 1.35rem;
         }
 
+        .documents-template-icon-image {
+            width: 118%;
+            max-width: none;
+            height: 118%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
         .documents-template-action {
             display: grid;
-            width: 2rem;
+            min-width: 2rem;
             height: 2rem;
+            padding: 0 0.55rem;
             place-items: center;
             border-radius: 999px;
             background: rgba(96, 165, 250, 0.12);
             color: #93c5fd;
+            font-size: 0.68rem;
+            font-weight: 900;
         }
 
         .documents-form-shell {
@@ -1939,6 +1951,64 @@
             font-size: 0.69rem;
             font-weight: 600;
             line-height: 1.45;
+        }
+
+        .documents-professionals-editor {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .documents-professional-row {
+            padding: 1rem;
+            border: 1px solid var(--docs-line);
+            border-radius: 1rem;
+            background: #f7fafc;
+        }
+
+        .documents-professional-grid {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .documents-professional-grid > label:first-child,
+        .documents-professional-grid > label:nth-child(4) {
+            grid-column: 1 / -1;
+        }
+
+        .documents-professional-remove {
+            min-height: 2rem;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid #d8a7a3;
+            border-radius: 0.65rem;
+            background: #ffffff;
+            color: #a8322b;
+            font-size: 0.68rem;
+            font-weight: 900;
+        }
+
+        .documents-add-professional {
+            display: inline-flex;
+            width: fit-content;
+            min-height: 2.6rem;
+            align-items: center;
+            justify-content: center;
+            padding: 0.65rem 0.9rem;
+            border: 1px solid #8dc7e5;
+            border-radius: 0.8rem;
+            background: #edf8fd;
+            color: var(--docs-accent-dark);
+            font-size: 0.75rem;
+            font-weight: 900;
+        }
+
+        .documents-serialized-control {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .documents-step-summary {
@@ -2436,6 +2506,15 @@
                 align-items: flex-start;
             }
 
+            .documents-professional-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .documents-professional-grid > label:first-child,
+            .documents-professional-grid > label:nth-child(4) {
+                grid-column: auto;
+            }
+
             .documents-pdf-hero-icon {
                 width: 4rem;
                 height: 4rem;
@@ -2852,7 +2931,7 @@
         <aside id="sidebar" class="bg-[#0F192C] border-r border-[#2B4870]/40 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
             
             <div class="h-20 flex items-center px-6 border-b border-[#2B4870]/40">
-                <h2 class="text-2xl font-medium tracking-tight text-white" style="font-family: 'Inter', sans-serif;">Platino OS</h2>
+                <img src="image_ce12c6.png" alt="Platino Assessoria" class="h-12 w-auto rounded-lg object-contain">
                 <button onclick="toggleSidebar()" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
                     <i class="ph ph-x text-xl"></i>
                 </button>
@@ -2946,7 +3025,7 @@
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
                 <div class="topbar-search-frame relative">
                     <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
-                    <input type="text" id="ai-search-input" placeholder="Busque por assunto, dúvida ou serviço." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                    <input type="search" id="ai-search-input" name="platino-global-search" autocomplete="off" data-lpignore="true" data-form-type="other" aria-label="Buscar no Platino" placeholder="Busque por assunto, dúvida ou serviço." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
                 </div>
             </div>
 
@@ -3347,15 +3426,15 @@
                     <header class="documents-hero">
                         <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                             <div class="documents-hero-copy">
-                                <img src="assets/pdf-document-icon.png" alt="" class="documents-pdf-hero-icon" aria-hidden="true">
+                                <img src="assets/document-model-icon-transparent.png" alt="" class="documents-pdf-hero-icon" aria-hidden="true">
                                 <div>
-                                    <p class="documents-eyebrow"><i class="ph ph-squares-four mr-1"></i> Documentos padronizados</p>
+                                    <p class="documents-eyebrow">Documentos padronizados</p>
                                     <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Gerador Inteligente de PDF</h2>
                                     <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Gere, organize e utilize os documentos padronizados. Fica pronto em menos de 1 minuto.</p>
                                 </div>
                             </div>
                             <div class="documents-hero-aside">
-                                <span class="documents-local-indicator"><i class="ph ph-lock-key"></i> Geração local e segura</span>
+                                <span class="documents-local-indicator">Processamento seguro no navegador</span>
                             </div>
                         </div>
                     </header>
@@ -3365,7 +3444,7 @@
                             <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                                 <div>
                                     <p class="documents-category-label">Escolha do modelo</p>
-                                    <h3 class="mt-1 text-xl font-black text-white"><i class="ph ph-books mr-1 text-sky-300"></i> Biblioteca de modelos</h3>
+                                    <h3 class="mt-1 text-xl font-black text-white">Biblioteca de modelos</h3>
                                     <p class="mt-1 text-sm text-blue-100/60">Selecione o documento adequado para abrir o formulário correspondente.</p>
                                 </div>
                                 <span id="adm-template-count" class="text-xs font-bold text-blue-200/60">Modelos disponíveis</span>
@@ -3407,9 +3486,9 @@
                                 <div class="documents-form-header">
                                     <div class="flex min-w-0 items-center gap-3">
                                         <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
-                                            <i class="ph ph-arrow-left"></i> <span class="hidden sm:inline">Biblioteca</span>
+                                            <span aria-hidden="true">←</span> <span class="hidden sm:inline">Biblioteca</span>
                                         </button>
-                                        <span class="documents-template-icon flex-shrink-0"><i id="documents-selected-icon" class="ph-fill ph-file-text"></i></span>
+                                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
                                         <div class="min-w-0">
                                             <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
                                             <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
@@ -3455,16 +3534,16 @@
                                         </div>
                                         <div class="documents-step-actions">
                                             <button id="documents-clear-button" type="button" onclick="resetAdmPdfForm()" class="documents-secondary-button">
-                                                <i class="ph ph-trash"></i> Limpar
+                                                Limpar
                                             </button>
                                             <button id="documents-prev-button" type="button" onclick="changeDocumentsStep(-1)" class="documents-secondary-button">
-                                                <i class="ph ph-arrow-left"></i> Voltar
+                                                <span aria-hidden="true">←</span> Voltar
                                             </button>
                                             <button id="documents-next-button" type="button" onclick="changeDocumentsStep(1)" class="documents-primary-button">
-                                                Avançar <i class="ph ph-arrow-right"></i>
+                                                Avançar <span aria-hidden="true">→</span>
                                             </button>
                                             <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="documents-generate-button hidden">
-                                                <i class="ph ph-download-simple"></i> <span>Gerar documento</span>
+                                                <span>Gerar documento</span>
                                             </button>
                                         </div>
                                     </div>
@@ -8869,7 +8948,7 @@
                     descricaoBem: 'Ex.: Volkswagen T-Cross 2022', valorFinanciadoBruto: 'Ex.: 85.000,00',
                     valorPrestacaoContratual: 'Ex.: 1.197,96', taxaJurosMensal: 'Ex.: 3,26',
                     quantidadeParcelas: 'Ex.: 48', parcelasPagas: 'Ex.: 12',
-                    peritosResponsaveis: 'Um profissional por linha: Nome | Categoria profissional | CRC/registro | Função | CNPC (opcional)',
+                    peritosResponsaveis: 'Cadastre os profissionais responsáveis nos campos abaixo.',
                     objetoPericia: 'Ex.: Examinar os dados econômicos do contrato e demonstrar o cenário revisional CDC.',
                     elementosExaminados: 'Ex.: Cédula de crédito bancário, quadro-resumo, planilha do contrato e comprovantes.',
                     limitacoesRessalvas: 'Ex.: Cálculo limitado aos dados do contrato apresentado e sujeito à conferência profissional.',
@@ -9096,11 +9175,9 @@
             const titleElement = document.getElementById('adm-template-picker-title');
             const categoryElement = document.getElementById('adm-template-picker-category');
             const descriptionElement = document.getElementById('adm-template-picker-description');
-            const iconElement = document.getElementById('documents-selected-icon');
             if (titleElement) titleElement.textContent = title;
             if (categoryElement) categoryElement.textContent = info.category;
             if (descriptionElement) descriptionElement.textContent = info.description;
-            if (iconElement) iconElement.className = `ph-fill ${info.icon}`;
         }
 
         function syncAdmPdfFileName(force = false) {
@@ -9159,19 +9236,19 @@
                 const info = getAdmTemplateInfo(option.value);
                 const selected = option.value === select.value;
                 return `<div class="documents-template-card" role="option" aria-selected="${selected}" data-template-value="${escapeHtml(option.value)}">
-                    <span class="documents-template-icon"><i class="ph-fill ${escapeHtml(info.icon)}"></i></span>
+                    <span class="documents-template-icon"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
                     <button type="button" class="min-w-0 text-left" onclick="selectAdmTemplate(this.closest('[data-template-value]').dataset.templateValue)">
                         <span class="documents-category-label">${escapeHtml(info.category)}</span>
                         <span class="documents-template-title mt-1 block text-base font-black leading-snug text-white">${escapeHtml(option.text)}</span>
                         <span class="mt-2 block text-xs font-medium leading-relaxed text-blue-100/55">${escapeHtml(info.description)}</span>
                         <span class="mt-2 block text-[11px] font-semibold leading-relaxed text-blue-200/75"><strong class="text-sky-300">Finalidade:</strong> ${escapeHtml(info.purpose)}</span>
-                        <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-black text-sky-300">Preencher documento <i class="ph ph-arrow-right"></i></span>
+                        <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-black text-sky-300">Preencher documento <span aria-hidden="true">→</span></span>
                     </button>
                     ${isGestorUser()
-                        ? `<button type="button" class="documents-template-action" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')"><i class="ph ph-pencil-simple"></i></button>`
-                        : `<span class="documents-template-action"><i class="ph ${selected ? 'ph-check-circle' : 'ph-caret-right'}"></i></span>`}
+                        ? `<button type="button" class="documents-template-action" title="Renomear modelo" aria-label="Renomear ${escapeHtml(option.text)}" onclick="renameAdmTemplate(event, '${escapeHtml(option.value)}')">Editar</button>`
+                        : `<span class="documents-template-action" aria-hidden="true">${selected ? '✓' : '›'}</span>`}
                 </div>`;
-            }).join('') : `<div class="documents-empty-state col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed px-4 text-center text-sm font-semibold"><span><i class="ph ph-file-magnifying-glass mb-2 block text-3xl text-blue-300"></i>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
+            }).join('') : `<div class="documents-empty-state col-span-full grid min-h-40 place-items-center rounded-2xl border border-dashed px-4 text-center text-sm font-semibold"><span>${allOptions.length ? 'Nenhum modelo encontrado para esta busca ou categoria.' : 'Nenhum modelo de documento disponível.'}</span></div>`;
         }
 
         async function renameAdmTemplate(event, value) {
@@ -9369,7 +9446,147 @@
             return '';
         }
 
+        function parseLaudoProfessionals(value = '') {
+            return String(value || '')
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(Boolean)
+                .map(line => {
+                    const [nome = '', categoria = '', registro = '', funcao = '', cnpc = ''] = line
+                        .split('|')
+                        .map(part => part.trim());
+                    return { nome, categoria, registro, funcao, cnpc };
+                });
+        }
+
+        function renderLaudoProfessionalRow(professional = {}) {
+            const value = key => escapeHtml(professional[key] || '');
+            return `
+                <article class="documents-professional-row" data-laudo-professional-row>
+                    <div class="mb-3 flex items-center justify-between gap-3">
+                        <strong class="text-sm text-slate-700" data-professional-row-title>Profissional</strong>
+                        <button type="button" class="documents-professional-remove" onclick="removeLaudoProfessional(this)">Remover</button>
+                    </div>
+                    <div class="documents-professional-grid">
+                        <label class="documents-field-label">
+                            <span>Nome completo <span class="documents-required" aria-label="obrigatório">*</span></span>
+                            <input type="text" required data-professional-key="nome" class="adm-pdf-control px-4 py-3 text-sm font-semibold" value="${value('nome')}" placeholder="Ex.: Maria da Silva">
+                        </label>
+                        <label class="documents-field-label">
+                            <span>Categoria profissional <span class="documents-required" aria-label="obrigatório">*</span></span>
+                            <input type="text" required list="laudo-professional-categories" data-professional-key="categoria" class="adm-pdf-control px-4 py-3 text-sm font-semibold" value="${value('categoria')}" placeholder="Ex.: Contador(a)">
+                        </label>
+                        <label class="documents-field-label">
+                            <span>Registro profissional <span class="documents-required" aria-label="obrigatório">*</span></span>
+                            <input type="text" required data-professional-key="registro" class="adm-pdf-control px-4 py-3 text-sm font-semibold" value="${value('registro')}" placeholder="Ex.: CRC-UF 123456/O-0">
+                        </label>
+                        <label class="documents-field-label">
+                            <span>Função no laudo <span class="documents-required" aria-label="obrigatório">*</span></span>
+                            <input type="text" required data-professional-key="funcao" class="adm-pdf-control px-4 py-3 text-sm font-semibold" value="${value('funcao')}" placeholder="Ex.: Responsável técnico">
+                        </label>
+                        <label class="documents-field-label">
+                            <span>CNPC (opcional)</span>
+                            <input type="text" data-professional-key="cnpc" class="adm-pdf-control px-4 py-3 text-sm font-semibold" value="${value('cnpc')}" placeholder="Ex.: 1234">
+                        </label>
+                    </div>
+                </article>
+            `;
+        }
+
+        function refreshLaudoProfessionalLabels() {
+            const rows = Array.from(document.querySelectorAll('[data-laudo-professional-row]'));
+            rows.forEach((row, index) => {
+                const title = row.querySelector('[data-professional-row-title]');
+                if (title) title.textContent = `Profissional ${index + 1}`;
+                const remove = row.querySelector('.documents-professional-remove');
+                if (remove) remove.textContent = rows.length === 1 ? 'Limpar dados' : 'Remover';
+            });
+        }
+
+        function sanitizeLaudoProfessionalPart(value) {
+            return String(value || '').replace(/[|\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+
+        function syncLaudoProfessionalsValue() {
+            const serialized = document.getElementById('adm-field-peritosResponsaveis');
+            if (!serialized) return '';
+            const lines = Array.from(document.querySelectorAll('[data-laudo-professional-row]'))
+                .map(row => ['nome', 'categoria', 'registro', 'funcao', 'cnpc']
+                    .map(key => sanitizeLaudoProfessionalPart(row.querySelector(`[data-professional-key="${key}"]`)?.value))
+                )
+                .filter(parts => parts.some(Boolean))
+                .map(parts => parts.join(' | '));
+            serialized.value = lines.join('\n');
+            return serialized.value;
+        }
+
+        function addLaudoProfessional(professional = {}) {
+            const list = document.getElementById('laudo-professionals-list');
+            if (!list) return;
+            list.insertAdjacentHTML('beforeend', renderLaudoProfessionalRow(professional));
+            refreshLaudoProfessionalLabels();
+            syncLaudoProfessionalsValue();
+            updateDocumentsSummary();
+            scheduleDocumentsDraftSave();
+            list.lastElementChild?.querySelector('[data-professional-key="nome"]')?.focus();
+        }
+
+        function removeLaudoProfessional(button) {
+            const list = document.getElementById('laudo-professionals-list');
+            const row = button?.closest('[data-laudo-professional-row]');
+            if (!list || !row) return;
+            const rows = list.querySelectorAll('[data-laudo-professional-row]');
+            if (rows.length === 1) {
+                row.querySelectorAll('input').forEach(input => {
+                    input.value = '';
+                    input.setCustomValidity('');
+                });
+                row.querySelector('[data-professional-key="nome"]')?.focus();
+            } else {
+                row.remove();
+            }
+            refreshLaudoProfessionalLabels();
+            syncLaudoProfessionalsValue();
+            updateDocumentsSummary();
+            scheduleDocumentsDraftSave();
+        }
+
+        function restoreLaudoProfessionalsEditor() {
+            const serialized = document.getElementById('adm-field-peritosResponsaveis');
+            const list = document.getElementById('laudo-professionals-list');
+            if (!serialized || !list) return;
+            const professionals = parseLaudoProfessionals(serialized.value);
+            list.innerHTML = (professionals.length ? professionals : [{}])
+                .map(renderLaudoProfessionalRow)
+                .join('');
+            refreshLaudoProfessionalLabels();
+            syncLaudoProfessionalsValue();
+        }
+
+        function renderLaudoProfessionalsField() {
+            return `
+                <div class="sm:col-span-2 documents-field-label">
+                    <div>
+                        <span>Profissionais responsáveis <span class="documents-required" aria-label="obrigatório">*</span></span>
+                        <p class="documents-field-help mt-1">Preencha cada informação no campo correspondente. O sistema organiza os dados no laudo automaticamente.</p>
+                    </div>
+                    <textarea id="adm-field-peritosResponsaveis" data-document-field="peritosResponsaveis" class="documents-serialized-control" tabindex="-1" aria-hidden="true"></textarea>
+                    <datalist id="laudo-professional-categories">
+                        <option value="Contador(a)"></option>
+                        <option value="Administrador(a)"></option>
+                        <option value="Economista"></option>
+                        <option value="Perito(a) contábil"></option>
+                    </datalist>
+                    <div id="laudo-professionals-list" class="documents-professionals-editor">
+                        ${renderLaudoProfessionalRow()}
+                    </div>
+                    <button type="button" class="documents-add-professional" onclick="addLaudoProfessional()">+ Adicionar outro profissional</button>
+                </div>
+            `;
+        }
+
         function renderDocumentsField(template, field) {
+            if (field === 'peritosResponsaveis') return renderLaudoProfessionalsField();
             const index = template.fields.indexOf(field);
             const label = getAdmPdfFieldLabel(template, field);
             const required = isAdmPdfFieldRequired(template, field, index);
@@ -9386,9 +9603,9 @@
                         ? `<input ${common} type="file" accept="image/png,image/jpeg" class="adm-pdf-control px-4 py-3 text-sm font-semibold">`
                         : `<input ${common} type="${type}" ${inputMode ? `inputmode="${inputMode}"` : ''} class="adm-pdf-control px-4 py-3 text-sm font-semibold" placeholder="${escapeHtml(placeholder)}">`;
             const extractButton = field === 'resumoProcesso'
-                ? `<button type="button" onclick="extractAdmProcessSummary(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Separar informações do resumo</button>`
+                ? `<button type="button" onclick="extractAdmProcessSummary(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-black text-white transition hover:bg-blue-500">Separar informações do resumo</button>`
                 : field === 'contratoTexto'
-                    ? `<button type="button" onclick="extractLaudoContract(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-black text-white transition hover:bg-blue-500"><i class="ph ph-magic-wand"></i> Organizar dados do contrato</button>`
+                    ? `<button type="button" onclick="extractLaudoContract(); scheduleDocumentsDraftSave()" class="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-xs font-black text-white transition hover:bg-blue-500">Organizar dados do contrato</button>`
                     : '';
             const methodHelp = field === 'metodoCalculo'
                 ? `<div class="documents-field-help mt-2 grid gap-1.5">
@@ -9496,6 +9713,7 @@
             if (date && draft.date) date.value = draft.date;
             if (number && draft.number) number.value = draft.number;
             if (fileName && draft.fileName) fileName.value = draft.fileName;
+            restoreLaudoProfessionalsEditor();
             documentsCurrentStep = Number.isInteger(draft.step) ? draft.step : 0;
             updateDocumentsStep(documentsCurrentStep);
             const status = document.getElementById('documents-draft-status');
@@ -9518,6 +9736,10 @@
                 const input = document.getElementById(`adm-field-${field}`);
                 let value = input?.type === 'file' ? input.files?.[0]?.name : input?.value;
                 value = String(value || '').trim();
+                if (field === 'peritosResponsaveis' && value) {
+                    const count = parseLaudoProfessionals(value).length;
+                    value = `${count} ${count === 1 ? 'profissional cadastrado' : 'profissionais cadastrados'}`;
+                }
                 item.querySelector('strong').textContent = value || 'Não informado';
                 item.querySelector('strong').title = value || 'Não informado';
             });
@@ -9588,19 +9810,13 @@
         }
 
         function validateLaudoTechnicalFields() {
-            const input = document.getElementById('adm-field-peritosResponsaveis');
-            if (!input) return true;
-            input.setCustomValidity('');
-            const lines = input.value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-            const invalidLine = lines.find(line => {
-                const parts = line.split('|').map(part => part.trim());
-                return parts.length < 4 || parts.slice(0, 4).some(part => !part);
-            });
-            if (!lines.length || invalidLine) {
-                input.setCustomValidity('Informe um profissional por linha: Nome | Categoria | CRC/registro | Função | CNPC (opcional).');
-                return false;
-            }
-            return true;
+            syncLaudoProfessionalsValue();
+            const requiredFields = Array.from(document.querySelectorAll('[data-laudo-professional-row] input[required]'));
+            requiredFields.forEach(input => input.setCustomValidity(''));
+            const invalid = requiredFields.find(input => !input.value.trim());
+            if (!invalid) return requiredFields.length > 0;
+            invalid.setCustomValidity('Preencha esta informação do profissional responsável.');
+            return false;
         }
 
         function renderAdmPdfFields() {
@@ -9616,7 +9832,7 @@
             fieldsContainer.innerHTML = sections.map((section, index) => `
                 <section class="documents-step${index === 0 ? ' is-active' : ''}" data-step-index="${index}" data-step-title="${escapeHtml(section.title)}">
                     <div class="mb-4 flex items-start gap-3">
-                        <span class="documents-template-icon flex-shrink-0"><i class="ph-fill ${escapeHtml(section.icon)}"></i></span>
+                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-model-icon-transparent.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
                         <div>
                             <p class="documents-category-label">Etapa ${index + 1}</p>
                             <h4 class="mt-1 text-lg font-black text-white">${escapeHtml(section.title)}</h4>
@@ -9639,6 +9855,10 @@
 
             fieldsContainer.oninput = event => {
                 formatDocumentsMaskedField(event.target);
+                if (event.target.closest('[data-laudo-professional-row]')) {
+                    event.target.setCustomValidity('');
+                    syncLaudoProfessionalsValue();
+                }
                 updateDocumentsSummary();
                 scheduleDocumentsDraftSave();
             };
@@ -9971,7 +10191,7 @@
 
             if (button) {
                 button.disabled = true;
-                button.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> <span>Gerando...</span>';
+                button.innerHTML = '<span>Gerando...</span>';
             }
             if (status) {
                 status.className = 'min-h-5 text-xs font-semibold text-blue-200';
@@ -10012,7 +10232,7 @@
             } finally {
                 if (button) {
                     button.disabled = false;
-                    button.innerHTML = '<i class="ph ph-download-simple"></i> <span>Gerar documento</span>';
+                    button.innerHTML = '<span>Gerar documento</span>';
                 }
             }
         }

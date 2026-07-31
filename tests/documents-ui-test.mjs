@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const icon = await stat(new URL('../assets/pdf-document-icon.png', import.meta.url));
+const icon = await stat(new URL('../assets/document-model-icon-transparent.png', import.meta.url));
 
 const documentsSection = html.match(
   /<section id="section-documentos"[\s\S]*?<\/section>\s*<section id="section-adm"/
@@ -17,7 +17,7 @@ assert.match(
   documentsSection,
   /Gere, organize e utilize os documentos padronizados\. Fica pronto em menos de 1 minuto\./
 );
-assert.match(documentsSection, /assets\/pdf-document-icon\.png/);
+assert.match(documentsSection, /assets\/document-model-icon-transparent\.png/);
 assert.ok(icon.size > 1000, 'O ícone de PDF deve estar disponível.');
 assert.match(
   html,
@@ -28,7 +28,7 @@ assert.match(html, /--docs-ink: #173a5e;/);
 assert.match(html, /--docs-accent: #0878bd;/);
 assert.match(html, /--docs-line: #cbd4dc;/);
 assert.doesNotMatch(html, /Times New Roman/);
-assert.match(html, /documents-template-icon"><i class="ph-fill/);
+assert.match(html, /documents-template-icon"><img src="assets\/document-model-icon-transparent\.png"/);
 assert.match(html, /box-shadow: inset 0 -3px var\(--docs-accent\)/);
 assert.match(html, /\.documents-central\s*\{[\s\S]*?background: #ffffff;/);
 assert.match(html, /const categoryOrder = \['Todos', 'Defesa', 'Extrajudicial', 'Termos', 'Procurações', 'Declarações', 'Judicial', 'Homologação', 'Perícia'\]/);
@@ -98,5 +98,12 @@ assert.match(html, /function selectAdmTemplate\(value\)/);
 assert.match(html, /select\.value = value;[\s\S]*?renderAdmPdfFields\(\);[\s\S]*?showDocumentsForm\(\);/);
 assert.match(html, /function showDocumentsLibrary\(\)/);
 assert.match(html, /function generateAdmPdf\(/);
+assert.match(html, /function renderLaudoProfessionalsField\(\)/);
+assert.match(html, /Adicionar outro profissional/);
+assert.match(html, /data-professional-key="nome"/);
+assert.match(html, /data-professional-key="categoria"/);
+assert.match(html, /data-professional-key="registro"/);
+assert.match(html, /data-professional-key="funcao"/);
+assert.doesNotMatch(html, /Um profissional por linha: Nome \| Categoria profissional/);
 
 console.log('Interface de Documentos: aparência clara, conteúdo e categorias validados.');
