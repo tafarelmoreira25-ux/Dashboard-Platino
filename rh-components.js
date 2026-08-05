@@ -27,7 +27,6 @@
             ],
             saturdayScale: [
                 { date: '27/06', team: 'Administrativo', people: 'Giovana Dilena, Lucas Prado', shift: '09h às 13h' },
-                { date: '27/06', team: 'Comercial', people: 'Mayara Cardoso, Gabriel Paes', shift: '09h às 13h' },
                 { date: '27/06', team: 'Jurídico', people: 'Nicole Martins, Elaine Costa', shift: '09h às 13h' }
             ]
         },

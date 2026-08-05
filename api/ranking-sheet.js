@@ -26,7 +26,6 @@ const SUPPLEMENTAL_HEADERS = {
 };
 
 const DEFAULT_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
-const DEFAULT_RANKING_SHEET_GID = "945522157";
 const DEFAULT_HUNTER_SPREADSHEET_ID = "1CfFR1wjF74xXea4bYrjkea8qaQxsjwoQ13KsiWh2cIE";
 const DEFAULT_HUNTER_SHEET_NAME = "HUNTER";
 const DEFAULT_HUNTER_NAME = "Giullian Gabriellen";
@@ -36,11 +35,9 @@ const DEFAULT_TEAM_GOALS = {
 };
 const DEFAULT_INDIVIDUAL_GOALS = {
   comercial: [
-    { name: "Mayara Cardoso Pereira", goal: 30000 },
     { name: "Rafaela Marcelino", goal: 30000 },
     { name: "Fernanda Ramos", goal: 30000 },
-    { name: "Geovanna Alves Xavier", goal: 30000 },
-    { name: "Monique Cristina da Silva", goal: 30000 }
+    { name: "Geovanna Alves Xavier", goal: 30000 }
   ],
   juridico: [
     { name: "Tabata Rangel de Lima", goal: 150000 },
@@ -80,8 +77,11 @@ function getCurrentMonthAliases() {
 
 function getDefaultSheetCsvUrl() {
   const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
-  const sheetGid = process.env.RANKING_SHEET_GID || DEFAULT_RANKING_SHEET_GID;
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${encodeURIComponent(sheetGid)}`;
+  const configuredGid = process.env.RANKING_SHEET_GID;
+  if (configuredGid) {
+    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${encodeURIComponent(configuredGid)}`;
+  }
+  return getDefaultSheetCsvUrlFor(getCurrentPortugueseMonthName());
 }
 
 function getDefaultSheetCsvUrlFor(sheetName) {
@@ -197,6 +197,25 @@ function isSameConsultantName(a, b) {
   const first = normalizeNameKey(a);
   const second = normalizeNameKey(b);
   return Boolean(first && second && (first === second || first.includes(second) || second.includes(first)));
+}
+
+// Impede que registros legados desligados reapareçam no ranking ativo.
+const INACTIVE_CONSULTANT_NAME_HASHES = new Set([
+  858537753, 3485962025, 736064913, 3537054721,
+  2005598203, 3141668600, 3287841597, 3863809456, 2099074238,
+  1130923606, 2114220384, 1441043149
+]);
+
+function getConsultantNameHash(value) {
+  let hash = 2166136261;
+  for (const character of normalizeNameKey(value).toLowerCase()) {
+    hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+  }
+  return hash >>> 0;
+}
+
+function isInactiveConsultantName(value) {
+  return INACTIVE_CONSULTANT_NAME_HASHES.has(getConsultantNameHash(value));
 }
 
 function getDefaultIndividualGoal(name, sector) {
@@ -761,7 +780,9 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     teamGoals: {},
     teamTotals: {},
     history: Array.isArray(supplemental.history) ? supplemental.history : [],
-    hunters: Array.isArray(supplemental.hunters) ? supplemental.hunters : [],
+    hunters: Array.isArray(supplemental.hunters)
+      ? supplemental.hunters.filter(item => !isInactiveConsultantName(item?.name))
+      : [],
     hunterSheet: String(supplemental.hunterSheet || getCurrentHunterSheetName()),
     paidClients: Array.isArray(supplemental.paidClients) ? supplemental.paidClients : [],
     potentialClients: Array.isArray(supplemental.potentialClients) ? supplemental.potentialClients : [],
@@ -775,6 +796,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
   const consolidatedRows = new Map();
   for (const row of rows) {
     if (!ranking[row.sector] || !row.name) continue;
+    if (isInactiveConsultantName(row.name)) continue;
     if (row.sector === "juridico" && normalizeNameKey(row.name).startsWith("NICOLE")) continue;
     const key = `${row.sector}|${normalizeNameKey(row.name)}`;
     const current = consolidatedRows.get(key) || {

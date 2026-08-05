@@ -10,8 +10,24 @@ const DEFAULT_CLIENT_SHEET_API_URL =
   "https://script.google.com/macros/s/AKfycby2b8UGWBXzQahMNgnCFG2N9LFBWeodyJihxCta9LQQ-m5GJACDerEOWHp5FTafbMKGRw/exec";
 const DEFAULT_OPERATION_SHEET_CSV_URL =
   "https://docs.google.com/spreadsheets/d/1MvKj4uO1GJL1XKJMqM5c2dauAG6q8yKt7fYxGaRMBKI/export?format=csv&gid=0";
-const DEFAULT_RANKING_TIMELINE_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg/export?format=csv&gid=945522157";
+const DEFAULT_RANKING_SPREADSHEET_ID = "1BJfwUQWr_R5K52QIKi2NHYW48bIJlGjHJwFNDtD4lEg";
+
+function getCurrentPortugueseMonthName() {
+  return new Intl.DateTimeFormat("pt-BR", {
+    month: "long",
+    timeZone: "America/Sao_Paulo"
+  }).format(new Date()).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
+function getDefaultRankingTimelineCsvUrl() {
+  const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_RANKING_SPREADSHEET_ID;
+  const configuredGid = process.env.RANKING_SHEET_GID;
+  if (configuredGid) {
+    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${encodeURIComponent(configuredGid)}`;
+  }
+  const sheetName = getCurrentPortugueseMonthName();
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+}
 
 function decodeJwtPart(value) {
   return JSON.parse(Buffer.from(value, "base64url").toString("utf8"));
@@ -391,7 +407,7 @@ function buildTimeline(clients, rankingSales = []) {
   };
 }
 
-export { buildTimeline, salesFromRankingCsv };
+export { buildTimeline, getDefaultRankingTimelineCsvUrl, salesFromRankingCsv };
 
 function scoreClientMatch(query, clientName) {
   const question = ` ${normalizeText(query)} `;
@@ -476,7 +492,7 @@ export default async function handler(request, response) {
 
   const apiUrl = process.env.CLIENT_SHEET_API_URL || DEFAULT_CLIENT_SHEET_API_URL;
   const operationCsvUrl = process.env.OPERATION_SHEET_CSV_URL || DEFAULT_OPERATION_SHEET_CSV_URL;
-  const rankingTimelineCsvUrl = process.env.RANKING_TIMELINE_SHEET_CSV_URL || DEFAULT_RANKING_TIMELINE_CSV_URL;
+  const rankingTimelineCsvUrl = process.env.RANKING_TIMELINE_SHEET_CSV_URL || getDefaultRankingTimelineCsvUrl();
 
   let authenticatedUser;
   try {
