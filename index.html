@@ -2955,6 +2955,198 @@
             pointer-events: none !important;
         }
 
+        /* Platino OS — Hub Operacional / Bento Grid */
+        .operational-home { color: #172033; }
+        .home-command-header {
+            position: relative; min-height: 220px; overflow: hidden; margin-bottom: 1.25rem;
+            padding: clamp(1.5rem, 4vw, 2.7rem); border: 1px solid rgba(96,165,250,.2); border-radius: 1.75rem;
+            color: #fff; background: radial-gradient(circle at 82% 18%, rgba(59,130,246,.28), transparent 28%), linear-gradient(125deg,#071329 0%,#0b2359 54%,#102c70 100%);
+            box-shadow: 0 24px 55px rgba(15,35,80,.2), inset 0 1px 0 rgba(255,255,255,.1);
+        }
+        .home-command-header::after { content:""; position:absolute; inset:auto -8% -70% 35%; height:210px; border:1px solid rgba(191,219,254,.16); border-radius:50%; transform:rotate(-7deg); }
+        .home-command-copy { position:relative; z-index:2; max-width:720px; }
+        .home-eyebrow { display:inline-flex; align-items:center; gap:.45rem; color:#93c5fd; font-size:.68rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+        .home-command-copy h2 { margin:.6rem 0 .35rem; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.75rem,4vw,3rem); font-weight:900; letter-spacing:-.045em; }
+        .home-command-copy p { color:#cbd5e1 !important; font-weight:600; }
+        .home-command-copy blockquote { margin-top:1.35rem; color:#93c5fd; font-size:.8rem; font-weight:700; letter-spacing:.04em; }
+        .home-command-mark { position:absolute; right:5%; top:50%; transform:translateY(-50%); color:rgba(219,234,254,.08); font-size:10rem; }
+        .home-focus-pill { position:absolute; z-index:2; right:1.5rem; top:1.5rem; display:flex; align-items:center; gap:.5rem; padding:.55rem .8rem; border:1px solid rgba(255,255,255,.12); border-radius:999px; background:rgba(255,255,255,.07); font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; backdrop-filter:blur(10px); }
+        .home-focus-pill span { width:.48rem; height:.48rem; border-radius:50%; background:#34d399; box-shadow:0 0 14px #34d399; }
+        .home-bento-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:1rem; }
+        .home-bento-card { position:relative; overflow:hidden; padding:1.35rem; border:1px solid #dce5f1; border-radius:1.45rem; background:linear-gradient(145deg,#fff,#f8fbff); box-shadow:0 12px 30px rgba(15,35,80,.07); transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+        .home-bento-card:hover { transform:translateY(-2px); border-color:rgba(37,99,235,.4); box-shadow:0 18px 38px rgba(30,64,175,.12),0 0 0 3px rgba(59,130,246,.05); }
+        .home-quick-actions { grid-column:span 7; }
+        .home-workflow-card { grid-column:span 5; grid-row:span 2; }
+        .home-kpi-card { grid-column:span 2; min-height:170px; }
+        .home-kpi-primary { grid-column:span 3; color:#fff; border-color:#1d4ed8; background:linear-gradient(145deg,#0b2b70,#1746b5); }
+        .home-next-step { grid-column:span 6; }
+        .home-card-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+        .home-card-heading span,.home-kpi-card>span { display:block; color:#64748b; font-size:.65rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
+        .home-card-heading h3 { margin:.2rem 0 0; color:#172033 !important; font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:850; }
+        .home-card-heading>i { color:#2563eb; font-size:1.55rem; }
+        .home-card-heading>strong { padding:.32rem .62rem; color:#1d4ed8; border-radius:999px; background:#dbeafe; font-size:.72rem; }
+        .quick-action-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+        .quick-action-grid button { display:grid; grid-template-columns:2.4rem 1fr auto; align-items:center; gap:.65rem; padding:.85rem; border:1px solid #e2e8f0; border-radius:1rem; color:#1e293b; background:#fff; text-align:left; transition:.2s ease; }
+        .quick-action-grid button:hover { border-color:#60a5fa; background:#eff6ff; box-shadow:0 0 22px rgba(59,130,246,.12); }
+        .quick-action-grid button>i:first-child { display:grid; place-items:center; width:2.4rem; height:2.4rem; border-radius:.8rem; color:#1d4ed8; background:#dbeafe; font-size:1.2rem; }
+        .quick-action-grid button>i:last-child { color:#94a3b8; }
+        .quick-action-grid span { font-size:.78rem; font-weight:850; }
+        .quick-action-grid small { display:block; margin-top:.14rem; color:#94a3b8; font-size:.62rem; font-weight:600; }
+        .home-task-form { display:flex; gap:.5rem; margin-bottom:.8rem; }
+        .home-task-form input { min-width:0; flex:1; padding:.75rem .9rem; border:1px solid #dbe3ef; border-radius:.85rem; background:#f8fafc; outline:none; font-size:.78rem; }
+        .home-task-form input:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.1); }
+        .home-task-form button { display:grid; place-items:center; width:2.65rem; border-radius:.85rem; color:#fff; background:#1d4ed8; }
+        .home-task-list { display:grid; gap:.55rem; max-height:245px; overflow:auto; padding-right:.15rem; }
+        .home-task-item { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:.65rem; padding:.75rem; border:1px solid #e7edf5; border-radius:.9rem; background:#fff; }
+        .home-task-item.is-done { opacity:.62; background:#f8fafc; }
+        .home-task-item.is-done span { text-decoration:line-through; }
+        .home-task-check { display:grid; place-items:center; width:1.35rem; height:1.35rem; min-height:0 !important; border:1.5px solid #93a4ba; border-radius:.42rem; color:transparent; }
+        .home-task-item.is-done .home-task-check { color:#fff; border-color:#2563eb; background:#2563eb; }
+        .home-task-item span { min-width:0; color:#334155; font-size:.77rem; font-weight:700; }
+        .home-task-delete { min-height:0 !important; color:#94a3b8; }
+        .home-task-empty { padding:1.2rem; border:1px dashed #cbd5e1; border-radius:1rem; color:#94a3b8; font-size:.76rem; text-align:center; }
+        .home-kpi-icon { display:grid; place-items:center; width:2.5rem; height:2.5rem; margin-bottom:1rem; border-radius:.9rem; color:#1d4ed8; background:#dbeafe; font-size:1.25rem; }
+        .home-kpi-card strong { display:block; margin:.35rem 0; color:#0f172a; font-family:'Montserrat',sans-serif; font-size:2rem; font-weight:900; }
+        .home-kpi-card small { color:#94a3b8; font-size:.66rem; line-height:1.35; }
+        .home-kpi-primary .home-kpi-icon { color:#fff; background:rgba(255,255,255,.12); }
+        .home-kpi-primary>span,.home-kpi-primary strong,.home-kpi-primary small { color:#fff; }
+        .home-progress { height:.35rem; margin-top:.7rem; overflow:hidden; border-radius:99px; background:#e2e8f0; }
+        .home-progress span { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#2563eb,#60a5fa); transition:width .3s ease; }
+        .home-next-step p { color:#64748b; font-size:.8rem; }
+        .home-next-step button { display:inline-flex; align-items:center; gap:.45rem; margin-top:1rem; color:#1d4ed8; font-size:.76rem; font-weight:850; }
+        .sales-community-hub { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:1rem; margin-bottom:1rem; }
+        .sales-community-main,.sales-team-wall,.sales-knowledge-strip { border:1px solid rgba(96,165,250,.16); border-radius:1.5rem; color:#fff; background:linear-gradient(145deg,#08162d,#102e69); box-shadow:0 18px 38px rgba(2,6,23,.2); }
+        .sales-community-main { min-width:0; padding:1.35rem; overflow:hidden; }
+        .sales-community-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+        .sales-community-heading span,.sales-wall-title span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
+        .sales-community-heading h2 { margin:.2rem 0; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
+        .sales-community-heading p { color:#a9bad4; font-size:.75rem; }
+        .sales-team-wall { padding:1rem; background:linear-gradient(160deg,#0b1930,#111e35); }
+        .sales-wall-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:.8rem; }
+        .sales-wall-title i { color:#facc15; font-size:1.25rem; }
+        .sales-wall-item { display:flex; align-items:center; gap:.7rem; padding:.75rem 0; border-top:1px solid rgba(255,255,255,.08); }
+        .sales-wall-item>i { display:grid; place-items:center; flex:0 0 2.2rem; height:2.2rem; border-radius:.75rem; color:#93c5fd; background:rgba(59,130,246,.15); }
+        .sales-wall-item small { display:block; color:#8fa5c5; font-size:.6rem; text-transform:uppercase; letter-spacing:.08em; }
+        .sales-wall-item strong { display:block; margin-top:.15rem; color:#e5edf8; font-size:.69rem; line-height:1.3; }
+        .sales-knowledge-strip { display:flex; align-items:center; gap:.65rem; margin-bottom:1.5rem; padding:.9rem 1rem; color:#172033; border-color:#dbe5f2; background:#fff; box-shadow:0 10px 25px rgba(15,35,80,.07); }
+        .sales-knowledge-strip>div { margin-right:auto; }
+        .sales-knowledge-strip>div strong { display:block; color:#1e293b; font-size:.75rem; }
+        .sales-knowledge-strip button { display:flex; align-items:center; gap:.4rem; padding:.62rem .75rem; border:1px solid #dbe5f2; border-radius:.8rem; color:#1e40af; background:#f8fbff; font-size:.68rem; font-weight:800; }
+        .sales-knowledge-strip button:hover { border-color:#60a5fa; box-shadow:0 0 18px rgba(59,130,246,.12); }
+        #section-avisos .sales-community-main .team-card { min-width:205px; }
+        /* Central de Vendas: ranking em primeiro plano, equipe e apoio compactos. */
+        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr) 230px; height:225px; max-height:225px; overflow:hidden; }
+        #section-avisos .sales-community-main { padding:.9rem 1rem; }
+        #section-avisos .sales-community-heading { margin-bottom:.55rem; }
+        #section-avisos .sales-community-heading h2 { font-size:1.08rem; }
+        #section-avisos .sales-community-heading p { font-size:.67rem; }
+        #section-avisos .sales-community-main .team-carousel { height:150px; min-height:150px; overflow:hidden; }
+        #section-avisos .sales-community-main .team-track { height:150px; }
+        #section-avisos .sales-community-main .team-card { width:170px; min-width:170px; height:145px; min-height:145px !important; padding:.55rem; border-radius:1rem; overflow:hidden; }
+        #section-avisos .sales-community-main .team-avatar { width:4rem !important; height:4rem !important; margin-bottom:.45rem !important; }
+        #section-avisos .sales-community-main .employee-name { font-size:.75rem; line-height:1.15; }
+        #section-avisos .sales-community-main .team-card>p.text-sm { font-size:.67rem; line-height:1.15; }
+        #section-avisos .sales-community-main .birthday-info { margin-top:.35rem; padding:.25rem .45rem; font-size:.58rem; }
+        #section-avisos .sales-community-main .team-extra { display:none; }
+        #section-avisos .sales-team-wall { height:225px; padding:.7rem .8rem; overflow:hidden; }
+        #section-avisos .sales-wall-item { padding:.42rem 0; }
+        #section-avisos .sales-wall-item>i { flex-basis:1.85rem; height:1.85rem; }
+        .sales-support-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.85rem; align-items:start; }
+        .sales-history-card { grid-column:span 4; }
+        .sales-chargeback-card { grid-column:span 3; }
+        .sales-hunters-card { grid-column:span 5; }
+        .sales-timeline-card { grid-column:1/-1; min-height:0 !important; }
+        .hunter-compact-stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
+        .hunter-compact-stats>div { padding:.55rem .65rem !important; border-radius:.75rem !important; }
+        .hunter-compact-stats p:first-child { font-size:.53rem !important; letter-spacing:.1em !important; }
+        .hunter-compact-stats .money-value { margin-top:.15rem !important; font-size:1.05rem !important; }
+        .sales-hunters-card #ranking-hunters-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
+        .sales-hunters-card #ranking-hunters-list>* { margin:0 !important; padding:.6rem !important; }
+        .sales-timeline-card #sales-timeline-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.65rem; height:auto !important; min-height:90px !important; max-height:220px; overflow:auto; }
+
+        /* A Home inteira herda a linguagem visual das telas do PDF. */
+        #content-viewport.operational-home-bg {
+            background:
+                radial-gradient(circle at 82% 8%, rgba(0,92,255,.2), transparent 27%),
+                radial-gradient(circle at 8% 88%, rgba(0,58,180,.16), transparent 25%),
+                linear-gradient(135deg,#020713 0%,#06132d 48%,#020817 100%) !important;
+        }
+        #content-viewport.operational-home-bg::before {
+            content:""; position:fixed; inset:5rem 0 0 16rem; pointer-events:none; opacity:.4;
+            background-image:radial-gradient(rgba(37,99,235,.35) 1px,transparent 1px); background-size:22px 22px;
+            mask-image:linear-gradient(135deg,transparent 18%,#000 70%,transparent 100%);
+        }
+        .operational-home { position:relative; z-index:1; color:#e7eefb; }
+        .home-command-header {
+            min-height:250px; border:1px solid rgba(226,232,240,.56); border-radius:2rem;
+            background:
+                linear-gradient(110deg,rgba(1,7,21,.98) 0%,rgba(4,20,58,.96) 58%,rgba(5,28,80,.92) 100%);
+            box-shadow:0 0 0 4px rgba(59,130,246,.08),inset 0 0 34px rgba(37,99,235,.12),0 0 38px rgba(0,92,255,.16);
+        }
+        .home-command-header::before { content:""; position:absolute; left:3rem; right:3rem; bottom:1.25rem; height:2px; background:linear-gradient(90deg,transparent,#1687ff,#dbeafe,#1687ff,transparent); box-shadow:0 0 14px #1687ff; }
+        .home-command-header::after { inset:-35% -3% auto auto; width:40%; height:160%; border:2px solid rgba(148,163,184,.34); box-shadow:0 0 18px rgba(37,99,235,.35),inset 0 0 18px rgba(37,99,235,.18); }
+        .home-command-copy { max-width:68%; }
+        .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(37,99,235,.55); }
+        .home-command-copy p { color:#d7e1f0 !important; }
+        .home-command-mark { right:3.5%; width:190px; height:190px; overflow:hidden; border:2px solid #b8c4d6; border-radius:50%; background:#061a45; box-shadow:0 0 0 6px rgba(30,64,175,.35),0 0 32px #075ef0,inset 0 0 22px #075ef0; }
+        .home-command-mark img { width:100%; height:100%; object-fit:cover; }
+        .home-focus-pill { border-color:rgba(191,219,254,.28); background:rgba(3,13,35,.7); }
+        .home-bento-card {
+            color:#e8eef8; border:1px solid rgba(203,213,225,.52);
+            background:linear-gradient(145deg,rgba(8,24,60,.96),rgba(2,10,28,.98));
+            box-shadow:inset 0 0 24px rgba(29,78,216,.08),0 0 0 3px rgba(30,64,175,.06),0 16px 35px rgba(0,0,0,.3);
+        }
+        .home-bento-card::after { content:""; position:absolute; left:15%; right:15%; top:-1px; height:2px; background:linear-gradient(90deg,transparent,#1d7fff,#eef6ff,#1d7fff,transparent); box-shadow:0 0 12px #1478ff; opacity:.72; }
+        .home-bento-card:hover { border-color:#b9c6d8; box-shadow:inset 0 0 30px rgba(37,99,235,.15),0 0 22px rgba(0,102,255,.28); }
+        .home-card-heading span,.home-kpi-card>span { color:#77aafc; }
+        .home-card-heading h3,.home-kpi-card strong { color:#f8fafc !important; text-shadow:0 2px 0 #000; }
+        #section-inicio .home-command-copy h2,
+        #section-inicio .home-card-heading h3,
+        #section-inicio .home-kpi-card strong { color:#f8fafc !important; }
+        .home-card-heading>strong { color:#dbeafe; border:1px solid rgba(96,165,250,.3); background:rgba(37,99,235,.24); }
+        .quick-action-grid button,.home-task-item { color:#e5edf8; border-color:rgba(148,163,184,.25); background:linear-gradient(145deg,rgba(11,33,77,.92),rgba(4,15,39,.96)); }
+        .quick-action-grid button:hover { color:#fff; border-color:#60a5fa; background:linear-gradient(145deg,rgba(16,52,122,.98),rgba(5,24,66,.98)); }
+        .quick-action-grid button>i:first-child,.home-kpi-icon { color:#fff; border:1px solid rgba(203,213,225,.58); background:radial-gradient(circle,#175be0 0%,#082568 62%,#030c25 100%); box-shadow:inset 0 0 10px #1687ff,0 0 12px rgba(22,135,255,.45); }
+        .quick-action-grid span,.home-task-item span { color:#e5edf8; }
+        .quick-action-grid small { color:#92a6c3; }
+        .home-task-form input { color:#e5edf8; border-color:rgba(148,163,184,.28); background:rgba(2,9,25,.7); }
+        .home-task-form input::placeholder { color:#71839e; }
+        .home-task-empty { color:#8193ad; border-color:rgba(148,163,184,.28); }
+        .home-task-item.is-done { background:rgba(4,15,35,.78); }
+        .home-kpi-card small,.home-next-step p { color:#93a7c3; }
+        .home-kpi-primary { border-color:#c6d0df; background:radial-gradient(circle at 30% 20%,rgba(32,105,255,.42),transparent 40%),linear-gradient(145deg,#082866,#020b20); }
+        .home-progress { background:rgba(148,163,184,.2); }
+        .home-progress span { background:linear-gradient(90deg,#075eff,#e2e8f0,#1687ff); box-shadow:0 0 12px #1687ff; }
+        .home-next-step button { color:#8fc1ff; }
+
+        @media (max-width: 1024px) {
+            .home-quick-actions,.home-workflow-card { grid-column:span 12; }
+            .home-kpi-card,.home-kpi-primary { grid-column:span 4; }
+            .home-next-step { grid-column:span 12; }
+            .sales-community-hub { grid-template-columns:1fr; }
+            .sales-team-wall { display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; }
+            .sales-wall-title { grid-column:1/-1; }
+            .sales-wall-item { border:1px solid rgba(255,255,255,.08); border-radius:1rem; padding:.75rem; }
+            #section-avisos .sales-community-hub { max-height:none; grid-template-columns:1fr; }
+            .sales-history-card,.sales-chargeback-card { grid-column:span 6; }
+            .sales-hunters-card { grid-column:1/-1; }
+            .sales-timeline-card #sales-timeline-list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        }
+        @media (max-width: 767px) {
+            .home-command-header { min-height:250px; }
+            .home-focus-pill { position:relative; inset:auto; display:inline-flex; margin-top:1rem; }
+            .home-command-mark { right:-12%; font-size:8rem; }
+            .quick-action-grid { grid-template-columns:1fr; }
+            .home-kpi-card,.home-kpi-primary { grid-column:span 12; min-height:145px; }
+            .sales-community-heading,.sales-knowledge-strip { align-items:stretch; flex-direction:column; }
+            .sales-team-wall { grid-template-columns:1fr; }
+            .sales-wall-title { grid-column:auto; }
+            .sales-knowledge-strip>div { margin:0 0 .25rem; }
+            .sales-history-card,.sales-chargeback-card,.sales-hunters-card { grid-column:1/-1; }
+            .hunter-compact-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .sales-hunters-card #ranking-hunters-list,.sales-timeline-card #sales-timeline-list { grid-template-columns:1fr; }
+        }
+
         @media (max-width: 767px), (any-pointer: coarse) {
             input,
             select,
@@ -3186,138 +3378,107 @@
 
         <div id="content-viewport" class="flex-1 overflow-y-auto p-4 md:p-8 relative">
             
-            <section id="section-inicio" class="content-section animate-fade-in">
-                <div class="max-w-5xl mx-auto">
-                    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-                            <i class="ph ph-shield-check text-[200px]"></i>
+            <section id="section-inicio" class="content-section animate-fade-in operational-home">
+                <div class="max-w-7xl mx-auto">
+                    <header class="home-command-header">
+                        <div class="home-command-copy">
+                            <span class="home-eyebrow"><i class="ph-fill ph-sparkle"></i> Hub operacional</span>
+                            <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
+                            <p id="home-date-role">Sua rotina começa aqui.</p>
+                            <blockquote>“Clareza na prioridade. Excelência na execução.”</blockquote>
                         </div>
-                        <h2 class="text-3xl font-bold mb-2 relative z-10">Central da Equipe</h2>
-                        <p class="text-blue-100 max-w-2xl relative z-8">Transformando o portal corporativo em uma experiência imersiva de alta performance e aprendizado contínuo.</p>
-                    </div>
+                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-mascot.png" alt=""></div>
+                        <div class="home-focus-pill"><span></span> Operação ativa</div>
+                    </header>
 
-                    <div class="mb-8">
-                        <div class="slide-carousel relative">
-                            <div class="slide-item active" id="carousel-slide-0">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-shield-check text-6xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Bem-vindo ao Platino Hub</h2>
-                                    <p class="text-lg text-blue-100 max-w-xl">Um portal para orientar a rotina e aproximar toda a equipe.</p>
-                                </div>
+                    <div class="home-bento-grid">
+                        <article class="home-bento-card home-quick-actions">
+                            <div class="home-card-heading">
+                                <div><span>Acesso inteligente</span><h3>Ações rápidas</h3></div>
+                                <i class="ph ph-lightning"></i>
                             </div>
+                            <div class="quick-action-grid">
+                                <button type="button" onclick="navigateTo('documentos')"><i class="ph ph-file-plus"></i><span>Gerar documento<small>Modelos padronizados</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('sdr')"><i class="ph ph-user-plus"></i><span>Novo atendimento<small>Abrir jornada do lead</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('drive')"><i class="ph ph-folder-open"></i><span>Acessar Drive<small>Pastas e documentos</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('treinamentos')"><i class="ph ph-graduation-cap"></i><span>Treinamentos<small>Base operacional</small></span><i class="ph ph-arrow-up-right"></i></button>
+                            </div>
+                        </article>
 
-                            <div class="slide-item" id="carousel-slide-1">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-chats-circle text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Comunicação, treinamentos e suporte</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Tudo em um só lugar para manter informação e aprendizado sempre acessíveis.</p>
-                                </div>
+                        <article class="home-bento-card home-workflow-card">
+                            <div class="home-card-heading">
+                                <div><span>Minha rotina</span><h3>Prioridades de hoje</h3></div>
+                                <strong id="home-task-progress">0/0</strong>
                             </div>
+                            <form class="home-task-form" onsubmit="addHomeTask(event)">
+                                <input id="home-task-input" type="text" maxlength="100" placeholder="Adicionar uma nova tarefa..." aria-label="Nova tarefa">
+                                <button type="submit" aria-label="Adicionar tarefa"><i class="ph ph-plus"></i></button>
+                            </form>
+                            <div id="home-task-list" class="home-task-list"></div>
+                        </article>
 
-                            <div class="slide-item" id="carousel-slide-2">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-users-three text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Conectando equipes</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Compartilhando conhecimento para que todos avancem na mesma direção.</p>
-                                </div>
-                            </div>
+                        <article class="home-bento-card home-kpi-card home-kpi-primary">
+                            <div class="home-kpi-icon"><i class="ph ph-check-circle"></i></div>
+                            <span>Concluídas hoje</span>
+                            <strong id="home-kpi-completed">0</strong>
+                            <small id="home-kpi-completed-label">Comece pela prioridade mais importante</small>
+                        </article>
 
-                            <div class="slide-item" id="carousel-slide-3">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-megaphone text-5xl text-white"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Comunicados Internos</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Novidades, avisos importantes e atualizações da operação Platino.</p>
-                                </div>
-                            </div>
+                        <article class="home-bento-card home-kpi-card">
+                            <div class="home-kpi-icon"><i class="ph ph-clock-countdown"></i></div>
+                            <span>Em andamento</span>
+                            <strong id="home-kpi-pending">0</strong>
+                            <small>Tarefas aguardando conclusão</small>
+                        </article>
 
-                            <div class="slide-item" id="carousel-slide-4">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-graduation-cap text-5xl text-blue-100"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Treinamentos sempre à mão</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Materiais e procedimentos para fortalecer a execução diária.</p>
-                                </div>
-                            </div>
+                        <article class="home-bento-card home-kpi-card">
+                            <div class="home-kpi-icon"><i class="ph ph-chart-line-up"></i></div>
+                            <span>Taxa de execução</span>
+                            <strong id="home-kpi-rate">0%</strong>
+                            <div class="home-progress"><span id="home-kpi-rate-bar"></span></div>
+                        </article>
 
-                            <div class="slide-item" id="carousel-slide-5">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-lightbulb text-5xl text-yellow-200"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Conhecimento compartilhado</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Cada atualização ajuda a equipe a trabalhar com mais clareza.</p>
-                                </div>
+                        <article class="home-bento-card home-next-step">
+                            <div class="home-card-heading">
+                                <div><span>Próximo passo</span><h3>Mantenha o fluxo em movimento</h3></div>
+                                <i class="ph ph-compass"></i>
                             </div>
-
-                            <div class="slide-item" id="carousel-slide-6">
-                                <div class="flex flex-col items-center gap-4">
-                                    <i class="ph ph-rocket-launch text-5xl text-cyan-200"></i>
-                                    <h2 class="text-3xl md:text-4xl font-extrabold text-white">Platino Hub em evolução</h2>
-                                    <p class="text-base text-blue-100 max-w-xl">Um espaço vivo para comunicação, suporte e melhoria contínua.</p>
-                                </div>
-                            </div>
-
-                            <div class="slide-dots">
-                                <button type="button" class="dot active" onclick="goToSlide(0)" aria-label="Abrir destaque 1"></button>
-                                <button type="button" class="dot" onclick="goToSlide(1)" aria-label="Abrir destaque 2"></button>
-                                <button type="button" class="dot" onclick="goToSlide(2)" aria-label="Abrir destaque 3"></button>
-                                <button type="button" class="dot" onclick="goToSlide(3)" aria-label="Abrir destaque 4"></button>
-                                <button type="button" class="dot" onclick="goToSlide(4)" aria-label="Abrir destaque 5"></button>
-                                <button type="button" class="dot" onclick="goToSlide(5)" aria-label="Abrir destaque 6"></button>
-                                <button type="button" class="dot" onclick="goToSlide(6)" aria-label="Abrir destaque 7"></button>
-                            </div>
-
-                            <button type="button" id="home-carousel-prev" onclick="prevCarouselSlide(event)" aria-label="Voltar um destaque" title="Destaque anterior" class="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation">
-                                <i class="ph ph-caret-left text-lg"></i>
-                            </button>
-                            <button type="button" id="home-carousel-next" onclick="nextCarouselSlide(event)" aria-label="Avançar um destaque" title="Próximo destaque" class="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors backdrop-blur-sm touch-manipulation">
-                                <i class="ph ph-caret-right text-lg"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="portal-card rounded-2xl p-5 md:p-6 mb-8">
-                        <div class="flex flex-col items-start justify-between gap-4 mb-4 sm:flex-row sm:items-center">
-                            <div>
-                                <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Comunicados Internos</p>
-                                <h3 class="mt-1 text-2xl font-black text-slate-900">Últimas novidades da empresa</h3>
-                            </div>
-                            <button onclick="openAvisosEditor('comunicados')" class="notice-editor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
-                                <i class="ph ph-pencil-simple text-lg"></i> Adicionar ou editar recados
-                            </button>
-                        </div>
-                        <div id="inicio-notices-list" class="grid gap-3 md:grid-cols-2"></div>
-                    </div>
-
-                    <div class="portal-card rounded-2xl p-5 md:p-6">
-                        <div class="mb-5 flex flex-col items-center justify-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
-                            <div>
-                                <p class="text-[10px] uppercase tracking-[0.22em] font-black text-blue-600">Conheça a Equipe</p>
-                                <h3 class="mt-1 text-2xl font-black text-slate-900">Pessoas que movem a Platino</h3>
-                            </div>
-                            <div class="gestor-only hidden flex-wrap items-center justify-center gap-2 sm:justify-end">
-                                <button onclick="openAvisosEditor('birthdays')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition-colors shadow-sm whitespace-nowrap">
-                                    <i class="ph ph-cake text-lg"></i> Aniversários
-                                </button>
-                                <button onclick="openAvisosEditor('carrossel')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition-colors shadow-sm whitespace-nowrap">
-                                    <i class="ph ph-images-square text-lg"></i> Equipe
-                                </button>
-                            </div>
-                        </div>
-                        <div class="relative">
-                            <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" title="Voltar no carrossel da equipe" aria-label="Voltar no carrossel da equipe">
-                                <i class="ph ph-caret-left text-lg"></i>
-                            </button>
-                            <div id="team-carousel" class="team-carousel manual-scroll">
-                                <div id="team-track" class="team-track"></div>
-                            </div>
-                            <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" title="Avançar no carrossel da equipe" aria-label="Avançar no carrossel da equipe">
-                                <i class="ph ph-caret-right text-lg"></i>
-                            </button>
-                        </div>
+                            <p id="home-next-task">Adicione sua primeira prioridade para organizar o dia.</p>
+                            <button type="button" onclick="document.getElementById('home-task-input')?.focus()">Organizar minha rotina <i class="ph ph-arrow-right"></i></button>
+                        </article>
                     </div>
                 </div>
             </section>
 
             <section id="section-avisos" class="content-section hidden animate-fade-in">
-                <div class="max-w-6xl mx-auto">
+                <div class="max-w-7xl mx-auto">
+                    <div class="sales-community-hub">
+                        <div class="sales-community-main">
+                            <div class="sales-community-heading">
+                                <div>
+                                    <span>Conexão Platino</span>
+                                    <h2>Nosso time, nossa força</h2>
+                                    <p>Conheça quem transforma desafios em resultados todos os dias.</p>
+                                </div>
+                                <div class="gestor-only hidden flex-wrap gap-2">
+                                    <button onclick="openAvisosEditor('birthdays')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-cake"></i> Aniversários</button>
+                                    <button onclick="openAvisosEditor('carrossel')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-images-square"></i> Equipe</button>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" aria-label="Voltar no carrossel da equipe"><i class="ph ph-caret-left text-lg"></i></button>
+                                <div id="team-carousel" class="team-carousel manual-scroll"><div id="team-track" class="team-track"></div></div>
+                                <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" aria-label="Avançar no carrossel da equipe"><i class="ph ph-caret-right text-lg"></i></button>
+                            </div>
+                        </div>
+                        <aside class="sales-team-wall">
+                            <div class="sales-wall-title"><span>Mural da equipe</span><i class="ph ph-confetti"></i></div>
+                            <div id="sales-birthday-wall" class="sales-wall-item"><i class="ph-fill ph-cake"></i><div><small>Aniversariantes do mês</small><strong>Confira os destaques no carrossel</strong></div></div>
+                            <div class="sales-wall-item"><i class="ph ph-user-circle-plus"></i><div><small>Novos integrantes</small><strong>Boas-vindas ao time Platino</strong></div></div>
+                            <div class="sales-wall-item"><i class="ph-fill ph-trophy"></i><div><small>Destaques em vendas</small><strong>Acompanhe o ranking abaixo</strong></div></div>
+                        </aside>
+                    </div>
+
                     <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
                         <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
@@ -3483,9 +3644,8 @@
                             </div>
                         </div>
 
-                        <div class="relative mt-5 grid grid-cols-1 xl:grid-cols-3 gap-4">
-                            <div class="space-y-4 xl:col-span-1">
-                                <div class="ranking-board rounded-2xl p-4">
+                        <div class="sales-support-grid relative mt-5">
+                                <div class="ranking-board sales-history-card rounded-2xl p-4">
                                     <div class="mb-3 flex items-center justify-between gap-3">
                                         <div>
                                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
@@ -3495,8 +3655,7 @@
                                     </div>
                                     <div id="ranking-history-panel" class="space-y-3"></div>
                                 </div>
-
-                                <div class="ranking-board rounded-2xl p-4 border-rose-300/20 bg-rose-950/20">
+                                <div class="ranking-board sales-chargeback-card rounded-2xl p-4 border-rose-300/20 bg-rose-950/20">
                                     <div class="mb-3 flex items-center justify-between gap-3">
                                         <div>
                                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-100/70">Chargebacks</p>
@@ -3521,9 +3680,7 @@
                                         <div id="avisos-chargebacks-list" class="grid gap-2"></div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="ranking-board rounded-2xl p-4">
+                            <div class="ranking-board sales-hunters-card rounded-2xl p-4">
                                 <div class="mb-3 flex items-center justify-between gap-3">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Origem dos clientes</p>
@@ -3532,11 +3689,11 @@
                                     </div>
                                     <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
                                 </div>
-                                <div id="ranking-hunters-stats" class="mb-3 grid grid-cols-2 gap-2"></div>
+                                <div id="ranking-hunters-stats" class="hunter-compact-stats mb-3 grid gap-2"></div>
                                 <div id="ranking-hunters-list" class="space-y-2"></div>
                             </div>
 
-                            <div id="sales-timeline-panel" class="ranking-board rounded-2xl p-4">
+                            <div id="sales-timeline-panel" class="ranking-board sales-timeline-card rounded-2xl p-4">
                                 <div class="mb-3 flex items-center justify-between gap-3">
                                     <div>
                                         <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Atualizações da operação</p>
@@ -5920,6 +6077,13 @@
             const contentViewport = document.getElementById('content-viewport');
             if (contentViewport) {
                 contentViewport.classList.toggle('central-info-bg', sectionId === 'avisos');
+                contentViewport.classList.toggle('operational-home-bg', sectionId === 'inicio');
+            }
+
+            if (sectionId === 'inicio') renderHomeOperationalHub();
+            if (sectionId === 'avisos') {
+                renderTeamCarousel();
+                bindTeamCarouselControls();
             }
 
             if (window.innerWidth < 768) {
@@ -6266,8 +6430,8 @@
                 return tokens.some(token => normalized.includes(token));
             }).slice(0, 8);
             const sections = [
-                'Início: comunicados internos, equipe e atualizações gerais.',
-                'Central de vendas: resultados, ranking Comercial e Jurídico, chargebacks, hunters e linha do tempo de vendas.',
+                'Início: hub operacional com ações rápidas, rotina pessoal e indicadores de produtividade.',
+                'Central de vendas: ranking, resultados, equipe, aniversariantes, hunters e linha do tempo de vendas.',
                 'Comercial: manual de conversão, atendimento, fechamento e contratos.',
                 'Administrativo: GOV.BR, conferência e rotinas administrativas.',
                 'Documentos: biblioteca de modelos, formulários e geração local de documentos em PDF.',
@@ -6459,64 +6623,96 @@
             }, 300);
         }
 
-        // LÓGICA DO CAROUSEL DE SLIDES
-        let currentCarouselSlide = 0;
+        // HUB OPERACIONAL — ROTINA PESSOAL
+        const HOME_TASKS_KEY = 'platinoHomeTasksV1';
 
-        function updateCarouselUI() {
-            const carousel = document.querySelector('#section-inicio .slide-carousel');
-            if (!carousel) return;
-            const slides = Array.from(carousel.querySelectorAll('.slide-item'));
-            const dots = Array.from(carousel.querySelectorAll('.dot'));
-            if (!slides.length) return;
-
-            currentCarouselSlide = ((currentCarouselSlide % slides.length) + slides.length) % slides.length;
-
-            // Atualizar slides
-            slides.forEach((slide, index) => {
-                if (index === currentCarouselSlide) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
-            });
-
-            // Atualizar dots
-            dots.forEach((dot, index) => {
-                if (index === currentCarouselSlide) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-        function nextCarouselSlide(event) {
-            event?.preventDefault();
-            event?.stopPropagation();
-            currentCarouselSlide += 1;
-            updateCarouselUI();
-        }
-
-        function prevCarouselSlide(event) {
-            event?.preventDefault();
-            event?.stopPropagation();
-            currentCarouselSlide -= 1;
-            updateCarouselUI();
-        }
-
-        function goToSlide(index) {
-            currentCarouselSlide = Number(index) || 0;
-            updateCarouselUI();
-        }
-
-        // Auto-advance carousel a cada 8 segundos
-        setInterval(() => {
-            if (document.querySelector('#section-inicio:not(.hidden)')) {
-                nextCarouselSlide();
+        function loadHomeTasks() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(HOME_TASKS_KEY) || '[]');
+                return Array.isArray(saved) ? saved : [];
+            } catch {
+                return [];
             }
-        }, 8000);
+        }
 
-        // LÓGICA DO CAROUSEL DE SLIDES - FIM
+        function saveHomeTasks(tasks) {
+            localStorage.setItem(HOME_TASKS_KEY, JSON.stringify(tasks.slice(0, 30)));
+        }
+
+        function addHomeTask(event) {
+            event?.preventDefault();
+            const input = document.getElementById('home-task-input');
+            const text = String(input?.value || '').trim();
+            if (!text) return;
+            const tasks = loadHomeTasks();
+            tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text, done: false, createdAt: new Date().toISOString() });
+            saveHomeTasks(tasks);
+            input.value = '';
+            renderHomeOperationalHub();
+        }
+
+        function toggleHomeTask(id) {
+            const tasks = loadHomeTasks().map(task => task.id === id ? { ...task, done: !task.done, completedAt: !task.done ? new Date().toISOString() : null } : task);
+            saveHomeTasks(tasks);
+            renderHomeOperationalHub();
+        }
+
+        function removeHomeTask(id) {
+            saveHomeTasks(loadHomeTasks().filter(task => task.id !== id));
+            renderHomeOperationalHub();
+        }
+
+        function renderHomeOperationalHub() {
+            const greeting = document.getElementById('home-greeting');
+            if (!greeting) return;
+            const now = new Date();
+            const hour = Number(new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' }).format(now));
+            const period = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+            const rawName = document.getElementById('user-name')?.textContent?.trim() || window.firebaseAuthUser?.displayName || 'Equipe Platino';
+            const firstName = rawName.split(/\s+/)[0];
+            const role = document.getElementById('user-role')?.textContent?.trim() || 'Operação Platino';
+            const dateLabel = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(now);
+            greeting.textContent = `${period}, ${firstName}.`;
+            document.getElementById('home-date-role').textContent = `${dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1)} • ${role}`;
+
+            const tasks = loadHomeTasks();
+            const completed = tasks.filter(task => task.done).length;
+            const pending = tasks.length - completed;
+            const rate = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
+            const list = document.getElementById('home-task-list');
+            list.innerHTML = tasks.length ? tasks.map(task => `
+                <div class="home-task-item ${task.done ? 'is-done' : ''}">
+                    <button type="button" class="home-task-check" onclick="toggleHomeTask('${escapeHtml(task.id)}')" aria-label="${task.done ? 'Reabrir' : 'Concluir'} tarefa"><i class="ph-bold ph-check"></i></button>
+                    <span>${escapeHtml(task.text)}</span>
+                    <button type="button" class="home-task-delete" onclick="removeHomeTask('${escapeHtml(task.id)}')" aria-label="Excluir tarefa"><i class="ph ph-trash"></i></button>
+                </div>`).join('') : '<div class="home-task-empty"><i class="ph ph-check-square-offset"></i><br>Seu dia está livre. Adicione uma prioridade para começar.</div>';
+
+            document.getElementById('home-task-progress').textContent = `${completed}/${tasks.length}`;
+            document.getElementById('home-kpi-completed').textContent = String(completed);
+            document.getElementById('home-kpi-pending').textContent = String(pending);
+            document.getElementById('home-kpi-rate').textContent = `${rate}%`;
+            document.getElementById('home-kpi-rate-bar').style.width = `${rate}%`;
+            document.getElementById('home-kpi-completed-label').textContent = completed ? `${completed} prioridade${completed === 1 ? '' : 's'} finalizada${completed === 1 ? '' : 's'}` : 'Comece pela prioridade mais importante';
+            document.getElementById('home-next-task').textContent = !tasks.length
+                ? 'Adicione sua primeira prioridade para organizar o dia.'
+                : tasks.find(task => !task.done)?.text || 'Todas as prioridades foram concluídas. Excelente trabalho!';
+        }
+
+        function openSalesObjection(type) {
+            const query = type === 'golpe'
+                ? 'Como responder à objeção: isso é golpe?'
+                : 'Como responder à objeção: não tenho dinheiro agora?';
+            const input = document.getElementById('global-search-input');
+            if (input) {
+                input.value = query;
+                input.focus();
+                handleSearch({ key: 'Enter', target: input });
+            } else {
+                navigateTo('treinamentos');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderHomeOperationalHub);
         function toggleChat() {
             const chat = document.getElementById('chat-window');
             const btn = document.getElementById('chat-toggle-btn');
@@ -8027,6 +8223,16 @@
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
             const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
             const currentMonth = getCurrentBirthdayMonth();
+            const birthdayNames = team.filter(person => {
+                const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
+                return getBirthdayMonth(birthday) === currentMonth;
+            }).map(person => formatPersonName(person.name));
+            const birthdayWall = document.getElementById('sales-birthday-wall');
+            if (birthdayWall) {
+                birthdayWall.querySelector('strong').textContent = birthdayNames.length
+                    ? birthdayNames.join(', ')
+                    : 'Nenhum aniversário cadastrado neste mês';
+            }
             container.dataset.originalCount = String(team.length);
             teamCarouselManualIndex = 0;
             container.style.transition = '';
@@ -11544,6 +11750,7 @@
 
         document.getElementById("user-name").innerText = displayName;
         document.getElementById("user-role").innerText = role === "gestor" ? `Gestor - ${displaySector}` : displaySector;
+        window.renderHomeOperationalHub?.();
 
         window.applyGestorVisibility?.();
         window.sdrApplyAccess?.();
