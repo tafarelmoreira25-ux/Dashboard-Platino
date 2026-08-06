@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 
 let clientCache = null;
 let clientCacheAt = 0;
-const CACHE_MS = 60000;
+const CACHE_MS = 15000;
 const TIMELINE_WINDOW_MS = 24 * 60 * 60 * 1000;
 let firebaseCertificates = null;
 let firebaseCertificatesExpireAt = 0;
@@ -21,12 +21,13 @@ function getCurrentPortugueseMonthName() {
 
 function getDefaultRankingTimelineCsvUrl() {
   const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_RANKING_SPREADSHEET_ID;
-  const configuredGid = process.env.RANKING_SHEET_GID;
-  if (configuredGid) {
-    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${encodeURIComponent(configuredGid)}`;
-  }
-  const sheetName = getCurrentPortugueseMonthName();
+  const sheetName = process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName();
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+}
+
+function withSyncBuster(url) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}_sync=${Date.now()}`;
 }
 
 function decodeJwtPart(value) {
@@ -434,7 +435,11 @@ async function loadClients(apiUrl, operationCsvUrl) {
 
   if (operationCsvUrl) {
     try {
-      const sheetResponse = await fetch(operationCsvUrl, { cache: "no-store", redirect: "follow" });
+      const sheetResponse = await fetch(withSyncBuster(operationCsvUrl), {
+        cache: "no-store",
+        redirect: "follow",
+        headers: { "Cache-Control": "no-cache, no-store, max-age=0", Pragma: "no-cache" }
+      });
       if (!sheetResponse.ok) throw new Error(`Planilha operacional respondeu HTTP ${sheetResponse.status}.`);
       datasets.push(recordsFromOperationCsv(await sheetResponse.text()));
     } catch (error) {
@@ -444,10 +449,10 @@ async function loadClients(apiUrl, operationCsvUrl) {
 
   if (apiUrl) {
     try {
-      const upstream = await fetch(apiUrl, {
+      const upstream = await fetch(withSyncBuster(apiUrl), {
         cache: "no-store",
         redirect: "follow",
-        headers: { Accept: "application/json" }
+        headers: { Accept: "application/json", "Cache-Control": "no-cache, no-store, max-age=0", Pragma: "no-cache" }
       });
       if (!upstream.ok) throw new Error(`Google Apps Script respondeu HTTP ${upstream.status}.`);
       const data = await upstream.json();
@@ -479,7 +484,11 @@ async function loadClients(apiUrl, operationCsvUrl) {
 }
 
 async function loadRankingSales(csvUrl) {
-  const response = await fetch(csvUrl, { cache: "no-store", redirect: "follow" });
+  const response = await fetch(withSyncBuster(csvUrl), {
+    cache: "no-store",
+    redirect: "follow",
+    headers: { "Cache-Control": "no-cache, no-store, max-age=0", Pragma: "no-cache" }
+  });
   if (!response.ok) throw new Error(`Planilha do ranking respondeu HTTP ${response.status}.`);
   return salesFromRankingCsv(await response.text());
 }

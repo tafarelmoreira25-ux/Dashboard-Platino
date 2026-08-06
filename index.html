@@ -6884,7 +6884,7 @@
         };
 
         const rankingSectors = ['comercial', 'juridico'];
-        const RANKING_SHEET_SYNC_INTERVAL_MS = 60000;
+        const RANKING_SHEET_SYNC_INTERVAL_MS = 30000;
         let rankingData = normalizeRankingData(defaultRankingData, { useFallback: true });
         let rankingExpanded = {
             comercial: false,
@@ -7031,7 +7031,8 @@
                 potentialClients: normalizePotentialClients(sourceValue.potentialClients),
                 source: sourceValue.source || 'manual',
                 updatedAt: sourceValue.updatedAt || null,
-                updatedBy: sourceValue.updatedBy || 'Supervisão'
+                updatedBy: sourceValue.updatedBy || 'Supervisão',
+                sourceHealth: sourceValue.sourceHealth || null
             };
 
             rankingSectors.forEach(sector => {
@@ -7468,8 +7469,14 @@
                 const updated = rankingData.updatedAt
                     ? new Date(rankingData.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
                     : '';
-                statusEl.innerText = `Google Sheets sincronizado${updated ? ` às ${updated}` : ''}`;
-                statusEl.className = 'mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-100/80';
+                const health = rankingData.sourceHealth || {};
+                const rankingRows = Number(health.ranking?.rows) || 0;
+                const hunterEmpty = health.hunters?.ok && health.hunters?.empty;
+                const failedSources = ['ranking', 'history', 'hunters'].filter(key => health[key] && health[key].ok === false && health[key].error);
+                statusEl.innerText = failedSources.length
+                    ? `Sincronização parcial: falha em ${failedSources.join(', ')}`
+                    : `Google Sheets sincronizado${updated ? ` às ${updated}` : ''} • ${rankingRows} resultado(s)${hunterEmpty ? ' • Hunters sem lançamentos' : ''}`;
+                statusEl.className = `mt-2 text-[10px] font-bold uppercase tracking-[0.18em] ${failedSources.length ? 'text-amber-100/90' : 'text-emerald-100/80'}`;
                 return;
             }
 
@@ -7791,7 +7798,9 @@
                     updatedAt: sheetData.updatedAt || new Date().toISOString(),
                     updatedBy: 'Google Sheets'
                 });
-                if (!normalized.comercial.length && !normalized.juridico.length) return;
+                if (!normalized.comercial.length && !normalized.juridico.length) {
+                    throw new Error(`A aba ${sheetData?.sourceHealth?.ranking?.sheet || 'mensal'} não retornou resultados`);
+                }
 
                 const signature = JSON.stringify({
                     comercial: normalized.comercial,
@@ -7827,6 +7836,17 @@
             rankingSheetSyncTimer = setInterval(refreshRankingFromSheets, RANKING_SHEET_SYNC_INTERVAL_MS);
             salesTimelineTimer = setInterval(refreshSalesTimeline, RANKING_SHEET_SYNC_INTERVAL_MS);
         }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                refreshRankingFromSheets(true);
+                refreshSalesTimeline();
+            }
+        });
+        window.addEventListener('online', () => {
+            refreshRankingFromSheets(true);
+            refreshSalesTimeline();
+        });
 
         function stopRankingSheetSync() {
             if (!rankingSheetSyncTimer) return;

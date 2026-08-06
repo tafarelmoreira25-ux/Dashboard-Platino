@@ -77,11 +77,8 @@ function getCurrentMonthAliases() {
 
 function getDefaultSheetCsvUrl() {
   const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
-  const configuredGid = process.env.RANKING_SHEET_GID;
-  if (configuredGid) {
-    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${encodeURIComponent(configuredGid)}`;
-  }
-  return getDefaultSheetCsvUrlFor(getCurrentPortugueseMonthName());
+  const sheetName = process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName();
+  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 }
 
 function getDefaultSheetCsvUrlFor(sheetName) {
@@ -314,7 +311,14 @@ function isDateInRankingPeriod(value, period) {
 }
 
 async function fetchCsv(url) {
-  const response = await fetch(url, { cache: "no-store" });
+  const separator = url.includes("?") ? "&" : "?";
+  const response = await fetch(`${url}${separator}_sync=${Date.now()}`, {
+    cache: "no-store",
+    headers: {
+      "Cache-Control": "no-cache, no-store, max-age=0",
+      Pragma: "no-cache"
+    }
+  });
   if (!response.ok) {
     throw new Error(`Falha ao ler planilha CSV (${response.status}).`);
   }
@@ -849,7 +853,9 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Method not allowed." });
   }
 
-  const sharedUrl = process.env.RANKING_SHEET_CSV_URL;
+  // A planilha principal sempre acompanha a aba mensal. URLs compartilhadas fixas
+  // causavam a permanência acidental no mês anterior após a virada do calendário.
+  const sharedUrl = "";
   const comercialUrl = process.env.RANKING_COMERCIAL_SHEET_CSV_URL;
   const juridicoUrl = process.env.RANKING_JURIDICO_SHEET_CSV_URL;
   const period = getRankingPeriod(request);
@@ -864,6 +870,12 @@ export default async function handler(request, response) {
       hunters: [],
       paidClients: [],
       potentialClients: []
+    };
+    const sourceHealth = {
+      ranking: { ok: false, sheet: process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName(), rows: 0 },
+      history: { ok: false, sheet: getPreviousOperationalMonth().sheet, rows: 0 },
+      hunters: { ok: false, sheet: getCurrentHunterSheetName(), rows: 0 },
+      checkedAt: new Date().toISOString()
     };
 
     if (sharedUrl || (!comercialUrl && !juridicoUrl)) {
@@ -881,6 +893,7 @@ export default async function handler(request, response) {
       } else {
         rows.push(...rowsFromCsv(csv));
       }
+      sourceHealth.ranking = { ...sourceHealth.ranking, ok: true, rows: rows.length };
     }
     if (comercialUrl) {
       const csv = await fetchCsv(comercialUrl);
@@ -918,7 +931,9 @@ export default async function handler(request, response) {
             goal: 0
           });
         }
+        sourceHealth.history = { ...sourceHealth.history, ok: true, rows: previousRows.length };
       } catch (historyError) {
+        sourceHealth.history.error = historyError.message;
         console.warn("Nao foi possivel carregar o historico do mes anterior.", historyError);
       }
     }
@@ -933,13 +948,21 @@ export default async function handler(request, response) {
       supplemental.hunters = hunterData.hunters;
       supplemental.paidClients = hunterData.paidClients;
       supplemental.potentialClients = hunterData.potentialClients;
+      sourceHealth.hunters = {
+        ...sourceHealth.hunters,
+        ok: true,
+        rows: hunterData.hunters.length,
+        empty: hunterData.hunters.length === 0
+      };
     } catch (hunterError) {
+      sourceHealth.hunters.error = hunterError.message;
       console.warn(`Nao foi possivel sincronizar a aba ${supplemental.hunterSheet}.`, hunterError);
     }
 
     response.setHeader("Cache-Control", "no-store");
     return response.status(200).json({
       ...buildRanking(rows, explicitTeamGoals, explicitTeamTotals, metrics, supplemental),
+      sourceHealth,
       period: period.key,
       periodStart: period.start.toISOString(),
       periodEnd: period.end.toISOString()
@@ -953,7 +976,9 @@ export default async function handler(request, response) {
 }
 
 export {
+  buildRanking,
   extractHunterDataFromCsv,
   getCurrentHunterSheetName,
-  getHunterSheetCsvUrl
+  getHunterSheetCsvUrl,
+  rowsFromPlatinoSideBySideCsv
 };
