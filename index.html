@@ -1118,28 +1118,16 @@
         }
 
         .platino-system-mark {
-            display: grid;
+            display: block;
             width: 2.35rem;
             height: 2.35rem;
             flex: 0 0 auto;
-            grid-template-columns: repeat(2, 0.48rem);
-            place-content: center;
-            gap: 0.22rem;
-            border: 1px solid rgba(148, 197, 255, 0.3);
-            border-radius: 0.78rem;
-            background: linear-gradient(145deg, rgba(37, 99, 235, 0.34), rgba(8, 25, 52, 0.92));
-            box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 8px 20px rgba(2, 8, 23, 0.26);
+            object-fit: contain;
+            border-radius: 50%;
+            filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.65));
         }
 
-        .platino-system-mark span {
-            width: 0.48rem;
-            height: 0.48rem;
-            border-radius: 0.15rem;
-            background: linear-gradient(145deg, #f8fafc, #72b8ff);
-        }
-
-        .platino-system-brand strong,
-        .platino-system-brand small {
+        .platino-system-brand strong {
             display: block;
             line-height: 1;
         }
@@ -1150,14 +1138,6 @@
             font-size: 0.92rem;
             font-weight: 900;
             letter-spacing: 0.08em;
-        }
-
-        .platino-system-brand small {
-            margin-top: 0.35rem;
-            color: #7f96b7;
-            font-size: 0.52rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
         }
 
         main {
@@ -3089,7 +3069,7 @@
         .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(37,99,235,.55); }
         .home-command-copy p { color:#d7e1f0 !important; }
         .home-command-mark { right:3.5%; width:190px; height:190px; overflow:hidden; border:2px solid #b8c4d6; border-radius:50%; background:#061a45; box-shadow:0 0 0 6px rgba(30,64,175,.35),0 0 32px #075ef0,inset 0 0 22px #075ef0; }
-        .home-command-mark img { width:100%; height:100%; object-fit:cover; }
+        .home-command-mark img { width:100%; height:100%; object-fit:cover; object-position:center 16%; transform:scale(1.02); }
         .home-focus-pill { border-color:rgba(191,219,254,.28); background:rgba(3,13,35,.7); }
         .home-bento-card {
             color:#e8eef8; border:1px solid rgba(203,213,225,.52);
@@ -3191,7 +3171,7 @@
                 <i class="ph ph-shield-check text-3xl text-blue-200"></i>
               </div>
               <div>
-                <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">Platino OS</h1>
+                <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">PLATINO</h1>
               </div>
             </div>
 
@@ -3268,14 +3248,9 @@
         <aside id="sidebar" class="bg-[#0F192C] border-r border-[#2B4870]/40 w-64 flex-shrink-0 h-full flex flex-col transition-transform duration-300 absolute md:relative z-50 -translate-x-full md:translate-x-0">
             
             <div class="h-20 flex items-center px-6 border-b border-[#2B4870]/40">
-                <div class="platino-system-brand" aria-label="Platino Operating System">
-                    <span class="platino-system-mark" aria-hidden="true">
-                        <span></span><span></span><span></span><span></span>
-                    </span>
-                    <span>
-                        <strong>PLATINO OS</strong>
-                        <small>OPERATING SYSTEM</small>
-                    </span>
+                <div class="platino-system-brand" aria-label="Platino">
+                    <img class="platino-system-mark" src="assets/platino-icon.png" alt="Logo Platino">
+                    <strong>PLATINO</strong>
                 </div>
                 <button onclick="toggleSidebar()" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
                     <i class="ph ph-x text-xl"></i>
@@ -3387,7 +3362,7 @@
                             <p id="home-date-role">Sua rotina começa aqui.</p>
                             <blockquote>“Clareza na prioridade. Excelência na execução.”</blockquote>
                         </div>
-                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-mascot.png" alt=""></div>
+                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-human-mascot-home.png" alt=""></div>
                         <div class="home-focus-pill"><span></span> Operação ativa</div>
                     </header>
 
@@ -4448,7 +4423,7 @@
                                         <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 text-white shadow-md shadow-slate-200"><i class="ph ph-push-pin text-xl"></i></span>
                                         <div>
                                             <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">Fixado</p>
-                                            <h3 class="font-semibold text-lg">PLATINO OS</h3>
+                                            <h3 class="font-semibold text-lg">PLATINO</h3>
                                         </div>
                                     </div>
                                     <span class="bg-red-50 text-red-600 text-[10px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">PDF</span>
@@ -4456,7 +4431,7 @@
                                 <p class="text-sm text-slate-500 mb-6">Manual fixado da plataforma, com visão geral e instruções essenciais para a equipe.</p>
                             </div>
                             <a href="platino-os.pdf" target="_blank" rel="noopener noreferrer" class="metal-button w-full py-2.5 text-sm font-semibold rounded-xl border transition-colors flex items-center justify-center gap-2">
-                                <i class="ph ph-file-pdf text-red-500"></i> Abrir PLATINO OS
+                                <i class="ph ph-file-pdf text-red-500"></i> Abrir apresentação
                             </a>
                         </div>
 
@@ -11131,7 +11106,7 @@
         due.forEach(item => {
           const key = `platino-notified-${auth.currentUser.uid}-${item.id}`;
           if (sessionStorage.getItem(key)) return;
-          new Notification("Platino OS — lembrete", {
+          new Notification("PLATINO — lembrete", {
             body: item.title,
             icon: "assets/platino-infohub-icon.png",
             tag: key,
