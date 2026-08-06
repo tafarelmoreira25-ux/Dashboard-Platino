@@ -20,6 +20,20 @@ function dataPorExtenso(data) {
   }).format(valor);
 }
 
+export function normalizarNomeCompleto(nome) {
+  return String(nome || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/(\p{L}{3,})(dos)(?=\s+\p{L})/giu, "$1 dos");
+}
+
+export function formatarLocalEData(cidade, dataEmissao) {
+  const local = String(cidade || "")
+    .replace(/[\s,]+$/g, "")
+    .trim() || "São Paulo";
+  return `${local}, ${dataPorExtenso(dataEmissao)}.`;
+}
+
 function qualificacaoPorGenero(genero) {
   if (genero === "feminino") return "qualificada";
   if (genero === "masculino") return "qualificado";
@@ -186,7 +200,7 @@ export async function gerarCitacaoJudicialPdf(dados) {
   };
   desenharCabecalhoERodape(pagina, fontes);
 
-  const nomeCliente = String(dados.nomeCliente || "").trim();
+  const nomeCliente = normalizarNomeCompleto(dados.nomeCliente);
   const banco = String(dados.banco || "").trim();
   const numeroProcesso = String(dados.numeroProcesso || "").trim();
   const cidade = String(dados.cidade || "").trim();
@@ -328,7 +342,7 @@ export async function gerarCitacaoJudicialPdf(dados) {
     alinhamento: "center",
     segmentos: [
       {
-        texto: `${cidade}, ${dataPorExtenso(dados.dataEmissao)}.`,
+        texto: formatarLocalEData(cidade, dados.dataEmissao),
       },
     ],
   });

@@ -7,6 +7,7 @@
     "audit:buttons": "node tests/button-interaction-audit.mjs",
     "test:auth": "node tests/auth-login-security-test.mjs",
     "test:documents-ui": "node tests/documents-ui-test.mjs",
+    "test:citacao": "node tests/citacao-judicial-pdf-test.mjs",
     "test:hunter": "node tests/hunter-sheet-test.mjs",
     "test:laudo": "node tests/laudo-pericial-contabil-test.mjs",
     "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-ui-test.mjs",
