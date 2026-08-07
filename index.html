@@ -294,6 +294,20 @@
             text-shadow: 0 0 22px rgba(226, 232, 240, 0.28);
         }
 
+        .company-revenue-level {
+            border-color: rgba(191, 219, 254, 0.42);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(96, 165, 250, 0.22), transparent 52%),
+                linear-gradient(145deg, rgba(15, 35, 80, 0.96), rgba(10, 18, 40, 0.98));
+            box-shadow: inset 0 0 24px rgba(59, 130, 246, 0.12), 0 0 24px rgba(37, 99, 235, 0.12);
+        }
+
+        .company-revenue-level .company-revenue-value {
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
+            text-shadow: 0 0 18px rgba(147, 197, 253, 0.45);
+        }
+
         .money-value {
             color: #fde68a;
             text-shadow: 0 0 16px rgba(250, 204, 21, 0.24);
@@ -3704,35 +3718,6 @@
                         </div>
                     </div>
 
-                    <div id="avisos-week-card" class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 rounded-2xl p-5 md:p-6 shadow-xl shadow-slate-200/70 text-white mb-6 relative overflow-hidden">
-                        <div class="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
-                        <div class="relative flex flex-col gap-5">
-                            <div class="relative flex flex-col items-center justify-center gap-4 text-center sm:min-h-11">
-                                <div>
-                                   <h3 class="metallic-title mt-1 text-xl font-bold flex items-center justify-center gap-2"><i class="ph ph-trend-up text-green-400"></i> Resultados da Semana</h3>
-                                </div>
-                                <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-xs text-blue-100 lg:absolute lg:right-0 lg:top-0">
-                                    <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span> Atualizado recentemente
-                                </span>
-                                <button onclick="openAvisosEditor('week')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold lg:absolute lg:left-0 lg:top-0">
-                                    <i class="ph ph-pencil-simple"></i> Editar resultados
-                                </button>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                                    <div class="flex items-center justify-between"><i class="ph ph-file-text text-blue-300 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-blue-200">Novos</span></div>
-                                    <p id="avisos-week-contracts" class="mt-2 text-3xl font-black">0</p>
-                                    <p class="text-xs text-blue-100">Contratos</p>
-                                </div>
-                                <div class="rounded-xl border border-purple-300/20 bg-purple-400/15 p-4 backdrop-blur-sm">
-                                    <div class="flex items-center justify-between"><i class="ph ph-currency-circle-dollar text-purple-200 text-xl"></i><span class="text-[9px] uppercase tracking-wider text-purple-100">Total</span></div>
-                                    <p id="avisos-week-revenue" class="mt-2 text-2xl md:text-3xl font-black">0,00</p>
-                                    <p class="text-xs text-purple-100">Faturamento</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="ranking-arena" class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
                         <div class="absolute right-0 top-0 h-40 w-40 bg-white-0/20 rounded-full blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 bg-yellow-300/10 rounded-full blur-3xl"></div>
@@ -3765,13 +3750,9 @@
                             <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
                         </div>
 
-                        <div data-ranking-content class="relative grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 text-center">
-                            <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Comercial</h4>
-                            <h4 class="ranking-sector-title text-lg font-black uppercase tracking-[0.22em]">Jurídico</h4>
-                        </div>
-
-                        <div class="relative grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+                        <div data-ranking-content class="relative grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
                             <div class="metal-level-card rounded-2xl p-4">
+                                <h4 class="ranking-sector-title mb-3 text-center text-base font-black uppercase tracking-[0.18em]">Comercial</h4>
                                 <div class="flex items-center gap-3">
                                     <div class="metal-level-icon w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-300/25 text-emerald-100 flex items-center justify-center">
                                         <i class="ph-fill ph-rocket-launch text-2xl"></i>
@@ -3794,7 +3775,33 @@
                                 </div>
                             </div>
 
+                            <div class="metal-level-card company-revenue-level rounded-2xl p-4">
+                                <h4 class="ranking-sector-title mb-3 text-center text-base font-black uppercase tracking-[0.18em]">Faturamento total</h4>
+                                <div class="flex items-center gap-3">
+                                    <div class="metal-level-icon flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-blue-200/30 bg-blue-400/20 text-blue-100">
+                                        <i class="ph-fill ph-currency-circle-dollar text-2xl"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-end justify-between gap-3">
+                                            <p id="company-revenue-value" class="company-revenue-value truncate text-xl font-black">R$ 0,00</p>
+                                            <span id="company-revenue-percent" class="money-value text-[10px] font-black uppercase tracking-wider">0%</span>
+                                        </div>
+                                        <div class="metal-level-track mt-2">
+                                            <div id="company-revenue-fill" class="metal-level-fill indigo" style="--level-width: 0%"></div>
+                                        </div>
+                                        <div class="mt-2 flex items-center justify-between gap-3 text-[10px] text-blue-100/80">
+                                            <span id="company-revenue-label" class="font-bold uppercase tracking-wider">Nível geral: Bronze mensal</span>
+                                            <span id="company-revenue-goal" class="money-value">Meta: R$ 0,00</span>
+                                        </div>
+                                        <div class="metal-level-gap mt-2 rounded-xl px-3 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-blue-100/75">
+                                            Comercial + Jurídico
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="metal-level-card rounded-2xl p-4">
+                                <h4 class="ranking-sector-title mb-3 text-center text-base font-black uppercase tracking-[0.18em]">Jurídico</h4>
                                 <div class="flex items-center gap-3">
                                     <div class="metal-level-icon w-11 h-11 rounded-2xl bg-indigo-500/20 border border-indigo-300/25 text-indigo-100 flex items-center justify-center">
                                         <i class="ph-fill ph-gavel text-2xl"></i>
@@ -3820,10 +3827,12 @@
 
                         <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
                             <div class="ranking-board rounded-2xl p-4">
+                                <h4 class="ranking-sector-title mb-3 text-center text-lg font-black uppercase tracking-[0.22em]">Comercial</h4>
                                 <div id="ranking-comercial-list" class="space-y-2"></div>
                             </div>
 
                             <div class="ranking-board rounded-2xl p-4">
+                                <h4 class="ranking-sector-title mb-3 text-center text-lg font-black uppercase tracking-[0.22em]">Jurídico</h4>
                                 <div id="ranking-juridico-list" class="space-y-2"></div>
                             </div>
                         </div>
@@ -7339,6 +7348,23 @@
                 if (totalEl) totalEl.innerText = `${formatCurrency(realized)} / ${formatCurrency(goal)}`;
                 if (gapEl) gapEl.innerText = `Total: ${formatCurrency(realized)}`;
             });
+
+            const companyTotal = getCompanyTotal();
+            const companyGoal = rankingSectors.reduce((total, sector) => total + getRankingTeamGoal(sector), 0);
+            const companyPercent = companyGoal
+                ? Math.min(Math.round((companyTotal / companyGoal) * 100), 100)
+                : 0;
+            const companyFill = document.getElementById('company-revenue-fill');
+            const companyValue = document.getElementById('company-revenue-value');
+            const companyPercentEl = document.getElementById('company-revenue-percent');
+            const companyLabel = document.getElementById('company-revenue-label');
+            const companyGoalEl = document.getElementById('company-revenue-goal');
+
+            if (companyFill) companyFill.style.setProperty('--level-width', `${companyPercent}%`);
+            if (companyValue) companyValue.innerText = formatCurrency(companyTotal);
+            if (companyPercentEl) companyPercentEl.innerText = `${companyPercent}%`;
+            if (companyLabel) companyLabel.innerText = `Nível geral: ${getMetalLevelName(companyPercent)}`;
+            if (companyGoalEl) companyGoalEl.innerText = `Meta: ${formatCurrency(companyGoal)}`;
         }
 
         function loadRankingData() {
@@ -8357,10 +8383,10 @@
                 highlightPhoto.alt = `Foto de ${avisosData.highlight.name || defaultAvisosData.highlight.name}`;
                 highlightPhoto.style.objectPosition = avisosData.highlight.photoPosition || defaultAvisosData.highlight.photoPosition || 'center center';
             }
-            document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
+            setTextIfExists('avisos-week-contracts', avisosData.week.contracts);
             setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
             setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
-            document.getElementById('avisos-week-revenue').innerText = avisosData.week.revenue;
+            setTextIfExists('avisos-week-revenue', avisosData.week.revenue);
             
             renderInicioNotices();
             renderChargebacks();
