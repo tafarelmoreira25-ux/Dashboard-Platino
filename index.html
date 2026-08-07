@@ -3015,20 +3015,20 @@
         .sales-knowledge-strip button:hover { border-color:#60a5fa; box-shadow:0 0 18px rgba(59,130,246,.12); }
         #section-avisos .sales-community-main .team-card { min-width:205px; }
         /* Central de Vendas: ranking em primeiro plano, equipe e apoio compactos. */
-        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr) 230px; height:225px; max-height:225px; overflow:hidden; }
-        #section-avisos .sales-community-main { padding:.9rem 1rem; }
+        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr) 230px; min-height:305px; height:auto; max-height:none; overflow:visible; }
+        #section-avisos .sales-community-main { min-height:305px; padding:.9rem 1rem; }
         #section-avisos .sales-community-heading { margin-bottom:.55rem; }
         #section-avisos .sales-community-heading h2 { font-size:1.08rem; }
         #section-avisos .sales-community-heading p { font-size:.67rem; }
-        #section-avisos .sales-community-main .team-carousel { height:150px; min-height:150px; overflow:hidden; }
-        #section-avisos .sales-community-main .team-track { height:150px; }
-        #section-avisos .sales-community-main .team-card { width:170px; min-width:170px; height:145px; min-height:145px !important; padding:.55rem; border-radius:1rem; overflow:hidden; }
-        #section-avisos .sales-community-main .team-avatar { width:4rem !important; height:4rem !important; margin-bottom:.45rem !important; }
-        #section-avisos .sales-community-main .employee-name { font-size:.75rem; line-height:1.15; }
-        #section-avisos .sales-community-main .team-card>p.text-sm { font-size:.67rem; line-height:1.15; }
-        #section-avisos .sales-community-main .birthday-info { margin-top:.35rem; padding:.25rem .45rem; font-size:.58rem; }
+        #section-avisos .sales-community-main .team-carousel { height:215px; min-height:215px; overflow-x:auto; overflow-y:hidden; }
+        #section-avisos .sales-community-main .team-track { min-height:210px; height:auto; align-items:stretch; }
+        #section-avisos .sales-community-main .team-card { display:flex; width:180px; min-width:180px; height:210px; min-height:210px !important; padding:.65rem; border-radius:1rem; overflow:hidden; flex-direction:column; align-items:center; }
+        #section-avisos .sales-community-main .team-avatar { width:4.25rem !important; height:4.25rem !important; min-height:4.25rem; margin-bottom:.45rem !important; flex:0 0 4.25rem; }
+        #section-avisos .sales-community-main .employee-name { display:-webkit-box; min-height:1.8rem; overflow:hidden; font-size:.75rem; line-height:1.15; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+        #section-avisos .sales-community-main .team-card>p.text-sm { display:-webkit-box; min-height:1.55rem; overflow:hidden; font-size:.67rem; line-height:1.15; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+        #section-avisos .sales-community-main .birthday-info { min-height:1.75rem; margin-top:auto; padding:.25rem .45rem; font-size:.58rem; white-space:nowrap; }
         #section-avisos .sales-community-main .team-extra { display:none; }
-        #section-avisos .sales-team-wall { height:225px; padding:.7rem .8rem; overflow:hidden; }
+        #section-avisos .sales-team-wall { min-height:305px; height:auto; padding:.7rem .8rem; overflow:visible; }
         #section-avisos .sales-wall-item { padding:.42rem 0; }
         #section-avisos .sales-wall-item>i { flex-basis:1.85rem; height:1.85rem; }
         .sales-support-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.85rem; align-items:start; }
@@ -3099,6 +3099,91 @@
         .home-progress span { background:linear-gradient(90deg,#075eff,#e2e8f0,#1687ff); box-shadow:0 0 12px #1687ff; }
         .home-next-step button { color:#8fc1ff; }
 
+        /* Campanha institucional temporária — agosto de 2026 */
+        .isabela-campaign { margin-bottom:1.5rem; color:#172033; }
+        .isabela-campaign-hero {
+            position:relative; min-height:450px; overflow:hidden; border:1px solid rgba(203,213,225,.34);
+            border-radius:1.75rem; background:#07152f; box-shadow:0 24px 54px rgba(0,8,28,.34),inset 0 1px 0 rgba(255,255,255,.12);
+            isolation:isolate;
+        }
+        .isabela-campaign-media { position:absolute; inset:0; overflow:hidden; }
+        .isabela-campaign-media img { width:100%; height:100%; object-fit:cover; object-position:center; transform:scale(1); transition:transform 8s cubic-bezier(.2,.65,.25,1); }
+        .isabela-campaign-hero::after {
+            content:""; position:absolute; z-index:1; inset:0; pointer-events:none;
+            background:linear-gradient(90deg,rgba(3,12,31,.98) 0%,rgba(5,20,49,.91) 33%,rgba(5,19,46,.48) 51%,rgba(3,12,31,.04) 72%);
+        }
+        .isabela-campaign-copy { position:relative; z-index:2; display:flex; min-height:450px; width:46%; flex-direction:column; justify-content:center; padding:clamp(2rem,5vw,4.4rem); }
+        .isabela-campaign-eyebrow { display:flex; align-items:center; gap:.65rem; color:#b9d6ff; font-size:.69rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
+        .isabela-campaign-eyebrow::before { content:""; width:2rem; height:1px; background:linear-gradient(90deg,#f8fafc,#60a5fa); }
+        #section-inicio .isabela-campaign-copy h2 { margin:.95rem 0 .35rem; color:#f7faff !important; -webkit-text-fill-color:#f7faff !important; font-family:'Montserrat',sans-serif; font-size:clamp(2.35rem,5vw,4.35rem); font-weight:900; letter-spacing:-.055em; line-height:.96; text-shadow:0 4px 24px rgba(142,188,255,.22),0 2px 5px rgba(0,0,0,.46); }
+        #section-inicio .isabela-campaign-copy .isabela-campaign-subtitle { color:#eef5ff !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.05rem,2vw,1.45rem); font-weight:750; }
+        #section-inicio .isabela-campaign-copy .isabela-campaign-summary { max-width:34rem; margin-top:.9rem; color:#c6d5e9 !important; font-size:.92rem; line-height:1.65; }
+        .isabela-campaign-actions { display:flex; flex-wrap:wrap; align-items:center; gap:.8rem; margin-top:1.45rem; }
+        .isabela-date-badge { display:inline-flex; align-items:center; gap:.5rem; padding:.72rem .95rem; border:1px solid rgba(226,232,240,.25); border-radius:999px; color:#e6eef9; background:rgba(2,10,27,.46); font-size:.75rem; font-weight:800; backdrop-filter:blur(10px); }
+        .isabela-tribute-button { display:inline-flex; align-items:center; justify-content:center; gap:.55rem; min-height:44px; padding:.75rem 1.1rem; border-radius:999px; color:#08204d; background:linear-gradient(135deg,#fff,#dce9f8); box-shadow:0 8px 22px rgba(0,0,0,.2); font-size:.78rem; font-weight:900; transition:transform .2s ease,box-shadow .2s ease; }
+        .isabela-tribute-button:hover { transform:translateY(-1px); box-shadow:0 12px 28px rgba(0,0,0,.25); }
+        .isabela-editorial { margin-top:1rem; padding:clamp(1.4rem,4vw,3rem); border:1px solid #dde6f1; border-radius:1.6rem; background:linear-gradient(145deg,#fff,#f7fafe); box-shadow:0 16px 38px rgba(8,35,80,.1); scroll-margin-top:6.5rem; }
+        .isabela-editorial-heading { max-width:780px; }
+        .isabela-editorial-kicker { color:#1d5fbf; font-size:.67rem; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }
+        .isabela-editorial-heading h3 { margin:.45rem 0 .65rem; color:#0b1e3d !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.6rem,3vw,2.45rem); font-weight:900; letter-spacing:-.035em; }
+        .isabela-editorial-heading>p { color:#5e6d83; line-height:1.7; }
+        .isabela-story-grid { display:grid; grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr); align-items:center; gap:clamp(1.5rem,4vw,3.5rem); margin-top:2rem; }
+        .isabela-story-copy { display:grid; gap:1rem; color:#46566e; font-size:.92rem; line-height:1.75; }
+        .isabela-story-copy strong { color:#102c59; }
+        .isabela-story-figure { overflow:hidden; border-radius:1.35rem; background:#07152f; box-shadow:0 18px 38px rgba(10,31,68,.18); }
+        .isabela-story-figure img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
+        .isabela-story-figure figcaption { padding:.8rem 1rem; color:#c7d4e7; background:#0a1b38; font-size:.7rem; line-height:1.5; }
+        .isabela-open-letter { margin:clamp(2rem,5vw,3.25rem) 0; overflow:hidden; border:1px solid #d5dfeb; border-radius:1.3rem; background:linear-gradient(145deg,#fbfdff,#f2f6fb); box-shadow:0 14px 32px rgba(15,35,80,.08); }
+        .isabela-open-letter summary { display:grid; grid-template-columns:3.35rem minmax(0,1fr) auto; align-items:center; gap:1rem; padding:1.15rem 1.25rem; cursor:pointer; list-style:none; }
+        .isabela-open-letter summary::-webkit-details-marker { display:none; }
+        .isabela-letter-icon { display:grid; place-items:center; width:3.35rem; height:3.35rem; border:1px solid rgba(165,183,207,.72); border-radius:1rem; color:#f5f9ff; background:linear-gradient(145deg,#153f7b,#09244d); box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 8px 18px rgba(8,36,82,.16); font-size:1.4rem; }
+        .isabela-letter-label { min-width:0; }
+        .isabela-letter-label small { display:block; color:#3869a4; font-size:.62rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
+        .isabela-letter-label strong { display:block; margin-top:.16rem; color:#102747; font-family:'Montserrat',sans-serif; font-size:clamp(.92rem,2vw,1.12rem); font-weight:850; }
+        .isabela-letter-label span { display:block; margin-top:.18rem; color:#6b7c92; font-size:.72rem; }
+        .isabela-letter-caret { color:#527092; font-size:1.15rem; transition:transform .25s ease; }
+        .isabela-open-letter[open] .isabela-letter-caret { transform:rotate(180deg); }
+        .isabela-letter-body { position:relative; max-width:900px; margin:0 auto; padding:clamp(1.5rem,5vw,3.3rem); border-top:1px solid #d9e2ed; color:#3c4d63; background:rgba(255,255,255,.84); font-size:clamp(.91rem,1.5vw,1rem); line-height:1.84; }
+        .isabela-letter-body::before { content:""; position:absolute; left:clamp(.8rem,2vw,1.5rem); top:2rem; bottom:2rem; width:2px; border-radius:99px; background:linear-gradient(#295f9f,#d5e1ef,#295f9f); opacity:.42; }
+        #section-inicio .isabela-letter-body p { color:#3c4d63 !important; }
+        .isabela-letter-body p+p { margin-top:1.15rem; }
+        .isabela-letter-salutation { color:#102e59 !important; font-family:'Montserrat',sans-serif; font-size:1.2rem; font-weight:850; }
+        #section-inicio .isabela-letter-emphasis { padding:1rem 1.1rem; border-left:3px solid #2b65aa; color:#153861 !important; background:#edf4fc; font-family:'Montserrat',sans-serif; font-weight:700; line-height:1.65; }
+        .isabela-letter-signature { padding-top:.45rem; color:#52657d !important; }
+        .isabela-letter-signature strong { color:#123765; }
+        .isabela-editorial-quote { margin:clamp(2rem,5vw,3.5rem) auto; padding:1.65rem clamp(1rem,4vw,2rem); border-block:1px solid #cfdae8; color:#0e315f; font-family:'Montserrat',sans-serif; font-size:clamp(1.35rem,3vw,2.15rem); font-weight:850; line-height:1.3; text-align:center; }
+        .isabela-message-wall { padding-top:.3rem; }
+        .isabela-wall-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+        .isabela-wall-heading h4 { color:#10213e !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.25rem,2.5vw,1.8rem); font-weight:900; }
+        .isabela-wall-heading p { margin-top:.3rem; color:#718096; font-size:.78rem; }
+        .isabela-wall-count { flex:0 0 auto; padding:.45rem .7rem; border-radius:999px; color:#1d4f91; background:#e9f2ff; font-size:.68rem; font-weight:850; }
+        .isabela-message-form { display:grid; gap:.8rem; padding:1rem; border:1px solid #dce5f0; border-radius:1.2rem; background:#f8fbff; }
+        .isabela-message-identity { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; color:#304258; font-size:.75rem; }
+        .isabela-message-identity strong { color:#102b54; }
+        .isabela-message-identity span { color:#718096; }
+        .isabela-message-form textarea { width:100%; min-height:112px; resize:vertical; padding:.9rem 1rem; border:1px solid #cdd8e6; border-radius:.9rem; color:#172033; background:#fff; outline:none; line-height:1.55; }
+        .isabela-message-form textarea:focus { border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.11); }
+        .isabela-message-footer { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.75rem; }
+        .isabela-message-meta { display:flex; align-items:center; gap:.75rem; color:#7a899d; font-size:.7rem; }
+        .isabela-message-status { min-height:1rem; font-weight:700; }
+        .isabela-message-status[data-type="error"] { color:#b42318; }
+        .isabela-message-status[data-type="success"] { color:#147a4b; }
+        .isabela-submit-button { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:42px; padding:.7rem 1rem; border-radius:.85rem; color:#fff; background:#123f87; font-size:.76rem; font-weight:850; box-shadow:0 8px 20px rgba(18,63,135,.16); }
+        .isabela-submit-button:disabled { cursor:wait; opacity:.65; }
+        .isabela-message-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; margin-top:1rem; }
+        .isabela-message-card { position:relative; min-width:0; padding:1rem; border:1px solid #dce5f0; border-radius:1rem; background:#fff; box-shadow:0 9px 22px rgba(15,35,80,.06); }
+        .isabela-message-card.is-hidden { opacity:.62; border-style:dashed; background:#f7f8fa; }
+        .isabela-message-card header { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; }
+        .isabela-message-card strong { display:block; color:#142945; font-size:.79rem; }
+        .isabela-message-card small { display:block; margin-top:.15rem; color:#7a899c; font-size:.65rem; }
+        .isabela-message-card p { margin-top:.75rem; color:#46566c; font-size:.8rem; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; }
+        .isabela-moderation-button { flex:0 0 auto; padding:.4rem .6rem; border:1px solid #d7e1ed; border-radius:.65rem; color:#38577e; background:#f7fafe; font-size:.63rem; font-weight:800; }
+        .isabela-message-empty { grid-column:1/-1; padding:1.4rem; border:1px dashed #cbd6e4; border-radius:1rem; color:#718096; background:#fafcff; font-size:.78rem; text-align:center; }
+
+        @media (hover:hover) and (pointer:fine) {
+            .isabela-campaign-hero:hover .isabela-campaign-media img { transform:scale(1.035); }
+        }
+
         @media (max-width: 1024px) {
             .home-quick-actions,.home-workflow-card { grid-column:span 12; }
             .home-kpi-card,.home-kpi-primary { grid-column:span 4; }
@@ -3111,6 +3196,8 @@
             .sales-history-card,.sales-chargeback-card { grid-column:span 6; }
             .sales-hunters-card { grid-column:1/-1; }
             .sales-timeline-card #sales-timeline-list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .isabela-campaign-copy { width:55%; }
+            .isabela-story-grid { grid-template-columns:1fr; }
         }
         @media (max-width: 767px) {
             .home-command-header { min-height:250px; }
@@ -3125,6 +3212,30 @@
             .sales-history-card,.sales-chargeback-card,.sales-hunters-card { grid-column:1/-1; }
             .hunter-compact-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
             .sales-hunters-card #ranking-hunters-list,.sales-timeline-card #sales-timeline-list { grid-template-columns:1fr; }
+            .isabela-campaign-hero { display:flex; min-height:0; flex-direction:column; }
+            .isabela-campaign-media { position:relative; order:1; height:250px; }
+            .isabela-campaign-media img { object-position:68% center; }
+            .isabela-campaign-hero::after { display:none; }
+            .isabela-campaign-copy { order:2; min-height:0; width:100%; padding:1.5rem; background:linear-gradient(145deg,#07152f,#0d2b61); }
+            #section-inicio .isabela-campaign-copy h2 { font-size:2.45rem; }
+            .isabela-campaign-summary { font-size:.84rem; }
+            .isabela-campaign-actions { align-items:stretch; flex-direction:column; }
+            .isabela-date-badge,.isabela-tribute-button { width:100%; justify-content:center; }
+            .isabela-editorial { padding:1.2rem; }
+            .isabela-story-grid { grid-template-columns:minmax(0,1fr); }
+            .isabela-story-figure { border-radius:1rem; }
+            .isabela-open-letter summary { grid-template-columns:2.8rem minmax(0,1fr) auto; gap:.75rem; padding:1rem; }
+            .isabela-letter-icon { width:2.8rem; height:2.8rem; border-radius:.85rem; }
+            .isabela-letter-label span { display:none; }
+            .isabela-letter-body { padding:1.4rem 1.25rem 1.5rem 1.7rem; }
+            .isabela-wall-heading { align-items:flex-start; flex-direction:column; }
+            .isabela-message-footer { align-items:stretch; flex-direction:column; }
+            .isabela-submit-button { width:100%; }
+            .isabela-message-grid { grid-template-columns:1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .isabela-campaign-media img,.isabela-tribute-button { transition:none !important; transform:none !important; }
         }
 
         @media (max-width: 767px), (any-pointer: coarse) {
@@ -3355,6 +3466,104 @@
             
             <section id="section-inicio" class="content-section animate-fade-in operational-home">
                 <div class="max-w-7xl mx-auto">
+                    <section id="celebrando-isabela" class="isabela-campaign" data-campaign-start="2026-08-01" data-campaign-end="2026-08-31" aria-labelledby="isabela-campaign-title" hidden>
+                        <div class="isabela-campaign-hero">
+                            <div class="isabela-campaign-media">
+                                <img src="assets/campaigns/celebrando-isabela-hero.png" alt="Isabela, CEO da Platino, em retrato institucional" width="1792" height="1024">
+                            </div>
+                            <div class="isabela-campaign-copy">
+                                <span class="isabela-campaign-eyebrow">AGOSTO • HOMENAGEM ESPECIAL</span>
+                                <h2 id="isabela-campaign-title">Celebrando Isabela</h2>
+                                <p class="isabela-campaign-subtitle">A força e a alma da Platino.</p>
+                                <p class="isabela-campaign-summary">Uma história de coragem, liderança e transformação.</p>
+                                <div class="isabela-campaign-actions">
+                                    <span class="isabela-date-badge"><i class="ph ph-calendar-blank" aria-hidden="true"></i> 13 de agosto</span>
+                                    <button type="button" class="isabela-tribute-button" onclick="openIsabelaTribute()">
+                                        Ler homenagem <i class="ph ph-arrow-down" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <article id="homenagem-isabela" class="isabela-editorial" tabindex="-1" aria-labelledby="isabela-editorial-title">
+                            <div class="isabela-editorial-heading">
+                                <span class="isabela-editorial-kicker">Uma liderança que deixa marcas positivas</span>
+                                <h3 id="isabela-editorial-title">À frente da Platino, perto de cada pessoa</h3>
+                                <p>Esta homenagem reconhece a mulher que transforma visão em caminho, desafios em aprendizado e trabalho em oportunidades reais para tantas pessoas.</p>
+                            </div>
+
+                            <div class="isabela-story-grid">
+                                <div class="isabela-story-copy">
+                                    <p><strong>Liderar exige coragem.</strong> É escolher seguir em frente mesmo quando o percurso pede firmeza, sensibilidade e decisões difíceis.</p>
+                                    <p>Isabela construiu uma trajetória movida por propósito e proximidade. Sua forma de conduzir a Platino inspira confiança, fortalece talentos e mostra que resultados consistentes também nascem do cuidado com as pessoas.</p>
+                                    <p>Durante este mês, celebramos sua história e agradecemos pela presença, pela determinação e por fazer cada conquista coletiva ter ainda mais significado.</p>
+                                </div>
+                                <figure class="isabela-story-figure">
+                                    <img src="assets/campaigns/celebrando-isabela-trajetoria.png" alt="Momentos da trajetória de Isabela na Platino" width="1792" height="1024" loading="lazy">
+                                    <figcaption>Uma trajetória presente nos encontros, nas conquistas e na evolução de toda a equipe.</figcaption>
+                                </figure>
+                            </div>
+
+                            <details class="isabela-open-letter">
+                                <summary aria-label="Abrir carta de homenagem para Isabela">
+                                    <span class="isabela-letter-icon" aria-hidden="true"><i class="ph ph-envelope-open"></i></span>
+                                    <span class="isabela-letter-label">
+                                        <small>Carta aberta</small>
+                                        <strong>Uma mensagem de toda a equipe</strong>
+                                        <span>Clique para abrir e ler a homenagem completa.</span>
+                                    </span>
+                                    <i class="ph ph-caret-down isabela-letter-caret" aria-hidden="true"></i>
+                                </summary>
+                                <div class="isabela-letter-body">
+                                    <p class="isabela-letter-salutation">Isabela,</p>
+                                    <p>A trajetória da Platino é feita de muitas fases, muitas temporadas e diversos personagens. Pessoas chegaram, fizeram parte dessa caminhada e seguiram novos caminhos. Tivemos desafios, mudanças e momentos difíceis, mas, em meio a tudo isso, você nunca desistiu do seu sonho.</p>
+                                    <p>Porque a Platino não é apenas uma empresa. <strong>A Platino é uma história.</strong> Uma história construída com coragem, persistência e, acima de tudo, com a sua vontade de fazer dar certo.</p>
+                                    <p>Em nome de todos os colaboradores que já passaram pela Platino, deixamos aqui o nosso agradecimento por você ter acreditado nesse sonho e por ter construído algo que vai muito além de uma empresa. Através da Platino, você também ajudou muitas pessoas a acreditarem em seus próprios sonhos, mudarem suas vidas e proporcionarem um futuro melhor para suas famílias.</p>
+                                    <p class="isabela-letter-emphasis"><strong>Que você nunca se esqueça: o seu sonho não transformou apenas a sua vida. Ele também fez parte da transformação da vida de muitas outras pessoas.</strong></p>
+                                    <p>Esta é a nossa homenagem a você, Isabela, por nunca ter desistido da história que decidiu escrever.</p>
+                                    <p class="isabela-letter-signature">Com admiração,<br><strong>Equipe Platino</strong></p>
+                                </div>
+                            </details>
+
+                            <blockquote class="isabela-editorial-quote">“Empreender também é transformar vidas.”</blockquote>
+
+                            <section class="isabela-message-wall" aria-labelledby="isabela-wall-title">
+                                <div class="isabela-wall-heading">
+                                    <div>
+                                        <h4 id="isabela-wall-title">Deixe sua mensagem para Isabela</h4>
+                                        <p>Sua homenagem ficará registrada neste mural durante a campanha.</p>
+                                    </div>
+                                    <span id="isabela-message-count" class="isabela-wall-count">0 mensagens</span>
+                                </div>
+
+                                <form id="isabela-message-form" class="isabela-message-form">
+                                    <div class="isabela-message-identity" aria-live="polite">
+                                        <i class="ph ph-user-circle" aria-hidden="true"></i>
+                                        <strong id="isabela-message-author">Colaborador Platino</strong>
+                                        <span aria-hidden="true">•</span>
+                                        <span id="isabela-message-department">Equipe</span>
+                                    </div>
+                                    <label for="isabela-message-input" class="sr-only">Mensagem para Isabela</label>
+                                    <textarea id="isabela-message-input" maxlength="400" required placeholder="Escreva uma mensagem de reconhecimento e carinho..." aria-describedby="isabela-message-help isabela-message-status"></textarea>
+                                    <div class="isabela-message-footer">
+                                        <div class="isabela-message-meta">
+                                            <span id="isabela-message-help">Até 400 caracteres</span>
+                                            <span id="isabela-message-counter" aria-live="polite">0/400</span>
+                                            <span id="isabela-message-status" class="isabela-message-status" role="status"></span>
+                                        </div>
+                                        <button id="isabela-message-submit" type="submit" class="isabela-submit-button">
+                                            <i class="ph ph-heart" aria-hidden="true"></i> Registrar homenagem
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div id="isabela-message-grid" class="isabela-message-grid" aria-live="polite">
+                                    <div class="isabela-message-empty">As mensagens da equipe aparecerão aqui.</div>
+                                </div>
+                            </section>
+                        </article>
+                    </section>
+
                     <header class="home-command-header">
                         <div class="home-command-copy">
                             <span class="home-eyebrow"><i class="ph-fill ph-sparkle"></i> Hub operacional</span>
@@ -3477,7 +3686,7 @@
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
                         <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
                             <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
-                                <img id="avisos-highlight-photo" src="assets/platino-infohub-icon.png" alt="Símbolo da equipe Platino" class="h-full w-full object-cover object-center">
+                                <img id="avisos-highlight-photo" src="assets/equipe/beatriz-garcia.png" alt="Foto de Beatriz Garcia" class="h-full w-full object-cover object-center">
                             </div>
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -7833,16 +8042,19 @@
         }
 
         const platinoPeople = [
+            { name: 'BEATRIZ GARCIA', date: '', role: 'Consultora financeira', photo: 'assets/equipe/beatriz-garcia.png', photoPosition: 'center center' },
             { name: 'GIULLIAN GABRIELLEN', date: '11/01/2000', role: 'Hunter Jurídico', photo: 'assets/equipe/giullian-gabriellen.png' },
             { name: 'NICOLAS PERES ISSO', date: '03/01/2006', role: 'Supervisor Jurídico', photo: 'assets/equipe/nicolas-peres-isso.png', aliases: ['Nicolas Peres'] },
             { name: 'EMILY DO VAL FERNANDES', date: '11/02/2005', role: 'Departamento Pessoal', photo: 'assets/equipe/emily-do-val-fernandes.png', aliases: ['Emily'] },
             { name: 'ROBERTA INÊS BRANDÃO', date: '25/02/1992', role: 'Supervisora Comercial', photo: 'assets/equipe/roberta-ines-brandao.png', photoPosition: 'center center', aliases: ['Roberta Brandão'] },
             { name: 'JANAINA RODRIGUES PAIVA', date: '03/04/1987', role: 'Consultora financeira' },
             { name: 'RAFAELA MARCELINO', date: '03/04/1994', role: 'Consultora financeira', photo: 'assets/equipe/rafaela-marcelino.png', photoPosition: 'center center' },
-            { name: 'FERNANDA RAMOS', date: '13/04/2007', role: 'Consultora financeira', photo: 'assets/equipe/fernanda-ramos.png' },
+            { name: 'Fernanda Ramos', date: '13/04/2007', role: 'Consultora financeira', photo: 'assets/equipe/fernanda-ramos.png', photoPosition: 'center center' },
             { name: 'TABATA RANGEL DE LIMA', date: '30/05/1991', role: 'Consultora Jurídica', photo: 'assets/equipe/tabata-rangel-de-lima.png', photoPosition: 'center 18%' },
             { name: 'TAFAREL MOREIRA', date: '30/06/1998', role: 'Supervisor Administrativo', photo: 'assets/equipe/tafarel-moreira.png' },
-            { name: 'GEOVANNA ALVES XAVIER', date: '18/07/2003', role: 'Consultora financeira', photo: 'assets/equipe/geovanna-alves-xavier.png' },
+            { name: 'Geovanna Alves Xavier', date: '18/07/2003', role: 'Consultora financeira', photo: 'assets/equipe/geovanna-alves-xavier.png', photoPosition: 'center center' },
+            { name: 'Mariana Santos', date: '', role: 'Consultora financeira', photo: 'assets/equipe/mariana-santos.png', photoPosition: 'center center' },
+            { name: 'Thayla Venturini', date: '', role: 'Consultora financeira', photo: 'assets/equipe/thayla-venturini.jpeg', photoPosition: 'center 26%' },
             { name: 'JONATAS SILVA FERRAZ', date: '02/08/2004', role: 'Marketing', photo: 'assets/equipe/jonatas-silva-ferraz.png', photoPosition: 'center center', aliases: ['Jonathas Silva Ferraz'] },
             { name: 'ISABELA LIMA DE SOUZA', date: '13/08/2000', role: 'CEO', photo: 'assets/equipe/isabela-lima-de-souza.png', aliases: ['Isabela Lima'] },
             { name: 'ANNA GRAZIELLY FERREIRA', date: '31/08/2003', role: 'RH - Recrutamento e seleção', photo: 'assets/equipe/anna-grazielly-ferreira.png', photoPosition: 'center 14%', aliases: ['Grazielly Aguilar', 'Anna Grazielly Ferreira Aguilar'] },
@@ -7938,8 +8150,11 @@
             return birthdays.find(person => isSamePersonName(person.name, name));
         }
 
+      const AVISOS_HIGHLIGHT_VERSION = '2026-07-beatriz-garcia';
+
       const defaultAvisosData = {
             monthKey: getCurrentOperationalMonthKey(),
+            highlightVersion: AVISOS_HIGHLIGHT_VERSION,
             main: {
                 title: 'Atualização no Fluxo do GOV.BR',
                 text: 'Atenção equipe Administrativa: O prazo de resposta no Consumidor.gov foi alterado pelo sistema. Agora devemos monitorar os protocolos a cada 48 horas. O manual já foi atualizado.',
@@ -7952,11 +8167,13 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'Destaque da Operação',
-                name: 'Equipe Platino',
-                subtitle: 'Resultados do mês em atualização.',
-                value: '—',
-                badge: 'Equipe Platino'
+                title: 'Destaque do mês de julho',
+                name: 'Beatriz Garcia',
+                subtitle: 'Ultrapassou sua meta em seu primeiro mês.',
+                value: 'R$ 21.078,50',
+                badge: 'Meta superada',
+                photo: 'assets/equipe/beatriz-garcia.png',
+                photoPosition: 'center center'
             },
             week: {
                 contracts: '0',
@@ -8073,6 +8290,7 @@
 
             return {
                 monthKey: defaultAvisosData.monthKey,
+                highlightVersion: defaultAvisosData.highlightVersion,
                 main: { ...defaultAvisosData.main, ...(value.main || {}) },
                 notices: normalizeList(value.notices, defaultAvisosData.notices).map(item => ({
                     category: String(item?.category || '').trim(),
@@ -8080,7 +8298,9 @@
                     text: String(item?.text || '').trim()
                 })).filter(item => item.category || item.title || item.text),
                 highlight: (() => {
-                    const highlight = { ...defaultAvisosData.highlight, ...(value.highlight || {}) };
+                    const highlight = value.highlightVersion === defaultAvisosData.highlightVersion
+                        ? { ...defaultAvisosData.highlight, ...(value.highlight || {}) }
+                        : { ...defaultAvisosData.highlight };
                     return isInactiveTeamMember(highlight.name)
                         ? { ...defaultAvisosData.highlight }
                         : highlight;
@@ -8131,6 +8351,12 @@
             document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
             document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
             document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
+            const highlightPhoto = document.getElementById('avisos-highlight-photo');
+            if (highlightPhoto) {
+                highlightPhoto.src = avisosData.highlight.photo || defaultAvisosData.highlight.photo;
+                highlightPhoto.alt = `Foto de ${avisosData.highlight.name || defaultAvisosData.highlight.name}`;
+                highlightPhoto.style.objectPosition = avisosData.highlight.photoPosition || defaultAvisosData.highlight.photoPosition || 'center center';
+            }
             document.getElementById('avisos-week-contracts').innerText = avisosData.week.contracts;
             setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
             setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
@@ -10699,6 +10925,7 @@
                 remoteData.notices = nextData.notices;
             } else if (activeAvisosEditorSection === 'highlight') {
                 nextData.highlight = {
+                    ...avisosData.highlight,
                     title: document.getElementById('editor-avisos-highlight-title').value.trim() || defaultAvisosData.highlight.title,
                     name: document.getElementById('editor-avisos-highlight-name').value.trim() || defaultAvisosData.highlight.name,
                     subtitle: document.getElementById('editor-avisos-highlight-subtitle').value.trim() || defaultAvisosData.highlight.subtitle,
@@ -10706,6 +10933,7 @@
                     badge: document.getElementById('editor-avisos-highlight-badge').value.trim() || defaultAvisosData.highlight.badge
                 };
                 remoteData.highlight = nextData.highlight;
+                remoteData.highlightVersion = defaultAvisosData.highlightVersion;
             } else if (activeAvisosEditorSection === 'week') {
                 nextData.week = {
                     contracts: document.getElementById('editor-avisos-week-contracts').value.trim() || defaultAvisosData.week.contracts,
@@ -10714,12 +10942,14 @@
                     revenue: document.getElementById('editor-avisos-week-revenue').value.trim() || defaultAvisosData.week.revenue
                 };
                 remoteData.week = nextData.week;
+                remoteData.monthKey = defaultAvisosData.monthKey;
             } else if (activeAvisosEditorSection === 'chargebacks') {
                 nextData.chargebacks = {
                     count: document.getElementById('editor-avisos-chargebacks-count').value.trim(),
                     recent: parseChargebacksFromEditor(document.getElementById('editor-avisos-chargebacks-recent').value)
                 };
                 remoteData.chargebacks = nextData.chargebacks;
+                remoteData.monthKey = defaultAvisosData.monthKey;
             } else if (activeAvisosEditorSection === 'birthdays') {
                 nextData.birthdays = document.getElementById('editor-avisos-birthdays').value
                     .split('\n')
@@ -10767,8 +10997,16 @@
         }
 
         window.applyRemoteAvisos = function (remoteData) {
-            if (!remoteData?.main || !remoteData?.highlight || !remoteData?.week) return;
-            avisosData = normalizeAvisosData(remoteData);
+            if (!remoteData || typeof remoteData !== 'object') return;
+            const mergedRemoteData = {
+                ...avisosData,
+                ...remoteData,
+                main: { ...avisosData.main, ...(remoteData.main || {}) },
+                highlight: { ...avisosData.highlight, ...(remoteData.highlight || {}) },
+                week: { ...avisosData.week, ...(remoteData.week || {}) },
+                chargebacks: { ...avisosData.chargebacks, ...(remoteData.chargebacks || {}) }
+            };
+            avisosData = normalizeAvisosData(mergedRemoteData);
             localStorage.setItem('platinoAvisos', JSON.stringify(avisosData));
             renderAvisos();
         };
@@ -10813,6 +11051,7 @@
         collection,
         doc,
         enableMultiTabIndexedDbPersistence,
+        getDoc,
         getFirestore,
         limit,
         onSnapshot,
@@ -10884,6 +11123,10 @@
       let stopReminderSubscription = null;
       let stopAccountSubscription = null;
       let stopMonthlyGoalSubscription = null;
+      let isabelaTributesRef = null;
+      let stopIsabelaTributesSubscription = null;
+      let currentIsabelaTributes = [];
+      let isabelaCampaignVisibilityTimer = null;
       let accountManagementApi = null;
       let currentWorkspaceItems = [];
       let currentMonthlyGoal = null;
@@ -10896,6 +11139,203 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+
+      function getSaoPauloDateParts(date = new Date()) {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone: "America/Sao_Paulo",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        }).formatToParts(date);
+        return Object.fromEntries(parts.filter(part => part.type !== "literal").map(part => [part.type, Number(part.value)]));
+      }
+
+      function isIsabelaCampaignActive(date = new Date()) {
+        const { year, month, day } = getSaoPauloDateParts(date);
+        return year === 2026 && month === 8 && day >= 1 && day <= 31;
+      }
+
+      function setIsabelaMessageStatus(message = "", type = "info") {
+        const status = document.getElementById("isabela-message-status");
+        if (!status) return;
+        status.textContent = message;
+        status.dataset.type = type;
+      }
+
+      function updateIsabelaMessageIdentity() {
+        const user = auth?.currentUser || window.firebaseAuthUser;
+        const fallbackName = user?.email?.split("@")[0] || "Colaborador Platino";
+        const displayedName = document.getElementById("user-name")?.textContent?.trim() || user?.displayName || fallbackName;
+        const department = window.platinoUserSector || "Equipe";
+        const authorElement = document.getElementById("isabela-message-author");
+        const departmentElement = document.getElementById("isabela-message-department");
+        if (authorElement) authorElement.textContent = displayedName;
+        if (departmentElement) departmentElement.textContent = department;
+      }
+
+      function formatIsabelaMessageDate(tribute) {
+        const date = tribute?.createdAt?.toDate?.() || (tribute?.createdAtIso ? new Date(tribute.createdAtIso) : null);
+        if (!date || Number.isNaN(date.getTime())) return "Agora";
+        return new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }).format(date);
+      }
+
+      function renderIsabelaTributes() {
+        const grid = document.getElementById("isabela-message-grid");
+        const count = document.getElementById("isabela-message-count");
+        if (!grid || !count) return;
+        const canModerate = window.platinoUserRole === "gestor";
+        const publishedCount = currentIsabelaTributes.filter(item => item.status !== "hidden").length;
+        count.textContent = `${publishedCount} ${publishedCount === 1 ? "mensagem" : "mensagens"}`;
+        const visibleTributes = canModerate
+          ? currentIsabelaTributes
+          : currentIsabelaTributes.filter(item => item.status !== "hidden");
+
+        if (!visibleTributes.length) {
+          grid.innerHTML = '<div class="isabela-message-empty">Seja a primeira pessoa a registrar uma homenagem para Isabela.</div>';
+          return;
+        }
+
+        grid.innerHTML = visibleTributes.map(tribute => {
+          const isHidden = tribute.status === "hidden";
+          const moderationButton = canModerate
+            ? `<button type="button" class="isabela-moderation-button" onclick="moderateIsabelaTribute('${htmlSafe(tribute.id)}', '${isHidden ? "published" : "hidden"}')">${isHidden ? "Restaurar" : "Ocultar"}</button>`
+            : "";
+          return `
+            <article class="isabela-message-card${isHidden ? " is-hidden" : ""}">
+              <header>
+                <div>
+                  <strong>${htmlSafe(tribute.authorName || "Colaborador Platino")}</strong>
+                  <small>${htmlSafe(tribute.department || "Equipe")} • ${htmlSafe(formatIsabelaMessageDate(tribute))}${isHidden ? " • Oculta" : ""}</small>
+                </div>
+                ${moderationButton}
+              </header>
+              <p>${htmlSafe(tribute.message)}</p>
+            </article>`;
+        }).join("");
+      }
+
+      async function hashIsabelaTribute(value) {
+        const normalized = value.normalize("NFKC").replace(/\s+/g, " ").trim().toLocaleLowerCase("pt-BR");
+        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(normalized));
+        return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+      }
+
+      async function submitIsabelaTribute(event) {
+        event.preventDefault();
+        const user = auth?.currentUser;
+        const input = document.getElementById("isabela-message-input");
+        const submit = document.getElementById("isabela-message-submit");
+        const message = input?.value?.trim() || "";
+        if (!user || !isabelaTributesRef) {
+          setIsabelaMessageStatus("Entre novamente para registrar sua homenagem.", "error");
+          return;
+        }
+        if (!message || message.length > 400) {
+          setIsabelaMessageStatus("Escreva uma mensagem com até 400 caracteres.", "error");
+          input?.focus();
+          return;
+        }
+
+        try {
+          submit.disabled = true;
+          setIsabelaMessageStatus("Registrando...", "info");
+          const messageHash = await hashIsabelaTribute(message);
+          const tributeReference = doc(isabelaTributesRef, `${user.uid}_${messageHash.slice(0, 32)}`);
+          const existingTribute = await getDoc(tributeReference);
+          if (existingTribute.exists()) {
+            setIsabelaMessageStatus("Esta mesma homenagem já foi registrada.", "error");
+            return;
+          }
+
+          const fallbackName = user.email?.split("@")[0] || "Colaborador Platino";
+          const authorName = document.getElementById("user-name")?.textContent?.trim() || user.displayName || fallbackName;
+          await setDoc(tributeReference, {
+            authorUid: user.uid,
+            authorName,
+            department: window.platinoUserSector || "Equipe",
+            message,
+            messageHash,
+            status: "published",
+            createdAt: serverTimestamp(),
+            createdAtIso: new Date().toISOString()
+          });
+          input.value = "";
+          document.getElementById("isabela-message-counter").textContent = "0/400";
+          setIsabelaMessageStatus("Homenagem registrada com sucesso.", "success");
+        } catch (error) {
+          console.error("Não foi possível registrar a homenagem.", error);
+          setIsabelaMessageStatus("Não foi possível registrar agora. Tente novamente.", "error");
+        } finally {
+          submit.disabled = false;
+        }
+      }
+
+      function subscribeToIsabelaTributes() {
+        if (!isIsabelaCampaignActive() || !isabelaTributesRef || stopIsabelaTributesSubscription) return;
+        const tributeQuery = query(isabelaTributesRef, orderBy("createdAt", "desc"), limit(100));
+        stopIsabelaTributesSubscription = onSnapshot(tributeQuery, snapshot => {
+          currentIsabelaTributes = snapshot.docs.map(snapshotDocument => ({ id: snapshotDocument.id, ...snapshotDocument.data() }));
+          renderIsabelaTributes();
+        }, error => {
+          console.error("Não foi possível carregar o mural da homenagem.", error);
+          setIsabelaMessageStatus("O mural está temporariamente indisponível.", "error");
+        });
+      }
+
+      function initializeIsabelaCampaign() {
+        const campaign = document.getElementById("celebrando-isabela");
+        if (!campaign) return;
+        const isActive = isIsabelaCampaignActive();
+        campaign.hidden = !isActive;
+        if (!isActive) {
+          if (stopIsabelaTributesSubscription) {
+            stopIsabelaTributesSubscription();
+            stopIsabelaTributesSubscription = null;
+          }
+          return;
+        }
+        updateIsabelaMessageIdentity();
+        subscribeToIsabelaTributes();
+      }
+
+      window.openIsabelaTribute = function () {
+        const tribute = document.getElementById("homenagem-isabela");
+        if (!tribute) return;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        tribute.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        window.setTimeout(() => tribute.focus({ preventScroll: true }), reduceMotion ? 0 : 650);
+      };
+
+      window.moderateIsabelaTribute = async function (tributeId, status) {
+        if (window.platinoUserRole !== "gestor" || !isabelaTributesRef || !["hidden", "published"].includes(status)) return;
+        try {
+          await updateDoc(doc(isabelaTributesRef, tributeId), {
+            status,
+            moderatedAt: serverTimestamp(),
+            moderatedBy: auth?.currentUser?.uid || "gestor"
+          });
+          setIsabelaMessageStatus(status === "hidden" ? "Mensagem ocultada do mural." : "Mensagem restaurada.", "success");
+        } catch (error) {
+          console.error("Não foi possível moderar a homenagem.", error);
+          setIsabelaMessageStatus("Não foi possível concluir a moderação.", "error");
+        }
+      };
+
+      const isabelaMessageInput = document.getElementById("isabela-message-input");
+      document.getElementById("isabela-message-form")?.addEventListener("submit", submitIsabelaTribute);
+      isabelaMessageInput?.addEventListener("input", () => {
+        document.getElementById("isabela-message-counter").textContent = `${isabelaMessageInput.value.length}/400`;
+        if (document.getElementById("isabela-message-status")?.textContent) setIsabelaMessageStatus();
+      });
+      initializeIsabelaCampaign();
+      isabelaCampaignVisibilityTimer = window.setInterval(initializeIsabelaCampaign, 60000);
 
       function setWorkspaceStatus(id, message, type = "info") {
         const element = document.getElementById(id);
@@ -11197,6 +11637,7 @@
           document.getElementById("profile-name-input").value = profile.displayName || user.displayName || "";
           document.getElementById("profile-avatar-preview").src = profile.avatarDataUrl || profile.photoURL || "assets/platino-infohub-icon.png";
           if (profile.displayName) document.getElementById("user-name").textContent = profile.displayName;
+          updateIsabelaMessageIdentity();
           renderMonthlyGoal();
         });
         stopReminderSubscription = subscribeToReminders(services, renderReminders, error =>
@@ -11770,6 +12211,7 @@
           rankingRef = doc(db, "appContent", "ranking");
           managementRef = doc(db, "appContent", "managementEdits");
           feedbacksRef = collection(db, "feedbacks");
+          isabelaTributesRef = collection(db, "isabelaTributes");
 
           onAuthStateChanged(auth, async (user) => {
         if (user && !loginAuthorizedForPage) {
@@ -11782,6 +12224,7 @@
           window.clearGlobalSearch?.();
           window.setTimeout(() => window.clearGlobalSearch?.(), 250);
           updateUserAccess(user);
+          initializeIsabelaCampaign();
           window.platinoFirebaseContext = { app, auth, db };
           window.dispatchEvent(new CustomEvent("platino-firebase-ready", {
             detail: window.platinoFirebaseContext
@@ -11844,6 +12287,12 @@
             stopFeedbackSubscription();
             stopFeedbackSubscription = null;
           }
+          if (stopIsabelaTributesSubscription) {
+            stopIsabelaTributesSubscription();
+            stopIsabelaTributesSubscription = null;
+          }
+          currentIsabelaTributes = [];
+          renderIsabelaTributes();
         }
           });
 

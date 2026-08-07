@@ -222,6 +222,40 @@ service cloud.firestore {
         && request.resource.data.handled is bool;
     }
 
+    function isValidIsabelaTributeCreate() {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'authorUid',
+          'authorName',
+          'department',
+          'message',
+          'messageHash',
+          'status',
+          'createdAt',
+          'createdAtIso'
+        ])
+        && data.authorUid == request.auth.uid
+        && isValidShortText(data.authorName, 120)
+        && isValidShortText(data.department, 100)
+        && isValidShortText(data.message, 400)
+        && data.messageHash is string
+        && data.messageHash.matches('^[0-9a-f]{64}$')
+        && data.status == 'published'
+        && data.createdAt is timestamp
+        && isValidShortText(data.createdAtIso, 40);
+    }
+
+    function isValidIsabelaTributeModeration() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',
+          'moderatedAt',
+          'moderatedBy'
+        ])
+        && request.resource.data.status in ['published', 'hidden']
+        && request.resource.data.moderatedAt is timestamp
+        && request.resource.data.moderatedBy == request.auth.uid;
+    }
+
     match /appContent/{document} {
       allow read: if signedIn();
       allow create: if isManagement();
@@ -264,6 +298,13 @@ service cloud.firestore {
       allow create: if signedIn() && isValidFeedbackCreate();
       allow read: if isManagement();
       allow update: if isManagement() && isValidFeedbackManagementUpdate();
+      allow delete: if false;
+    }
+
+    match /isabelaTributes/{tributeId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && isValidIsabelaTributeCreate();
+      allow update: if isManagement() && isValidIsabelaTributeModeration();
       allow delete: if false;
     }
 

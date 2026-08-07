@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node server.mjs",
     "audit:buttons": "node tests/button-interaction-audit.mjs",
+    "test:avisos": "node tests/avisos-team-highlight-test.mjs && node tests/avisos-chargeback-persistence-test.mjs && node tests/avisos-team-update-test.mjs",
     "test:auth": "node tests/auth-login-security-test.mjs",
+    "test:campaign": "node tests/isabela-campaign-test.mjs",
     "test:documents-ui": "node tests/documents-ui-test.mjs",
     "test:citacao": "node tests/citacao-judicial-pdf-test.mjs",
     "test:hunter": "node tests/hunter-sheet-test.mjs",
