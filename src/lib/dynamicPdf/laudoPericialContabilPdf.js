@@ -157,13 +157,6 @@ function desenharFundo(ctx, pagina) {
 }
 
 function desenharCabecalho(ctx, pagina) {
-  pagina.drawText("PLATINO", {
-    x: MARGEM,
-    y: 805,
-    size: 9,
-    font: ctx.fonts.bold,
-    color: AZUL,
-  });
   pagina.drawText("CÁLCULOS REVISIONAIS BANCÁRIOS - CDC", {
     x: A4[0] - MARGEM
       - ctx.fonts.bold.widthOfTextAtSize("CÁLCULOS REVISIONAIS BANCÁRIOS - CDC", 7.6),
@@ -342,79 +335,106 @@ function caixaAviso(ctx, tituloAviso, conteudo) {
 }
 
 function formulaPrice(ctx) {
-  garantir(ctx, 92);
-  const altura = 78;
-  const base = ctx.y - altura;
-  ctx.page.drawRectangle({
-    x: MARGEM,
-    y: base,
-    width: LARGURA,
-    height: altura,
-    color: FUNDO,
-    opacity: 0.94,
-    borderWidth: 0.8,
-    borderColor: CINZA_CLARO,
-  });
-  const formula = "P = (q0 x J) / [1 - (1 + J)^(-N)]";
-  ctx.page.drawText(formula, {
-    x: (A4[0] - ctx.fonts.bold.widthOfTextAtSize(formula, 15)) / 2,
-    y: ctx.y - 28,
-    size: 15,
-    font: ctx.fonts.bold,
-    color: AZUL,
-  });
-  const legenda = "P = prestação | q0 = novo valor financiado | J = taxa mensal decimal | N = parcelas";
-  ctx.page.drawText(legenda, {
-    x: (A4[0] - ctx.fonts.normal.widthOfTextAtSize(legenda, 7.7)) / 2,
-    y: ctx.y - 51,
-    size: 7.7,
-    font: ctx.fonts.normal,
-    color: CINZA,
-  });
-  ctx.y = base - 14;
-}
-
-function caixasResultado(ctx, calculo) {
-  garantir(ctx, 104);
-  const intervalo = 8;
-  const largura = (LARGURA - (intervalo * 2)) / 3;
-  const altura = 88;
-  const itens = [
-    ["TARIFAS A DEVOLVER", moeda(calculo.tarifasRestituicao)],
-    ["A MAIS NO RECÁLCULO", moeda(calculo.jurosRestituicao)],
-    ["PROVEITO ECONÔMICO", moeda(calculo.proveitoEconomicoTotal)],
-  ];
-
-  itens.forEach(([rotulo, valor], indice) => {
-    const x = MARGEM + (indice * (largura + intervalo));
-    const destaque = indice === 2;
-    ctx.page.drawRectangle({
-      x,
+  const formula = ctx.formulaPriceImage;
+  if (formula) {
+    const larguraMaxima = LARGURA - 42;
+    const alturaMaxima = 84;
+    const escala = Math.min(larguraMaxima / formula.width, alturaMaxima / formula.height);
+    const largura = formula.width * escala;
+    const altura = formula.height * escala;
+    garantir(ctx, altura + 22);
+    ctx.page.drawImage(formula, {
+      x: (A4[0] - largura) / 2,
       y: ctx.y - altura,
       width: largura,
       height: altura,
-      color: destaque ? AZUL : AZUL_CLARO,
-      opacity: destaque ? 0.96 : 0.94,
-      borderWidth: 0.7,
-      borderColor: destaque ? AZUL : CINZA_CLARO,
     });
-    const linhasRotulo = quebrar(rotulo, ctx.fonts.bold, 7.3, largura - 14);
-    linhasRotulo.forEach((linha, linhaIndice) => ctx.page.drawText(linha, {
-      x: x + (largura - ctx.fonts.bold.widthOfTextAtSize(linha, 7.3)) / 2,
-      y: ctx.y - 20 - (linhaIndice * 9),
+    ctx.y -= altura + 15;
+    return;
+  }
+
+  garantir(ctx, 55);
+  const textoFormula = "P = q0 x J / [1 - (1 + J)^(-N)]";
+  ctx.page.drawText(textoFormula, {
+    x: (A4[0] - ctx.fonts.bold.widthOfTextAtSize(textoFormula, 13)) / 2,
+    y: ctx.y - 24,
+    size: 13,
+    font: ctx.fonts.bold,
+    color: AZUL,
+  });
+  ctx.y -= 42;
+}
+
+function quadroConclusaoFinanceira(ctx, calculo) {
+  const larguraColuna = LARGURA / 3;
+  const alturaCabecalho = 38;
+  const alturaValores = 33;
+  const alturaTotal = alturaCabecalho + alturaValores;
+  const itens = [
+    ["TARIFAS A DEVOLVER", "EM DOBRO", moeda(calculo.tarifasRestituicao)],
+    ["A MAIS NO RECÁLCULO", "DEVOLUÇÃO / COMPENSAÇÃO", moeda(calculo.jurosRestituicao)],
+    ["TOTAL FINAL", "PROVEITO ECONÔMICO", moeda(calculo.proveitoEconomicoTotal)],
+  ];
+
+  garantir(ctx, alturaTotal + 34);
+  ctx.page.drawText("SÍNTESE ECONÔMICA DA CONCLUSÃO", {
+    x: MARGEM,
+    y: ctx.y - 9,
+    size: 7.4,
+    font: ctx.fonts.bold,
+    color: CINZA,
+  });
+
+  const topo = ctx.y - 19;
+  const base = topo - alturaTotal;
+  itens.forEach(([titulo, subtitulo, valor], indice) => {
+    const x = MARGEM + (indice * larguraColuna);
+    const destaque = indice === 2;
+    const corCabecalho = destaque ? AZUL : rgb(228 / 255, 234 / 255, 242 / 255);
+    const corTextoCabecalho = destaque ? rgb(1, 1, 1) : AZUL;
+    const corValor = destaque ? AZUL_CLARO : rgb(1, 1, 1);
+
+    ctx.page.drawRectangle({
+      x,
+      y: topo - alturaCabecalho,
+      width: larguraColuna,
+      height: alturaCabecalho,
+      color: corCabecalho,
+      borderWidth: 0.65,
+      borderColor: CINZA,
+    });
+    ctx.page.drawRectangle({
+      x,
+      y: base,
+      width: larguraColuna,
+      height: alturaValores,
+      color: rgb(1, 1, 1),
+      borderWidth: 0.65,
+      borderColor: CINZA,
+    });
+    ctx.page.drawText(titulo, {
+      x: x + (larguraColuna - ctx.fonts.bold.widthOfTextAtSize(titulo, 7.3)) / 2,
+      y: topo - 15,
       size: 7.3,
       font: ctx.fonts.bold,
-      color: destaque ? rgb(1, 1, 1) : AZUL,
-    }));
-    ctx.page.drawText(valor, {
-      x: x + (largura - ctx.fonts.bold.widthOfTextAtSize(valor, 12)) / 2,
-      y: ctx.y - 61,
-      size: 12,
+      color: corTextoCabecalho,
+    });
+    ctx.page.drawText(subtitulo, {
+      x: x + (larguraColuna - ctx.fonts.bold.widthOfTextAtSize(subtitulo, 6.8)) / 2,
+      y: topo - 27,
+      size: 6.8,
       font: ctx.fonts.bold,
-      color: destaque ? rgb(1, 1, 1) : PRETO,
+      color: corTextoCabecalho,
+    });
+    ctx.page.drawText(valor, {
+      x: x + (larguraColuna - ctx.fonts.bold.widthOfTextAtSize(valor, 10.5)) / 2,
+      y: base + 11,
+      size: 10.5,
+      font: ctx.fonts.bold,
+      color: corValor,
     });
   });
-  ctx.y -= altura + 17;
+  ctx.y = base - 17;
 }
 
 function blocoAssinatura(ctx, perito) {
@@ -568,13 +588,6 @@ function numerarPaginas(ctx) {
       font: ctx.fonts.normal,
       color: CINZA,
     });
-    pagina.drawText("Documento gerado pelo sistema interno Platino", {
-      x: MARGEM,
-      y: 42,
-      size: 7.4,
-      font: ctx.fonts.normal,
-      color: CINZA,
-    });
   });
 }
 
@@ -604,12 +617,12 @@ async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
       bold: await pdf.embedFont(StandardFonts.HelveticaBold),
     },
     backgroundImage: await incorporarFundo(pdf, assets.backgroundBytes),
+    formulaPriceImage: await incorporarFundo(pdf, assets.formulaPriceBytes),
     page: null,
     y: TOPO,
   };
   pdf.setTitle("Laudo Pericial Contábil - Cálculos Revisionais CDC");
   pdf.setSubject("Recálculo de financiamento de veículo pelo Sistema Price");
-  pdf.setCreator("Sistema interno Platino");
 
   capa(ctx, dados, peritos);
 
@@ -644,11 +657,6 @@ async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
     ctx,
     `Elementos examinados: ${texto(dados.elementosExaminados, "Contrato de financiamento e dados transcritos no formulário do sistema.")}`,
   );
-  paragrafo(
-    ctx,
-    `Limitações e ressalvas: ${texto(dados.limitacoesRessalvas, "O resultado depende da exatidão dos dados fornecidos e deve ser conferido pelo responsável técnico antes da assinatura.")}`,
-  );
-
   novaPagina(ctx);
   titulo(ctx, "4. Metodologia de cálculo");
   paragrafo(
@@ -734,16 +742,11 @@ async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
     ],
   ]);
 
-  if (calculo.parcelaReferencia !== null) {
-    tabela(ctx, [
-      ["Parcela de referência informada", moeda(calculo.parcelaReferencia)],
-      ["Diferença para a fórmula Price", moeda(Math.abs(calculo.divergenciaParcelaReferencia))],
-    ]);
-  }
-  calculo.avisos.forEach(aviso => caixaAviso(ctx, "Alerta de consistência", aviso));
+  calculo.avisos
+    .filter(aviso => aviso !== "A parcela de referência informada não coincide com a fórmula Price.")
+    .forEach(aviso => caixaAviso(ctx, "Alerta de consistência", aviso));
 
   titulo(ctx, "9. Cenário econômico de repetição");
-  caixasResultado(ctx, calculo);
   paragrafo(
     ctx,
     `Tarifas: ${moeda(calculo.totalTarifas)} x ${calculo.multiplicadorRestituicao} = ${moeda(calculo.tarifasRestituicao)}.`,
@@ -757,6 +760,7 @@ async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
 
   novaPagina(ctx);
   titulo(ctx, "10. Conclusão técnica");
+  quadroConclusaoFinanceira(ctx, calculo);
   const conclusaoPadrao = [
     `No cenário examinado, a prestação contratual de ${moeda(calculo.parcelaControversa)} foi comparada à prestação recalculada de ${moeda(calculo.parcelaIncontroversa)}.`,
     `A diferença mensal apurada é de ${moeda(calculo.diferencaMensal)}, com projeção de ${moeda(calculo.prejuizoTotalJuros)} ao longo de ${calculo.quantidadeParcelas} parcelas.`,
@@ -780,11 +784,6 @@ async function gerarLaudoPericialContabilPdf(dados = {}, assets = {}) {
     { size: 8.8, lineHeight: 12.2 },
   );
 
-  caixaAviso(
-    ctx,
-    "Documento sujeito à validação",
-    "Este PDF é uma minuta técnica gerada a partir dos dados inseridos. A emissão definitiva exige conferência integral, identificação, assinatura e carimbo do(s) responsável(is) técnico(s).",
-  );
   peritos.forEach(perito => blocoAssinatura(ctx, perito));
 
   numerarPaginas(ctx);

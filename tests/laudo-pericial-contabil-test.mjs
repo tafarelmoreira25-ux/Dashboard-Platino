@@ -15,6 +15,9 @@ const outputFile = join(outputDir, "laudo-cdc-validacao.pdf");
 const backgroundBytes = await readFile(
   join(projectDir, "modelos", "laudo-cdc-background-a4.png"),
 );
+const formulaPriceBytes = await readFile(
+  join(projectDir, "modelos", "laudo-price-formula.png"),
+);
 
 const dados = {
   numeroDocumento: "CDC-VALIDACAO-001",
@@ -98,7 +101,7 @@ assert.throws(
   /taxa de juros mensal/i,
 );
 
-const bytes = await gerarLaudoPericialContabilPdf(dados, { backgroundBytes });
+const bytes = await gerarLaudoPericialContabilPdf(dados, { backgroundBytes, formulaPriceBytes });
 const pdf = await PDFDocument.load(bytes);
 assert.ok(pdf.getPageCount() >= 6, "O laudo padronizado deveria ter pelo menos seis páginas.");
 assert.ok(bytes.length > 100_000, "O arquivo PDF gerado parece não conter o fundo visual.");
@@ -130,6 +133,17 @@ assert.doesNotMatch(serverSource, /perito-denis-assinatura/i);
 assert.match(generatorSource, /art\. 42, parágrafo único/i);
 assert.match(generatorSource, /valor pago em excesso/i);
 assert.match(generatorSource, /engano justificável/i);
+assert.match(generatorSource, /formulaPriceImage/);
+assert.match(browserSource, /laudo-price-formula\.png/);
+assert.match(serverSource, /laudo-price-formula\.png/);
+assert.doesNotMatch(generatorSource, /Documento gerado pelo sistema interno Platino/i);
+assert.doesNotMatch(generatorSource, /Limitações e ressalvas:/i);
+assert.doesNotMatch(generatorSource, /Documento sujeito à validação/i);
+assert.doesNotMatch(generatorSource, /calculo\.avisos\.forEach/);
+assert.doesNotMatch(generatorSource, /pagina\.drawText\("PLATINO"/);
+assert.doesNotMatch(generatorSource, /Parcela de referência informada/);
+assert.match(generatorSource, /function quadroConclusaoFinanceira/);
+assert.match(generatorSource, /SÍNTESE ECONÔMICA DA CONCLUSÃO/);
 
 await Promise.all([
   mkdir(qaDir, { recursive: true }),

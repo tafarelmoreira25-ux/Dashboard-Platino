@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="360" viewBox="0 0 1800 360" role="img" aria-label="Fórmula da prestação pelo Sistema Price">
+  <rect width="1800" height="360" fill="#ffffff"/>
+  <g fill="#17365d" font-family="Arial, Helvetica, sans-serif" font-weight="600">
+    <text x="290" y="228" font-size="108">P</text>
+    <text x="378" y="228" font-size="88">=</text>
+    <text x="560" y="136" font-size="90">q</text>
+    <text x="620" y="158" font-size="52">0</text>
+    <text x="670" y="136" font-size="78">· J</text>
+    <line x1="526" y1="177" x2="1280" y2="177" stroke="#17365d" stroke-width="7"/>
+    <text x="548" y="286" font-size="80">1 − (1 + J)</text>
+    <text x="1040" y="224" font-size="52">−N</text>
+  </g>
+</svg>

@@ -269,6 +269,7 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       cidadeEstado: texto(data.cidadeEstado) || texto(data.localEmissao) || texto(data.estado),
     }, {
       backgroundBytes: await asset("laudo-cdc-background-a4.png").catch(() => null),
+      formulaPriceBytes: await asset("laudo-price-formula.png").catch(() => null),
     }),
   };
 
