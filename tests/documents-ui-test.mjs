@@ -6,6 +6,10 @@ const declaracoesPdf = await readFile(
   new URL('../src/lib/dynamicPdf/declaracoesPdf.js', import.meta.url),
   'utf8'
 );
+const termoCompromissoPagamentoPdf = await readFile(
+  new URL('../src/lib/dynamicPdf/termoCompromissoPagamentoPdf.js', import.meta.url),
+  'utf8'
+);
 const heroIcon = await stat(new URL('../assets/pdf-document-icon.png', import.meta.url));
 const libraryIcon = await stat(new URL('../assets/document-library-icon-3d.png', import.meta.url));
 
@@ -130,6 +134,14 @@ assert.match(
   /'declaracao-hipossuficiencia':[\s\S]*?fields: \[[^\]]*'cep'[^\]]*\]/
 );
 assert.match(declaracoesPdf, /CEP: \$\{dados\.cep\}/);
+assert.match(
+  termoCompromissoPagamentoPdf,
+  /o CLIENTE se compromete com o pagamento na data ____\/____\/________\./
+);
+assert.match(
+  html,
+  /contrato de financiamento, e o CLIENTE se compromete com o pagamento na data ____\/____\/________\./
+);
 assert.match(html, /function renderLaudoProfessionalsField\(\)/);
 assert.match(html, /Adicionar outro profissional/);
 assert.match(html, /data-professional-key="nome"/);

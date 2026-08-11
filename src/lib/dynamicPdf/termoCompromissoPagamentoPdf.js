@@ -53,7 +53,7 @@ export async function gerarTermoCompromissoPagamentoPdf(dados) {
           { texto: `${texto(dados.servico)},`, negrito: true },
           {
             texto:
-              "relacionados ao procedimento de revisão do contrato de financiamento.",
+              "relacionados ao procedimento de revisão do contrato de financiamento, e o CLIENTE se compromete com o pagamento na data ____/____/________.",
           },
         ],
         [
@@ -195,4 +195,3 @@ export async function gerarTermoCompromissoPagamentoPdf(dados) {
 
   return pdf.save();
 }
-
