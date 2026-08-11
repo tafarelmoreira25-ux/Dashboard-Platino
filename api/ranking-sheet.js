@@ -593,6 +593,16 @@ function isTeamSummaryRow(sold, goal, entries, section) {
   return goal >= defaultGoal * 0.5 || (summarizedTotal && Math.abs(sold - summarizedTotal) < 0.02);
 }
 
+function isRankingPersonName(value) {
+  const name = normalizeConsultantName(value);
+  const normalized = normalizeHeader(name);
+  if (!name || parseMoney(name) || isDateLike(name)) return false;
+  return ![
+    "RANKING", "META", "GAP", "COMISSAO", "COMISSÃO", "TOTAL", "RESULTADO",
+    "VALOR", "CONSULTOR", "VENDEDOR", "NOME", "COMERCIAL", "JURIDICO", "JURÍDICO"
+  ].some(label => normalized === label || normalized.startsWith(`${label} `));
+}
+
 function extractSummaryData(rows, section) {
   const entries = [];
   const team = {
@@ -604,7 +614,10 @@ function extractSummaryData(rows, section) {
   for (const row of rows.slice(1)) {
     const hasDate = isDateLike(row[section.dateIndex]);
     const dateLabel = normalizeHeader(row[section.dateIndex]);
-    const name = normalizeConsultantName(row[section.dateIndex]) || normalizeConsultantName(row[section.consultantIndex]);
+    // A tabela de ranking é a fonte oficial dos nomes e dos resultados exibidos.
+    // O consultor presente nos lançamentos diários não pode completar, renomear ou
+    // alterar o ranking, pois aquelas linhas atendem a outras métricas operacionais.
+    const name = normalizeConsultantName(row[section.dateIndex]);
     const sold = parseMoney(row[section.valueIndex]);
     const goal = parseMoney(row[section.metaIndex]);
     const gap = parseMoney(row[section.gapIndex]);
@@ -631,69 +644,27 @@ function extractSummaryData(rows, section) {
     }
 
     if (summaryStarted) {
-      if (isTeamSummaryRow(sold, goal, entries, section)) {
+      if (!isRankingPersonName(name) && isTeamSummaryRow(sold, goal, entries, section)) {
         team.total = Math.max(team.total, sold);
         if (goal) team.goal = goal;
         continue;
       }
 
-      entries.push({
-        name,
-        sold,
-        goal,
-        gap
-      });
+      if (isRankingPersonName(name)) {
+        entries.push({
+          name,
+          sold,
+          goal,
+          gap
+        });
+      }
       continue;
-    }
-
-    if (!name && !goal && !gap) {
-      entries.push({ name: "", sold, goal: 0, gap: 0 });
     }
   }
 
   const summarizedTotal = entries.reduce((sum, item) => sum + (item.sold || 0), 0);
   if (!team.total && summarizedTotal) team.total = summarizedTotal;
   return { entries, team };
-}
-
-function applySummaryData(grouped, summaryEntries) {
-  const usedEntries = new Set();
-  const items = Array.from(grouped.values());
-
-  for (const item of items) {
-    const itemKey = normalizeNameKey(item.name);
-    let entryIndex = summaryEntries.findIndex((entry, index) =>
-      !usedEntries.has(index) && entry.name && isSameConsultantName(entry.name, item.name)
-    );
-
-    if (entryIndex === -1) {
-      entryIndex = summaryEntries.findIndex((entry, index) =>
-        !usedEntries.has(index) && Math.abs((entry.sold || 0) - (item.sold || 0)) < 0.02
-      );
-    }
-
-    if (entryIndex === -1) continue;
-
-    const entry = summaryEntries[entryIndex];
-    usedEntries.add(entryIndex);
-    item.name = entry.name || item.name;
-    item.sold = entry.sold || item.sold;
-    item.goal = entry.goal || item.goal || 0;
-    item.gap = entry.gap || Math.max((item.goal || 0) - (item.sold || 0), 0);
-  }
-
-  summaryEntries.forEach((entry, index) => {
-    if (usedEntries.has(index) || !entry.name) return;
-    const key = normalizeNameKey(entry.name);
-    if (!grouped.has(key)) {
-      grouped.set(key, {
-        name: entry.name,
-        sold: entry.sold,
-        goal: entry.goal || 0,
-        gap: entry.gap || Math.max((entry.goal || 0) - (entry.sold || 0), 0)
-      });
-    }
-  });
 }
 
 function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {} })) {
@@ -715,7 +686,6 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
   };
 
   for (const section of sections) {
-    const grouped = new Map();
     const summary = extractSummaryData(tableRows, section);
     teamGoals[section.sector] = summary.team.goal || DEFAULT_TEAM_GOALS[section.sector] || 0;
     teamTotals[section.sector] = summary.team.total || 0;
@@ -724,49 +694,20 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       const isValidEntryDate = isDateInRankingPeriod(row[section.dateIndex], period);
       if (!isValidEntryDate) continue;
 
-      const name = normalizeConsultantName(row[section.consultantIndex]);
       const sold = getNetSoldValue(row, section);
-      if (!name || !sold) continue;
+      if (!sold) continue;
       if (section.sector === "comercial") metrics.comercialContracts += 1;
-
-      const key = normalizeNameKey(name);
-      const current = grouped.get(key) || {
-        name,
-        sold: 0,
-        goal: 0,
-        gap: 0
-      };
-      current.sold += sold;
-      grouped.set(key, current);
     }
 
-    if (period.key === "month") applySummaryData(grouped, summary.entries);
-
-    const summaryNameKeys = period.key === "month"
-      ? new Set(summary.entries.map(entry => normalizeNameKey(entry.name)).filter(Boolean))
-      : new Set();
-    if (summaryNameKeys.size) {
-      for (const key of Array.from(grouped.keys())) {
-        const appearsInSummary = Array.from(summaryNameKeys).some(summaryKey =>
-          key === summaryKey || key.includes(summaryKey) || summaryKey.includes(key)
-        );
-        if (!appearsInSummary) grouped.delete(key);
-      }
-    }
-
-    grouped.forEach(item => applyDefaultIndividualGoal(item, section.sector));
-    teamGoals[section.sector] = getTeamGoalFromEntries(Array.from(grouped.values()), section.sector) || teamGoals[section.sector];
-    if (period.key !== "month") {
-      teamTotals[section.sector] = Array.from(grouped.values()).reduce((sum, item) => sum + (item.sold || 0), 0);
-    }
-
-    grouped.forEach(item => {
+    // Filtros de data continuam úteis para os indicadores derivados dos lançamentos.
+    // O ranking, por sua vez, sempre mostra a consolidação publicada na tabela mensal.
+    summary.entries.forEach(item => {
       rows.push({
         sector: section.sector,
         name: item.name,
         sold: item.sold,
         goal: item.goal || 0,
-        gap: item.gap || Math.max((item.goal || 0) - (item.sold || 0), 0),
+        gap: item.gap || 0,
         teamGoal: teamGoals[section.sector],
         teamGap: 0
       });
@@ -816,7 +757,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     current.goal = Math.max(current.goal, Number(row.goal) || 0);
     current.teamGoal = Math.max(current.teamGoal, Number(row.teamGoal) || 0);
     current.teamGap = Math.max(current.teamGap, Number(row.teamGap) || 0);
-    current.gap = Math.max(current.goal - current.sold, 0);
+    current.gap = Number.isFinite(Number(row.gap)) ? Number(row.gap) : Math.max(current.goal - current.sold, 0);
     consolidatedRows.set(key, current);
   }
 

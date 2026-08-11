@@ -42,8 +42,25 @@ export async function requireAuthenticated(request) {
   }
   try {
     return await adminAuth().verifyIdToken(token, true);
-  } catch {
-    const error = new Error("Sessão inválida ou expirada.");
+  } catch (cause) {
+    const code = String(cause?.code || "");
+    const message = String(cause?.message || "");
+    console.error("Falha na autenticação da API:", code || message);
+
+    // Erros de infraestrutura não devem aparecer como uma falsa expiração de sessão.
+    if (message.includes("Firebase Admin não configurado")) {
+      const error = new Error("O servidor do SDR ainda não está configurado para validar acessos. Configure as credenciais Firebase Admin e publique novamente.");
+      error.status = 503;
+      throw error;
+    }
+
+    if (code === "auth/argument-error") {
+      const error = new Error("A configuração de autenticação do SDR está divergente do projeto Firebase do sistema.");
+      error.status = 503;
+      throw error;
+    }
+
+    const error = new Error("Sessão inválida ou expirada. Entre novamente e tente salvar o lead.");
     error.status = 401;
     throw error;
   }

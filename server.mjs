@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import firebaseConfigHandler from './api/firebase-config.js';
 import handler from './api/generate-document.js';
 import rankingSheetHandler from './api/ranking-sheet.js';
 import clientSheetHandler from './api/consultar.js';
@@ -16,6 +17,7 @@ app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Mount API handler
+app.get('/api/firebase-config', (req, res) => firebaseConfigHandler(req, res));
 app.get('/api/generate-document', (req, res) => handler(req, res));
 app.post('/api/generate-document', (req, res) => handler(req, res));
 app.get('/api/ranking-sheet', (req, res) => rankingSheetHandler(req, res));

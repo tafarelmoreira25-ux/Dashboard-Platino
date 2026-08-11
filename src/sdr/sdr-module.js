@@ -66,12 +66,20 @@ function canAccessSdr() { return canSdr() || canConsult(); }
 async function api(action, payload = {}) {
   if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
   if (!navigator.onLine) throw new Error("Sem conexão. O rascunho permanece salvo neste dispositivo.");
-  const token = await state.auth.currentUser.getIdToken();
-  const response = await fetch("/api/sdr", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ action, payload })
-  });
+  const send = async forceRefresh => {
+    const token = await state.auth.currentUser.getIdToken(forceRefresh);
+    return fetch("/api/sdr", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ action, payload })
+    });
+  };
+
+  // O SDK renova o token automaticamente. Em uma resposta 401, força uma
+  // renovação e tenta uma única vez antes de interromper o trabalho.
+  // A API autentica antes de executar a ação, portanto a repetição não duplica leads.
+  let response = await send(false);
+  if (response.status === 401) response = await send(true);
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || "Não foi possível concluir a operação.");
   return result;
