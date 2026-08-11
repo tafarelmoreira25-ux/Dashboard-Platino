@@ -45,6 +45,12 @@ const DEFAULT_INDIVIDUAL_GOALS = {
     { name: "Janaina Rodrigues Paiva", goal: 150000 }
   ]
 };
+const CONSULTANT_NAME_ALIASES = {
+  comercial: [
+    { name: "Mariana", aliases: ["Mariane"] }
+  ],
+  juridico: []
+};
 
 function getCurrentPortugueseMonthName() {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -219,6 +225,19 @@ function getDefaultIndividualGoal(name, sector) {
   const goals = DEFAULT_INDIVIDUAL_GOALS[sector] || [];
   const match = goals.find(item => isSameConsultantName(item.name, name));
   return match?.goal || 0;
+}
+
+function getCanonicalConsultantName(name, sector) {
+  const normalizedName = normalizeConsultantName(name);
+  const match = (DEFAULT_INDIVIDUAL_GOALS[sector] || [])
+    .find(item => isSameConsultantName(item.name, normalizedName));
+  if (match?.name) return match.name;
+
+  const aliasMatch = (CONSULTANT_NAME_ALIASES[sector] || []).find(item =>
+    isSameConsultantName(item.name, normalizedName)
+    || item.aliases.some(alias => isSameConsultantName(alias, normalizedName))
+  );
+  return aliasMatch?.name || normalizedName;
 }
 
 function applyDefaultIndividualGoal(item, sector) {
@@ -614,9 +633,6 @@ function extractSummaryData(rows, section) {
   for (const row of rows.slice(1)) {
     const hasDate = isDateLike(row[section.dateIndex]);
     const dateLabel = normalizeHeader(row[section.dateIndex]);
-    // A tabela de ranking é a fonte oficial dos nomes e dos resultados exibidos.
-    // O consultor presente nos lançamentos diários não pode completar, renomear ou
-    // alterar o ranking, pois aquelas linhas atendem a outras métricas operacionais.
     const name = normalizeConsultantName(row[section.dateIndex]);
     const sold = parseMoney(row[section.valueIndex]);
     const goal = parseMoney(row[section.metaIndex]);
@@ -632,6 +648,10 @@ function extractSummaryData(rows, section) {
 
     if (!hasDate && !name && explicitTeamTotal > team.total) {
       team.total = explicitTeamTotal;
+      // A planilha atual exibe o título do ranking como objeto visual. No CSV, o
+      // primeiro sinal confiável do bloco consolidado é a célula com o total.
+      summaryStarted = true;
+      continue;
     }
 
     if (hasDate) continue;
@@ -650,9 +670,9 @@ function extractSummaryData(rows, section) {
         continue;
       }
 
-      if (isRankingPersonName(name)) {
+      if (isRankingPersonName(name) || sold || goal || gap) {
         entries.push({
-          name,
+          name: isRankingPersonName(name) ? name : "",
           sold,
           goal,
           gap
@@ -665,6 +685,31 @@ function extractSummaryData(rows, section) {
   const summarizedTotal = entries.reduce((sum, item) => sum + (item.sold || 0), 0);
   if (!team.total && summarizedTotal) team.total = summarizedTotal;
   return { entries, team };
+}
+
+function matchUnnamedSummaryEntries(grouped, summaryEntries) {
+  const available = Array.from(grouped.values());
+  const used = new Set();
+  const matched = [];
+
+  for (const entry of summaryEntries) {
+    if (isRankingPersonName(entry.name)) continue;
+    const index = available.findIndex((item, itemIndex) =>
+      !used.has(itemIndex) && Math.abs((item.sold || 0) - (entry.sold || 0)) < 0.02
+    );
+    if (index === -1) continue;
+
+    used.add(index);
+    const item = available[index];
+    matched.push({
+      ...item,
+      sold: entry.sold || item.sold,
+      goal: entry.goal || item.goal || 0,
+      gap: entry.gap || Math.max((entry.goal || item.goal || 0) - (entry.sold || item.sold || 0), 0)
+    });
+  }
+
+  return matched;
 }
 
 function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {} })) {
@@ -686,6 +731,7 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
   };
 
   for (const section of sections) {
+    const grouped = new Map();
     const summary = extractSummaryData(tableRows, section);
     teamGoals[section.sector] = summary.team.goal || DEFAULT_TEAM_GOALS[section.sector] || 0;
     teamTotals[section.sector] = summary.team.total || 0;
@@ -694,20 +740,49 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       const isValidEntryDate = isDateInRankingPeriod(row[section.dateIndex], period);
       if (!isValidEntryDate) continue;
 
+      const name = normalizeConsultantName(row[section.consultantIndex]);
       const sold = getNetSoldValue(row, section);
-      if (!sold) continue;
+      if (!name || !sold) continue;
       if (section.sector === "comercial") metrics.comercialContracts += 1;
+
+      const canonicalName = getCanonicalConsultantName(name, section.sector);
+      const key = normalizeNameKey(canonicalName);
+      const current = grouped.get(key) || {
+        name: canonicalName,
+        sold: 0,
+        goal: 0,
+        gap: 0
+      };
+      current.sold += sold;
+      grouped.set(key, current);
     }
 
-    // Filtros de data continuam úteis para os indicadores derivados dos lançamentos.
-    // O ranking, por sua vez, sempre mostra a consolidação publicada na tabela mensal.
-    summary.entries.forEach(item => {
+    const namedSummaryEntries = summary.entries.filter(item => isRankingPersonName(item.name));
+    let rankingItems;
+    if (period.key === "month" && namedSummaryEntries.length) {
+      // Quando a tabela consolidada é exportada completa, ela continua sendo a fonte oficial.
+      rankingItems = namedSummaryEntries;
+    } else if (period.key === "month" && summary.entries.length) {
+      // Quando os nomes são objetos visuais e somem do CSV, relaciona cada total
+      // consolidado ao consultor cujo acumulado diário tem exatamente o mesmo valor.
+      const matched = matchUnnamedSummaryEntries(grouped, summary.entries);
+      rankingItems = matched.length ? matched : Array.from(grouped.values());
+    } else {
+      rankingItems = Array.from(grouped.values());
+    }
+
+    rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
+    if (period.key !== "month") {
+      teamTotals[section.sector] = rankingItems.reduce((sum, item) => sum + (item.sold || 0), 0);
+    }
+
+    rankingItems.forEach(item => {
       rows.push({
         sector: section.sector,
-        name: item.name,
+        name: getCanonicalConsultantName(item.name, section.sector),
         sold: item.sold,
         goal: item.goal || 0,
-        gap: item.gap || 0,
+        gap: item.gap || Math.max((item.goal || 0) - (item.sold || 0), 0),
         teamGoal: teamGoals[section.sector],
         teamGap: 0
       });

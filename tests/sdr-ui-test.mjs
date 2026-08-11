@@ -60,6 +60,27 @@ assert.match(moduleSource, /localStorage/);
 assert.match(moduleSource, /navigator\.onLine/);
 assert.match(moduleSource, /send\(true\)/);
 assert.match(moduleSource, /response\.status === 401/);
+assert.match(moduleSource, /Durante a ligação/);
+assert.match(moduleSource, /Dados complementares/);
+assert.match(moduleSource, /Roteiro de ligação/);
+assert.match(moduleSource, /Valores e taxas/);
+for (const bank of [
+  "Banco BV", "Santander", "Bradesco", "Itaú Unibanco", "Banco do Brasil",
+  "Caixa Econômica Federal", "Banco PAN", "Safra", "Omni Financeira", "Daycoval",
+  "Aymoré Crédito, Financiamento e Investimento", "Chevrolet Serviços Financeiros",
+  "Volkswagen Financial Services", "Banco Honda", "Banco Yamaha", "Banco Toyota", "Banco CNH Industrial"
+]) assert.ok(moduleSource.includes(bank), `Instituição financeira ausente do seletor: ${bank}`);
+assert.match(moduleSource, /optgroup label="Mais recorrentes"/);
+assert.match(moduleSource, /optgroup label="Outras instituições"/);
+assert.match(moduleSource, /function mergeBankCatalog/);
+assert.match(moduleSource, /function expandableBlock/);
+assert.match(moduleSource, /const primaryMetricKeys = new Set/);
+assert.match(moduleSource, /preservar foco, blocos expandidos e posição da rolagem/);
+assert.match(css, /\.sdr-progress-track/);
+assert.match(css, /\.sdr-essential-grid/);
+assert.match(css, /\.sdr-expandable/);
+assert.match(css, /height: min\(48rem, calc\(100vh - 6\.5rem\)\)/);
+assert.match(css, /\.sdr-shortcuts \{ flex-wrap: nowrap;/);
 assert.match(moduleSource, /function canCreateLead\(\) \{ return Boolean\(state\.user\); \}/);
 assert.match(moduleSource, /const tabs = \[\["sdr", "Central SDR"\]\];/);
 assert.doesNotMatch(api, /Somente SDR ou gestão pode criar leads/);

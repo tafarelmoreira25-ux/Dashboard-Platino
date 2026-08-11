@@ -1,17 +1,28 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "../api/_firebase-admin.js";
 
-const banks = [
-  "Banco do Brasil",
-  "Caixa Econômica Federal",
-  "Itaú Unibanco",
-  "Bradesco",
-  "Santander",
-  "Banco Safra",
+const preferredBanks = [
+  { id: "banco-bv", name: "Banco BV" },
+  { id: "santander", name: "Santander" },
+  { id: "bradesco", name: "Bradesco" },
+  { id: "itau-unibanco", name: "Itaú Unibanco" },
+  { id: "banco-do-brasil", name: "Banco do Brasil" },
+  { id: "caixa-economica-federal", name: "Caixa Econômica Federal" },
+  { id: "banco-pan", name: "Banco PAN" },
+  { id: "banco-safra", name: "Safra" },
+  { id: "omni-financeira", name: "Omni Financeira" },
+  { id: "banco-daycoval", name: "Daycoval" },
+  { id: "aymore-credito-financiamento-e-investimento", name: "Aymoré Crédito, Financiamento e Investimento" },
+  { id: "banco-gm", name: "Chevrolet Serviços Financeiros" },
+  { id: "banco-volkswagen", name: "Volkswagen Financial Services" },
+  { id: "banco-honda", name: "Banco Honda" },
+  { id: "banco-yamaha", name: "Banco Yamaha" },
+  { id: "banco-toyota", name: "Banco Toyota" },
+  { id: "banco-cnh-industrial", name: "Banco CNH Industrial" }
+];
+
+const additionalBankNames = [
   "BTG Pactual",
-  "Banco BV",
-  "Banco PAN",
-  "Banco Daycoval",
   "Banco BMG",
   "Banco Inter",
   "Nubank",
@@ -25,25 +36,28 @@ const banks = [
   "Banco Original",
   "Banco Rendimento",
   "Banco Alfa",
-  "Banco Volkswagen",
-  "Banco Toyota",
-  "Banco Honda",
   "Banco Mercedes-Benz",
-  "Banco GM",
-  "Banco CNH Industrial",
   "Outro"
+];
+
+function bankId(name) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+const banks = [
+  ...preferredBanks,
+  ...additionalBankNames.map(name => ({ id: bankId(name), name }))
 ];
 
 async function seedBanks() {
   const db = adminDb();
   const batch = db.batch();
-  banks.forEach((name, index) => {
-    const id = name
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+  banks.forEach(({ id, name }, index) => {
     batch.set(db.collection("sdrBankCatalog").doc(id), {
       id,
       name,

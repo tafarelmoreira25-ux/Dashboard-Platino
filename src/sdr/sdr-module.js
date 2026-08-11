@@ -40,9 +40,28 @@ const SDR_EMAILS = new Set([
 const CONSULTANT_EMAILS = new Set([
   "giullian@platino.com", "nicolas@platino.com", "tabata@platino.com", "elaine@platino.com"
 ]);
+const DEFAULT_BANKS = Object.freeze([
+  { id: "banco-bv", name: "Banco BV", featured: true },
+  { id: "santander", name: "Santander", featured: true },
+  { id: "bradesco", name: "Bradesco", featured: true },
+  { id: "itau-unibanco", name: "Itaú Unibanco", featured: true },
+  { id: "banco-do-brasil", name: "Banco do Brasil", featured: true },
+  { id: "caixa-economica-federal", name: "Caixa Econômica Federal", featured: true },
+  { id: "banco-pan", name: "Banco PAN", featured: true },
+  { id: "banco-safra", name: "Safra", featured: true },
+  { id: "omni-financeira", name: "Omni Financeira", featured: true },
+  { id: "banco-daycoval", name: "Daycoval", featured: true },
+  { id: "aymore-credito-financiamento-e-investimento", name: "Aymoré Crédito, Financiamento e Investimento" },
+  { id: "banco-gm", name: "Chevrolet Serviços Financeiros" },
+  { id: "banco-volkswagen", name: "Volkswagen Financial Services" },
+  { id: "banco-honda", name: "Banco Honda" },
+  { id: "banco-yamaha", name: "Banco Yamaha" },
+  { id: "banco-toyota", name: "Banco Toyota" },
+  { id: "banco-cnh-industrial", name: "Banco CNH Industrial" }
+]);
 const state = {
   app: null, auth: null, db: null, user: null, profile: null, role: "collaborator",
-  leads: [], notifications: [], banks: [], rules: [], assignableUsers: [], events: [], comments: [],
+  leads: [], notifications: [], banks: [...DEFAULT_BANKS], rules: [], assignableUsers: [], events: [], comments: [],
   activeId: "", step: 0, view: "sdr", metricFilter: "", saveTimer: 0,
   stop: [], detailStops: [], booted: false, duplicatePayload: null
 };
@@ -210,6 +229,7 @@ const metrics = [
   ["hot", "Quentes"], ["warm", "Mornos"], ["cold", "Frios"], ["forwarded", "Encaminhados"],
   ["negotiation", "Em negociação"], ["approved", "Lead Aprovado"], ["rejected", "Lead Reprovado"]
 ];
+const primaryMetricKeys = new Set(["new", "today", "returns", "overdue", "hot", "forwarded"]);
 
 function metricMatch(key, lead) {
   const today = new Date().toISOString().slice(0, 10);
@@ -232,10 +252,16 @@ function metricMatch(key, lead) {
 }
 
 function renderMetrics() {
-  document.getElementById("sdr-metrics").innerHTML = metrics.map(([key, label]) => `
-    <button type="button" class="sdr-metric" data-metric="${key}" aria-pressed="${state.metricFilter === key}">
-      <span>${esc(label)}</span><strong>${state.leads.filter(lead => metricMatch(key, lead)).length}</strong>
-    </button>`).join("");
+  const metricButton = ([key, label]) => `<button type="button" class="sdr-metric" data-metric="${key}" aria-pressed="${state.metricFilter === key}">
+    <span>${esc(label)}</span><strong>${state.leads.filter(lead => metricMatch(key, lead)).length}</strong>
+  </button>`;
+  const primary = metrics.filter(([key]) => primaryMetricKeys.has(key));
+  const secondary = metrics.filter(([key]) => !primaryMetricKeys.has(key));
+  document.getElementById("sdr-metrics").innerHTML = `<div class="sdr-metrics-primary">${primary.map(metricButton).join("")}</div>
+    <details class="sdr-metrics-more" ${secondary.some(([key]) => state.metricFilter === key) ? "open" : ""}>
+      <summary><span><i class="ph ph-chart-bar"></i>Mais indicadores</span><i class="ph ph-caret-down"></i></summary>
+      <div class="sdr-metrics-secondary">${secondary.map(metricButton).join("")}</div>
+    </details>`;
   document.querySelectorAll("[data-metric]").forEach(button => button.onclick = () => {
     state.metricFilter = state.metricFilter === button.dataset.metric ? "" : button.dataset.metric;
     renderMetrics();
@@ -326,14 +352,18 @@ function renderSdrWorkspace(lead) {
       <div class="min-w-0"><p class="text-[10px] font-black uppercase tracking-wider text-sky-700">${esc(lead.protocol || "Novo cadastro")}</p><h3 class="truncate font-black text-slate-800">${esc(lead.fullName || "Novo lead")}</h3><p class="text-xs text-slate-500">${esc(lead.status || "Rascunho")}</p></div>
       <span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span>
     </header>
-    <div class="px-4 pt-3"><nav class="sdr-stepper">${SDR_STEPS.map((item, index) => `<button type="button" class="sdr-step" data-step="${index}" aria-current="${index === state.step ? "step" : "false"}">${index + 1}. ${esc(item.label)}</button>`).join("")}</nav></div>
+    <div class="sdr-progress-header">
+      <div class="sdr-progress-copy"><span>Passo ${state.step + 1} de ${SDR_STEPS.length}</span><strong>${esc(step.label)}</strong></div>
+      <div class="sdr-progress-track" aria-hidden="true"><span style="width:${((state.step + 1) / SDR_STEPS.length) * 100}%"></span></div>
+      <nav class="sdr-stepper" aria-label="Etapas do atendimento">${SDR_STEPS.map((item, index) => `<button type="button" class="sdr-step" data-step="${index}" aria-label="${index + 1}. ${esc(item.label)}" aria-current="${index === state.step ? "step" : "false"}"><span class="sdr-step-number">${index + 1}</span><span class="sdr-step-label">${esc(item.label)}</span></button>`).join("")}</nav>
+    </div>
     <form id="sdr-step-form">
       <div class="sdr-form-body">${renderStep(step.key, lead)}</div>
       <footer class="sdr-actionbar">
         <span id="sdr-save-status" class="sdr-save-status">Rascunho protegido neste dispositivo.</span>
-        <button class="sdr-secondary" type="button" data-prev ${state.step === 0 ? "disabled" : ""}><i class="ph ph-arrow-left"></i>Voltar</button>
-        <button class="sdr-primary" type="button" data-save><i class="ph ph-floppy-disk"></i>${lead.id ? "Salvar" : "Criar lead"}</button>
-        <button class="sdr-primary" type="button" data-next ${state.step === SDR_STEPS.length - 1 ? "disabled" : ""}>Avançar<i class="ph ph-arrow-right"></i></button>
+        <button class="sdr-secondary" type="button" data-prev ${state.step === 0 ? "disabled" : ""}><i class="ph ph-arrow-left"></i><span>Voltar</span></button>
+        <button class="sdr-secondary sdr-save-button" type="button" data-save><i class="ph ph-floppy-disk"></i><span>${lead.id ? "Salvar agora" : "Criar lead"}</span></button>
+        <button class="sdr-primary" type="button" data-next ${state.step === SDR_STEPS.length - 1 ? "disabled" : ""}><span>Avançar</span><i class="ph ph-arrow-right"></i></button>
       </footer>
     </form>`;
   bindWorkspace(lead);
@@ -353,29 +383,58 @@ function input(label, path, lead, options = {}) {
   const value = getPath(lead, path) ?? "";
   const type = options.type || "text";
   const required = options.required ? `<span class="sdr-required">*</span>` : "";
+  const inputMode = options.inputmode || (type === "tel" ? "tel" : type === "number" ? "numeric" : "");
+  const attributes = `${inputMode ? ` inputmode="${inputMode}"` : ""}${options.autocomplete ? ` autocomplete="${esc(options.autocomplete)}"` : ""}${options.readonly ? " readonly" : ""}`;
   const field = options.as === "textarea"
     ? `<textarea class="sdr-control" rows="${options.rows || 3}" data-sdr-field="${path}" ${options.required ? "required" : ""} placeholder="${esc(options.placeholder || "")}">${esc(value)}</textarea>`
     : options.options
       ? `<select class="sdr-control" data-sdr-field="${path}" ${options.required ? "required" : ""}>${options.options.map(item => `<option value="${esc(item)}" ${String(value) === item ? "selected" : ""}>${esc(item || "Selecione")}</option>`).join("")}</select>`
-      : `<input class="sdr-control" type="${type}" value="${esc(value)}" data-sdr-field="${path}" ${options.required ? "required" : ""} placeholder="${esc(options.placeholder || "")}">`;
+      : `<input class="sdr-control" type="${type}" value="${esc(value)}" data-sdr-field="${path}" ${options.required ? "required" : ""} placeholder="${esc(options.placeholder || "")}"${attributes}>`;
   return `<label class="sdr-field">${esc(label)} ${required}${field}${options.help ? `<span class="sdr-help">${esc(options.help)}</span>` : ""}</label>`;
+}
+
+function expandableBlock(title, description, content, options = {}) {
+  return `<details class="sdr-expandable" ${options.open ? "open" : ""}>
+    <summary><span><strong>${esc(title)}</strong>${description ? `<small>${esc(description)}</small>` : ""}</span><i class="ph ph-caret-down"></i></summary>
+    <div class="sdr-expandable-body">${content}</div>
+  </details>`;
+}
+
+function mergeBankCatalog(remoteBanks = []) {
+  const defaultsById = new Map(DEFAULT_BANKS.map((bank, index) => [bank.id, { ...bank, displayOrder: index + 1 }]));
+  const remoteById = new Map(remoteBanks.map(bank => [bank.id, bank]));
+  const preferred = [...defaultsById].map(([id, bank]) => ({ ...remoteById.get(id), ...bank, id }));
+  const extras = remoteBanks
+    .filter(bank => !defaultsById.has(bank.id) && bank.id !== "outro" && normalizeSearch(bank.name) !== "outro")
+    .sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999) || a.name.localeCompare(b.name));
+  return [...preferred, ...extras];
 }
 
 function registrationStep(lead) {
   const origins = ["", "Instagram", "Facebook", "Site", "WhatsApp", "Ligação", "Indicação", "Campanha", "Lista comercial", "Empresa de marketing", "Outro"];
   const statuses = ["APROVADO", "Aprovado com prioridade", "Aprovado com urgência", "Aprovado aguardando documentos", "Aprovado para contato imediato"];
-  return `<section class="sdr-form-card"><h3>Novo lead</h3><p>Status inicial: Rascunho. Nome, telefone e origem são obrigatórios.</p><div class="sdr-grid two">
-    ${input("Nome completo", "fullName", lead, { required: true })}${input("Telefone/WhatsApp", "phone", lead, { required: true })}
-    ${input("CPF/CNPJ", "cpfCnpj", lead, { help: "Obrigatório ao encaminhar." })}${input("E-mail", "email", lead, { type: "email" })}
-    ${input("Estado", "state", lead)}${input("Cidade", "city", lead)}${input("Origem", "origin", lead, { options: origins, required: true })}
-    ${input("Canal de contato", "sourceChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
-    ${input("Campanha", "campaign", lead)}${input("Código externo do lead", "externalCode", lead)}
-    ${input("Próximo contato", "nextContactAt", lead, { type: "datetime-local" })}${input("Melhor horário", "preferredContactTime", lead)}
-  </div>${input("Observação inicial", "initialObservation", lead, { as: "textarea", rows: 3 })}</section>
-  <section class="sdr-form-card"><h3>Origem e aprovação do lead</h3><p>A aprovação original recebida do marketing é preservada; somente a gestão pode corrigi-la com justificativa.</p><div class="sdr-grid two">
-    ${input("Empresa de marketing responsável", "marketingCompany", lead)}${input("Data da análise inicial", "marketingAnalysisDate", lead, { type: "date" })}
-    ${input("Responsável pela análise inicial", "marketingAnalyst", lead)}${input("Status recebido", "marketingStatus", lead, { options: statuses })}
-  </div>${input("Resumo da análise", "marketingSummary", lead, { as: "textarea", rows: 4 })}</section>`;
+  return `<section class="sdr-form-card sdr-call-card">
+    <div class="sdr-card-heading"><div><span class="sdr-eyebrow">Durante a ligação</span><h3>Identificação rápida</h3><p>Comece pelos três campos obrigatórios. O restante pode ser completado depois.</p></div><span class="sdr-required-note"><b>*</b> obrigatório</span></div>
+    <div class="sdr-grid two sdr-essential-grid">
+      ${input("Nome completo", "fullName", lead, { required: true, autocomplete: "name", placeholder: "Nome do cliente" })}
+      ${input("Telefone/WhatsApp", "phone", lead, { required: true, type: "tel", autocomplete: "tel", placeholder: "(00) 00000-0000" })}
+      ${input("Origem do lead", "origin", lead, { options: origins, required: true })}
+      ${input("Agendar próximo contato", "nextContactAt", lead, { type: "datetime-local" })}
+    </div>
+    ${input("Anotação rápida da conversa", "initialObservation", lead, { as: "textarea", rows: 2, placeholder: "Dor principal, pedido do cliente ou informação importante..." })}
+  </section>
+  ${expandableBlock("Dados complementares", "CPF, e-mail, localização e preferências", `<div class="sdr-grid two">
+    ${input("CPF/CNPJ", "cpfCnpj", lead, { inputmode: "numeric", help: "Obrigatório somente ao encaminhar." })}
+    ${input("E-mail", "email", lead, { type: "email", autocomplete: "email" })}
+    ${input("Estado", "state", lead)}${input("Cidade", "city", lead)}
+    ${input("Canal preferido", "sourceChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
+    ${input("Melhor horário", "preferredContactTime", lead, { placeholder: "Ex.: após as 18h" })}
+    ${input("Campanha", "campaign", lead)}${input("Código externo", "externalCode", lead)}
+  </div>`)}
+  ${expandableBlock("Informações do marketing", "Abra somente quando o lead vier de campanha ou parceiro", `<div class="sdr-grid two">
+    ${input("Empresa responsável", "marketingCompany", lead)}${input("Data da análise inicial", "marketingAnalysisDate", lead, { type: "date" })}
+    ${input("Responsável pela análise", "marketingAnalyst", lead)}${input("Status recebido", "marketingStatus", lead, { options: statuses })}
+  </div>${input("Resumo da análise", "marketingSummary", lead, { as: "textarea", rows: 3 })}`)} `;
 }
 
 const questions = [
@@ -387,49 +446,70 @@ const questions = [
 
 function qualificationStep(lead) {
   const q = lead.qualification || {};
-  return `<section class="sdr-form-card"><h3>Perfil do Lead</h3><p>Registre as respostas informadas pelo lead durante o atendimento. Utilize as palavras do próprio cliente sempre que possível.</p></section>
-    ${questions.map((item, index) => `<section class="sdr-question"><h3>${esc(item.title)}</h3><p class="mt-1 text-sm text-slate-600">${esc(item.text)}</p><div class="sdr-shortcuts">${item.shortcuts.map(shortcut => `<button class="sdr-shortcut" type="button" data-shortcut="${index}" data-value="${esc(shortcut)}">${esc(shortcut)}</button>`).join("")}</div>${input("Resposta completa", `qualification.answers.${index}.answer`, lead, { as: "textarea", rows: 4, required: true, placeholder: "Registre a resposta completa do lead." })}${input("Observações", `qualification.answers.${index}.notes`, lead, { as: "textarea", rows: 2 })}<label class="mt-2 flex items-center gap-2 text-xs text-slate-600"><input type="checkbox" data-sdr-field="qualification.answers.${index}.notInformed" ${q.answers?.[index]?.notInformed ? "checked" : ""}> Marcar como não informado</label></section>`).join("")}
-    <section class="sdr-form-card"><h3>Campos internos de qualificação</h3><div class="sdr-grid three">
-      ${input("Dor principal", "qualification.mainPain", lead, { options: ["", "Parcela alta", "Parcelas atrasadas", "Saldo elevado", "Busca e apreensão", "Juros elevados", "Encargos", "Quitação", "Renegociação", "Outro"] })}
-      ${input("Urgência", "qualification.urgency", lead, { options: ["", "Muito alta", "Alta", "Média", "Baixa", "Sem urgência"] })}
-      ${input("Intenção de avançar", "qualification.intention", lead, { options: ["", "Muito interessado", "Interessado", "Considerando", "Apenas pesquisando", "Sem interesse no momento"] })}
-      ${input("Disponibilidade financeira", "qualification.financialAvailability", lead, { options: ["", "Possui disponibilidade imediata", "Possui disponibilidade parcial", "Precisa organizar", "Precisa falar com outra pessoa", "Não informado"] })}
-      ${input("Depende de outra pessoa?", "qualification.dependsOnOtherPerson", lead, { options: ["", "Não", "Cônjuge", "Familiar", "Sócio", "Responsável financeiro", "Outro", "Não informado"] })}
-      ${input("Principal objeção", "qualification.mainObjection", lead)}
-      ${input("Melhor canal", "qualification.preferredChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
-      ${input("Nível de confiança percebido", "qualification.confidenceLevel", lead, { options: ["", "Alto", "Médio", "Baixo"] })}
-    </div>${input("Orientação para o consultor", "qualification.consultantGuidance", lead, { as: "textarea" })}${input("Resumo editável do SDR", "qualification.sdrSummary", lead, { as: "textarea", rows: 5, required: true })}
-    <div class="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4"><span class="text-xs font-black text-sky-800">Percentual interno de interesse</span><strong id="sdr-score-preview" class="ml-3 text-xl text-sky-800">${Number(lead.commercialScore) || 0}% · ${esc(lead.commercialClassification || "Frio")}</strong></div></section>`;
+  return `<section class="sdr-form-card sdr-call-guide"><div class="sdr-card-heading"><div><span class="sdr-eyebrow">Roteiro de ligação</span><h3>Faça uma pergunta por vez</h3><p>Clique nas respostas rápidas e complemente somente quando necessário.</p></div><span class="sdr-call-timer"><i class="ph ph-phone-call"></i>Fluxo guiado</span></div></section>
+    <div class="sdr-question-list">${questions.map((item, index) => {
+      const selectedValues = new Set(String(q.answers?.[index]?.answer || "").split(";").map(value => value.trim()).filter(Boolean));
+      return `<section class="sdr-question"><div class="sdr-question-heading"><span>${index + 1}</span><div><h3>${esc(item.title.replace(/^Pergunta \d+ — /, ""))}</h3><p>${esc(item.text)}</p></div></div>
+        <div class="sdr-shortcuts">${item.shortcuts.map(shortcut => `<button class="sdr-shortcut" type="button" data-shortcut="${index}" data-value="${esc(shortcut)}" aria-pressed="${selectedValues.has(shortcut)}">${esc(shortcut)}</button>`).join("")}</div>
+        ${input("Resposta registrada", `qualification.answers.${index}.answer`, lead, { as: "textarea", rows: 2, required: true, placeholder: "Selecione uma opção acima ou escreva com as palavras do cliente." })}
+        <div class="sdr-question-footer"><label><input type="checkbox" data-sdr-field="qualification.answers.${index}.notInformed" ${q.answers?.[index]?.notInformed ? "checked" : ""}> Cliente não informou</label>${expandableBlock("Adicionar observação", "", input("Observação interna", `qualification.answers.${index}.notes`, lead, { as: "textarea", rows: 2 }))}</div>
+      </section>`;
+    }).join("")}</div>
+    <section class="sdr-form-card"><div class="sdr-card-heading"><div><span class="sdr-eyebrow">Fechamento da qualificação</span><h3>Resumo para continuidade</h3><p>Registre o essencial para quem receber este atendimento.</p></div><div class="sdr-score-chip"><span>Interesse</span><strong id="sdr-score-preview">${Number(lead.commercialScore) || 0}% · ${esc(lead.commercialClassification || "Frio")}</strong></div></div>
+      <div class="sdr-grid three sdr-essential-grid">
+        ${input("Dor principal", "qualification.mainPain", lead, { options: ["", "Parcela alta", "Parcelas atrasadas", "Saldo elevado", "Busca e apreensão", "Juros elevados", "Encargos", "Quitação", "Renegociação", "Outro"] })}
+        ${input("Urgência", "qualification.urgency", lead, { options: ["", "Muito alta", "Alta", "Média", "Baixa", "Sem urgência"] })}
+        ${input("Interesse", "qualification.intention", lead, { options: ["", "Muito interessado", "Interessado", "Considerando", "Apenas pesquisando", "Sem interesse no momento"] })}
+      </div>
+      ${input("Resumo do atendimento", "qualification.sdrSummary", lead, { as: "textarea", rows: 3, required: true, placeholder: "Resuma a situação, objetivo e urgência do cliente." })}
+      ${expandableBlock("Detalhes internos", "Disponibilidade, objeções e orientação ao consultor", `<div class="sdr-grid two">
+        ${input("Disponibilidade financeira", "qualification.financialAvailability", lead, { options: ["", "Possui disponibilidade imediata", "Possui disponibilidade parcial", "Precisa organizar", "Precisa falar com outra pessoa", "Não informado"] })}
+        ${input("Depende de outra pessoa?", "qualification.dependsOnOtherPerson", lead, { options: ["", "Não", "Cônjuge", "Familiar", "Sócio", "Responsável financeiro", "Outro", "Não informado"] })}
+        ${input("Principal objeção", "qualification.mainObjection", lead)}
+        ${input("Melhor canal", "qualification.preferredChannel", lead, { options: ["", "WhatsApp", "Ligação", "E-mail", "Videochamada", "Outro"] })}
+        ${input("Confiança percebida", "qualification.confidenceLevel", lead, { options: ["", "Alto", "Médio", "Baixo"] })}
+      </div>${input("Orientação para o consultor", "qualification.consultantGuidance", lead, { as: "textarea", rows: 2 })}`)}
+    </section>`;
 }
 
 function contractStep(lead) {
   const types = ["", "Financiamento de veículo", "Financiamento de imóvel", "Empréstimo pessoal", "Empréstimo consignado", "Refinanciamento", "Renegociação", "Outro"];
-  return `<section class="sdr-form-card"><h3>Contrato</h3><p>Valores em reais e percentuais no formato brasileiro.</p><div class="sdr-grid three">
-    ${input("Tipo", "contract.contractType", lead, { options: types, required: true })}
-    ${input("Subtipo", "contract.contractSubtype", lead, { options: ["", "Carro", "Moto", "Caminhão", "Utilitário", "Outro"] })}
-    ${bankSelect(lead)}${input("Outra instituição", "contract.bankOther", lead)}
-    ${input("Valor da parcela atual", "contract.currentInstallment", lead, { required: true, placeholder: "R$ 0,00" })}
-    ${input("Valor financiado", "contract.financedAmount", lead, { placeholder: "R$ 0,00" })}
-    ${input("Valor da entrada", "contract.downPayment", lead, { placeholder: "R$ 0,00" })}
-    ${input("Saldo devedor", "contract.informedBalance", lead, { placeholder: "R$ 0,00" })}
-    ${input("Quantidade total de parcelas", "contract.totalInstallments", lead, { type: "number", required: true })}
-    ${input("Parcelas pagas", "contract.paidInstallments", lead, { type: "number", required: true })}
-    ${input("Parcelas restantes", "contract.remainingInstallments", lead, { type: "number" })}
-    ${input("Parcelas atrasadas", "contract.overdueInstallments", lead, { type: "number" })}
+  return `<section class="sdr-form-card"><div class="sdr-card-heading"><div><span class="sdr-eyebrow">Dados para análise</span><h3>Informações essenciais do contrato</h3><p>Peça primeiro os campos marcados com *. Os demais podem ser completados depois.</p></div><span class="sdr-required-note"><b>*</b> obrigatório</span></div>
+    <div class="sdr-grid three sdr-essential-grid">
+      ${input("Tipo de contrato", "contract.contractType", lead, { options: types, required: true })}
+      ${bankSelect(lead)}
+      ${input("Outra instituição", "contract.bankOther", lead, { help: "Preencha somente se escolheu Outra instituição." })}
+      ${input("Parcela atual", "contract.currentInstallment", lead, { required: true, inputmode: "decimal", placeholder: "R$ 0,00" })}
+      ${input("Total de parcelas", "contract.totalInstallments", lead, { type: "number", required: true, placeholder: "Ex.: 48" })}
+      ${input("Parcelas pagas", "contract.paidInstallments", lead, { type: "number", required: true, placeholder: "Ex.: 12" })}
+      ${input("Parcelas restantes", "contract.remainingInstallments", lead, { type: "number", readonly: true })}
+      ${input("Parcelas atrasadas", "contract.overdueInstallments", lead, { type: "number", placeholder: "0" })}
+      ${input("Situação atual", "contract.contractStatus", lead, { options: ["", "Em dia", "Parcelas atrasadas", "Quitado", "Renegociado", "Busca e apreensão", "Em negociação", "Não informado", "Outro"] })}
+    </div>
+    ${input("Observação importante", "contract.notes", lead, { as: "textarea", rows: 2, placeholder: "Registre apenas o que influencia a análise." })}
+  </section>
+  ${expandableBlock("Valores e taxas", "Valor financiado, entrada, saldo e taxas contratadas", `<div class="sdr-grid three">
+    ${input("Valor financiado", "contract.financedAmount", lead, { inputmode: "decimal", placeholder: "R$ 0,00" })}
+    ${input("Valor da entrada", "contract.downPayment", lead, { inputmode: "decimal", placeholder: "R$ 0,00" })}
+    ${input("Saldo devedor", "contract.informedBalance", lead, { inputmode: "decimal", placeholder: "R$ 0,00" })}
     ${input("Data do contrato", "contract.contractDate", lead, { type: "date" })}
-    ${input("Taxa contratada ao mês", "contract.monthlyRate", lead, { placeholder: "2,19%" })}
-    ${input("Taxa contratada ao ano", "contract.annualRate", lead, { placeholder: "29,64%" })}
-    ${input("Situação", "contract.contractStatus", lead, { options: ["", "Em dia", "Parcelas atrasadas", "Quitado", "Renegociado", "Busca e apreensão", "Em negociação", "Não informado", "Outro"] })}
+    ${input("Taxa ao mês", "contract.monthlyRate", lead, { inputmode: "decimal", placeholder: "2,19%" })}
+    ${input("Taxa ao ano", "contract.annualRate", lead, { inputmode: "decimal", placeholder: "29,64%" })}
+  </div>`)}
+  ${expandableBlock("Bem e documento", "Detalhes do veículo e disponibilidade do contrato", `<div class="sdr-grid three">
+    ${input("Subtipo", "contract.contractSubtype", lead, { options: ["", "Carro", "Moto", "Caminhão", "Utilitário", "Outro"] })}
+    ${input("Modelo do veículo", "contract.vehicleModel", lead)}${input("Ano do veículo", "contract.vehicleYear", lead, { type: "number" })}${input("Placa", "contract.vehiclePlate", lead)}
     ${input("Possui contrato?", "contract.hasContract", lead, { options: ["Não informado", "Sim", "Não"] })}
     ${input("Formato", "contract.contractFormat", lead, { options: ["", "PDF", "Físico", "Fotografado", "Não possui", "Não informado"] })}
-    ${input("Modelo do veículo", "contract.vehicleModel", lead)}${input("Ano do veículo", "contract.vehicleYear", lead, { type: "number" })}${input("Placa", "contract.vehiclePlate", lead)}
-  </div>${input("Observações", "contract.notes", lead, { as: "textarea" })}
-  <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600"><i class="ph ph-info mr-1 text-sky-700"></i>O sistema registra somente as informações do contrato. Nenhum arquivo é anexado ou armazenado.</div></section>`;
+  </div><div class="sdr-info-note"><i class="ph ph-info"></i>Nenhum arquivo é anexado ou armazenado nesta etapa.</div>`)} `;
 }
 
 function bankSelect(lead) {
   const value = lead.contract?.bankId || "";
-  return `<label class="sdr-field">Banco <span class="sdr-required">*</span><select class="sdr-control" data-sdr-field="contract.bankId" required><option value="">Selecione</option>${state.banks.map(bank => `<option value="${esc(bank.id)}" data-name="${esc(bank.name)}" ${value === bank.id ? "selected" : ""}>${esc(bank.name)}</option>`).join("")}<option value="other" ${value === "other" ? "selected" : ""}>Outra instituição — escrever manualmente</option></select></label>`;
+  const recurring = state.banks.filter(bank => bank.featured);
+  const others = state.banks.filter(bank => !bank.featured);
+  const options = banks => banks.map(bank => `<option value="${esc(bank.id)}" data-name="${esc(bank.name)}" ${value === bank.id ? "selected" : ""}>${esc(bank.name)}</option>`).join("");
+  return `<label class="sdr-field">Banco ou financeira <span class="sdr-required">*</span><select class="sdr-control" data-sdr-field="contract.bankId" required><option value="">Selecione a instituição</option><optgroup label="Mais recorrentes">${options(recurring)}</optgroup><optgroup label="Outras instituições">${options(others)}</optgroup><option value="other" ${value === "other" ? "selected" : ""}>Outra instituição — escrever manualmente</option></select></label>`;
 }
 
 function analysisStep(lead) {
@@ -953,6 +1033,14 @@ function subscribeLeads() {
   }
   state.stop.push(onSnapshot(leadsQuery, snapshot => {
     state.leads = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
+    // O autosave gera snapshots enquanto o atendente ainda está digitando.
+    // Atualizamos fila e indicadores sem reconstruir o formulário aberto, para
+    // preservar foco, blocos expandidos e posição da rolagem durante a ligação.
+    if (document.getElementById("sdr-step-form") && document.getElementById("sdr-layout")?.classList.contains("is-editing")) {
+      renderMetrics();
+      renderQueue();
+      return;
+    }
     renderAll();
   }, error => showToast(`Não foi possível sincronizar a fila: ${error.message}`, "error")));
   state.stop.push(onSnapshot(query(collection(state.db, "sdrNotifications"), where("userId", "==", state.user.uid), limit(100)), snapshot => {
@@ -961,7 +1049,8 @@ function subscribeLeads() {
     renderNotifications();
   }));
   state.stop.push(onSnapshot(query(collection(state.db, "sdrBankCatalog"), where("isActive", "==", true), limit(200)), snapshot => {
-    state.banks = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0) || a.name.localeCompare(b.name));
+    const remoteBanks = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+    state.banks = mergeBankCatalog(remoteBanks);
     if (state.view === "settings" || state.step === 2) renderAll();
   }));
   state.stop.push(onSnapshot(query(collection(state.db, "sdrSimulationRules"), limit(200)), snapshot => {
