@@ -79,12 +79,14 @@ service cloud.firestore {
       return signedIn()
         && (
           request.auth.token.email in [
+            'comercial@platino.com',
             'roberta@platino.com',
             'janaina@platino.com',
             'rafaela@platino.com',
             'fernanda@platino.com',
             'geovanna@platino.com'
           ]
+          || request.auth.token.email.matches('^[a-z0-9._-]+[.]sdr@platino[.]com$')
           || operationalRole() in ['sdr', 'SDR']
         );
     }

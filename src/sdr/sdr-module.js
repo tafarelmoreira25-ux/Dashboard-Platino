@@ -28,6 +28,18 @@ import {
 
 const root = document.getElementById("sdr-root");
 const CACHE_KEY = "platinoSdrWorkspaceV2";
+const MANAGEMENT_EMAILS = new Set([
+  "gestao@platino.com", "tafarel@platino.com", "tafarel.moreira@platino.com",
+  "tafarelmoreira@platino.com", "supervisao@platino.com", "diretoria@platino.com",
+  "admin@platino.com", "isabela@platino.com", "vanessa@platino.com"
+]);
+const SDR_EMAILS = new Set([
+  "comercial@platino.com", "roberta@platino.com", "janaina@platino.com",
+  "rafaela@platino.com", "fernanda@platino.com", "geovanna@platino.com"
+]);
+const CONSULTANT_EMAILS = new Set([
+  "giullian@platino.com", "nicolas@platino.com", "tabata@platino.com", "elaine@platino.com"
+]);
 const state = {
   app: null, auth: null, db: null, user: null, profile: null, role: "collaborator",
   leads: [], notifications: [], banks: [], rules: [], assignableUsers: [], events: [], comments: [],
@@ -51,10 +63,17 @@ function currentLead() {
   return state.leads.find(item => item.id === state.activeId) || loadLocalDraft() || null;
 }
 
-function resolveRole(profile = {}) {
+function resolveRole(profile = {}, user = state.user) {
+  const email = normalizeSearch(user?.email);
+  if (MANAGEMENT_EMAILS.has(email) || window.platinoUserRole === "gestor") return "manager";
+  if (SDR_EMAILS.has(email) || /^[a-z0-9._-]+\.sdr@platino\.com$/i.test(email)) return "sdr";
+  if (CONSULTANT_EMAILS.has(email)) return "consultant";
   const role = normalizeSearch(profile.operationalRole || profile.role);
   if (["admin", "manager", "sdr", "consultant", "analyst"].includes(role)) return role;
-  if (["gestor", "supervisor"].includes(role) || window.platinoUserRole === "gestor") return "manager";
+  if (["gestor", "supervisor"].includes(role)) return "manager";
+  const sector = normalizeSearch(profile.sector || window.platinoUserSector);
+  if (/sdr|comercial/.test(sector)) return "sdr";
+  if (/jurid|consult/.test(sector)) return "consultant";
   return "collaborator";
 }
 
@@ -648,7 +667,7 @@ function showDuplicate(matches, lead) {
     const reason = document.getElementById("sdr-duplicate-reason").value.trim();
     if (!reason) return showToast("Informe a justificativa.", "error");
     const result = await api("lead.create", { ...lead, duplicateJustification: reason });
-    closeModal(); clearLocalDraft(""); Object.assign(lead, result.lead); state.activeId = lead.id; renderAll();
+    closeModal(); clearLocalDraft(""); Object.assign(lead, result.lead); state.activeId = lead.id; saveLocalDraft(lead); renderAll();
   };
 }
 
@@ -659,7 +678,9 @@ async function flushCurrentDraft() {
 
 async function runAnalysis(lead) {
   collectWorkspace(lead);
-  await saveLead(lead, false);
+  if (!await saveLead(lead, false)) {
+    return showToast("A análise não foi iniciada porque o lead ainda não foi salvo.", "error");
+  }
   const loading = document.getElementById("sdr-analysis-loading");
   const fill = loading?.querySelector("span");
   const message = document.getElementById("sdr-analysis-message");
@@ -757,9 +778,16 @@ async function recordConsent(lead) {
 
 async function assignLead(lead) {
   collectWorkspace(lead);
+  const pendingAssignment = { ...(lead.assignment || {}) };
   try {
-    const result = await api("lead.assign", { id: lead.id, consultantId: lead.assignment.consultantId, ...lead.assignment });
-    lead.assignment = result.assignment; lead.status = "Encaminhado"; lead.assignedConsultantId = result.assignment.consultantId; showToast(`Lead encaminhado com sucesso para ${result.assignment.consultantName}.`, "success"); renderSdrWorkspace(lead);
+    if (!await saveLead(lead, false)) {
+      throw new Error("O lead não foi encaminhado porque existem alterações que ainda não foram salvas.");
+    }
+    // O salvamento comum preserva a última delegação confirmada no servidor.
+    // Mantemos a escolha atual separada até a transação de encaminhamento concluir.
+    lead.assignment = pendingAssignment;
+    const result = await api("lead.assign", { id: lead.id, consultantId: pendingAssignment.consultantId, ...pendingAssignment });
+    lead.assignment = result.assignment; lead.status = "Encaminhado"; lead.assignedConsultantId = result.assignment.consultantId; saveLocalDraft(lead); showToast(`Lead encaminhado com sucesso para ${result.assignment.consultantName}.`, "success"); renderSdrWorkspace(lead);
   } catch (error) { showToast(error.message, "error"); }
 }
 

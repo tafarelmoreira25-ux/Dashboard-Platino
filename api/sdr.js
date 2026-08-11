@@ -30,6 +30,7 @@ const LEGACY_MANAGEMENT_EMAILS = new Set([
   "vanessa@platino.com"
 ]);
 const LEGACY_SDR_EMAILS = new Set([
+  "comercial@platino.com",
   "roberta@platino.com",
   "janaina@platino.com",
   "rafaela@platino.com",
@@ -71,6 +72,26 @@ function cleanRole(value) {
   return "collaborator";
 }
 
+function isNamedSdrEmail(value) {
+  return /^[a-z0-9._-]+\.sdr@platino\.com$/i.test(sanitizeText(value, 254));
+}
+
+function resolveAccountRole(account = {}) {
+  const email = sanitizeText(account.email, 254).toLowerCase();
+  const declaredRole = cleanRole(account.operationalRole || account.role);
+  const accountRole = cleanRole(account.role);
+  const sector = sanitizeText(account.sector, 80);
+  if (LEGACY_MANAGEMENT_EMAILS.has(email)) {
+    return accountRole === SDR_ROLES.ADMIN ? SDR_ROLES.ADMIN : SDR_ROLES.MANAGER;
+  }
+  if (LEGACY_SDR_EMAILS.has(email) || isNamedSdrEmail(email)) return SDR_ROLES.SDR;
+  if (LEGACY_CONSULTANT_EMAILS.has(email)) return SDR_ROLES.CONSULTANT;
+  if (declaredRole !== "collaborator") return declaredRole;
+  if (/sdr|comercial/i.test(sector)) return SDR_ROLES.SDR;
+  if (/jur[ií]d|consult/i.test(sector)) return SDR_ROLES.CONSULTANT;
+  return declaredRole;
+}
+
 async function getActor(request) {
   const token = await requireAuthenticated(request);
   checkRateLimit(token.uid);
@@ -78,12 +99,12 @@ async function getActor(request) {
   const profile = profileSnapshot.exists ? profileSnapshot.data() : {};
   const email = sanitizeText(token.email, 254).toLowerCase();
   const sector = sanitizeText(token.sector || profile.sector, 80);
-  let role = cleanRole(token.operationalRole || profile.operationalRole || token.role || profile.role);
-  if (LEGACY_MANAGEMENT_EMAILS.has(email)) role = token.role === "admin" || profile.role === "admin" ? SDR_ROLES.ADMIN : SDR_ROLES.MANAGER;
-  if (LEGACY_SDR_EMAILS.has(email)) role = SDR_ROLES.SDR;
-  if (LEGACY_CONSULTANT_EMAILS.has(email)) role = SDR_ROLES.CONSULTANT;
-  if (role === "collaborator" && /sdr|comercial/i.test(sector)) role = SDR_ROLES.SDR;
-  if (role === "collaborator" && /jur[ií]d|consult/i.test(sector)) role = SDR_ROLES.CONSULTANT;
+  const role = resolveAccountRole({
+    email,
+    operationalRole: token.operationalRole || profile.operationalRole,
+    role: token.role || profile.role,
+    sector
+  });
   if (profile.disabled === true) throw apiError("Usuário inativo.", 403);
   return {
     uid: token.uid,
@@ -373,7 +394,7 @@ async function assignLead(actor, input) {
     const lead = leadSnapshot.data();
     const consultant = consultantSnapshot.data();
     assertActionPermission("assignment.create", actor, lead);
-    const consultantRole = cleanRole(consultant.operationalRole || consultant.role);
+    const consultantRole = resolveAccountRole(consultant);
     if (!CONSULTANT_ROLES.has(consultantRole) && !MANAGER_ROLES.has(consultantRole)) {
       throw apiError("Selecione um analista ou consultor ativo.");
     }
@@ -757,7 +778,7 @@ async function listAssignableUsers(actor) {
   const users = [];
   for (const item of snapshot.docs) {
     const data = item.data();
-    const role = cleanRole(data.operationalRole || data.role);
+    const role = resolveAccountRole(data);
     if ((!CONSULTANT_ROLES.has(role) && !MANAGER_ROLES.has(role)) || data.disabled === true || data.isActive === false) continue;
     const leads = await adminDb().collection("sdrLeads")
       .where("assignedConsultantId", "==", item.id)
@@ -873,5 +894,7 @@ export default async function handler(request, response) {
 export {
   cleanLeadInput,
   cleanRole,
-  criticalDiff
+  criticalDiff,
+  isNamedSdrEmail,
+  resolveAccountRole
 };

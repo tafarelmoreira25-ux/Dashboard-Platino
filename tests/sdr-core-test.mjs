@@ -15,6 +15,7 @@ import {
   roleCan,
   validateLeadRegistration
 } from "../src/sdr/sdr-core.js";
+import { isNamedSdrEmail, resolveAccountRole } from "../api/sdr.js";
 
 assert.equal(formatPhone("5511987654321"), "(11) 98765-4321");
 assert.equal(maskPhone("5511987654321"), "(11) 98•••••-21");
@@ -78,6 +79,17 @@ assert.equal(createCorrectionNumber(2026, 15), "CR-2026-000015");
 assert.equal(assertTransition("Novo lead", "Em qualificação"), true);
 assert.throws(() => assertTransition("Novo lead", "LEAD APROVADO"), /não permitida/);
 assert.equal(SDR_STATUSES.includes("Sem contato"), false);
+
+assert.equal(resolveAccountRole({ email: "roberta@platino.com" }), "sdr");
+assert.equal(resolveAccountRole({ email: "comercial@platino.com" }), "sdr");
+assert.equal(resolveAccountRole({ email: "maria.sdr@platino.com" }), "sdr");
+assert.equal(resolveAccountRole({ email: "giullian@platino.com" }), "consultant");
+assert.equal(resolveAccountRole({ email: "nicolas@platino.com" }), "consultant");
+assert.equal(resolveAccountRole({ email: "isabela@platino.com" }), "manager");
+assert.equal(resolveAccountRole({ email: "vanessa@platino.com" }), "manager");
+assert.equal(resolveAccountRole({ email: "tafarel@platino.com", role: "admin" }), "admin");
+assert.equal(isNamedSdrEmail("nome.sdr@platino.com"), true);
+assert.equal(isNamedSdrEmail("nome@platino.com"), false);
 
 assert.equal(validateLeadRegistration({
   fullName: "Cliente de teste",

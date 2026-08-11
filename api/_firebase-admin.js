@@ -32,6 +32,43 @@ export function adminDb() {
   return getFirestore(getAdminApp());
 }
 
+function authenticationError(cause) {
+  const code = String(cause?.code || "");
+  const message = String(cause?.message || "");
+  const configurationMismatch = /incorrect [`']?(aud|iss)[`']? claim|project id|securetoken\.google\.com/i.test(message);
+  let error;
+
+  if (message.includes("Firebase Admin não configurado")) {
+    error = new Error("O servidor do SDR ainda não está configurado para validar acessos.");
+    error.status = 503;
+    error.expose = true;
+  } else if (configurationMismatch) {
+    error = new Error("A autenticação do SDR está ligada a um projeto Firebase diferente do sistema.");
+    error.status = 503;
+    error.expose = true;
+  } else if ([
+    "app/invalid-credential",
+    "app/network-error",
+    "app/network-timeout",
+    "auth/invalid-credential",
+    "auth/internal-error",
+    "auth/server-unavailable"
+  ].includes(code)) {
+    error = new Error("O servidor do SDR não conseguiu validar o acesso no Firebase. Tente novamente em instantes.");
+    error.status = 503;
+    error.expose = true;
+  } else if (code === "auth/user-disabled") {
+    error = new Error("Este usuário está inativo. Fale com a gestão para liberar o acesso.");
+    error.status = 403;
+  } else {
+    error = new Error("Sessão inválida ou expirada. Entre novamente e tente salvar o lead.");
+    error.status = 401;
+  }
+
+  error.cause = cause;
+  return error;
+}
+
 export async function requireAuthenticated(request) {
   const authorization = String(request.headers?.authorization || "");
   const token = authorization.startsWith("Bearer ") ? authorization.slice(7).trim() : "";
@@ -41,28 +78,18 @@ export async function requireAuthenticated(request) {
     throw error;
   }
   try {
-    return await adminAuth().verifyIdToken(token, true);
+    // A verificação criptográfica já valida assinatura, projeto, emissão e
+    // expiração. O segundo argumento `true` fazia uma chamada adicional ao
+    // Firebase Auth em toda ação do SDR; falhas nessa chamada eram tratadas
+    // incorretamente como sessão expirada e impediam o salvamento de tokens
+    // válidos. Tokens Firebase expiram em até uma hora e o perfil inativo é
+    // conferido novamente pelo próprio endpoint do SDR.
+    return await adminAuth().verifyIdToken(token);
   } catch (cause) {
     const code = String(cause?.code || "");
     const message = String(cause?.message || "");
     console.error("Falha na autenticação da API:", code || message);
-
-    // Erros de infraestrutura não devem aparecer como uma falsa expiração de sessão.
-    if (message.includes("Firebase Admin não configurado")) {
-      const error = new Error("O servidor do SDR ainda não está configurado para validar acessos. Configure as credenciais Firebase Admin e publique novamente.");
-      error.status = 503;
-      throw error;
-    }
-
-    if (code === "auth/argument-error") {
-      const error = new Error("A configuração de autenticação do SDR está divergente do projeto Firebase do sistema.");
-      error.status = 503;
-      throw error;
-    }
-
-    const error = new Error("Sessão inválida ou expirada. Entre novamente e tente salvar o lead.");
-    error.status = 401;
-    throw error;
+    throw authenticationError(cause);
   }
 }
 
@@ -110,7 +137,9 @@ export function assertPost(request, response) {
 export function sendApiError(response, error) {
   console.error(error);
   const status = Number(error?.status) || 500;
-  const safeMessage = status < 500 ? error.message : "Não foi possível concluir a operação.";
+  const safeMessage = status < 500 || error?.expose === true
+    ? error.message
+    : "Não foi possível concluir a operação.";
   return response.status(status).json({ error: safeMessage });
 }
 

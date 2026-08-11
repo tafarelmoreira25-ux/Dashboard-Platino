@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [html, moduleSource, coreSource, css, api, firestoreRules, storageRules, server] = await Promise.all([
+const [html, moduleSource, coreSource, css, api, firebaseAdmin, firestoreRules, storageRules, server] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../src/sdr/sdr-module.js", import.meta.url), "utf8"),
   readFile(new URL("../src/sdr/sdr-core.js", import.meta.url), "utf8"),
   readFile(new URL("../src/sdr/sdr.css", import.meta.url), "utf8"),
   readFile(new URL("../api/sdr.js", import.meta.url), "utf8"),
+  readFile(new URL("../api/_firebase-admin.js", import.meta.url), "utf8"),
   readFile(new URL("../firestore.rules", import.meta.url), "utf8"),
   readFile(new URL("../storage.rules", import.meta.url), "utf8"),
   readFile(new URL("../server.mjs", import.meta.url), "utf8")
@@ -59,6 +60,19 @@ assert.match(moduleSource, /localStorage/);
 assert.match(moduleSource, /navigator\.onLine/);
 assert.match(moduleSource, /send\(true\)/);
 assert.match(moduleSource, /response\.status === 401/);
+assert.match(moduleSource, /comercial@platino\.com/);
+assert.match(moduleSource, /\\\.sdr@platino\\\.com/);
+assert.match(api, /resolveAccountRole\(consultant\)/);
+assert.match(api, /resolveAccountRole\(data\)/);
+assert.match(firestoreRules, /sdr@platino\[\.\]com/);
+assert.match(moduleSource, /lead ainda não foi salvo/);
+assert.match(moduleSource, /alterações que ainda não foram salvas/);
+assert.match(moduleSource, /const pendingAssignment = \{ \.\.\.\(lead\.assignment \|\| \{\}\) \}/);
+assert.match(moduleSource, /consultantId: pendingAssignment\.consultantId/);
+assert.match(firebaseAdmin, /verifyIdToken\(token\)/);
+assert.doesNotMatch(firebaseAdmin, /verifyIdToken\(token,\s*true\)/);
+assert.match(firebaseAdmin, /error\?\.expose === true/);
+assert.match(firebaseAdmin, /app\/invalid-credential/);
 assert.match(moduleSource, /onSnapshot/);
 assert.match(moduleSource, /if \(!canAccessSdr\(\)\) \{[\s\S]*?return;[\s\S]*?\}[\s\S]*?mount\(\);[\s\S]*?subscribeLeads\(\);/);
 assert.doesNotMatch(moduleSource, /sector\.includes\("comercial"\)/);
