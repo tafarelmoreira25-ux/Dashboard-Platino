@@ -38,14 +38,18 @@ assert.ok(html.includes('collection(db, "isabelaTributes")'), "Coleção isolada
 assert.match(html, /name: 'ISABELA LIMA DE SOUZA'[\s\S]+photo: 'assets\/equipe\/isabela-lima-de-souza\.png'/);
 assert.ok(html.includes('crypto.subtle.digest("SHA-256"'), "Prevenção determinística de duplicidade ausente.");
 assert.ok(html.includes("existingTribute.exists()"), "Verificação de homenagem duplicada ausente.");
-assert.ok(html.includes('window.platinoUserRole !== "gestor"'), "Trava de moderação administrativa ausente.");
+assert.match(html, /const visibleTributes = currentIsabelaTributes;/);
+assert.match(html, /query\(isabelaTributesRef, orderBy\("createdAt", "desc"\)\)/);
+assert.doesNotMatch(html, /currentIsabelaTributes\.filter\(item => item\.status !== "hidden"\)/);
+assert.doesNotMatch(html, /window\.moderateIsabelaTribute/);
+assert.doesNotMatch(html, /orderBy\("createdAt", "desc"\), limit\(100\)/);
 
 assert.match(rules, /match \/isabelaTributes\/\{tributeId\}/);
+assert.match(rules, /allow read: if signedIn\(\)/);
 assert.match(rules, /allow create: if signedIn\(\) && isValidIsabelaTributeCreate\(\)/);
 assert.match(rules, /isValidShortText\(data\.message, 400\)/);
 assert.match(rules, /data\.authorUid == request\.auth\.uid/);
-assert.match(rules, /allow update: if isManagement\(\) && isValidIsabelaTributeModeration\(\)/);
-assert.match(rules, /allow delete: if false/);
+assert.match(rules, /allow update, delete: if false/);
 
 for (const relativePath of [
   "../assets/campaigns/celebrando-isabela-hero.png",

@@ -80,7 +80,8 @@ function resolveRole(profile = {}, user = state.user) {
 function canManage() { return ["admin", "manager"].includes(state.role); }
 function canSdr() { return canManage() || state.role === "sdr"; }
 function canConsult() { return canManage() || ["consultant", "analyst"].includes(state.role); }
-function canAccessSdr() { return canSdr() || canConsult(); }
+function canCreateLead() { return Boolean(state.user); }
+function canAccessSdr() { return canCreateLead(); }
 
 async function api(action, payload = {}) {
   if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
@@ -187,8 +188,7 @@ function bindShell() {
 }
 
 function renderViewTabs() {
-  const tabs = [];
-  if (canSdr()) tabs.push(["sdr", "Central SDR"]);
+  const tabs = [["sdr", "Central SDR"]];
   if (canConsult()) tabs.push(["consultant", "Leads recebidos"]);
   if (canManage()) tabs.push(["settings", "Configurações"]);
   if (!tabs.some(([key]) => key === state.view)) state.view = tabs[0]?.[0] || "sdr";
@@ -302,7 +302,7 @@ function renderEmptyWorkspace() {
 }
 
 function startNew() {
-  if (!canSdr()) return showToast("Somente SDR ou gestão pode criar leads.", "error");
+  if (!canCreateLead()) return showToast("Faça login para criar um lead.", "error");
   state.activeId = "";
   state.step = 0;
   saveLocalDraft(emptyLead());

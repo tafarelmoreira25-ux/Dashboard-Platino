@@ -120,6 +120,12 @@ const readyLead = {
 };
 assert.deepEqual(getForwardingMissingFields(readyLead), []);
 assert.equal(roleCan("lead.create", "sdr", { uid: "sdr-1" }), true);
+assert.equal(roleCan("lead.create", "collaborator", { uid: "equipe-1" }), true);
+assert.equal(roleCan("lead.create", "consultant", { uid: "consultor-1" }), true);
+assert.equal(roleCan("lead.create", "collaborator", {}), false);
+assert.equal(roleCan("lead.autosave", "collaborator", { uid: "equipe-1", ownerSdrId: "equipe-1" }), true);
+assert.equal(roleCan("lead.autosave", "collaborator", { uid: "equipe-2", ownerSdrId: "equipe-1" }), false);
+assert.equal(roleCan("lead.read", "collaborator", { uid: "equipe-1", ownerSdrId: "equipe-1" }), true);
 assert.equal(roleCan("lead.read", "consultant", { uid: "c-1", assignedConsultantId: "c-1" }), true);
 assert.equal(roleCan("lead.read", "consultant", { uid: "c-2", assignedConsultantId: "c-1" }), false);
 assert.equal(roleCan("lead.outcome", "sdr", { uid: "sdr-1", ownerSdrId: "sdr-1" }), false);

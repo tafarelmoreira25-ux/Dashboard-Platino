@@ -279,9 +279,10 @@ function formatDateKey(date = new Date()) {
 }
 
 async function createLead(actor, input) {
-  if (![SDR_ROLES.SDR, SDR_ROLES.MANAGER, SDR_ROLES.ADMIN].includes(actor.role)) {
-    throw apiError("Somente SDR ou gestão pode criar leads.", 403);
-  }
+  // getActor já garante que a conta está autenticada e ativa. A criação é
+  // deliberadamente aberta a todos os perfis; a autoria continua registrada
+  // para limitar a leitura e os salvamentos posteriores ao próprio usuário.
+  assertActionPermission("lead.create", actor);
   const initial = cleanLeadInput({ ...input, ownerSdrId: actor.uid, ownerSdrName: actor.name });
   Object.assign(initial, {
     analysis: {},

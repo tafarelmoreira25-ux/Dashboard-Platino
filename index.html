@@ -11216,12 +11216,10 @@
         const grid = document.getElementById("isabela-message-grid");
         const count = document.getElementById("isabela-message-count");
         if (!grid || !count) return;
-        const canModerate = window.platinoUserRole === "gestor";
-        const publishedCount = currentIsabelaTributes.filter(item => item.status !== "hidden").length;
-        count.textContent = `${publishedCount} ${publishedCount === 1 ? "mensagem" : "mensagens"}`;
-        const visibleTributes = canModerate
-          ? currentIsabelaTributes
-          : currentIsabelaTributes.filter(item => item.status !== "hidden");
+        // O mural é compartilhado: todo recado registrado é exibido igualmente
+        // para todos os usuários autenticados, sem filtro por autor ou perfil.
+        const visibleTributes = currentIsabelaTributes;
+        count.textContent = `${visibleTributes.length} ${visibleTributes.length === 1 ? "mensagem" : "mensagens"}`;
 
         if (!visibleTributes.length) {
           grid.innerHTML = '<div class="isabela-message-empty">Seja a primeira pessoa a registrar uma homenagem para Isabela.</div>';
@@ -11229,18 +11227,13 @@
         }
 
         grid.innerHTML = visibleTributes.map(tribute => {
-          const isHidden = tribute.status === "hidden";
-          const moderationButton = canModerate
-            ? `<button type="button" class="isabela-moderation-button" onclick="moderateIsabelaTribute('${htmlSafe(tribute.id)}', '${isHidden ? "published" : "hidden"}')">${isHidden ? "Restaurar" : "Ocultar"}</button>`
-            : "";
           return `
-            <article class="isabela-message-card${isHidden ? " is-hidden" : ""}">
+            <article class="isabela-message-card">
               <header>
                 <div>
                   <strong>${htmlSafe(tribute.authorName || "Colaborador Platino")}</strong>
-                  <small>${htmlSafe(tribute.department || "Equipe")} • ${htmlSafe(formatIsabelaMessageDate(tribute))}${isHidden ? " • Oculta" : ""}</small>
+                  <small>${htmlSafe(tribute.department || "Equipe")} • ${htmlSafe(formatIsabelaMessageDate(tribute))}</small>
                 </div>
-                ${moderationButton}
               </header>
               <p>${htmlSafe(tribute.message)}</p>
             </article>`;
@@ -11305,7 +11298,7 @@
 
       function subscribeToIsabelaTributes() {
         if (!isIsabelaCampaignActive() || !isabelaTributesRef || stopIsabelaTributesSubscription) return;
-        const tributeQuery = query(isabelaTributesRef, orderBy("createdAt", "desc"), limit(100));
+        const tributeQuery = query(isabelaTributesRef, orderBy("createdAt", "desc"));
         stopIsabelaTributesSubscription = onSnapshot(tributeQuery, snapshot => {
           currentIsabelaTributes = snapshot.docs.map(snapshotDocument => ({ id: snapshotDocument.id, ...snapshotDocument.data() }));
           renderIsabelaTributes();
@@ -11337,21 +11330,6 @@
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         tribute.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
         window.setTimeout(() => tribute.focus({ preventScroll: true }), reduceMotion ? 0 : 650);
-      };
-
-      window.moderateIsabelaTribute = async function (tributeId, status) {
-        if (window.platinoUserRole !== "gestor" || !isabelaTributesRef || !["hidden", "published"].includes(status)) return;
-        try {
-          await updateDoc(doc(isabelaTributesRef, tributeId), {
-            status,
-            moderatedAt: serverTimestamp(),
-            moderatedBy: auth?.currentUser?.uid || "gestor"
-          });
-          setIsabelaMessageStatus(status === "hidden" ? "Mensagem ocultada do mural." : "Mensagem restaurada.", "success");
-        } catch (error) {
-          console.error("Não foi possível moderar a homenagem.", error);
-          setIsabelaMessageStatus("Não foi possível concluir a moderação.", "error");
-        }
       };
 
       const isabelaMessageInput = document.getElementById("isabela-message-input");

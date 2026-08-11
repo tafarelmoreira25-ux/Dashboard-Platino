@@ -304,9 +304,14 @@ export function createCorrectionNumber(year = new Date().getFullYear(), sequence
 }
 
 export function roleCan(action, role, context = {}) {
+  // Qualquer conta autenticada e ativa pode cadastrar um lead. Depois da
+  // criação, o autor também pode ler e continuar salvando o próprio cadastro,
+  // independentemente do perfil operacional atribuído à conta.
+  if (action === "lead.create") return Boolean(context.uid);
+  if (["lead.read", "lead.autosave"].includes(action) && context.ownerSdrId === context.uid) return true;
   if ([SDR_ROLES.ADMIN, SDR_ROLES.MANAGER].includes(role)) return true;
   if (role === SDR_ROLES.SDR) {
-    if (["lead.create", "lead.autosave", "qualification.edit", "contract.edit", "analysis.create", "document.create", "consent.create", "assignment.create"].includes(action)) {
+    if (["qualification.edit", "contract.edit", "analysis.create", "document.create", "consent.create", "assignment.create"].includes(action)) {
       return !context.ownerSdrId || context.ownerSdrId === context.uid;
     }
     return action === "lead.read" && context.ownerSdrId === context.uid;
