@@ -16,6 +16,7 @@ import {
   validateLeadRegistration
 } from "../src/sdr/sdr-core.js";
 import { isNamedSdrEmail, resolveAccountRole } from "../api/sdr.js";
+import { resolveFirebaseAdminConfig } from "../api/_firebase-admin.js";
 
 assert.equal(formatPhone("5511987654321"), "(11) 98765-4321");
 assert.equal(maskPhone("5511987654321"), "(11) 98•••••-21");
@@ -89,6 +90,28 @@ assert.equal(resolveAccountRole({ email: "isabela@platino.com" }), "manager");
 assert.equal(resolveAccountRole({ email: "vanessa@platino.com" }), "manager");
 assert.equal(resolveAccountRole({ email: "tafarel@platino.com", role: "admin" }), "admin");
 assert.equal(isNamedSdrEmail("nome.sdr@platino.com"), true);
+
+const pem = "-----BEGIN PRIVATE KEY-----\nCHAVE\n-----END PRIVATE KEY-----";
+assert.deepEqual(resolveFirebaseAdminConfig({
+  FIREBASE_PROJECT_ID: "platino-hub",
+  FIREBASE_CLIENT_EMAIL: "firebase-admin@platino-hub.iam.gserviceaccount.com",
+  FIREBASE_PRIVATE_KEY: '"-----BEGIN PRIVATE KEY-----\\nCHAVE\\n-----END PRIVATE KEY-----"'
+}), {
+  projectId: "platino-hub",
+  clientEmail: "firebase-admin@platino-hub.iam.gserviceaccount.com",
+  privateKey: pem
+});
+assert.deepEqual(resolveFirebaseAdminConfig({
+  FIREBASE_PRIVATE_KEY: JSON.stringify({
+    project_id: "platino-hub",
+    client_email: "firebase-admin@platino-hub.iam.gserviceaccount.com",
+    private_key: pem
+  })
+}), {
+  projectId: "platino-hub",
+  clientEmail: "firebase-admin@platino-hub.iam.gserviceaccount.com",
+  privateKey: pem
+});
 assert.equal(isNamedSdrEmail("nome@platino.com"), false);
 
 assert.equal(validateLeadRegistration({

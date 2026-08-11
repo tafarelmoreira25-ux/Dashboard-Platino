@@ -10,13 +10,64 @@ const LEGACY_MANAGEMENT = new Map([
   ["vanessa@platino.com", "manager"],
 ]);
 
+function unwrapEnvironmentValue(value) {
+  const text = String(value || "").trim();
+  if (text.length >= 2 && ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'")))) {
+    return text.slice(1, -1).trim();
+  }
+  return text;
+}
+
+function parseServiceAccount(value) {
+  let candidate = unwrapEnvironmentValue(value);
+  if (!candidate.startsWith("{")) return {};
+  try {
+    let parsed = JSON.parse(candidate);
+    if (typeof parsed === "string") parsed = JSON.parse(parsed);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+export function resolveFirebaseAdminConfig(environment = process.env) {
+  const privateKeyValue = unwrapEnvironmentValue(environment.FIREBASE_PRIVATE_KEY);
+  const serviceAccount = parseServiceAccount(
+    environment.FIREBASE_SERVICE_ACCOUNT_JSON
+      || environment.FIREBASE_SERVICE_ACCOUNT
+      || (privateKeyValue.startsWith("{") ? privateKeyValue : "")
+  );
+  const projectId = unwrapEnvironmentValue(
+    environment.FIREBASE_ADMIN_PROJECT_ID
+      || environment.FIREBASE_PROJECT_ID
+      || serviceAccount.project_id
+      || serviceAccount.projectId
+  );
+  const clientEmail = unwrapEnvironmentValue(
+    environment.FIREBASE_CLIENT_EMAIL
+      || serviceAccount.client_email
+      || serviceAccount.clientEmail
+  );
+  const rawPrivateKey = unwrapEnvironmentValue(
+    privateKeyValue.startsWith("{") ? serviceAccount.private_key : privateKeyValue || serviceAccount.private_key
+  );
+  const privateKey = rawPrivateKey
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\n")
+    .trim();
+
+  return { projectId, clientEmail, privateKey };
+}
+
 function getAdminApp() {
   if (getApps().length) return getApps()[0];
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const { projectId, clientEmail, privateKey } = resolveFirebaseAdminConfig();
   if (!projectId || !clientEmail || !privateKey) {
     throw new Error("Firebase Admin não configurado na hospedagem.");
+  }
+  if (!privateKey.includes("-----BEGIN PRIVATE KEY-----") || !privateKey.includes("-----END PRIVATE KEY-----")) {
+    throw new Error("Firebase Admin com chave privada em formato inválido.");
   }
   return initializeApp({
     credential: cert({ projectId, clientEmail, privateKey }),
@@ -42,12 +93,15 @@ function authenticationError(cause) {
     error = new Error("O servidor do SDR ainda não está configurado para validar acessos.");
     error.status = 503;
     error.expose = true;
+  } else if (message.includes("Firebase Admin com chave privada em formato inválido") || code === "app/invalid-credential") {
+    error = new Error("A credencial Firebase Admin da hospedagem está inválida. Confira a chave privada do projeto platino-hub.");
+    error.status = 503;
+    error.expose = true;
   } else if (configurationMismatch) {
     error = new Error("A autenticação do SDR está ligada a um projeto Firebase diferente do sistema.");
     error.status = 503;
     error.expose = true;
   } else if ([
-    "app/invalid-credential",
     "app/network-error",
     "app/network-timeout",
     "auth/invalid-credential",
