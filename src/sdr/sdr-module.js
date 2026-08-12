@@ -35,7 +35,8 @@ const MANAGEMENT_EMAILS = new Set([
 ]);
 const SDR_EMAILS = new Set([
   "comercial@platino.com", "roberta@platino.com", "janaina@platino.com",
-  "rafaela@platino.com", "fernanda@platino.com", "geovanna@platino.com"
+  "rafaela@platino.com", "fernanda@platino.com", "geovanna@platino.com",
+  "giullian@hunter.com"
 ]);
 const CONSULTANT_EMAILS = new Set([
   "giullian@platino.com", "nicolas@platino.com", "tabata@platino.com", "elaine@platino.com"

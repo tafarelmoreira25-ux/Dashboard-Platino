@@ -84,7 +84,8 @@ service cloud.firestore {
             'janaina@platino.com',
             'rafaela@platino.com',
             'fernanda@platino.com',
-            'geovanna@platino.com'
+            'geovanna@platino.com',
+            'giullian@hunter.com'
           ]
           || request.auth.token.email.matches('^[a-z0-9._-]+[.]sdr@platino[.]com$')
           || operationalRole() in ['sdr', 'SDR']

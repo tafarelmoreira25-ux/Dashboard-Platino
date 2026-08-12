@@ -35,7 +35,8 @@ const LEGACY_SDR_EMAILS = new Set([
   "janaina@platino.com",
   "rafaela@platino.com",
   "fernanda@platino.com",
-  "geovanna@platino.com"
+  "geovanna@platino.com",
+  "giullian@hunter.com"
 ]);
 const LEGACY_CONSULTANT_EMAILS = new Set([
   "giullian@platino.com",

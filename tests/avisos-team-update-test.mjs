@@ -3,6 +3,8 @@ import { readFile, stat } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const expectedProfiles = [
+  ['JANAINA RODRIGUES PAIVA', 'Consultora financeira', 'janaina-rodrigues-paiva.jpeg'],
+  ['ELAINE APARECIDA DOS SANTOS', 'Consultora Jurídica', 'elaine-aparecida-dos-santos.jpeg'],
   ['Fernanda Ramos', 'Consultora financeira', 'fernanda-ramos.png'],
   ['Geovanna Alves Xavier', 'Consultora financeira', 'geovanna-alves-xavier.png'],
   ['Mariana Santos', 'Consultora financeira', 'mariana-santos.png'],

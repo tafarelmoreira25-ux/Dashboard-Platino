@@ -84,6 +84,7 @@ assert.equal(SDR_STATUSES.includes("Sem contato"), false);
 assert.equal(resolveAccountRole({ email: "roberta@platino.com" }), "sdr");
 assert.equal(resolveAccountRole({ email: "comercial@platino.com" }), "sdr");
 assert.equal(resolveAccountRole({ email: "maria.sdr@platino.com" }), "sdr");
+assert.equal(resolveAccountRole({ email: "giullian@hunter.com" }), "sdr");
 assert.equal(resolveAccountRole({ email: "giullian@platino.com" }), "consultant");
 assert.equal(resolveAccountRole({ email: "nicolas@platino.com" }), "consultant");
 assert.equal(resolveAccountRole({ email: "isabela@platino.com" }), "manager");
