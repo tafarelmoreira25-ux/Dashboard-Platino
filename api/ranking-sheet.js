@@ -767,14 +767,19 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       for (const entry of namedSummaryEntries) {
         const canonicalName = getCanonicalConsultantName(entry.name, section.sector);
         const key = normalizeNameKey(canonicalName);
-        const daily = merged.get(key);
+        const daily = grouped.get(key);
+        const sold = daily?.sold || entry.sold || 0;
+        const goal = entry.goal || daily?.goal || 0;
         merged.set(key, {
-          ...(daily || {}),
           ...entry,
+          ...(daily || {}),
           name: canonicalName,
-          sold: entry.sold || daily?.sold || 0,
-          goal: entry.goal || daily?.goal || 0,
-          gap: entry.gap || Math.max((entry.goal || daily?.goal || 0) - (entry.sold || daily?.sold || 0), 0)
+          // Os lançamentos datados são a fonte viva do vendido. O quadro-resumo
+          // pode conter fórmulas com intervalos fixos e ficar atrasado quando novas
+          // vendas são acrescentadas à aba mensal.
+          sold,
+          goal,
+          gap: Math.max(goal - sold, 0)
         });
       }
       for (const [key, daily] of grouped) {
@@ -793,9 +798,10 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     }
 
     rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
-    if (period.key !== "month") {
-      teamTotals[section.sector] = rankingItems.reduce((sum, item) => sum + (item.sold || 0), 0);
-    }
+    const liveTransactionsTotal = Array.from(grouped.values())
+      .reduce((sum, item) => sum + (item.sold || 0), 0);
+    if (period.key !== "month") teamTotals[section.sector] = liveTransactionsTotal;
+    else teamTotals[section.sector] = Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal);
 
     rankingItems.forEach(item => {
       rows.push({
