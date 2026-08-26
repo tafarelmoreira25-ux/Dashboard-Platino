@@ -103,6 +103,11 @@ function canConsult() { return canManage() || ["consultant", "analyst"].includes
 function canCreateLead() { return Boolean(state.user); }
 function canAccessSdr() { return canCreateLead(); }
 
+function hunterDisplayName() {
+  const rawName = state.profile?.displayName || state.user?.displayName || state.user?.email?.split("@")[0] || "Hunter";
+  return String(rawName).trim().split(/\s+/).slice(0, 2).join(" ");
+}
+
 async function api(action, payload = {}) {
   if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
   if (!navigator.onLine) throw new Error("Sem conexão. O rascunho permanece salvo neste dispositivo.");
@@ -165,14 +170,20 @@ function emptyLead() {
 function mount() {
   root.innerHTML = `
     <div class="sdr-shell space-y-4">
-      <header class="sdr-topbar">
-        <div><h2 class="sdr-title">SDR — Qualificação de Leads</h2><p class="sdr-subtitle">Fila de contatos, qualificação completa e encaminhamento integrado ao Comercial.</p></div>
-        <div class="flex items-center gap-2">
+      <header class="sdr-command-hero">
+        <div class="sdr-command-copy">
+          <span class="sdr-command-eyebrow">Carteira de prospecção</span>
+          <h2 class="sdr-title">Central Hunter <span>· ${esc(hunterDisplayName())}</span></h2>
+          <p class="sdr-subtitle">Cadastre clientes potenciais, construa o perfil, gere a análise e encaminhe oportunidades qualificadas.</p>
+          <div class="sdr-command-status"><span></span> Carteira sincronizada em tempo real</div>
+        </div>
+        <div class="sdr-command-actions">
           <div class="sdr-notifications">
-            <button id="sdr-notification-button" class="sdr-secondary" type="button" aria-expanded="false"><i class="ph ph-bell"></i><span id="sdr-notification-count">0</span></button>
+            <button id="sdr-notification-button" class="sdr-hero-secondary" type="button" aria-expanded="false" title="Notificações"><i class="ph ph-bell"></i><span id="sdr-notification-count">0</span></button>
             <div id="sdr-notification-panel" class="sdr-notification-panel" hidden></div>
           </div>
-          <button id="sdr-new-button" class="sdr-primary" type="button"><i class="ph ph-plus"></i>Novo lead</button>
+          <button id="sdr-refresh-button" class="sdr-hero-secondary" type="button"><i class="ph ph-arrows-clockwise"></i>Atualizar carteira</button>
+          <button id="sdr-new-button" class="sdr-hero-primary" type="button"><i class="ph ph-user-plus"></i>Novo cliente</button>
         </div>
       </header>
       <nav id="sdr-view-tabs" class="sdr-view-tabs"></nav>
@@ -199,6 +210,10 @@ function mount() {
 
 function bindShell() {
   document.getElementById("sdr-new-button").onclick = () => startNew();
+  document.getElementById("sdr-refresh-button").onclick = () => {
+    subscribeLeads();
+    showToast("Carteira atualizada e sincronização renovada.", "success");
+  };
   document.getElementById("sdr-search").oninput = renderQueue;
   document.getElementById("sdr-status-filter").onchange = renderQueue;
   document.getElementById("sdr-class-filter").onchange = renderQueue;
@@ -225,17 +240,20 @@ function renderViewTabs() {
 }
 
 const metrics = [
+  ["portfolio", "Carteira total"], ["pending", "Pendentes"],
   ["new", "Novos"], ["waiting", "Aguardando contato"], ["today", "Contatos de hoje"],
   ["returns", "Retornos"], ["overdue", "Retornos vencidos"], ["qualifying", "Em qualificação"],
   ["hot", "Quentes"], ["warm", "Mornos"], ["cold", "Frios"], ["forwarded", "Encaminhados"],
   ["negotiation", "Em negociação"], ["approved", "Lead Aprovado"], ["rejected", "Lead Reprovado"]
 ];
-const primaryMetricKeys = new Set(["new", "today", "returns", "overdue", "hot", "forwarded"]);
+const primaryMetricKeys = new Set(["portfolio", "pending", "forwarded", "approved"]);
 
 function metricMatch(key, lead) {
   const today = new Date().toISOString().slice(0, 10);
   const next = String(lead.nextContactAt || "").slice(0, 10);
   return ({
+    portfolio: true,
+    pending: !["Encaminhado", "Recebido pelo consultor", "LEAD APROVADO", "LEAD REPROVADO", "Arquivado"].includes(lead.status),
     new: lead.status === "Novo lead",
     waiting: ["Aguardando contato", "Aguardando informações", "Aguardando aceite"].includes(lead.status),
     today: next === today,
@@ -256,9 +274,18 @@ function renderMetrics() {
   const metricButton = ([key, label]) => `<button type="button" class="sdr-metric" data-metric="${key}" aria-pressed="${state.metricFilter === key}">
     <span>${esc(label)}</span><strong>${state.leads.filter(lead => metricMatch(key, lead)).length}</strong>
   </button>`;
-  const primary = metrics.filter(([key]) => primaryMetricKeys.has(key));
+  const primary = [
+    { key: "portfolio", label: "Clientes na carteira", icon: "ph-address-book", tone: "blue" },
+    { key: "pending", label: "Pendentes", icon: "ph-clock-countdown", tone: "amber" },
+    { key: "forwarded", label: "Encaminhados", icon: "ph-paper-plane-tilt", tone: "green" },
+    { key: "approved", label: "Aprovados", icon: "ph-seal-check", tone: "rose" }
+  ];
   const secondary = metrics.filter(([key]) => !primaryMetricKeys.has(key));
-  document.getElementById("sdr-metrics").innerHTML = `<div class="sdr-metrics-primary">${primary.map(metricButton).join("")}</div>
+  const approved = state.leads.filter(lead => metricMatch("approved", lead)).length;
+  const conversion = state.leads.length ? Math.round((approved / state.leads.length) * 100) : 0;
+  document.getElementById("sdr-metrics").innerHTML = `<div class="sdr-metrics-primary">${primary.map(item => `<button type="button" class="sdr-portfolio-metric" data-tone="${item.tone}" data-metric="${item.key}" aria-pressed="${state.metricFilter === item.key}"><span><i class="ph ${item.icon}"></i>${esc(item.label)}</span><strong>${state.leads.filter(lead => metricMatch(item.key, lead)).length}</strong></button>`).join("")}
+      <article class="sdr-portfolio-metric sdr-conversion-metric" data-tone="navy"><span><i class="ph ph-trend-up"></i>Conversão</span><strong>${conversion}%</strong><small>${approved} fechamento(s)</small></article>
+    </div>
     <details class="sdr-metrics-more" ${secondary.some(([key]) => state.metricFilter === key) ? "open" : ""}>
       <summary><span><i class="ph ph-chart-bar"></i>Mais indicadores</span><i class="ph ph-caret-down"></i></summary>
       <div class="sdr-metrics-secondary">${secondary.map(metricButton).join("")}</div>
@@ -351,7 +378,13 @@ function renderSdrWorkspace(lead) {
     <header class="sdr-lead-header">
       <button type="button" class="sdr-secondary md:hidden" data-back-list><i class="ph ph-arrow-left"></i>Fila</button>
       <div class="min-w-0"><p class="text-[10px] font-black uppercase tracking-wider text-sky-700">${esc(lead.protocol || "Novo cadastro")}</p><h3 class="truncate font-black text-slate-800">${esc(lead.fullName || "Novo lead")}</h3><p class="text-xs text-slate-500">${esc(lead.status || "Rascunho")}</p></div>
-      <span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span>
+      <div class="sdr-lead-toolbar">
+        <span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span>
+        ${lead.phone ? `<a class="sdr-icon-action whatsapp" href="https://wa.me/55${normalizeDigits(lead.phone)}" target="_blank" rel="noopener" title="Conversar no WhatsApp" aria-label="Conversar no WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>` : ""}
+        ${lead.id ? `<button class="sdr-icon-action" type="button" data-profile-pdf title="Baixar PDF do perfil" aria-label="Baixar PDF do perfil"><i class="ph ph-identification-card"></i></button>` : ""}
+        ${lead.analysis?.correctionNumber ? `<button class="sdr-icon-action" type="button" data-quick-analysis-pdf title="Baixar PDF da análise" aria-label="Baixar PDF da análise"><i class="ph ph-file-pdf"></i></button>` : ""}
+        ${lead.id ? `<button class="sdr-forward-action" type="button" data-jump-assignment><i class="ph ph-paper-plane-tilt"></i>Encaminhar</button>` : ""}
+      </div>
     </header>
     <div class="sdr-progress-header">
       <div class="sdr-progress-copy"><span>Passo ${state.step + 1} de ${SDR_STEPS.length}</span><strong>${esc(step.label)}</strong></div>
@@ -527,10 +560,12 @@ function analysisStep(lead) {
 }
 
 function documentStep(lead) {
-  return `<section class="sdr-form-card"><h3>DOCUMENTO DE ANÁLISE APROVADA</h3><p>Revise os dados antes de gerar o PDF. O arquivo será baixado diretamente no dispositivo e não será armazenado no sistema.</p>
-    ${reviewSummary(lead)}
-    <button id="sdr-generate-pdf" type="button" class="sdr-primary mt-4" ${!lead.analysis?.correctionNumber ? "disabled" : ""}><i class="ph ph-file-pdf"></i>Gerar documento e salvar</button>
-    <p id="sdr-document-status" class="mt-2 text-xs text-slate-500">${lead.analysisDocument?.fileName ? `Geração registrada: ${esc(lead.analysisDocument.fileName)} · arquivo não armazenado` : "Nenhum documento gerado."}</p>
+  return `<section class="sdr-form-card"><div class="sdr-card-heading"><div><span class="sdr-eyebrow">Documentos do cliente</span><h3>PDFs para registro e encaminhamento</h3><p>Os arquivos são gerados no dispositivo e não ficam armazenados no sistema.</p></div><span class="sdr-required-note"><i class="ph ph-shield-check"></i> Dados protegidos</span></div>
+    <div class="sdr-document-options">
+      <article class="sdr-document-option"><i class="ph ph-identification-card"></i><div><strong>Perfil completo do cliente</strong><p>Cadastro, qualificação, contrato, observações e situação atual.</p></div><button id="sdr-generate-profile-pdf" type="button" class="sdr-secondary" ${!lead.id ? "disabled" : ""}><i class="ph ph-download-simple"></i>Baixar perfil</button></article>
+      <article class="sdr-document-option"><i class="ph ph-chart-line-up"></i><div><strong>Análise preliminar do lead</strong><p>Simulação aprovada, valores estimados, redução e estorno.</p></div><button id="sdr-generate-pdf" type="button" class="sdr-primary" ${!lead.analysis?.correctionNumber ? "disabled" : ""}><i class="ph ph-file-pdf"></i>Gerar análise</button></article>
+    </div>
+    <p id="sdr-document-status" class="mt-3 text-xs text-slate-500">${lead.analysisDocument?.fileName ? `Última análise registrada: ${esc(lead.analysisDocument.fileName)} · arquivo não armazenado` : "O PDF do perfil já pode ser baixado após salvar o cadastro."}</p>
   </section>`;
 }
 
@@ -588,7 +623,16 @@ function bindWorkspace(lead) {
   });
   document.querySelectorAll("[data-shortcut]").forEach(button => button.onclick = () => applyShortcut(button, lead));
   document.getElementById("sdr-run-analysis")?.addEventListener("click", () => runAnalysis(lead));
+  document.getElementById("sdr-generate-profile-pdf")?.addEventListener("click", () => generateLeadProfilePdf(lead));
   document.getElementById("sdr-generate-pdf")?.addEventListener("click", () => generateAnalysisPdf(lead));
+  document.querySelector("[data-profile-pdf]")?.addEventListener("click", () => generateLeadProfilePdf(lead));
+  document.querySelector("[data-quick-analysis-pdf]")?.addEventListener("click", () => generateAnalysisPdf(lead, { register: false }));
+  document.querySelector("[data-jump-assignment]")?.addEventListener("click", () => {
+    collectWorkspace(lead);
+    state.step = SDR_STEPS.length - 1;
+    saveLocalDraft(lead);
+    renderSdrWorkspace(lead);
+  });
   document.getElementById("sdr-record-consent")?.addEventListener("click", () => recordConsent(lead));
   document.getElementById("sdr-assign-lead")?.addEventListener("click", () => assignLead(lead));
 }
@@ -777,6 +821,131 @@ async function runAnalysis(lead) {
     const result = await api("analysis.run", { id: lead.id });
     lead.analysis = result.analysis; lead.status = "Análise Concluída"; saveLocalDraft(lead); renderSdrWorkspace(lead);
   } catch (error) { showToast(error.message, "error"); if (button) button.disabled = false; }
+}
+
+function generateLeadProfilePdf(lead) {
+  if (!window.jspdf?.jsPDF) return showToast("Gerador PDF indisponível.", "error");
+  if (!lead?.id) return showToast("Salve o cadastro antes de gerar o perfil em PDF.", "error");
+  collectWorkspace(lead);
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: "mm", format: "a4" });
+    const margin = 16;
+    const contentWidth = 178;
+    let y = 45;
+
+    const drawHeader = () => {
+      pdf.setFillColor(9, 31, 63);
+      pdf.rect(0, 0, 210, 34, "F");
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(17);
+      pdf.text("PERFIL DO CLIENTE", margin, 15);
+      pdf.setFontSize(8);
+      pdf.setTextColor(191, 219, 254);
+      pdf.text("PLATINO · CENTRAL HUNTER", margin, 23);
+      pdf.text(lead.protocol || "Cadastro sem protocolo", 194, 23, { align: "right" });
+    };
+    const ensureSpace = height => {
+      if (y + height <= 276) return;
+      pdf.addPage();
+      drawHeader();
+      y = 45;
+    };
+    const section = title => {
+      ensureSpace(14);
+      pdf.setFillColor(235, 243, 251);
+      pdf.roundedRect(margin, y - 5, contentWidth, 9, 1.5, 1.5, "F");
+      pdf.setTextColor(18, 58, 89);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(9);
+      pdf.text(title.toUpperCase(), margin + 4, y + 1);
+      y += 11;
+    };
+    const row = (label, value) => {
+      const safeValue = String(value ?? "").trim() || "Não informado";
+      pdf.setFontSize(8.5);
+      pdf.setFont("helvetica", "bold");
+      const labelLines = pdf.splitTextToSize(label, 44);
+      pdf.setFont("helvetica", "normal");
+      const valueLines = pdf.splitTextToSize(safeValue, 128);
+      const height = Math.max(labelLines.length, valueLines.length) * 4.2 + 3;
+      ensureSpace(height);
+      pdf.setTextColor(70, 92, 112);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(labelLines, margin, y);
+      pdf.setTextColor(31, 49, 70);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(valueLines, margin + 48, y);
+      pdf.setDrawColor(224, 231, 238);
+      pdf.line(margin, y + height - 2, margin + contentWidth, y + height - 2);
+      y += height;
+    };
+
+    drawHeader();
+    section("Identificação e atendimento");
+    row("Nome", lead.fullName);
+    row("Telefone / WhatsApp", formatPhone(lead.phone));
+    row("CPF / CNPJ", formatCpfCnpj(lead.cpfCnpj));
+    row("E-mail", lead.email);
+    row("Localização", [lead.city, lead.state].filter(Boolean).join(" / "));
+    row("Origem", [lead.origin, lead.campaign].filter(Boolean).join(" · "));
+    row("Status", `${lead.status || "Rascunho"} · ${lead.commercialClassification || "Frio"} (${Number(lead.commercialScore) || 0}%)`);
+    row("Próximo contato", lead.nextContactAt ? formatDateTime(lead.nextContactAt) : "Não agendado");
+    row("Observação inicial", lead.initialObservation);
+
+    section("Perfil e qualificação");
+    (lead.qualification?.answers || []).slice(0, 4).forEach((answer, index) => {
+      row(`Pergunta ${index + 1}`, answer?.answer || (answer?.notInformed ? "Cliente não informou" : "Não informada"));
+    });
+    row("Dor principal", lead.qualification?.mainPain);
+    row("Urgência", lead.qualification?.urgency);
+    row("Intenção", lead.qualification?.intention);
+    row("Principal objeção", lead.qualification?.mainObjection);
+    row("Resumo do Hunter", lead.qualification?.sdrSummary);
+    row("Orientação ao consultor", lead.qualification?.consultantGuidance);
+
+    section("Contrato informado");
+    row("Tipo de contrato", lead.contract?.contractType);
+    row("Banco / financeira", lead.contract?.bankName || lead.contract?.bankOther);
+    row("Parcela atual", formatMoney(parsePtBrMoney(lead.contract?.currentInstallment)));
+    row("Parcelas", `${lead.contract?.paidInstallments || 0} pagas · ${lead.contract?.remainingInstallments || 0} restantes · ${lead.contract?.overdueInstallments || 0} atrasadas`);
+    row("Saldo devedor", formatMoney(parsePtBrMoney(lead.contract?.informedBalance)));
+    row("Situação", lead.contract?.contractStatus);
+    row("Observações", lead.contract?.notes);
+
+    if (lead.analysis?.correctionNumber) {
+      section("Análise preliminar");
+      row("Correção", lead.analysis.correctionNumber);
+      row("Nova parcela estimada", formatMoney(lead.analysis.estimatedInstallment));
+      row("Redução por parcela", formatMoney(lead.analysis.installmentReduction));
+      row("Estorno estimado", formatMoney(lead.analysis.estimatedRefund));
+      row("Redução total", formatMoney(lead.analysis.totalContractReduction));
+    }
+
+    section("Encaminhamento");
+    row("Consultor responsável", lead.assignedConsultantName || lead.assignment?.consultantName);
+    row("Prioridade", lead.assignment?.priority);
+    row("Motivo", lead.assignment?.reason);
+    row("Pontos importantes", lead.assignment?.importantPoints);
+
+    const pages = pdf.getNumberOfPages();
+    for (let page = 1; page <= pages; page += 1) {
+      pdf.setPage(page);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(7);
+      pdf.setTextColor(112, 126, 140);
+      pdf.text(`Gerado em ${new Date().toLocaleString("pt-BR")} · Uso interno e confidencial`, margin, 288);
+      pdf.text(`${page}/${pages}`, 194, 288, { align: "right" });
+    }
+    const fileName = `perfil-cliente-${lead.protocol || lead.id}.pdf`.replace(/[^A-Za-z0-9._-]/g, "-");
+    pdf.save(fileName);
+    showToast("PDF do perfil do cliente baixado com sucesso.", "success");
+    return true;
+  } catch (error) {
+    showToast(`Não foi possível gerar o perfil: ${error.message}`, "error");
+    return false;
+  }
 }
 
 async function generateAnalysisPdf(lead, options = {}) {

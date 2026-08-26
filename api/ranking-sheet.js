@@ -158,6 +158,10 @@ function parseMoney(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function roundMoney(value) {
+  return Math.round(((Number(value) || 0) + Number.EPSILON) * 100) / 100;
+}
+
 function getColumn(row, headerMap, key) {
   const aliases = [
     ...(key === "sold" ? getCurrentMonthAliases() : []),
@@ -753,7 +757,7 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
         goal: 0,
         gap: 0
       };
-      current.sold += sold;
+      current.sold = roundMoney(current.sold + sold);
       grouped.set(key, current);
     }
 
@@ -798,8 +802,8 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     }
 
     rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
-    const liveTransactionsTotal = Array.from(grouped.values())
-      .reduce((sum, item) => sum + (item.sold || 0), 0);
+    const liveTransactionsTotal = roundMoney(Array.from(grouped.values())
+      .reduce((sum, item) => sum + (item.sold || 0), 0));
     if (period.key !== "month") teamTotals[section.sector] = liveTransactionsTotal;
     else teamTotals[section.sector] = Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal);
 
@@ -855,7 +859,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
       teamGoal: 0,
       teamGap: 0
     };
-    current.sold += Number(row.sold) || 0;
+    current.sold = roundMoney(current.sold + (Number(row.sold) || 0));
     current.goal = Math.max(current.goal, Number(row.goal) || 0);
     current.teamGoal = Math.max(current.teamGoal, Number(row.teamGoal) || 0);
     current.teamGap = Math.max(current.teamGap, Number(row.teamGap) || 0);
@@ -878,15 +882,15 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     const items = ranking[sector];
     const teamGoal = explicitTeamGoals[sector] || Math.max(0, ...items.map(item => item.teamGoal || 0));
     const teamGaps = items.map(item => item.teamGap || 0).filter(value => value > 0);
-    const soldTotal = items.reduce((sum, item) => sum + (item.sold || 0), 0);
+    const soldTotal = roundMoney(items.reduce((sum, item) => sum + (item.sold || 0), 0));
 
     ranking.teamGoals[sector] = teamGoal;
-    ranking.teamTotals[sector] = explicitTeamTotals[sector] || (teamGoal && teamGaps.length
+    ranking.teamTotals[sector] = roundMoney(explicitTeamTotals[sector] || (teamGoal && teamGaps.length
       ? Math.max(teamGoal - Math.min(...teamGaps), 0)
-      : soldTotal);
+      : soldTotal));
   }
 
-  ranking.metrics.companyTotal = (ranking.teamTotals.comercial || 0) + (ranking.teamTotals.juridico || 0);
+  ranking.metrics.companyTotal = roundMoney((ranking.teamTotals.comercial || 0) + (ranking.teamTotals.juridico || 0));
   return ranking;
 }
 

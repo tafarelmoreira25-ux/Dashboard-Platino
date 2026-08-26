@@ -2,14 +2,18 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const carouselSource = html.match(/const platinoPeople = \[[\s\S]*?\n\s*\];/)?.[0] || '';
 const expectedProfiles = [
   ['JANAINA RODRIGUES PAIVA', 'Consultora financeira', 'janaina-rodrigues-paiva.jpeg'],
-  ['ELAINE APARECIDA DOS SANTOS', 'Consultora Jurídica', 'elaine-aparecida-dos-santos.jpeg'],
   ['Fernanda Ramos', 'Consultora financeira', 'fernanda-ramos.png'],
   ['Geovanna Alves Xavier', 'Consultora financeira', 'geovanna-alves-xavier.png'],
   ['Mariana Santos', 'Consultora financeira', 'mariana-santos.png'],
-  ['Thayla Venturini', 'Consultora financeira', 'thayla-venturini.jpeg']
+  ['Thayla Venturini', 'Departamento administrativo', 'thayla-venturini.jpeg']
 ];
+
+assert.ok(carouselSource, 'A lista oficial do carrossel deve continuar disponível.');
+assert.doesNotMatch(carouselSource, /NICOLAS PERES ISSO|Nicolas Peres/);
+assert.doesNotMatch(carouselSource, /ELAINE APARECIDA DOS SANTOS/);
 
 for (const [name, role, photo] of expectedProfiles) {
   assert.equal((html.match(new RegExp(`\\{ name: '${name}', date:`, 'g')) || []).length, 1, `${name} deve aparecer uma única vez no carrossel.`);
