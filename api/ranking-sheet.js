@@ -760,8 +760,34 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     const namedSummaryEntries = summary.entries.filter(item => isRankingPersonName(item.name));
     let rankingItems;
     if (period.key === "month" && namedSummaryEntries.length) {
-      // Quando a tabela consolidada é exportada completa, ela continua sendo a fonte oficial.
-      rankingItems = namedSummaryEntries;
+      // O CSV do Google pode exportar apenas parte do bloco visual de resumo. Mantem
+      // os consultores ativos cadastrados encontrados nos lancamentos e usa o resumo
+      // somente para atualizar os valores que ele realmente trouxe.
+      const merged = new Map();
+      for (const entry of namedSummaryEntries) {
+        const canonicalName = getCanonicalConsultantName(entry.name, section.sector);
+        const key = normalizeNameKey(canonicalName);
+        const daily = grouped.get(key);
+        const sold = daily?.sold || entry.sold || 0;
+        const goal = entry.goal || daily?.goal || 0;
+        merged.set(key, {
+          ...entry,
+          ...(daily || {}),
+          name: canonicalName,
+          // Os lançamentos datados são a fonte viva do vendido. O quadro-resumo
+          // pode conter fórmulas com intervalos fixos e ficar atrasado quando novas
+          // vendas são acrescentadas à aba mensal.
+          sold,
+          goal,
+          gap: Math.max(goal - sold, 0)
+        });
+      }
+      for (const [key, daily] of grouped) {
+        if (!merged.has(key) && getDefaultIndividualGoal(daily.name, section.sector)) {
+          merged.set(key, daily);
+        }
+      }
+      rankingItems = Array.from(merged.values());
     } else if (period.key === "month" && summary.entries.length) {
       // Quando os nomes são objetos visuais e somem do CSV, relaciona cada total
       // consolidado ao consultor cujo acumulado diário tem exatamente o mesmo valor.
@@ -772,9 +798,10 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     }
 
     rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
-    if (period.key !== "month") {
-      teamTotals[section.sector] = rankingItems.reduce((sum, item) => sum + (item.sold || 0), 0);
-    }
+    const liveTransactionsTotal = Array.from(grouped.values())
+      .reduce((sum, item) => sum + (item.sold || 0), 0);
+    if (period.key !== "month") teamTotals[section.sector] = liveTransactionsTotal;
+    else teamTotals[section.sector] = Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal);
 
     rankingItems.forEach(item => {
       rows.push({
