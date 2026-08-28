@@ -10778,19 +10778,37 @@
             }
         }
 
+        function isAdmPdfBlob(blob) {
+            return blob instanceof Blob && blob.size > 4 && /^application\/pdf(?:;|$)/i.test(blob.type || '');
+        }
+
         function downloadAdmPdfBlob(blob, fileName) {
+            if (!isAdmPdfBlob(blob)) {
+                throw new Error('O gerador não retornou um arquivo PDF válido. Tente novamente.');
+            }
             if (typeof navigator.msSaveOrOpenBlob === 'function') {
                 navigator.msSaveOrOpenBlob(blob, fileName);
                 return;
             }
             const url = URL.createObjectURL(blob);
+            const isAppleMobile = /iP(?:ad|hone|od)/i.test(navigator.userAgent)
+                || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            // Safari no iPhone/iPad ignora com frequência o atributo download para blob URLs.
+            // Abrir o PDF permite que o usuário use a opção nativa "Salvar em Arquivos".
+            if (isAppleMobile) {
+                window.location.assign(url);
+                setTimeout(() => URL.revokeObjectURL(url), 5 * 60 * 1000);
+                return;
+            }
+
             const link = document.createElement('a');
             link.href = url;
             link.download = fileName;
             link.rel = 'noopener';
             link.style.display = 'none';
             document.body.appendChild(link);
-            link.click();
+            link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
             link.remove();
             setTimeout(() => URL.revokeObjectURL(url), 60000);
         }
@@ -10822,6 +10840,9 @@
                     throw new Error(payload?.detail || payload?.error || `O servidor respondeu HTTP ${response.status}.`);
                 }
                 blob = await response.blob();
+                if (!isAdmPdfBlob(blob)) {
+                    throw new Error('O servidor respondeu sem um PDF válido. Atualize a página e tente novamente.');
+                }
             }
 
             downloadAdmPdfBlob(blob, getAdmPdfFileName(template, data, fileNameOverride));
