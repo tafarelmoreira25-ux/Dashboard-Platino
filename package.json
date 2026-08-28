@@ -16,6 +16,7 @@
     "test:laudo": "node tests/laudo-pericial-contabil-test.mjs",
     "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-ui-test.mjs",
     "test:sdr:pdf": "node tests/sdr-analysis-pdf-test.mjs",
+    "test:pdf-unicode": "node tests/pdf-unicode-safety-test.mjs",
     "migrate:sdr": "node migrations/001-sdr-module-v1.mjs"
   },
   "dependencies": {

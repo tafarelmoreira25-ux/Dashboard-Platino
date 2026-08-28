@@ -1,5 +1,5 @@
 import { PDFDocument, rgb } from 'pdf-lib';
-import { baixarArquivo } from './pdfHelpers.js';
+import { baixarArquivo, textoSeguroParaPdf } from './pdfHelpers.js';
 
 /**
  * Gera um PDF a partir de um template existente e dados posicionais.
@@ -26,7 +26,7 @@ export async function gerarPdfComTemplate({
   const page = pages[0];
 
   campos.forEach((campo) => {
-    const texto = String(dados[campo.textKey] ?? '');
+    const texto = textoSeguroParaPdf(dados[campo.textKey]);
     if (!texto) return;
 
     page.drawText(texto, {
