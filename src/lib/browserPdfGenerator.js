@@ -67,7 +67,7 @@ function dadosComuns(data) {
 }
 
 async function asset(nome) {
-  const resposta = await fetch(`./modelos/${nome}`);
+  const resposta = await fetch(new URL(`../../modelos/${nome}`, import.meta.url));
   if (!resposta.ok) {
     throw new Error(`Não foi possível carregar o recurso ${nome}.`);
   }
@@ -133,6 +133,7 @@ export function extrairResumoProcessual(resumo) {
     assunto: campo("assunto(?:\\s*/\\s*natureza da a(?:ç|c)(?:ã|a)o)?|classe|natureza"),
     statusAtual: secao("status atual|situa(?:ç|c)(?:ã|a)o atual", "atualiza(?:ç|c)(?:ã|a)o processual|resumo processual|data da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos")
       || secao("atualiza(?:ç|c)(?:ã|a)o processual|resumo processual", "(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
+    atualizacaoProcessual: secao("atualiza(?:ç|c)(?:ã|a)o processual|resumo processual", "(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|pr(?:ó|o)ximos passos|anexos"),
     dataUltimaMovimentacao: campo("data da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o em"),
     descricaoUltimaMovimentacao: secao("descri(?:ç|c)(?:ã|a)o da (?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o|(?:ú|u)ltima movimenta(?:ç|c)(?:ã|a)o", "pr(?:ó|o)ximos passos|anexos|data da (?:ú|u)ltima consulta|data da consulta|hora da consulta"),
     dataConsulta: campo("data da (?:ú|u)ltima consulta|data da consulta"),

@@ -1,7 +1,6 @@
 import { gerarChargebackPdf } from "./dynamicPdf/chargebackPdf.js";
 import { gerarCitacaoJudicialPdf } from "./dynamicPdf/citacaoJudicialPdf.js";
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { gerarContestacaoTaxasEmailPdfComAssets } from "./dynamicPdf/contestacaoTaxasEmailPdf.js";
 import { gerarDeclaracaoAusenciaCarteiraTrabalhoPdf } from "./dynamicPdf/declaracaoAusenciaCarteiraTrabalhoPdf.js";
 import {
@@ -22,6 +21,22 @@ import { gerarRelatorioAtualizacaoProcessoPdf } from "./dynamicPdf/relatorioAtua
 import { gerarLaudoPericialContabilPdf } from "./dynamicPdf/laudoPericialContabilPdf.js";
 import { gerarTermoCienciaSegurancaPdfComAssets } from "./dynamicPdf/termoCienciaSegurancaPdf.js";
 import { gerarTermoCompromissoPagamentoPdf } from "./dynamicPdf/termoCompromissoPagamentoPdf.js";
+
+const ASSET_URLS = {
+  "assinatura-manuscrita-rafael.png": new URL("../../modelos/assinatura-manuscrita-rafael.png", import.meta.url),
+  "certidao-diligencia-assinatura-platino.png": new URL("../../modelos/certidao-diligencia-assinatura-platino.png", import.meta.url),
+  "certidao-diligencia-clicksign.png": new URL("../../modelos/certidao-diligencia-clicksign.png", import.meta.url),
+  "certidao-diligencia-icp-brasil.png": new URL("../../modelos/certidao-diligencia-icp-brasil.png", import.meta.url),
+  "certidao-diligencia-selo-reproducao.png": new URL("../../modelos/certidao-diligencia-selo-reproducao.png", import.meta.url),
+  "contestacao-taxas-email-assinatura.png": new URL("../../modelos/contestacao-taxas-email-assinatura.png", import.meta.url),
+  "contestacao-taxas-email-fundo.jpg": new URL("../../modelos/contestacao-taxas-email-fundo.jpg", import.meta.url),
+  "documentos-institucionais-assinatura.png": new URL("../../modelos/documentos-institucionais-assinatura.png", import.meta.url),
+  "documentos-institucionais-carimbo.png": new URL("../../modelos/documentos-institucionais-carimbo.png", import.meta.url),
+  "laudo-cdc-background-a4.png": new URL("../../modelos/laudo-cdc-background-a4.png", import.meta.url),
+  "laudo-price-formula.png": new URL("../../modelos/laudo-price-formula.png", import.meta.url),
+  "recibo-prestacao-servicos-carimbo.png": new URL("../../modelos/recibo-prestacao-servicos-carimbo.png", import.meta.url),
+  "termo-ciencia-seguranca-assinatura.png": new URL("../../modelos/termo-ciencia-seguranca-assinatura.png", import.meta.url),
+};
 
 function texto(valor) {
   return String(valor ?? "").trim();
@@ -69,7 +84,9 @@ function dadosComuns(data) {
 }
 
 function asset(nome) {
-  return readFile(path.join(process.cwd(), "modelos", nome));
+  const assetUrl = ASSET_URLS[nome];
+  if (!assetUrl) throw new Error(`Recurso de PDF não configurado: ${nome}`);
+  return readFile(assetUrl);
 }
 
 function extrairResumoProcessual(resumo) {

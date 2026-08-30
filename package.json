@@ -9,6 +9,7 @@
     "test:auth": "node tests/auth-login-security-test.mjs",
     "test:campaign": "node tests/isabela-campaign-test.mjs",
     "test:documents-ui": "node tests/documents-ui-test.mjs",
+    "test:documents-download": "node tests/document-download-test.mjs",
     "test:citacao": "node tests/citacao-judicial-pdf-test.mjs",
     "test:hunter": "node tests/hunter-sheet-test.mjs",
     "test:ranking": "node tests/ranking-sheet-summary-test.mjs",
