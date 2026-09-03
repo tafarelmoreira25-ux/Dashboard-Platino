@@ -2676,6 +2676,23 @@
             pointer-events: none;
         }
 
+        .ranking-sync-loader { display:none; width:min(100%,34rem); border:1px solid rgba(147,197,253,.2); background:linear-gradient(135deg,rgba(30,58,138,.2),rgba(15,23,42,.55)); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
+        .ranking-loading .ranking-sync-loader { display:block; }
+        .ranking-loading #ranking-sync-status { visibility:hidden; }
+        .ranking-sync-message { transition:opacity 240ms ease; }
+        .ranking-sync-message.is-changing { opacity:0; }
+        .ranking-sync-track { position:relative; height:2px; overflow:hidden; border-radius:999px; background:rgba(147,197,253,.12); }
+        .ranking-sync-track::after { content:""; position:absolute; inset-block:0; left:-35%; width:35%; border-radius:inherit; background:linear-gradient(90deg,transparent,#93c5fd,#fde68a,transparent); animation:ranking-sync-scan 1.8s ease-in-out infinite; }
+        @keyframes ranking-sync-scan { to { transform:translateX(390%); } }
+        .monthly-highlights-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+        .monthly-highlight-person + .monthly-highlight-person { border-left:1px solid rgba(250,204,21,.14); }
+        .monthly-highlight-avatar { background:linear-gradient(145deg,rgba(30,64,175,.7),rgba(15,23,42,.94)); box-shadow:0 0 24px rgba(250,204,21,.12); }
+        #avisos-highlight-card .monthly-highlight-badge { color:#fef3c7 !important; -webkit-text-fill-color:#fef3c7 !important; }
+        @media (max-width:767px) {
+            .monthly-highlights-grid { grid-template-columns:1fr; }
+            .monthly-highlight-person + .monthly-highlight-person { border-top:1px solid rgba(250,204,21,.14); border-left:0; }
+        }
+
         .ranking-skeleton {
             display: none;
         }
@@ -2692,6 +2709,12 @@
 
         @keyframes ranking-shimmer {
             to { background-position: -200% 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ranking-sync-message { transition:none; }
+            .ranking-sync-track::after, .ranking-loading .skeleton-line { animation:none; }
+            .ranking-sync-track::after { left:32.5%; }
         }
 
         :is(
@@ -3486,27 +3509,17 @@
                         </div>
                     </div>
 
-                    <div id="avisos-highlight-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
+                    <div id="avisos-highlight-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
-                            <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
-                                <img id="avisos-highlight-photo" src="assets/equipe/beatriz-garcia.png" alt="Foto de Beatriz Garcia" class="h-full w-full object-cover object-center">
+                        <div class="relative z-10 px-6 pt-6 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="ph-fill ph-star text-xl text-yellow-400" aria-hidden="true"></i>
+                                <h3 class="metallic-title text-lg font-black uppercase tracking-[0.12em] sm:text-xl">Destaques do mês de agosto</h3>
                             </div>
-                            <div class="flex-1">
-                                <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
-                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque da Operação</h3>
-                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Equipe Platino</span>
-                                </div>
-                                <p id="avisos-highlight-name" class="font-black text-2xl">Equipe Platino</p>
-                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Resultados do mês em atualização.</p>
-                            </div>
-                            <div class="md:text-right">
-                                    <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">—</p>
-                            </div>
+                            <p class="mt-1 text-xs text-blue-100/70">Resultados que elevaram o padrão da nossa operação.</p>
                         </div>
+                        <div id="monthly-highlights-list" class="monthly-highlights-grid relative z-10 mt-5"></div>
                     </div>
 
                     <div id="ranking-arena" class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
@@ -3520,6 +3533,12 @@
                             <button onclick="openRankingEditor()" class="gestor-only metal-button hidden items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
                                 <i class="ph ph-pencil-simple text-lg"></i> Editar Ranking
                             </button>
+                        </div>
+
+                        <div id="ranking-sync-loader" class="ranking-sync-loader relative z-20 mx-auto mb-5 rounded-2xl px-5 py-4 text-center" role="status" aria-live="polite" aria-atomic="true">
+                            <div class="flex items-center justify-center gap-2 text-sm font-black text-white"><i class="ph ph-arrows-clockwise text-lg text-blue-200" aria-hidden="true"></i><span>Sincronizando os resultados<span class="sr-only">.</span><span aria-hidden="true">...</span></span></div>
+                            <p id="ranking-sync-message" class="ranking-sync-message mt-1 min-h-5 text-xs font-semibold text-blue-100/75">Já vendeu hoje? 👀</p>
+                            <div class="ranking-sync-track mt-3" aria-hidden="true"></div>
                         </div>
 
                         <div class="relative mb-5 flex flex-col items-center justify-center gap-3">
@@ -6885,6 +6904,9 @@
         };
         let rankingSheetSyncTimer = null;
         let rankingSheetLastSignature = '';
+        let rankingSyncMessageTimer = null;
+        let rankingSyncTransitionTimer = null;
+        let rankingSyncMessageIndex = 0;
         let salesTimelineTimer = null;
         let salesTimelineEvents = [];
         let activeRankingPeriod = 'month';
@@ -6932,6 +6954,47 @@
             const arena = document.getElementById('ranking-arena');
             arena?.classList.toggle('ranking-loading', isLoading);
             arena?.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+            document.getElementById('ranking-sync-status')?.classList.toggle('invisible', isLoading);
+            if (isLoading) startRankingSyncMessages();
+            else stopRankingSyncMessages();
+        }
+
+        const rankingSyncMessages = [
+            'Já vendeu hoje? 👀', 'Quem será que subiu no ranking? 🏆',
+            'Conferindo as metas de hoje... 🎯', 'Será que teve meta batida hoje? 🚀',
+            'Somando os resultados... cada contrato conta 📈',
+            'Atualizando o placar... a disputa está acirrada 🔥',
+            'Buscando as últimas vendas... 🥇', 'Conferindo Comercial + Jurídico... ⚡'
+        ];
+
+        function showNextRankingSyncMessage() {
+            const message = document.getElementById('ranking-sync-message');
+            if (!message) return;
+            const updateText = () => {
+                rankingSyncMessageIndex = (rankingSyncMessageIndex + 1) % rankingSyncMessages.length;
+                message.textContent = rankingSyncMessages[rankingSyncMessageIndex];
+                message.classList.remove('is-changing');
+            };
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) updateText();
+            else {
+                message.classList.add('is-changing');
+                rankingSyncTransitionTimer = window.setTimeout(updateText, 240);
+            }
+        }
+
+        function startRankingSyncMessages() {
+            if (rankingSyncMessageTimer) return;
+            const message = document.getElementById('ranking-sync-message');
+            if (message) message.textContent = rankingSyncMessages[rankingSyncMessageIndex];
+            rankingSyncMessageTimer = window.setInterval(showNextRankingSyncMessage, 2800);
+        }
+
+        function stopRankingSyncMessages() {
+            if (rankingSyncMessageTimer) window.clearInterval(rankingSyncMessageTimer);
+            if (rankingSyncTransitionTimer) window.clearTimeout(rankingSyncTransitionTimer);
+            rankingSyncMessageTimer = null;
+            rankingSyncTransitionTimer = null;
+            document.getElementById('ranking-sync-message')?.classList.remove('is-changing');
         }
 
         function normalizeRankingData(value = {}, options = {}) {
@@ -7198,6 +7261,7 @@
             renderRankingHunters();
             renderRankingPaidClients();
             renderSalesTimeline();
+            renderMonthlyHighlights();
             updateRankingSyncStatus();
             window.dispatchEvent(new CustomEvent('platino-ranking-updated'));
         }
@@ -7859,11 +7923,12 @@
         });
 
         function stopRankingSheetSync() {
-            if (!rankingSheetSyncTimer) return;
-            clearInterval(rankingSheetSyncTimer);
+            if (rankingSheetSyncTimer) clearInterval(rankingSheetSyncTimer);
             rankingSheetSyncTimer = null;
             if (salesTimelineTimer) clearInterval(salesTimelineTimer);
             salesTimelineTimer = null;
+            stopRankingSyncMessages();
+            setRankingLoading(false);
             rankingSheetLastSignature = '';
         }
 
@@ -7974,7 +8039,7 @@
             return birthdays.find(person => isSamePersonName(person.name, name));
         }
 
-      const AVISOS_HIGHLIGHT_VERSION = '2026-07-beatriz-garcia';
+      const AVISOS_HIGHLIGHT_VERSION = '2026-08-dual-highlights';
       const AVISOS_CHARGEBACK_VERSION = '2026-08-chargebacks-v1';
 
       const defaultAvisosData = {
@@ -7993,12 +8058,12 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'Destaque do mês de julho',
-                name: 'Beatriz Garcia',
-                subtitle: 'Ultrapassou sua meta em seu primeiro mês.',
-                value: 'R$ 21.078,50',
+                title: 'Destaques do mês de agosto',
+                name: 'Mariana Guijo e Janaina Rodrigues Paiva',
+                subtitle: 'Destaques Comercial e Jurídico de agosto.',
+                value: '',
                 badge: 'Meta superada',
-                photo: 'assets/equipe/beatriz-garcia.png',
+                photo: '',
                 photoPosition: 'center center'
             },
             week: {
@@ -8187,17 +8252,7 @@
             setTextIfExists('avisos-main-title', avisosData.main.title);
             setTextIfExists('avisos-main-text', avisosData.main.text);
             setTextIfExists('avisos-main-meta', avisosData.main.meta);
-            document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
-            document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
-            document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
-            document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
-            document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
-            const highlightPhoto = document.getElementById('avisos-highlight-photo');
-            if (highlightPhoto) {
-                highlightPhoto.src = avisosData.highlight.photo || defaultAvisosData.highlight.photo;
-                highlightPhoto.alt = `Foto de ${avisosData.highlight.name || defaultAvisosData.highlight.name}`;
-                highlightPhoto.style.objectPosition = avisosData.highlight.photoPosition || defaultAvisosData.highlight.photoPosition || 'center center';
-            }
+            renderMonthlyHighlights();
             setTextIfExists('avisos-week-contracts', avisosData.week.contracts);
             setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
             setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
@@ -8220,6 +8275,34 @@
                 updatedTag.classList.add('hidden');
                 updatedTag.classList.remove('flex');
             }
+        }
+
+        function renderMonthlyHighlights() {
+            const container = document.getElementById('monthly-highlights-list');
+            if (!container) return;
+            const highlights = [
+                { name: 'Mariana Guijo', sector: 'comercial', label: 'Destaque Comercial', photo: '' },
+                { name: 'Janaina Rodrigues Paiva', sector: 'juridico', label: 'Destaque Jurídico', photo: 'assets/equipe/janaina-rodrigues-paiva.jpeg', photoPosition: 'center 24%' }
+            ];
+            container.innerHTML = highlights.map(person => {
+                const rankingMatch = (rankingData[person.sector] || []).find(item => isSamePersonName(item.name, person.name));
+                const result = rankingMatch ? getRankingSold(rankingMatch) : 0;
+                const avatar = person.photo
+                    ? `<img src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" class="h-full w-full object-cover" style="object-position:${escapeHtml(person.photoPosition || 'center center')}" loading="lazy" decoding="async">`
+                    : `<span aria-label="Avatar de ${escapeHtml(person.name)}">${escapeHtml(getInitials(person.name))}</span>`;
+                return `<article class="monthly-highlight-person flex flex-col items-center gap-4 px-5 py-6 text-center sm:flex-row sm:text-left md:px-7">
+                    <div class="monthly-highlight-avatar flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-yellow-300/35 text-xl font-black text-yellow-100">${avatar}</div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[10px] font-black uppercase tracking-[0.18em] text-blue-200">Equipe ${escapeHtml(person.sector)}</p>
+                        <h4 class="mt-1 text-xl font-black uppercase leading-tight text-white">${escapeHtml(person.name)}</h4>
+                        ${result > 0 ? `<p class="money-value mt-2 text-xl font-black">${formatCurrency(result)}</p>` : ''}
+                        <div class="mt-3 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                            <span class="monthly-highlight-badge rounded-full border border-yellow-300/35 bg-yellow-400/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-yellow-100">Meta superada</span>
+                            <span class="text-xs font-semibold text-blue-100/75">${escapeHtml(person.label)} de agosto</span>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
         }
 
         // --- BLOCO RESTAURADO DO CARROSSEL E DOS CARDS MENORES ---
