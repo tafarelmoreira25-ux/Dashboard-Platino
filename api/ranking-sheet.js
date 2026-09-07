@@ -900,6 +900,26 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Method not allowed." });
   }
 
+  // Competência fixa da homenagem; não acompanha o calendário nem os filtros do ranking.
+  if (request.query?.action === "monthly-highlights") {
+    response.setHeader("Cache-Control", "no-store");
+    try {
+      const csv = await fetchCsv(getDefaultSheetCsvUrlFor("AGOSTO"));
+      const period = { key: "month", start: new Date(2026, 7, 1), end: new Date(2026, 7, 31) };
+      const parsed = rowsFromPlatinoSideBySideCsv(csv, period);
+      const rows = parsed?.rows || rowsFromCsv(csv);
+      const archived = buildRanking(rows, parsed?.teamGoals || {}, parsed?.teamTotals || {});
+      return response.status(200).json({
+        month: "2026-08",
+        source: "googleSheets",
+        comercial: archived.comercial,
+        juridico: archived.juridico
+      });
+    } catch (error) {
+      return response.status(502).json({ error: "Nao foi possivel carregar os resultados de agosto.", details: error.message });
+    }
+  }
+
   // A planilha principal sempre acompanha a aba mensal. URLs compartilhadas fixas
   // causavam a permanência acidental no mês anterior após a virada do calendário.
   const sharedUrl = "";

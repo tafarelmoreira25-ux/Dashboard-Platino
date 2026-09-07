@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import vm from 'node:vm';
+import rankingHandler from '../api/ranking-sheet.js';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const functionSource = (name, next) => html.slice(html.indexOf('        function ' + name + '('), html.indexOf('        function ' + next + '('));
@@ -9,7 +10,7 @@ const container = { innerHTML: '' };
 const context = vm.createContext({
     document: { getElementById: () => container },
     defaultAvisosData: { highlight: { people } },
-    rankingData: { source: 'googleSheets', period: 'month', periodStart: '2026-08-01T03:00:00.000Z', periodEnd: '2026-08-31T03:00:00.000Z', comercial: [{ name: 'Mariana Guijo', sold: 12345 }], juridico: [{ name: 'Janaina', sold: 23456 }] },
+    monthlyHighlightsData: { month: '2026-08', source: 'googleSheets', period: 'month', periodStart: '2026-08-01T03:00:00.000Z', periodEnd: '2026-08-31T03:00:00.000Z', comercial: [{ name: 'Mariana Guijo', sold: 12345 }], juridico: [{ name: 'Janaina', sold: 23456 }] },
     escapeHtml: String,
     normalizePersonKey: value => value.toLowerCase(),
     getRankingSold: item => item.sold,
@@ -25,16 +26,23 @@ assert.doesNotMatch(container.innerHTML, /beatriz|mariana-santos/i);
 assert.equal((container.innerHTML.match(/META SUPERADA/g) || []).length, 2);
 assert.match(container.innerHTML, /BRL 12345/);
 assert.match(container.innerHTML, /BRL 23456/);
-context.rankingData.period = 'today';
+// O ranking atual e seus filtros nunca substituem os valores arquivados.
+context.rankingData = { period: 'today', comercial: [{ name: 'Mariana Guijo', sold: 999999 }] };
+context.renderAvisosHighlights();
+assert.match(container.innerHTML, /BRL 12345/);
+assert.doesNotMatch(container.innerHTML, /999999/);
+context.monthlyHighlightsData.month = '2026-09';
 context.renderAvisosHighlights();
 assert.doesNotMatch(container.innerHTML, /BRL/);
-context.rankingData.period = 'month';
-context.rankingData.periodStart = '2026-09-01T03:00:00.000Z';
+context.monthlyHighlightsData.month = '2026-08';
+context.monthlyHighlightsData.comercial = [{ name: 'Mariana Santos', sold: 999 }];
+context.monthlyHighlightsData.juridico = [];
 context.renderAvisosHighlights();
 assert.doesNotMatch(container.innerHTML, /BRL/);
-context.rankingData.periodStart = '2026-08-01T03:00:00.000Z';
-context.rankingData.comercial = [{ name: 'Mariana Santos', sold: 999 }];
-context.rankingData.juridico = [];
+context.monthlyHighlightsData.comercial = [{ name: 'Mariana', sold: 12345 }];
+context.renderAvisosHighlights();
+assert.match(container.innerHTML, /BRL 12345/);
+context.monthlyHighlightsData = null;
 context.renderAvisosHighlights();
 assert.doesNotMatch(container.innerHTML, /BRL/);
 assert.ok((await stat(new URL('../assets/equipe/janaina-rodrigues-paiva.jpeg', import.meta.url))).size > 50000);
@@ -78,4 +86,31 @@ loading.setRankingLoading(true);
 loading.setRankingLoading(false);
 assert.equal(timers.size, 0);
 assert.match(html, /prefers-reduced-motion: reduce/);
+
+// A consulta do banner deve usar a aba fechada, mesmo com filtros atuais na requisição.
+const originalFetch = globalThis.fetch;
+const requestedSheets = [];
+globalThis.fetch = async url => {
+    requestedSheets.push(new URL(url).searchParams.get('sheet'));
+    return new Response('NOME,RESULTADO,META,SETOR\nMariana,12345,10000,comercial\nJanaina Rodrigues Paiva,23456,20000,juridico');
+};
+try {
+    const response = {
+        setHeader() {},
+        status(code) { this.code = code; return this; },
+        json(data) { this.data = data; return this; }
+    };
+    await rankingHandler({ method: 'GET', query: { action: 'monthly-highlights', period: 'today' } }, response);
+    assert.equal(response.code, 200);
+    assert.deepEqual(requestedSheets, ['AGOSTO']);
+    assert.equal(response.data.month, '2026-08');
+    assert.equal(response.data.comercial[0].sold, 12345);
+    assert.equal(response.data.juridico[0].sold, 23456);
+    globalThis.fetch = async () => { throw new Error('offline'); };
+    await rankingHandler({ method: 'GET', query: { action: 'monthly-highlights' } }, response);
+    assert.equal(response.code, 502);
+    assert.equal(response.data.comercial, undefined, 'Falhas não devem retornar resultados atuais como históricos.');
+} finally {
+    globalThis.fetch = originalFetch;
+}
 console.log('Destaques de agosto e ciclo de sincronização validados.');

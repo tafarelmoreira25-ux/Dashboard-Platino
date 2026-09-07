@@ -3009,20 +3009,13 @@
         .home-progress span { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#2563eb,#60a5fa); transition:width .3s ease; }
         .home-next-step p { color:#64748b; font-size:.8rem; }
         .home-next-step button { display:inline-flex; align-items:center; gap:.45rem; margin-top:1rem; color:#1d4ed8; font-size:.76rem; font-weight:850; }
-        .sales-community-hub { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:1rem; margin-bottom:1rem; }
-        .sales-community-main,.sales-team-wall,.sales-knowledge-strip { border:1px solid rgba(96,165,250,.16); border-radius:1.5rem; color:#fff; background:linear-gradient(145deg,#08162d,#102e69); box-shadow:0 18px 38px rgba(2,6,23,.2); }
+        .sales-community-hub { display:grid; grid-template-columns:minmax(0,1fr); gap:1rem; margin-bottom:1rem; }
+        .sales-community-main,.sales-knowledge-strip { border:1px solid rgba(96,165,250,.16); border-radius:1.5rem; color:#fff; background:linear-gradient(145deg,#08162d,#102e69); box-shadow:0 18px 38px rgba(2,6,23,.2); }
         .sales-community-main { min-width:0; padding:1.35rem; overflow:hidden; }
         .sales-community-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-        .sales-community-heading span,.sales-wall-title span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
+        .sales-community-heading span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
         .sales-community-heading h2 { margin:.2rem 0; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
         .sales-community-heading p { color:#a9bad4; font-size:.75rem; }
-        .sales-team-wall { padding:1rem; background:linear-gradient(160deg,#0b1930,#111e35); }
-        .sales-wall-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:.8rem; }
-        .sales-wall-title i { color:#facc15; font-size:1.25rem; }
-        .sales-wall-item { display:flex; align-items:center; gap:.7rem; padding:.75rem 0; border-top:1px solid rgba(255,255,255,.08); }
-        .sales-wall-item>i { display:grid; place-items:center; flex:0 0 2.2rem; height:2.2rem; border-radius:.75rem; color:#93c5fd; background:rgba(59,130,246,.15); }
-        .sales-wall-item small { display:block; color:#8fa5c5; font-size:.6rem; text-transform:uppercase; letter-spacing:.08em; }
-        .sales-wall-item strong { display:block; margin-top:.15rem; color:#e5edf8; font-size:.69rem; line-height:1.3; }
         .sales-knowledge-strip { display:flex; align-items:center; gap:.65rem; margin-bottom:1.5rem; padding:.9rem 1rem; color:#172033; border-color:#dbe5f2; background:#fff; box-shadow:0 10px 25px rgba(15,35,80,.07); }
         .sales-knowledge-strip>div { margin-right:auto; }
         .sales-knowledge-strip>div strong { display:block; color:#1e293b; font-size:.75rem; }
@@ -3030,7 +3023,7 @@
         .sales-knowledge-strip button:hover { border-color:#60a5fa; box-shadow:0 0 18px rgba(59,130,246,.12); }
         #section-avisos .sales-community-main .team-card { min-width:205px; }
         /* Central de Vendas: ranking em primeiro plano, equipe e apoio compactos. */
-        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr) 230px; min-height:305px; height:auto; max-height:none; overflow:visible; }
+        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr); min-height:305px; height:auto; max-height:none; overflow:visible; }
         #section-avisos .sales-community-main { min-height:305px; padding:.9rem 1rem; }
         #section-avisos .sales-community-heading { margin-bottom:.55rem; }
         #section-avisos .sales-community-heading h2 { font-size:1.08rem; }
@@ -3043,9 +3036,6 @@
         #section-avisos .sales-community-main .team-card>p.text-sm { display:-webkit-box; min-height:1.55rem; overflow:hidden; font-size:.67rem; line-height:1.15; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
         #section-avisos .sales-community-main .birthday-info { min-height:1.75rem; margin-top:auto; padding:.25rem .45rem; font-size:.58rem; white-space:nowrap; }
         #section-avisos .sales-community-main .team-extra { display:none; }
-        #section-avisos .sales-team-wall { min-height:305px; height:auto; padding:.7rem .8rem; overflow:visible; }
-        #section-avisos .sales-wall-item { padding:.42rem 0; }
-        #section-avisos .sales-wall-item>i { flex-basis:1.85rem; height:1.85rem; }
         .sales-support-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.85rem; align-items:start; }
         .sales-history-card { grid-column:span 4; }
         .sales-chargeback-card { grid-column:span 3; }
@@ -3119,9 +3109,6 @@
             .home-kpi-card,.home-kpi-primary { grid-column:span 4; }
             .home-next-step { grid-column:span 12; }
             .sales-community-hub { grid-template-columns:1fr; }
-            .sales-team-wall { display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; }
-            .sales-wall-title { grid-column:1/-1; }
-            .sales-wall-item { border:1px solid rgba(255,255,255,.08); border-radius:1rem; padding:.75rem; }
             #section-avisos .sales-community-hub { max-height:none; grid-template-columns:1fr; }
             .sales-history-card,.sales-chargeback-card { grid-column:span 6; }
             .sales-hunters-card { grid-column:1/-1; }
@@ -3134,8 +3121,6 @@
             .quick-action-grid { grid-template-columns:1fr; }
             .home-kpi-card,.home-kpi-primary { grid-column:span 12; min-height:145px; }
             .sales-community-heading,.sales-knowledge-strip { align-items:stretch; flex-direction:column; }
-            .sales-team-wall { grid-template-columns:1fr; }
-            .sales-wall-title { grid-column:auto; }
             .sales-knowledge-strip>div { margin:0 0 .25rem; }
             .sales-history-card,.sales-chargeback-card,.sales-hunters-card { grid-column:1/-1; }
             .hunter-compact-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -3182,9 +3167,10 @@
         <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
           <div class="mb-8">
             <div class="mt-5 flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-white/8 border border-white/12 flex items-center justify-center shadow-lg shadow-blue-950/30">
-                <i class="ph ph-shield-check text-3xl text-blue-200"></i>
-              </div>
+              <picture class="block h-16 w-16 flex-shrink-0" aria-hidden="true">
+                <source media="(prefers-reduced-motion: reduce)" srcset="assets/platino-login-logo.png">
+                <img src="assets/platino-login-logo-motion.webp" width="64" height="64" alt="" decoding="async" class="block h-full w-full object-contain" onerror="this.onerror=null; this.src='assets/platino-login-logo.png';">
+              </picture>
               <div>
                 <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">PLATINO</h1>
               </div>
@@ -3459,30 +3445,6 @@
                                 <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" aria-label="Voltar no carrossel da equipe"><i class="ph ph-caret-left text-lg"></i></button>
                                 <div id="team-carousel" class="team-carousel manual-scroll"><div id="team-track" class="team-track"></div></div>
                                 <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" aria-label="Avançar no carrossel da equipe"><i class="ph ph-caret-right text-lg"></i></button>
-                            </div>
-                        </div>
-                        <aside class="sales-team-wall">
-                            <div class="sales-wall-title"><span>Mural da equipe</span><i class="ph ph-confetti"></i></div>
-                            <div id="sales-birthday-wall" class="sales-wall-item"><i class="ph-fill ph-cake"></i><div><small>Aniversariantes do mês</small><strong>Confira os destaques no carrossel</strong></div></div>
-                            <div class="sales-wall-item"><i class="ph ph-user-circle-plus"></i><div><small>Novos integrantes</small><strong>Boas-vindas ao time Platino</strong></div></div>
-                            <div class="sales-wall-item"><i class="ph-fill ph-trophy"></i><div><small>Destaques em vendas</small><strong>Acompanhe o ranking abaixo</strong></div></div>
-                        </aside>
-                    </div>
-
-                    <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
-                        <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
-                        <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
-                        <div class="relative grid min-h-10 grid-cols-1 items-center gap-4 text-center lg:grid-cols-[1fr_auto_1fr]">
-                            <div class="hidden lg:block"></div>
-                            <div class="min-w-0">
-                                <h2 class="relative z-10 text-2xl font-bold sm:text-3xl">Placar operacional</h2>
-                            </div>
-                            <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-end">
-                                <button onclick="openAvisosEditor('highlight')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
-                                    <i class="ph ph-pencil-simple text-lg"></i> Editar destaque
-                                </button>
-                                <span id="avisos-updated-tag" class="hidden bg-white/10 text-blue-100 border border-white/10 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -6876,6 +6838,8 @@
         };
         let rankingSheetSyncTimer = null;
         let rankingSheetLastSignature = '';
+        let monthlyHighlightsData = null;
+        let monthlyHighlightsRequest = null;
         let salesTimelineTimer = null;
         let salesTimelineEvents = [];
         let activeRankingPeriod = 'month';
@@ -7833,6 +7797,7 @@
             if (window.ENABLE_RANKING_SHEET_SYNC === false) return;
             if (window.location.protocol === 'file:') return;
 
+            refreshMonthlyHighlights();
             setRankingLoading(true);
             try {
                 const response = await fetch(getRankingSheetRequestUrl(), { cache: 'no-store' });
@@ -8221,18 +8186,36 @@
             renderAvisos();
         }
 
+        async function refreshMonthlyHighlights() {
+            if (monthlyHighlightsRequest) return monthlyHighlightsRequest;
+            monthlyHighlightsRequest = (async () => {
+                try {
+                    const response = await fetch('/api/ranking-sheet?action=monthly-highlights', { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    if (data.month !== '2026-08' || data.source !== 'googleSheets') throw new Error('Competência do destaque inválida');
+                    monthlyHighlightsData = data;
+                    renderAvisosHighlights();
+                } catch (error) {
+                    console.warn('Não foi possível consultar os destaques de agosto.', error);
+                } finally {
+                    monthlyHighlightsRequest = null;
+                }
+            })();
+            return monthlyHighlightsRequest;
+        }
+
         function renderAvisosHighlights() {
             const container = document.getElementById('avisos-highlights');
             if (!container) return;
             // O destaque é de agosto de 2026; nunca atribuir valores de outro período.
-            const isAugustRanking = rankingData.source === 'googleSheets'
-                && rankingData.period === 'month'
-                && /^2026-08-01T/.test(rankingData.periodStart)
-                && /^2026-08-31T/.test(rankingData.periodEnd);
+            const isAugustRanking = monthlyHighlightsData?.source === 'googleSheets'
+                && monthlyHighlightsData.month === '2026-08';
             container.innerHTML = defaultAvisosData.highlight.people.map(person => {
                 // Nomes abreviados só são aceitos quando identificam a pessoa sem ambiguidade.
-                const matches = (rankingData[person.sector] || []).filter(item =>
+                const matches = (monthlyHighlightsData?.[person.sector] || []).filter(item =>
                     normalizePersonKey(item.name) === normalizePersonKey(person.name)
+                    || (person.sector === 'comercial' && normalizePersonKey(item.name) === 'mariana')
                     || (person.sector === 'juridico' && normalizePersonKey(item.name) === 'janaina')
                 );
                 const result = isAugustRanking && matches.length === 1 ? matches[0] : null;
@@ -8244,7 +8227,7 @@
                     <div class="avisos-highlight-details">
                         <p class="font-black text-xl text-white uppercase">${escapeHtml(person.name)}</p>
                         <p class="text-xs text-slate-300 tracking-wider mt-1">EQUIPE ${person.team}</p>
-                        ${result ? `<p class="silver-value text-2xl font-black mt-2">${formatCurrency(getRankingSold(result))}</p>` : ''}
+                        ${result ? `<p class="text-xs text-slate-300 mt-2">Resultado de agosto</p><p class="silver-value text-2xl font-black">${formatCurrency(getRankingSold(result))}</p>` : ''}
                         <span class="inline-block mt-3 bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">META SUPERADA</span>
                         <p class="text-slate-300 text-sm mt-2">Destaque ${department} de agosto</p>
                     </div>
@@ -8272,17 +8255,8 @@
             renderTeamCarousel();
             renderSalesTimeline();
 
-            const updatedTag = document.getElementById('avisos-updated-tag');
             if (avisosData.updatedAt) {
-                const date = new Date(avisosData.updatedAt);
-                updatedTag.innerHTML = `<i class="ph ph-clock"></i> ${date.toLocaleDateString('pt-BR')} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-                updatedTag.classList.remove('hidden');
-                updatedTag.classList.add('flex');
                 setTextIfExists('avisos-main-meta', `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`);
-            } else {
-                updatedTag.innerHTML = '';
-                updatedTag.classList.add('hidden');
-                updatedTag.classList.remove('flex');
             }
         }
 
@@ -8357,16 +8331,6 @@
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
             const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
             const currentMonth = getCurrentBirthdayMonth();
-            const birthdayNames = team.filter(person => {
-                const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
-                return getBirthdayMonth(birthday) === currentMonth;
-            }).map(person => formatPersonName(person.name));
-            const birthdayWall = document.getElementById('sales-birthday-wall');
-            if (birthdayWall) {
-                birthdayWall.querySelector('strong').textContent = birthdayNames.length
-                    ? birthdayNames.join(', ')
-                    : 'Nenhum aniversário cadastrado neste mês';
-            }
             container.dataset.originalCount = String(team.length);
             teamCarouselManualIndex = 0;
             container.style.transition = '';
