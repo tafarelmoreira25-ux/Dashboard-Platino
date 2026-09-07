@@ -129,6 +129,10 @@ assert.match(html, /function selectAdmTemplate\(value\)/);
 assert.match(html, /select\.value = value;[\s\S]*?renderAdmPdfFields\(\);[\s\S]*?showDocumentsForm\(\);/);
 assert.match(html, /function showDocumentsLibrary\(\)/);
 assert.match(html, /function generateAdmPdf\(/);
+assert.match(html, /function isAdmPdfBlob\(blob\)/);
+assert.match(html, /isAppleMobile/);
+assert.match(html, /Salvar em Arquivos/);
+assert.match(html, /O gerador não retornou um arquivo PDF válido/);
 assert.match(
   html,
   /'declaracao-hipossuficiencia':[\s\S]*?fields: \[[^\]]*'cep'[^\]]*\]/

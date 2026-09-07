@@ -2671,27 +2671,28 @@
             color: #ffffff;
         }
 
-        .ranking-loading [data-ranking-content] {
-            opacity: 0.2;
-            pointer-events: none;
+        .ranking-sync-status[hidden] { display: none; }
+        .ranking-sync-status { display: flex; align-items: center; gap: 1rem; }
+        .ranking-sync-message { min-height: 2.8em; transition: opacity 220ms ease; }
+        .ranking-sync-message.is-fading { opacity: 0; }
+        .ranking-sync-indicator { display: flex; gap: .25rem; flex-shrink: 0; }
+        .ranking-sync-indicator span { width: .35rem; height: .35rem; border-radius: 50%; background: currentColor; animation: ranking-sync-pulse 1.4s ease-in-out infinite; }
+        .ranking-sync-indicator span:nth-child(2) { animation-delay: .18s; }
+        .ranking-sync-indicator span:nth-child(3) { animation-delay: .36s; }
+        @keyframes ranking-sync-pulse { 50% { opacity: .3; } }
+        .avisos-highlights-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
+        .avisos-highlight-person { display: flex; gap: 1rem; min-width: 0; padding: 1.5rem 0; }
+        .avisos-highlight-person + .avisos-highlight-person { border-top: 1px solid rgba(147,197,253,.15); }
+        .avisos-highlight-person .team-avatar { width: 4.5rem; height: 4.5rem; flex: 0 0 4.5rem; }
+        .avisos-highlight-details { min-width: 0; overflow-wrap: anywhere; }
+        @media (min-width: 1024px) {
+            .avisos-highlights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .avisos-highlight-person:first-child { padding-right: 1.5rem; }
+            .avisos-highlight-person + .avisos-highlight-person { border-top: 0; border-left: 1px solid rgba(147,197,253,.15); padding-left: 1.5rem; }
         }
-
-        .ranking-skeleton {
-            display: none;
-        }
-
-        .ranking-loading .ranking-skeleton {
-            display: grid;
-        }
-
-        .skeleton-line {
-            background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.2), rgba(255,255,255,.08));
-            background-size: 200% 100%;
-            animation: ranking-shimmer 1.2s linear infinite;
-        }
-
-        @keyframes ranking-shimmer {
-            to { background-position: -200% 0; }
+        @media (prefers-reduced-motion: reduce) {
+            .ranking-sync-message { transition: none; }
+            .ranking-sync-indicator span { animation: none; }
         }
 
         :is(
@@ -3489,23 +3490,9 @@
                     <div id="avisos-highlight-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
-                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
-                            <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
-                                <img id="avisos-highlight-photo" src="assets/equipe/beatriz-garcia.png" alt="Foto de Beatriz Garcia" class="h-full w-full object-cover object-center">
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
-                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque da Operação</h3>
-                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Equipe Platino</span>
-                                </div>
-                                <p id="avisos-highlight-name" class="font-black text-2xl">Equipe Platino</p>
-                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Resultados do mês em atualização.</p>
-                            </div>
-                            <div class="md:text-right">
-                                    <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
-                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">—</p>
-                            </div>
+                        <div class="relative z-10">
+                            <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg"><i class="ph-fill ph-star text-yellow-400 mr-2" aria-hidden="true"></i>DESTAQUES DO MÊS DE AGOSTO</h3>
+                            <div id="avisos-highlights" class="avisos-highlights-grid"></div>
                         </div>
                     </div>
 
@@ -3536,9 +3523,12 @@
                             </div>
                         </div>
 
-                        <div class="ranking-skeleton absolute inset-x-5 top-44 z-20 grid-cols-1 gap-3 md:grid-cols-2" aria-hidden="true">
-                            <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
-                            <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
+                        <div id="ranking-sync-status" class="ranking-sync-status relative rounded-xl border border-blue-900/30 bg-slate-950/70 p-4 mb-5" role="status" aria-live="polite" hidden>
+                            <span class="ranking-sync-indicator text-blue-200" aria-hidden="true"><span></span><span></span><span></span></span>
+                            <div class="min-w-0">
+                                <p class="text-sm font-bold text-white">Sincronizando os resultados...</p>
+                                <p id="ranking-sync-message" class="ranking-sync-message text-xs text-slate-300 mt-1">Já vendeu hoje? 👀</p>
+                            </div>
                         </div>
 
                         <div data-ranking-content class="relative grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
@@ -6929,10 +6919,55 @@
             return `/api/ranking-sheet?${params.toString()}`;
         }
 
+        const rankingSyncMessages = [
+            'Já vendeu hoje? 👀',
+            'Quem será que subiu no ranking? 🏆',
+            'Conferindo as metas de hoje... 🎯',
+            'Será que teve meta batida hoje? 🚀',
+            'Somando os resultados... cada contrato conta 📈',
+            'Atualizando o placar... a disputa está acirrada 🔥',
+            'Buscando as últimas vendas... 🥇',
+            'Conferindo Comercial + Jurídico... ⚡'
+        ];
+        let rankingSyncRequests = 0;
+        let rankingSyncMessageTimer = null;
+        let rankingSyncFadeTimer = null;
+
+        function clearRankingSyncTimers() {
+            clearInterval(rankingSyncMessageTimer);
+            clearTimeout(rankingSyncFadeTimer);
+            rankingSyncMessageTimer = null;
+            rankingSyncFadeTimer = null;
+        }
+
+        window.addEventListener('pagehide', clearRankingSyncTimers);
+
         function setRankingLoading(isLoading) {
+            rankingSyncRequests = Math.max(0, rankingSyncRequests + (isLoading ? 1 : -1));
+            const loading = rankingSyncRequests > 0;
             const arena = document.getElementById('ranking-arena');
-            arena?.classList.toggle('ranking-loading', isLoading);
-            arena?.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+            arena?.setAttribute('aria-busy', String(loading));
+            const status = document.getElementById('ranking-sync-status');
+            const message = document.getElementById('ranking-sync-message');
+            if (status) status.hidden = !loading;
+            if (!loading) {
+                clearRankingSyncTimers();
+                message?.classList.remove('is-fading');
+                return;
+            }
+            if (!message || rankingSyncMessageTimer !== null) return;
+            let index = 0;
+            message.textContent = rankingSyncMessages[index];
+            rankingSyncMessageTimer = setInterval(() => {
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (!reducedMotion) message.classList.add('is-fading');
+                rankingSyncFadeTimer = setTimeout(() => {
+                    index = (index + 1) % rankingSyncMessages.length;
+                    message.textContent = rankingSyncMessages[index];
+                    message.classList.remove('is-fading');
+                    rankingSyncFadeTimer = null;
+                }, reducedMotion ? 0 : 220);
+            }, 2800);
         }
 
         function normalizeRankingData(value = {}, options = {}) {
@@ -7026,7 +7061,10 @@
                 source: sourceValue.source || 'manual',
                 updatedAt: sourceValue.updatedAt || null,
                 updatedBy: sourceValue.updatedBy || 'Supervisão',
-                sourceHealth: sourceValue.sourceHealth || null
+                sourceHealth: sourceValue.sourceHealth || null,
+                period: sourceValue.period || '',
+                periodStart: sourceValue.periodStart || '',
+                periodEnd: sourceValue.periodEnd || ''
             };
 
             rankingSectors.forEach(sector => {
@@ -7184,6 +7222,7 @@
         }
 
         function renderRanking() {
+            renderAvisosHighlights();
             renderRankingDepartment('comercial', rankingData.comercial, {
                 color: 'emerald',
                 icon: 'ph-target',
@@ -7860,6 +7899,7 @@
         });
 
         function stopRankingSheetSync() {
+            clearRankingSyncTimers();
             if (!rankingSheetSyncTimer) return;
             clearInterval(rankingSheetSyncTimer);
             rankingSheetSyncTimer = null;
@@ -7975,7 +8015,7 @@
             return birthdays.find(person => isSamePersonName(person.name, name));
         }
 
-      const AVISOS_HIGHLIGHT_VERSION = '2026-07-beatriz-garcia';
+      const AVISOS_HIGHLIGHT_VERSION = '2026-08-mariana-janaina';
       const AVISOS_CHARGEBACK_VERSION = '2026-08-chargebacks-v1';
 
       const defaultAvisosData = {
@@ -7994,13 +8034,15 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'Destaque do mês de julho',
-                name: 'Beatriz Garcia',
-                subtitle: 'Ultrapassou sua meta em seu primeiro mês.',
-                value: 'R$ 21.078,50',
+                title: 'DESTAQUES DO MÊS DE AGOSTO',
+                name: 'Mariana Guijo e Janaina Rodrigues Paiva',
+                subtitle: 'Destaques Comercial e Jurídico de agosto',
+                value: '',
                 badge: 'Meta superada',
-                photo: 'assets/equipe/beatriz-garcia.png',
-                photoPosition: 'center center'
+                people: [
+                    { name: 'Mariana Guijo', sector: 'comercial', team: 'COMERCIAL', initials: 'MG' },
+                    { name: 'Janaina Rodrigues Paiva', sector: 'juridico', team: 'JURÍDICO', initials: 'JP', photo: 'assets/equipe/janaina-rodrigues-paiva.jpeg', photoPosition: 'center 24%' }
+                ]
             },
             week: {
                 contracts: '0',
@@ -8179,6 +8221,37 @@
             renderAvisos();
         }
 
+        function renderAvisosHighlights() {
+            const container = document.getElementById('avisos-highlights');
+            if (!container) return;
+            // O destaque é de agosto de 2026; nunca atribuir valores de outro período.
+            const isAugustRanking = rankingData.source === 'googleSheets'
+                && rankingData.period === 'month'
+                && /^2026-08-01T/.test(rankingData.periodStart)
+                && /^2026-08-31T/.test(rankingData.periodEnd);
+            container.innerHTML = defaultAvisosData.highlight.people.map(person => {
+                // Nomes abreviados só são aceitos quando identificam a pessoa sem ambiguidade.
+                const matches = (rankingData[person.sector] || []).filter(item =>
+                    normalizePersonKey(item.name) === normalizePersonKey(person.name)
+                    || (person.sector === 'juridico' && normalizePersonKey(item.name) === 'janaina')
+                );
+                const result = isAugustRanking && matches.length === 1 ? matches[0] : null;
+                const department = person.sector === 'comercial' ? 'Comercial' : 'Jurídico';
+                return `<article class="avisos-highlight-person">
+                    <div class="team-avatar rounded-full text-xl font-black">
+                        ${person.photo ? `<img class="team-photo" src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" style="object-position: ${escapeHtml(person.photoPosition)}">` : `<span class="team-avatar-fallback" aria-label="${escapeHtml(person.name)}">${person.initials}</span>`}
+                    </div>
+                    <div class="avisos-highlight-details">
+                        <p class="font-black text-xl text-white uppercase">${escapeHtml(person.name)}</p>
+                        <p class="text-xs text-slate-300 tracking-wider mt-1">EQUIPE ${person.team}</p>
+                        ${result ? `<p class="silver-value text-2xl font-black mt-2">${formatCurrency(getRankingSold(result))}</p>` : ''}
+                        <span class="inline-block mt-3 bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">META SUPERADA</span>
+                        <p class="text-slate-300 text-sm mt-2">Destaque ${department} de agosto</p>
+                    </div>
+                </article>`;
+            }).join('');
+        }
+
         function renderAvisos() {
             const setTextIfExists = (id, value) => {
                 const element = document.getElementById(id);
@@ -8188,17 +8261,7 @@
             setTextIfExists('avisos-main-title', avisosData.main.title);
             setTextIfExists('avisos-main-text', avisosData.main.text);
             setTextIfExists('avisos-main-meta', avisosData.main.meta);
-            document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
-            document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
-            document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
-            document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
-            document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
-            const highlightPhoto = document.getElementById('avisos-highlight-photo');
-            if (highlightPhoto) {
-                highlightPhoto.src = avisosData.highlight.photo || defaultAvisosData.highlight.photo;
-                highlightPhoto.alt = `Foto de ${avisosData.highlight.name || defaultAvisosData.highlight.name}`;
-                highlightPhoto.style.objectPosition = avisosData.highlight.photoPosition || defaultAvisosData.highlight.photoPosition || 'center center';
-            }
+            renderAvisosHighlights();
             setTextIfExists('avisos-week-contracts', avisosData.week.contracts);
             setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
             setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
@@ -10629,7 +10692,14 @@
             }
         }
 
+        function isAdmPdfBlob(blob) {
+            return blob instanceof Blob && blob.size > 4 && /^application\/pdf(?:;|$)/i.test(blob.type || '');
+        }
+
         function downloadAdmPdfBlob(blob, fileName) {
+            if (!isAdmPdfBlob(blob)) {
+                throw new Error('O gerador não retornou um arquivo PDF válido. Tente novamente.');
+            }
             if (typeof navigator.msSaveOrOpenBlob === 'function') {
                 navigator.msSaveOrOpenBlob(blob, fileName);
                 return;
@@ -10638,6 +10708,17 @@
             if (!links) throw new Error('O botão de download do PDF não está disponível. Atualize a página.');
             const url = URL.createObjectURL(blob);
             admPdfDownloadUrls.push(url);
+            const isAppleMobile = /iP(?:ad|hone|od)/i.test(navigator.userAgent)
+                || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            // Safari no iPhone/iPad ignora com frequência o atributo download para blob URLs.
+            // Abrir o PDF permite que o usuário use a opção nativa "Salvar em Arquivos".
+            if (isAppleMobile) {
+                window.location.assign(url);
+                setTimeout(() => URL.revokeObjectURL(url), 5 * 60 * 1000);
+                return;
+            }
+
             const link = document.createElement('a');
             link.href = url;
             link.download = fileName;
@@ -10683,6 +10764,9 @@
                     throw new Error(payload?.detail || payload?.error || `O servidor respondeu HTTP ${response.status}.`);
                 }
                 blob = await response.blob();
+                if (!isAdmPdfBlob(blob)) {
+                    throw new Error('O servidor respondeu sem um PDF válido. Atualize a página e tente novamente.');
+                }
             }
 
             await assertValidAdmPdfBlob(blob);
