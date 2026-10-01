@@ -3104,6 +3104,36 @@
         .home-progress span { background:linear-gradient(90deg,#075eff,#e2e8f0,#1687ff); box-shadow:0 0 12px #1687ff; }
         .home-next-step button { color:#8fc1ff; }
 
+        /* Outubro Rosa: homenagem na tela inicial. */
+        #content-viewport.operational-home-bg {
+            background:radial-gradient(circle at 82% 8%,rgba(236,72,153,.22),transparent 32%),radial-gradient(circle at 8% 88%,rgba(190,24,93,.14),transparent 28%),linear-gradient(135deg,#100713 0%,#181126 48%,#080817 100%) !important;
+        }
+        #content-viewport.operational-home-bg::before { background-image:radial-gradient(rgba(244,114,182,.35) 1px,transparent 1px); }
+        #section-inicio .home-command-header {
+            border-color:rgba(249,168,212,.6);
+            background:radial-gradient(circle at 90% 20%,rgba(219,39,119,.22),transparent 48%),linear-gradient(110deg,#140b1c,#25102b 58%,#321432);
+            box-shadow:0 0 0 4px rgba(236,72,153,.07),inset 0 0 34px rgba(219,39,119,.1),0 0 38px rgba(236,72,153,.14);
+        }
+        #section-inicio .home-command-header::before { background:linear-gradient(90deg,transparent,#ec4899,#fce7f3,#ec4899,transparent); box-shadow:0 0 14px #ec4899; }
+        #section-inicio .home-command-header::after { border-color:rgba(249,168,212,.3); box-shadow:0 0 18px rgba(236,72,153,.25); }
+        #section-inicio .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(236,72,153,.3); }
+        #section-inicio .home-eyebrow,#section-inicio .home-command-copy blockquote { color:#f9a8d4; }
+        #section-inicio .home-eyebrow svg { width:1.4rem; height:1.7rem; flex-shrink:0; }
+        #section-inicio .home-command-mark { border-color:#f9a8d4; box-shadow:0 0 0 6px rgba(219,39,119,.18),0 0 32px rgba(236,72,153,.5),inset 0 0 22px rgba(236,72,153,.3); }
+        #section-inicio .home-focus-pill { color:#fce7f3; border-color:rgba(249,168,212,.4); background:rgba(49,12,36,.8); }
+        #section-inicio .home-focus-pill span { background:#f472b6; box-shadow:0 0 14px #ec4899; }
+        #section-inicio .home-bento-card { border-color:rgba(249,168,212,.35); }
+        #section-inicio .home-bento-card::after { background:linear-gradient(90deg,transparent,#ec4899,#fce7f3,#ec4899,transparent); box-shadow:0 0 12px #ec4899; }
+        #section-inicio .home-bento-card:hover { border-color:#f9a8d4; box-shadow:inset 0 0 30px rgba(236,72,153,.1),0 0 22px rgba(236,72,153,.18); }
+        #section-inicio .home-card-heading span,#section-inicio .home-kpi-card>span,#section-inicio .home-card-heading>i,#section-inicio .home-next-step button { color:#f9a8d4; }
+        #section-inicio .home-card-heading>strong { color:#fce7f3; border-color:rgba(249,168,212,.3); background:rgba(219,39,119,.2); }
+        #section-inicio .quick-action-grid button>i:first-child,#section-inicio .home-kpi-icon { border-color:rgba(249,168,212,.55); background:radial-gradient(circle,#be185d,#64113b 62%,#240d24); box-shadow:inset 0 0 10px rgba(244,114,182,.5),0 0 12px rgba(236,72,153,.25); }
+        #section-inicio .quick-action-grid button:hover { border-color:#f9a8d4; background:linear-gradient(145deg,#431331,#190d26); }
+        #section-inicio .home-task-form input:focus { border-color:#f472b6; box-shadow:0 0 0 3px rgba(236,72,153,.18); }
+        #section-inicio .home-task-form button,#section-inicio .home-task-item.is-done .home-task-check { background:#be185d; border-color:#f472b6; }
+        #section-inicio .home-kpi-primary { background:radial-gradient(circle at 30% 20%,rgba(219,39,119,.3),transparent 45%),linear-gradient(145deg,#35122e,#100b20); }
+        #section-inicio .home-progress span { background:linear-gradient(90deg,#db2777,#fce7f3,#f472b6); box-shadow:0 0 12px #ec4899; }
+
         @media (max-width: 1024px) {
             .home-quick-actions,.home-workflow-card { grid-column:span 12; }
             .home-kpi-card,.home-kpi-primary { grid-column:span 4; }
@@ -3358,13 +3388,13 @@
                 <div class="max-w-7xl mx-auto">
                     <header class="home-command-header">
                         <div class="home-command-copy">
-                            <span class="home-eyebrow"><i class="ph-fill ph-sparkle"></i> Hub operacional</span>
+                            <span class="home-eyebrow"><svg viewBox="0 0 32 40" fill="none" aria-hidden="true"><path d="M10 4C12 1 20 1 22 4L25 12L20 21L29 34L21 39L16 28L11 39L3 34L12 21L7 12Z" fill="#f472b6"/><path d="M10 4C12 8 20 8 22 4M7 12L20 21M25 12L12 21L21 39" stroke="#be185d" stroke-width="2" stroke-linejoin="round"/></svg> Outubro Rosa · Platino apoia</span>
                             <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
                             <p id="home-date-role">Sua rotina começa aqui.</p>
-                            <blockquote>“Clareza na prioridade. Excelência na execução.”</blockquote>
+                            <blockquote>Um mês de conscientização, acolhimento e cuidado com a vida.</blockquote>
                         </div>
                         <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-human-mascot-home.png" alt=""></div>
-                        <div class="home-focus-pill"><span></span> Operação ativa</div>
+                        <div class="home-focus-pill"><span></span> Juntos pelo cuidado</div>
                     </header>
 
                     <div class="home-bento-grid">
@@ -3428,27 +3458,6 @@
 
             <section id="section-avisos" class="content-section hidden animate-fade-in">
                 <div class="max-w-7xl mx-auto">
-                    <div class="sales-community-hub">
-                        <div class="sales-community-main">
-                            <div class="sales-community-heading">
-                                <div>
-                                    <span>Conexão Platino</span>
-                                    <h2>Nosso time, nossa força</h2>
-                                    <p>Conheça quem transforma desafios em resultados todos os dias.</p>
-                                </div>
-                                <div class="gestor-only hidden flex-wrap gap-2">
-                                    <button onclick="openAvisosEditor('birthdays')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-cake"></i> Aniversários</button>
-                                    <button onclick="openAvisosEditor('carrossel')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-images-square"></i> Equipe</button>
-                                </div>
-                            </div>
-                            <div class="relative">
-                                <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" aria-label="Voltar no carrossel da equipe"><i class="ph ph-caret-left text-lg"></i></button>
-                                <div id="team-carousel" class="team-carousel manual-scroll"><div id="team-track" class="team-track"></div></div>
-                                <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" aria-label="Avançar no carrossel da equipe"><i class="ph ph-caret-right text-lg"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="avisos-highlight-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
                         <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
@@ -6803,23 +6812,23 @@
                 juridico: 480000
             },
             teamTotals: {
-                comercial: 101114.37,
-                juridico: 160012.71
+                comercial: 0,
+                juridico: 0
             },
             comercial: [
-                { name: 'Beatriz', sold: 25036.76, goal: 40000 },
-                { name: 'Mariana', sold: 24106.64, goal: 30000 },
-                { name: 'Fernanda Ramos', sold: 22002.43, goal: 30000 },
-                { name: 'Geovanna Alves Xavier', sold: 20571.90, goal: 30000 },
-                { name: 'Karen', sold: 6250.65, goal: 15500 },
-                { name: 'Rafaela Marcelino', sold: 1542.84, goal: 1542.84 },
-                { name: 'Roberta', sold: 1303.15, goal: 1303.15 },
-                { name: 'Rayane', sold: 300, goal: 3000 }
+                { name: 'Beatriz', sold: 0, goal: 40000 },
+                { name: 'Mariana', sold: 0, goal: 30000 },
+                { name: 'Fernanda Ramos', sold: 0, goal: 30000 },
+                { name: 'Geovanna Alves Xavier', sold: 0, goal: 30000 },
+                { name: 'Karen', sold: 0, goal: 15500 },
+                { name: 'Rafaela Marcelino', sold: 0, goal: 1542.84 },
+                { name: 'Roberta', sold: 0, goal: 1303.15 },
+                { name: 'Rayane', sold: 0, goal: 3000 }
             ],
             juridico: [
-                { name: 'Janaina Rodrigues Paiva', sold: 107687.06, goal: 150000 },
-                { name: 'Tabata Rangel de Lima', sold: 49825.65, goal: 150000 },
-                { name: 'Elaine Aparecida dos Santos', sold: 2500, goal: 80000 }
+                { name: 'Janaina Rodrigues Paiva', sold: 0, goal: 150000 },
+                { name: 'Tabata Rangel de Lima', sold: 0, goal: 150000 },
+                { name: 'Elaine Aparecida dos Santos', sold: 0, goal: 80000 }
             ],
             history: [
                 { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
@@ -6936,7 +6945,7 @@
 
         function normalizeRankingData(value = {}, options = {}) {
             const useFallback = options.useFallback === true;
-            const isCurrentMonthData = value.monthKey === defaultRankingData.monthKey || value.source === 'googleSheets';
+            const isCurrentMonthData = value.monthKey === getCurrentOperationalMonthKey();
             const sourceValue = isCurrentMonthData || useFallback ? value : defaultRankingData;
             const normalizeList = (items, fallback, sector) => {
                 const source = Array.isArray(items) && items.length
@@ -7779,6 +7788,7 @@
 
         window.applyRemoteRanking = function (remoteData) {
             if (!remoteData?.comercial || !remoteData?.juridico) return;
+            if (remoteData.monthKey !== getCurrentOperationalMonthKey()) return;
 
             // Firebase/Firestore deve ter prioridade sobre localStorage e planilha.
             // Antes, quando o navegador estava com source = 'googleSheets', o sistema ignorava
@@ -7806,6 +7816,9 @@
 
                 const sheetData = await response.json();
                 if (sheetData?.enabled === false) return;
+                if (sheetData.monthKey !== getCurrentOperationalMonthKey()) {
+                    throw new Error('A planilha retornou dados de outro mes.');
+                }
 
                 const normalized = normalizeRankingData({
                     ...sheetData,
@@ -7813,9 +7826,6 @@
                     updatedAt: sheetData.updatedAt || new Date().toISOString(),
                     updatedBy: 'Google Sheets'
                 });
-                if (!normalized.comercial.length && !normalized.juridico.length) {
-                    throw new Error(`A aba ${sheetData?.sourceHealth?.ranking?.sheet || 'mensal'} não retornou resultados`);
-                }
 
                 const signature = JSON.stringify({
                     comercial: normalized.comercial,
