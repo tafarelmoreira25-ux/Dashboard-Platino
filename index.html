@@ -3037,7 +3037,7 @@
         #section-avisos .sales-community-main .birthday-info { min-height:1.75rem; margin-top:auto; padding:.25rem .45rem; font-size:.58rem; white-space:nowrap; }
         #section-avisos .sales-community-main .team-extra { display:none; }
         .sales-support-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.85rem; align-items:start; }
-        .sales-history-card { grid-column:span 4; }
+        .sales-history-card { grid-column:1/-1; }
         .sales-hunters-card { grid-column:span 8; }
         .sales-timeline-card { grid-column:1/-1; min-height:0 !important; }
         .hunter-compact-stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
@@ -3579,48 +3579,6 @@
                             </div>
                         </div>
 
-                        <div class="sales-support-grid relative mt-5">
-                                <div class="ranking-board sales-history-card rounded-2xl p-4">
-                                    <div class="mb-3 flex items-center justify-between gap-3">
-                                        <div>
-                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
-                                            <h4 class="metallic-title text-lg font-black">Resultado anterior</h4>
-                                        </div>
-                                        <i class="ph ph-clock-counter-clockwise text-2xl text-blue-200/70"></i>
-                                    </div>
-                                    <div id="ranking-history-panel" class="space-y-3"></div>
-                                </div>
-                            <div class="ranking-board sales-hunters-card rounded-2xl p-4">
-                                <div class="mb-3 flex items-center justify-between gap-3">
-                                    <div>
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Origem dos clientes</p>
-                                        <h4 class="metallic-title text-lg font-black">Hunters</h4>
-                                        <p id="ranking-hunters-source" class="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-200">HUNTER DO MÊS ATUAL</p>
-                                    </div>
-                                    <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
-                                </div>
-                                <div id="ranking-hunters-stats" class="hunter-compact-stats mb-3 grid gap-2"></div>
-                                <div id="ranking-hunters-list" class="space-y-2"></div>
-                            </div>
-
-                            <div id="sales-timeline-panel" class="ranking-board sales-timeline-card rounded-2xl p-4">
-                                <div class="mb-3 flex items-center justify-between gap-3">
-                                    <div>
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Atualizações da operação</p>
-                                    </div>
-                                    <div class="flex flex-wrap items-center justify-end gap-2">
-                                        <button type="button" id="timeline-add-message-button" class="timeline-editor-only hidden items-center gap-1.5 rounded-xl border border-blue-300/20 bg-blue-400/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-100 hover:bg-blue-400/20">
-                                            <i class="ph ph-plus-circle text-sm"></i> Adicionar frase
-                                        </button>
-                                        <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-200">
-                                            <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span> Ao vivo
-                                        </span>
-                                    </div>
-                                </div>
-                                <p id="sales-timeline-status" class="mb-3 text-[11px] text-blue-100/60">Conectando à planilha...</p>
-                                <div id="sales-timeline-list" class="space-y-3 pr-1" tabindex="0" role="feed" aria-label="Atualizações da operação"></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>

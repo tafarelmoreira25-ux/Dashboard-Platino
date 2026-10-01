@@ -40,8 +40,8 @@ const current = context.normalizeRankingData({
 });
 assert.equal(current.teamTotals.comercial, 1250);
 assert.equal(current.comercial[0].goal, 30000);
-const central = source('            <section id="section-avisos"', '                    <div id="ranking-arena"');
-assert.ok(central.includes('avisos-highlight-card'));
+const central = source('            <section id="section-avisos"', '            <section id="section-comercial"');
+assert.doesNotMatch(central, /avisos-highlight-card|sales-hunters-card|sales-timeline-panel/);
 assert.doesNotMatch(central, /id="team-carousel(?:-prev|-next)?"|id="team-track"/);
 
 const originalFetch = globalThis.fetch;
