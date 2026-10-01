@@ -5,46 +5,14 @@ import rankingHandler from '../api/ranking-sheet.js';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const functionSource = (name, next) => html.slice(html.indexOf('        function ' + name + '('), html.indexOf('        function ' + next + '('));
-const people = vm.runInNewContext(html.match(/people: (\[[\s\S]*?\n                \])/)[1]);
-const container = { innerHTML: '' };
+const removed = [];
 const context = vm.createContext({
-    document: { getElementById: () => container },
-    defaultAvisosData: { highlight: { people } },
-    monthlyHighlightsData: { month: '2026-08', source: 'googleSheets', period: 'month', periodStart: '2026-08-01T03:00:00.000Z', periodEnd: '2026-08-31T03:00:00.000Z', comercial: [{ name: 'Mariana Guijo', sold: 12345 }], juridico: [{ name: 'Janaina', sold: 23456 }] },
-    escapeHtml: String,
-    normalizePersonKey: value => value.toLowerCase(),
-    getRankingSold: item => item.sold,
-    formatCurrency: value => 'BRL ' + value
+    document: { getElementById: id => ({ remove: () => removed.push(id) }) }
 });
 vm.runInContext(functionSource('renderAvisosHighlights', 'renderAvisos'), context);
 context.renderAvisosHighlights();
-assert.match(container.innerHTML, /Mariana Guijo/);
-assert.match(container.innerHTML, /Janaina Rodrigues Paiva/);
-assert.match(container.innerHTML, />MG<\/span>/);
-assert.match(container.innerHTML, /janaina-rodrigues-paiva.jpeg/);
-assert.doesNotMatch(container.innerHTML, /beatriz|mariana-santos/i);
-assert.equal((container.innerHTML.match(/META SUPERADA/g) || []).length, 2);
-assert.match(container.innerHTML, /BRL 12345/);
-assert.match(container.innerHTML, /BRL 23456/);
-// O ranking atual e seus filtros nunca substituem os valores arquivados.
-context.rankingData = { period: 'today', comercial: [{ name: 'Mariana Guijo', sold: 999999 }] };
-context.renderAvisosHighlights();
-assert.match(container.innerHTML, /BRL 12345/);
-assert.doesNotMatch(container.innerHTML, /999999/);
-context.monthlyHighlightsData.month = '2026-09';
-context.renderAvisosHighlights();
-assert.doesNotMatch(container.innerHTML, /BRL/);
-context.monthlyHighlightsData.month = '2026-08';
-context.monthlyHighlightsData.comercial = [{ name: 'Mariana Santos', sold: 999 }];
-context.monthlyHighlightsData.juridico = [];
-context.renderAvisosHighlights();
-assert.doesNotMatch(container.innerHTML, /BRL/);
-context.monthlyHighlightsData.comercial = [{ name: 'Mariana', sold: 12345 }];
-context.renderAvisosHighlights();
-assert.match(container.innerHTML, /BRL 12345/);
-context.monthlyHighlightsData = null;
-context.renderAvisosHighlights();
-assert.doesNotMatch(container.innerHTML, /BRL/);
+assert.deepEqual(removed, ['avisos-highlight-card', 'avisos-highlights']);
+assert.doesNotMatch(html, /Resultado de agosto|Destaque \$\{department\} de agosto|refreshMonthlyHighlights/);
 assert.ok((await stat(new URL('../assets/equipe/janaina-rodrigues-paiva.jpeg', import.meta.url))).size > 50000);
 assert.equal((html.match(/name: 'BEATRIZ GARCIA'/g) || []).length, 1);
 assert.match(html, /AVISOS_HIGHLIGHT_VERSION = '2026-08-mariana-janaina'/);

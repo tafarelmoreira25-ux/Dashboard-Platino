@@ -7769,7 +7769,7 @@
             if (window.ENABLE_RANKING_SHEET_SYNC === false) return;
             if (window.location.protocol === 'file:') return;
 
-            refreshMonthlyHighlights();
+
             setRankingLoading(true);
             try {
                 const response = await fetch(getRankingSheetRequestUrl(), { cache: 'no-store' });
@@ -8158,53 +8158,9 @@
             renderAvisos();
         }
 
-        async function refreshMonthlyHighlights() {
-            if (monthlyHighlightsRequest) return monthlyHighlightsRequest;
-            monthlyHighlightsRequest = (async () => {
-                try {
-                    const response = await fetch('/api/ranking-sheet?action=monthly-highlights', { cache: 'no-store' });
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const data = await response.json();
-                    if (data.month !== '2026-08' || data.source !== 'googleSheets') throw new Error('Competência do destaque inválida');
-                    monthlyHighlightsData = data;
-                    renderAvisosHighlights();
-                } catch (error) {
-                    console.warn('Não foi possível consultar os destaques de agosto.', error);
-                } finally {
-                    monthlyHighlightsRequest = null;
-                }
-            })();
-            return monthlyHighlightsRequest;
-        }
-
         function renderAvisosHighlights() {
-            const container = document.getElementById('avisos-highlights');
-            if (!container) return;
-            // O destaque é de agosto de 2026; nunca atribuir valores de outro período.
-            const isAugustRanking = monthlyHighlightsData?.source === 'googleSheets'
-                && monthlyHighlightsData.month === '2026-08';
-            container.innerHTML = defaultAvisosData.highlight.people.map(person => {
-                // Nomes abreviados só são aceitos quando identificam a pessoa sem ambiguidade.
-                const matches = (monthlyHighlightsData?.[person.sector] || []).filter(item =>
-                    normalizePersonKey(item.name) === normalizePersonKey(person.name)
-                    || (person.sector === 'comercial' && normalizePersonKey(item.name) === 'mariana')
-                    || (person.sector === 'juridico' && normalizePersonKey(item.name) === 'janaina')
-                );
-                const result = isAugustRanking && matches.length === 1 ? matches[0] : null;
-                const department = person.sector === 'comercial' ? 'Comercial' : 'Jurídico';
-                return `<article class="avisos-highlight-person">
-                    <div class="team-avatar rounded-full text-xl font-black">
-                        ${person.photo ? `<img class="team-photo" src="${escapeHtml(person.photo)}" alt="Foto de ${escapeHtml(person.name)}" style="object-position: ${escapeHtml(person.photoPosition)}">` : `<span class="team-avatar-fallback" aria-label="${escapeHtml(person.name)}">${person.initials}</span>`}
-                    </div>
-                    <div class="avisos-highlight-details">
-                        <p class="font-black text-xl text-white uppercase">${escapeHtml(person.name)}</p>
-                        <p class="text-xs text-slate-300 tracking-wider mt-1">EQUIPE ${person.team}</p>
-                        ${result ? `<p class="text-xs text-slate-300 mt-2">Resultado de agosto</p><p class="silver-value text-2xl font-black">${formatCurrency(getRankingSold(result))}</p>` : ''}
-                        <span class="inline-block mt-3 bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">META SUPERADA</span>
-                        <p class="text-slate-300 text-sm mt-2">Destaque ${department} de agosto</p>
-                    </div>
-                </article>`;
-            }).join('');
+            document.getElementById('avisos-highlight-card')?.remove();
+            document.getElementById('avisos-highlights')?.remove();
         }
 
         function renderAvisos() {
