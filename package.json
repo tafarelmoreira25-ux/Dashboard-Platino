@@ -12,7 +12,7 @@
     "test:documents-download": "node tests/document-download-test.mjs",
     "test:citacao": "node tests/citacao-judicial-pdf-test.mjs",
     "test:hunter": "node tests/hunter-sheet-test.mjs",
-    "test:ranking": "node tests/ranking-sheet-summary-test.mjs",
+    "test:ranking": "node tests/ranking-sheet-summary-test.mjs && node tests/ranking-month-reset-test.mjs",
     "test:ranking-summary": "node tests/ranking-summary-source-test.mjs",
     "test:laudo": "node tests/laudo-pericial-contabil-test.mjs",
     "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-ui-test.mjs",

@@ -88,14 +88,14 @@
   text-transform: uppercase;
 }
 
-.sdr-command-hero .sdr-title {
-  color: #fff;
+#section-sdr .sdr-command-hero .sdr-title {
+  color: #fff !important;
   font-size: clamp(1.55rem, 3vw, 2.25rem);
   letter-spacing: -0.035em;
 }
 
 .sdr-command-hero .sdr-title span { color: #dbeafe; font-weight: 720; }
-.sdr-command-hero .sdr-subtitle { max-width: 46rem; color: #d6e5f4; line-height: 1.6; }
+#section-sdr .sdr-command-hero .sdr-subtitle { max-width: 46rem; color: #d6e5f4; line-height: 1.6; }
 
 .sdr-command-status {
   display: inline-flex;

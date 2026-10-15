@@ -87,6 +87,19 @@ function getDefaultSheetCsvUrl() {
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 }
 
+async function verifyCurrentRankingSheet() {
+  const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+  const sheetName = process.env.RANKING_SHEET_NAME || getCurrentPortugueseMonthName();
+  const response = await fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit`, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Nao foi possivel verificar a aba ${sheetName}.`);
+  const html = await response.text();
+  const tabs = Array.from(html.matchAll(/docs-sheet-tab-caption[^>]*>([^<]+)/g), match => match[1].trim());
+  // O endpoint CSV pode devolver a primeira aba quando o nome solicitado nao existe.
+  if (!tabs.includes(sheetName)) {
+    throw new Error(`A aba ${sheetName} nao existe ou nao esta acessivel na planilha. Ranking mantido sem dados de outros meses.`);
+  }
+}
+
 function getDefaultSheetCsvUrlFor(sheetName) {
   const spreadsheetId = process.env.RANKING_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
@@ -946,6 +959,7 @@ export default async function handler(request, response) {
     };
 
     if (sharedUrl || (!comercialUrl && !juridicoUrl)) {
+      if (!sharedUrl) await verifyCurrentRankingSheet();
       const csv = await fetchCsv(sharedUrl || getDefaultSheetCsvUrl());
       const extraData = extractSupplementalDataFromCsv(csv);
       supplemental.history.push(...extraData.history);
