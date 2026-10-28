@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -2211,11 +2211,6 @@
             }
         }
 
-        /* Identidade branca, azul e prata exclusiva da Central de Documentos. */
-        #section-documentos {
-            background: #ffffff;
-        }
-
         .documents-central,
         .documents-central * {
             font-family: "Inter", Arial, sans-serif;
@@ -3239,9 +3234,6 @@
 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pt-5 pb-2">Recursos</div>
 
-                <button id="nav-documentos" onclick="navigateTo('documentos')" class="nav-btn">
-                    <i class="ph ph-files"></i> Documentos
-                </button>
                 <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn">
                     <i class="ph ph-books"></i> Treinamentos
                 </button>
@@ -3321,7 +3313,6 @@
                                 <i class="ph ph-lightning"></i>
                             </div>
                             <div class="quick-action-grid">
-                                <button type="button" onclick="navigateTo('documentos')"><i class="ph ph-file-plus"></i><span>Gerar documento<small>Modelos padronizados</small></span><i class="ph ph-arrow-up-right"></i></button>
                                 <button type="button" onclick="navigateTo('sdr')"><i class="ph ph-user-plus"></i><span>Novo atendimento<small>Abrir jornada do lead</small></span><i class="ph ph-arrow-up-right"></i></button>
                                 <button type="button" onclick="navigateTo('drive')"><i class="ph ph-folder-open"></i><span>Acessar Drive<small>Pastas e documentos</small></span><i class="ph ph-arrow-up-right"></i></button>
                                 <button type="button" onclick="navigateTo('treinamentos')"><i class="ph ph-graduation-cap"></i><span>Treinamentos<small>Base operacional</small></span><i class="ph ph-arrow-up-right"></i></button>
@@ -3513,141 +3504,6 @@
                         </a>
                     </div>
                     <div class="space-y-4" id="com-accordions"></div>
-                </div>
-            </section>
-
-            <section id="section-documentos" class="content-section hidden animate-fade-in">
-                <div class="documents-central max-w-7xl mx-auto">
-                    <header class="documents-hero">
-                        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                            <div class="documents-hero-copy">
-                                <img src="assets/pdf-document-icon.png" alt="Ícone PDF do Gerador Inteligente de PDF" class="documents-pdf-hero-icon">
-                                <div>
-                                    <p class="documents-eyebrow">Documentos padronizados</p>
-                                    <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Gerador Inteligente de PDF</h2>
-                                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Localize um modelo, preencha os dados e gere o documento padronizado.</p>
-                                </div>
-                            </div>
-                            <div class="documents-hero-aside">
-                                <span class="documents-local-indicator">Processamento seguro no navegador</span>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div class="documents-content">
-                        <div id="documents-library-view">
-                            <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                                <div>
-                                    <p class="documents-category-label">Escolha do modelo</p>
-                                    <h3 class="mt-1 text-xl font-black text-white">Biblioteca de modelos</h3>
-                                    <p class="mt-1 text-sm text-blue-100/60">Pesquise ou filtre para encontrar rapidamente o documento.</p>
-                                </div>
-                                <span id="adm-template-count" class="text-xs font-bold text-blue-200/60">Modelos disponíveis</span>
-                            </div>
-
-                            <div class="documents-library-toolbar">
-                                <div class="documents-search">
-                                    <i class="ph ph-magnifying-glass"></i>
-                                    <input id="adm-template-search" name="document_library_search" type="search" placeholder="Pesquisar por nome ou finalidade..." autocomplete="off" autocapitalize="none" spellcheck="false" oninput="renderAdmTemplateOptions(this.value)">
-                                    <button id="documents-search-clear" type="button" class="documents-search-clear hidden" onclick="clearDocumentsSearch()" aria-label="Limpar busca de documentos" title="Limpar busca">×</button>
-                                </div>
-                                <div id="documents-category-filters" class="documents-categories" aria-label="Filtrar modelos por categoria"></div>
-                            </div>
-
-                            <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="sr-only" aria-hidden="true" tabindex="-1">
-                                <option value="chargeback">Chargeback</option>
-                                <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
-                                <option value="citacao-judicial">Citação Judicial</option>
-                                <option value="contestacao-taxas-email">Contestação de Taxas por E-mail</option>
-                                <option value="declaracao-ausencia-carteira-trabalho">Declaração de Ausência de Carteira de Trabalho</option>
-                                <option value="declaracao-hipossuficiencia">Declaração de Hipossuficiência</option>
-                                <option value="declaracao-isencao-irpf">Declaração de Isenção de IRPF</option>
-                                <option value="notificacao-extrajudicial-platino">Notificação Extrajudicial Platino</option>
-                                <option value="procuracao-dra-juliane">Procuração Dra. Juliane</option>
-                                <option value="termo-ciencia-autorizacao-seguranca">Termo de Ciência e Autorização de Segurança</option>
-                                <option value="termo-compromisso-pagamento">Termo de Compromisso de Pagamento</option>
-                                <option value="modelo-termo-compromisso-pagamento">Modelo - Termo de Compromisso de Pagamento</option>
-                                <option value="recibo-prestacao-servicos">Recibo de Prestação de Serviços</option>
-                                <option value="termo-recompra">Termo de Recompra</option>
-                                <option value="relatorio-negociacao-acordo-homologacao">Relatório de Negociação — Acordo de Homologação</option>
-                                <option value="certidao-diligencia-contato-profissional">Certidão de Diligência e Contato Profissional</option>
-                                <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
-                                <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
-                            </select>
-                            <div id="adm-template-options" class="documents-template-options" role="listbox" aria-label="Modelos de documentos disponíveis"></div>
-                        </div>
-
-                        <div id="documents-form-view" class="hidden">
-                            <div class="documents-form-shell">
-                                <div class="documents-form-header">
-                                    <div class="flex min-w-0 items-center gap-3">
-                                        <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
-                                            <span aria-hidden="true">←</span> <span class="hidden sm:inline">Biblioteca</span>
-                                        </button>
-                                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-library-icon-3d.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
-                                        <div class="min-w-0">
-                                            <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
-                                            <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
-                                            <p id="adm-template-picker-description" class="mt-0.5 truncate text-xs text-blue-100/60">Preencha os dados solicitados.</p>
-                                        </div>
-                                    </div>
-                                    <div class="documents-progress">
-                                        <div class="flex items-center justify-between gap-4 text-[11px] font-bold text-blue-100/70">
-                                            <span id="documents-step-label">Etapa 1 de 1</span>
-                                            <span id="documents-progress-value">0%</span>
-                                        </div>
-                                        <div class="documents-progress-track"><div id="documents-progress-fill" class="documents-progress-fill"></div></div>
-                                    </div>
-                                </div>
-
-                                <form id="adm-pdf-form" onsubmit="event.preventDefault(); generateAdmPdf(event)">
-                                    <div class="documents-form-body">
-                                        <div class="documents-meta-grid">
-                                            <label class="documents-field-label">
-                                                Data do documento
-                                                <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold">
-                                            </label>
-                                            <label class="documents-field-label">
-                                                Número do documento
-                                                <input id="adm-pdf-number" type="text" readonly class="adm-pdf-control px-4 py-3 text-sm font-black">
-                                            </label>
-                                            <label class="documents-field-label">
-                                                Nome do arquivo
-                                                <div class="relative">
-                                                    <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
-                                                    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">.pdf</span>
-                                                </div>
-                                            </label>
-                                        </div>
-
-                                        <div id="adm-pdf-fields"></div>
-                                    </div>
-
-                                    <div class="documents-form-footer">
-                                        <div>
-                                            <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
-                                            <p id="documents-draft-status" class="documents-draft-status"></p>
-                                        </div>
-                                        <div class="documents-step-actions">
-                                            <button id="documents-clear-button" type="button" onclick="resetAdmPdfForm()" class="documents-secondary-button">
-                                                Limpar
-                                            </button>
-                                            <button id="documents-prev-button" type="button" onclick="changeDocumentsStep(-1)" class="documents-secondary-button">
-                                                <span aria-hidden="true">←</span> Voltar
-                                            </button>
-                                            <button id="documents-next-button" type="button" onclick="changeDocumentsStep(1)" class="documents-primary-button">
-                                                Avançar <span aria-hidden="true">→</span>
-                                            </button>
-                                            <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="documents-generate-button hidden">
-                                                <span>Gerar documento</span>
-                                            </button>
-                                            <div id="adm-pdf-download-links" class="hidden contents" aria-label="Downloads de PDF disponíveis"></div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -5757,7 +5613,6 @@
             sdr: 'SDR',
             rh: 'RH',
             financeiro: 'Financeiro',
-            documentos: 'Documentos',
             drive: 'Drive',
             treinamentos: 'Treinamentos',
             perfil: 'Perfil e Tarefas',
@@ -6196,7 +6051,6 @@
                 'Central de vendas: ranking, resultados, equipe, aniversariantes, hunters e linha do tempo de vendas.',
                 'Comercial: manual de conversão, atendimento, fechamento e contratos.',
                 'Administrativo: GOV.BR, conferência e rotinas administrativas.',
-                'Documentos: biblioteca de modelos, formulários e geração local de documentos em PDF.',
                 'Jurídico: fluxo processual, citações, audiências e homologação.',
                 'RH: comunicados, frequência, treinamentos, calendário e solicitações.',
                 'Treinamentos: biblioteca oficial de PDFs, manuais e conteúdos interativos.',
@@ -8543,12 +8397,6 @@
             getFlowCollections().forEach(collection => renderAccordions(collection.containerId, collection.data));
             loadRhNotes();
             renderRhMiniMural();
-            applyAdmTemplateNames();
-            syncAdmTemplatePicker();
-            if (!document.getElementById('adm-template-picker-panel')?.hidden) {
-                renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
-            }
-
             const rhStatus = document.getElementById('rh-notes-status');
             if (rhStatus) {
                 rhStatus.innerText = 'Sincronizado para todos os logins';
@@ -10735,9 +10583,6 @@
             renderAccordions('com-accordions', fluxosComercial);
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
-            resetAdmPdfForm();
-            renderAdmTemplateOptions();
-            checkAdmPdfGeneratorAvailability();
             loadRhNotes();
             renderRhMiniMural();
             
