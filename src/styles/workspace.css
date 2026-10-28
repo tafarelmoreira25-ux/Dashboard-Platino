@@ -185,12 +185,12 @@ body .ranking-sync-indicator > span { background: var(--brand); }
 body .metal-level-fill::before, body .metal-level-fill::after,
 body .dot::after, body .training-card::before,
 body .metal-login-button::before, body .metal-button::before,
-body .login-feature-strip::before, body .documents-hero::after { content: none; }
+body .documents-hero::after { content: none; }
 body .documents-local-indicator::before { background: var(--brand); box-shadow: none; animation: none; }
 body .metal-level-fill::before, body .metal-level-fill::after,
 body .dot::after, body .training-card::before,
 body .metal-login-button::before, body .metal-button::before,
-body .login-feature-strip::before, body .documents-hero::after { content: none; }
+body .documents-hero::after { content: none; }
 body .documents-local-indicator::before { background: var(--brand); box-shadow: none; animation: none; }
 
 /* Home: greeting, quick links and daily work, with no promotional hero. */
@@ -266,13 +266,14 @@ body .chat-bubble-ai { background: var(--canvas) !important; color: var(--ink) !
 body .dev-badge-container { display: none; }
 
 /* Login keeps its existing form, validation and Firebase flow. */
-body .login-hero-bg { background: var(--canvas); color: var(--ink); }
-body .login-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-body .login-glow-overlay { display: none; }
-body #login-screen > .grid { display: block; max-width: 440px; }
-body .login-feature-strip { color: var(--muted); }
+body #login-screen { background: #FFFFFF; color: var(--ink); }
+body #login-screen .login-layout { max-width: 440px; }
+body #login-screen .login-panel { background: #FFFFFF; border: 0; border-radius: 0; box-shadow: none; }
+body #login-screen .login-brand { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 32px; }
+body #login-screen .login-brand-image { display: block; width: min(160px, 100%); height: auto; max-width: 100%; object-fit: contain; }
+body #login-screen .login-brand-name { margin: 0; font: 500 24px/1.2 Inter, sans-serif; letter-spacing: .04em; }
+body #login-screen, body #login-screen *, body #login-screen *::before, body #login-screen *::after { animation: none !important; transition: none !important; }
 body #login-reset-password { color: var(--brand) !important; }
-body .login-feature-strip span { color: inherit; background: none; border: 0; }
 
 /* SDR includes portfolio, registration, analysis, acceptance and settings. */
 body #section-sdr { --sdr-navy: var(--ink); --sdr-ocean: var(--brand); --sdr-ocean-dark: var(--brand); --sdr-surface: var(--surface); --sdr-canvas: var(--canvas); --sdr-line: var(--line); --sdr-muted: var(--muted); color: var(--ink); }

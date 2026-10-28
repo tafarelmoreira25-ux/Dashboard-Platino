@@ -876,19 +876,6 @@
             filter: brightness(1.05);
         }
 
-        .login-hero-bg {
-            background-image:
-                linear-gradient(90deg, rgba(2, 6, 23, 0.82) 0%, rgba(2, 6, 23, 0.58) 38%, rgba(2, 6, 23, 0.12) 72%),
-                url('assets/platino-login-bg.png');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .login-glow-overlay {
-            background:
-                radial-gradient(circle at 72% 32%, rgba(37, 99, 235, 0.12), transparent 30%),
-                linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.34));
-        }
 
         .login-panel {
             background: linear-gradient(180deg, rgba(2, 6, 23, 0.82), rgba(15, 23, 42, 0.72));
@@ -1021,58 +1008,6 @@
             filter: brightness(1.04);
         }
 
-        .login-feature-strip {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            width: 100%;
-            padding: 0.7rem 0.95rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            background:
-                linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(59, 130, 246, 0.08) 42%, rgba(15, 23, 42, 0.26)),
-                rgba(255, 255, 255, 0.04);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.16),
-                0 14px 34px rgba(0, 0, 0, 0.18);
-            color: rgba(219, 234, 254, 0.86);
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .login-feature-strip::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(110deg, transparent 8%, rgba(255, 255, 255, 0.18) 45%, transparent 62%);
-            transform: translateX(-120%);
-            animation: loginFeatureSheen 5.5s ease-in-out infinite;
-        }
-
-        .login-feature-strip span {
-            position: relative;
-            z-index: 1;
-        }
-
-        @keyframes loginFeatureSheen {
-            0%, 35% { transform: translateX(-120%); }
-            70%, 100% { transform: translateX(120%); }
-        }
-
-        @media (max-width: 640px) {
-            .login-feature-strip {
-                gap: 0.45rem;
-                padding-inline: 0.75rem;
-                font-size: 0.62rem;
-                letter-spacing: 0.13em;
-            }
-        }
 
         .security-footer {
             color: #dbeafe;
@@ -3194,28 +3129,12 @@
     </div>
 </div>
 
-    <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
-      <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
-      <div class="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-[440px_1fr] gap-10 items-center">
-        <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
-          <div class="mb-8">
-            <div class="mt-5 flex items-center gap-3">
-              <picture class="block h-16 w-16 flex-shrink-0" aria-hidden="true">
-                <source media="(prefers-reduced-motion: reduce)" srcset="assets/platino-login-logo.png">
-                <img src="assets/platino-login-logo-motion.webp" width="64" height="64" alt="" decoding="async" class="block h-full w-full object-contain" onerror="this.onerror=null; this.src='assets/platino-login-logo.png';">
-              </picture>
-              <div>
-                <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">PLATINO</h1>
-              </div>
-            </div>
-
-            <div class="login-feature-strip mt-6">
-              <span>Tecnologia</span>
-              <span aria-hidden="true">-</span>
-              <span>Controle</span>
-              <span aria-hidden="true">-</span>
-              <span>Suporte</span>
-            </div>
+    <section id="login-screen" class="min-h-screen flex items-center px-4 py-8">
+      <div class="login-layout w-full mx-auto">
+        <div class="login-panel w-full p-7 md:p-8">
+          <div class="login-brand">
+            <img src="assets/platino-login-logo.png" width="160" height="160" alt="Símbolo Platino" class="login-brand-image" decoding="async">
+            <h1 class="login-brand-name">PLATINO</h1>
           </div>
 
           <form id="login-form" class="space-y-4" autocomplete="on">
@@ -3264,10 +3183,6 @@
             </button>
 
             <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
-            <p class="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-blue-100/70">
-              <i class="ph ph-lock-key mt-0.5 text-sm text-blue-200" aria-hidden="true"></i>
-              <strong>Criptografia SSL de Ponta a Ponta</strong>
-            </p>
           </form>
 
         </div>
