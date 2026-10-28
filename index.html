@@ -3110,6 +3110,8 @@
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
 <link rel="stylesheet" href="./src/styles/workspace.css">
+<link rel="stylesheet" href="./src/styles/home-presentation.css">
+<script type="module" src="./src/home-presentation.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3304,6 +3306,23 @@
                             <blockquote>Um mês de conscientização, acolhimento e cuidado com a vida.</blockquote>
                         </div>
                     </header>
+
+                    <section id="home-presentation" class="home-presentation" aria-label="Apresentação institucional Platino OS" aria-roledescription="carrossel">
+                        <div class="home-presentation-heading">
+                            <h3>Platino OS</h3>
+                            <a href="./assets/platino-os/platino-os.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF original</a>
+                        </div>
+                        <div class="home-presentation-stage" aria-live="off">
+                            <img width="1600" height="900" decoding="async" alt="Platino OS — página 1 de 7" data-presentation-image>
+                        </div>
+                        <div class="home-presentation-controls">
+                            <button type="button" data-presentation-prev aria-label="Página anterior">Anterior</button>
+                            <span data-presentation-counter role="status" aria-live="off">1 / 7</span>
+                            <button type="button" data-presentation-next aria-label="Próxima página">Próxima</button>
+                            <button type="button" data-presentation-toggle aria-pressed="false">Pausar</button>
+                        </div>
+                        <p data-presentation-error hidden>Não foi possível carregar esta página. Utilize o link para abrir o PDF original.</p>
+                    </section>
 
                     <div class="home-bento-grid">
                         <article class="home-bento-card home-quick-actions">
