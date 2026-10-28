@@ -7,7 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@layer platino-legacy {
         
         body { 
             font-family: 'Inter', sans-serif; 
@@ -69,9 +70,12 @@
         .progress-bar {
             transition: width 0.3s ease;
         }
-    </style>
+
+}
+</style>
+<link rel="stylesheet" href="./src/styles/workspace.css">
 </head>
-<body class="text-slate-800 antialiased h-screen w-screen flex flex-col">
+<body class="platino-training text-slate-800 antialiased h-screen w-screen flex flex-col">
 
     <!-- Container da Apresentação -->
     <main id="presentation-container" class="relative w-full h-full flex-1 overflow-hidden">

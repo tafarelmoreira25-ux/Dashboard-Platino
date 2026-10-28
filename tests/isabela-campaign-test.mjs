@@ -28,6 +28,8 @@ assert.match(
   "A tela inicial operacional deve ser o primeiro conteúdo da seção Início."
 );
 assert.match(html, /id="home-greeting">Bom dia, equipe Platino\.<\/h2>/);
-assert.match(html, /<span class="home-eyebrow"><i class="ph-fill ph-sparkle"><\/i> Hub operacional<\/span>/);
+assert.doesNotMatch(html, /<span class="home-eyebrow">/);
+assert.doesNotMatch(html, /<div class="home-command-mark"/);
+assert.match(html, /href="\.\/src\/styles\/workspace\.css"/);
 
 console.log("Campanha de homenagem removida; tela inicial operacional preservada como entrada.");

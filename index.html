@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="assets/platino-icon.png?v=20260722">
     <link rel="shortcut icon" type="image/png" href="assets/platino-icon.png?v=20260722">
     <link rel="apple-touch-icon" href="assets/platino-icon.png?v=20260722">
-    <meta name="theme-color" content="#071d65">
+    <meta name="theme-color" content="#FFFFFF">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -19,7 +19,8 @@
     }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
+@layer platino-legacy {
         body { font-family: 'Inter', sans-serif; }
         
         /* Ocultar scrollbar mas manter funcionalidade */
@@ -38,8 +39,8 @@
 
         .app-topbar {
             min-height: 5rem;
-            border-bottom: 1px solid rgba(43, 72, 112, 0.48) !important;
-            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%) !important;
+            border-bottom: 1px solid rgba(43, 72, 112, 0.48);
+            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%);
             box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
         }
 
@@ -60,7 +61,7 @@
         }
 
         .topbar-search-frame .ph {
-            color: #cbd5e1 !important;
+            color: #cbd5e1;
             z-index: 2;
             filter: drop-shadow(0 0 10px rgba(226, 232, 240, 0.12));
             transition: color 0.2s ease, transform 0.2s ease;
@@ -92,10 +93,10 @@
 
         .topbar-search-input {
             min-height: 3.25rem;
-            color: #e5edf7 !important;
-            background: rgba(11, 19, 34, 0.92) !important;
-            border: 1px solid rgba(139, 156, 182, 0.26) !important;
-            border-radius: 999px !important;
+            color: #e5edf7;
+            background: rgba(11, 19, 34, 0.92);
+            border: 1px solid rgba(139, 156, 182, 0.26);
+            border-radius: 999px;
             box-shadow:
                 0 12px 26px rgba(2, 6, 23, 0.22),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -109,12 +110,12 @@
 
         .topbar-search-frame:hover .ph,
         .topbar-search-frame:focus-within .ph {
-            color: #bfdbfe !important;
+            color: #bfdbfe;
         }
 
         .topbar-search-input:focus {
-            background: rgba(15, 25, 44, 0.98) !important;
-            border-color: rgba(96, 165, 250, 0.42) !important;
+            background: rgba(15, 25, 44, 0.98);
+            border-color: rgba(96, 165, 250, 0.42);
             box-shadow:
                 0 14px 30px rgba(0, 0, 0, 0.24),
                 0 0 0 4px rgba(59, 130, 246, 0.12),
@@ -303,8 +304,8 @@
         }
 
         .company-revenue-level .company-revenue-value {
-            color: #f8fafc !important;
-            -webkit-text-fill-color: #f8fafc !important;
+            color: #f8fafc;
+            -webkit-text-fill-color: #f8fafc;
             text-shadow: 0 0 18px rgba(147, 197, 253, 0.45);
         }
 
@@ -530,8 +531,8 @@
         #rh-action-panel {
             background:
                 radial-gradient(circle at 15% 0%, rgba(96, 165, 250, 0.18), transparent 35%),
-                linear-gradient(145deg, rgba(9, 43, 85, 0.96), rgba(5, 25, 51, 0.98)) !important;
-            border-color: rgba(203, 213, 225, 0.2) !important;
+                linear-gradient(145deg, rgba(9, 43, 85, 0.96), rgba(5, 25, 51, 0.98));
+            border-color: rgba(203, 213, 225, 0.2);
             color: #eaf1fb;
             box-shadow:
                 0 24px 56px rgba(2, 6, 23, 0.22),
@@ -626,13 +627,13 @@
             flex: 0 0 auto;
             position: relative;
             background:
-                linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98)) !important;
-            border-color: rgba(203, 213, 225, 0.18) !important;
+                linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98));
+            border-color: rgba(203, 213, 225, 0.18);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .team-card.birthday-month {
-            border-color: rgba(251, 191, 36, 0.72) !important;
+            border-color: rgba(251, 191, 36, 0.72);
             box-shadow:
                 0 0 0 1px rgba(251, 191, 36, 0.25),
                 0 18px 42px rgba(251, 191, 36, 0.16),
@@ -860,15 +861,15 @@
         }
 
         #section-treinamentos .training-card > a {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
-            border: 1px solid rgba(147, 197, 253, 0.62) !important;
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
+            border: 1px solid rgba(147, 197, 253, 0.62);
             box-shadow:
                 0 14px 28px rgba(37, 99, 235, 0.26),
                 inset 0 1px 0 rgba(255, 255, 255, 0.22),
-                inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
+                inset 0 -1px 0 rgba(15, 23, 42, 0.22);
         }
 
         #section-treinamentos .training-card > a:hover {
@@ -913,14 +914,14 @@
             overflow: hidden;
             cursor: pointer;
             isolation: isolate;
-            color: #07111f !important;
+            color: #07111f;
             background:
-                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.72) !important;
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
+            border: 1px solid rgba(255, 255, 255, 0.72);
             box-shadow:
                 0 16px 36px rgba(0, 25, 80, 0.36),
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -2px 8px rgba(15, 23, 42, 0.22) !important;
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
             transition: transform 0.2s, filter 0.2s;
         }
 
@@ -929,52 +930,52 @@
             overflow: hidden;
             cursor: pointer;
             isolation: isolate;
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 42%, #0f4fb8 100%) !important;
-            border: 1px solid rgba(147, 197, 253, 0.62) !important;
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 42%, #0f4fb8 100%);
+            border: 1px solid rgba(147, 197, 253, 0.62);
             box-shadow:
                 0 14px 28px rgba(37, 99, 235, 0.28),
                 inset 0 1px 0 rgba(255, 255, 255, 0.22),
-                inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
+                inset 0 -1px 0 rgba(15, 23, 42, 0.22);
             transition: transform 0.2s, filter 0.2s;
         }
 
         #section-avisos .metal-button {
-            color: #07111f !important;
-            -webkit-text-fill-color: #07111f !important;
+            color: #07111f;
+            -webkit-text-fill-color: #07111f;
             background:
-                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.72) !important;
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
+            border: 1px solid rgba(255, 255, 255, 0.72);
             box-shadow:
                 0 16px 36px rgba(0, 25, 80, 0.36),
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -2px 8px rgba(15, 23, 42, 0.22) !important;
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
         }
 
         .content-section:not(#section-avisos) :is(button, a)[class*="bg-slate-100"],
         .content-section:not(#section-avisos) :is(button, a)[class*="bg-slate-200"],
         .content-section:not(#section-avisos) :is(button, a)[class*="from-slate"],
         .content-section:not(#section-avisos) :is(button, a)[class*="to-slate"] {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
-            border-color: rgba(147, 197, 253, 0.58) !important;
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
+            border-color: rgba(147, 197, 253, 0.58);
             box-shadow:
                 0 12px 24px rgba(37, 99, 235, 0.24),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         #feedback-modal :is(button, a)[class*="bg-slate-100"],
         #feedback-modal :is(button, a)[class*="bg-slate-200"] {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
-            border-color: rgba(147, 197, 253, 0.58) !important;
-            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22) !important;
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
+            border-color: rgba(147, 197, 253, 0.58);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
         }
 
         .metal-login-button::before,
@@ -1106,7 +1107,7 @@
         main > .flex-1 {
             background:
                 radial-gradient(circle at 10% 0%, rgba(203, 213, 225, 0.52), transparent 30%),
-                linear-gradient(135deg, #ffffff 0%, #f8fafc 46%, #e5e7eb 100%) !important;
+                linear-gradient(135deg, #ffffff 0%, #f8fafc 46%, #e5e7eb 100%);
         }
 
         #app-container {
@@ -1121,7 +1122,7 @@
             min-height: 100vh;
             height: 100dvh;
             background:
-                linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%) !important;
+                linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%);
         }
 
         .platino-system-brand {
@@ -1171,8 +1172,8 @@
         }
 
         .app-topbar {
-            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%) !important;
-            border-bottom-color: rgba(43, 72, 112, 0.48) !important;
+            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%);
+            border-bottom-color: rgba(43, 72, 112, 0.48);
         }
 
         .app-topbar-title,
@@ -1204,7 +1205,7 @@
         .training-card h3,
         .team-card h4,
         #rh-action-panel h3 {
-            color: #f8fafc !important;
+            color: #f8fafc;
         }
 
         .portal-card p,
@@ -1212,14 +1213,14 @@
         .training-card p,
         .team-card p,
         #rh-action-panel p {
-            color: rgba(219, 234, 254, 0.76) !important;
+            color: rgba(219, 234, 254, 0.76);
         }
 
         .team-card h4,
         .employee-name,
         #avisos-highlight-name,
         .ranking-row p:first-child {
-            color: #ffffff !important;
+            color: #ffffff;
             text-transform: capitalize;
             letter-spacing: 0;
             text-shadow: 0 8px 22px rgba(2, 6, 23, 0.36);
@@ -1233,7 +1234,7 @@
         #avisos-week-revenue,
         .content-section [class*="text-3xl"].font-bold,
         .content-section [class*="text-3xl"].font-black {
-            color: var(--platino-gold) !important;
+            color: var(--platino-gold);
             -webkit-text-fill-color: var(--platino-gold);
             text-shadow: 0 0 18px rgba(250, 204, 21, 0.34);
         }
@@ -1259,8 +1260,8 @@
 
         .content-section:not(#section-avisos) h2,
         .content-section:not(#section-avisos) .section-title {
-            color: #0f172a !important;
-            background: none !important;
+            color: #0f172a;
+            background: none;
             -webkit-background-clip: initial;
             background-clip: initial;
             -webkit-text-fill-color: currentColor;
@@ -1273,26 +1274,26 @@
         }
 
         #section-treinamentos .training-card {
-            background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
-            border-color: rgba(148, 163, 184, 0.32) !important;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-color: rgba(148, 163, 184, 0.32);
             color: #0f172a;
             box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
         }
 
         #section-treinamentos .training-card h3,
         #section-treinamentos .training-card p {
-            color: inherit !important;
+            color: inherit;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
 
         #section-treinamentos .training-card p {
-            color: #64748b !important;
+            color: #64748b;
         }
 
         .suggestion-shell {
             background:
-                linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96)) !important;
+                linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96));
             border: 1px solid rgba(148, 163, 184, 0.32);
             color: #0f172a;
             box-shadow: 0 22px 48px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -1300,15 +1301,15 @@
 
         .suggestion-shell label,
         .suggestion-shell p {
-            color: #334155 !important;
+            color: #334155;
         }
 
         .suggestion-shell input,
         .suggestion-shell select,
         .suggestion-shell textarea {
-            background: #ffffff !important;
-            border-color: #cbd5e1 !important;
-            color: #0f172a !important;
+            background: #ffffff;
+            border-color: #cbd5e1;
+            color: #0f172a;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         }
 
@@ -1318,12 +1319,12 @@
         }
 
         #content-viewport.central-info-bg {
-            background: #16181A !important;
+            background: #16181A;
         }
 
         .content-section:not(#section-avisos) h3,
         .content-section:not(#section-avisos) h4 {
-            color: #0f172a !important;
+            color: #0f172a;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
@@ -1332,13 +1333,13 @@
         #section-inicio .bg-gradient-to-r p,
         #section-inicio .slide-item h2,
         #section-inicio .slide-item p {
-            color: #ffffff !important;
+            color: #ffffff;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
 
         #section-inicio .slide-item p {
-            color: #dbeafe !important;
+            color: #dbeafe;
         }
 
         .portal-card h3,
@@ -1347,7 +1348,7 @@
         .dark-panel h3,
         .team-card h4,
         #rh-action-panel h3 {
-            color: #f8fafc !important;
+            color: #f8fafc;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
@@ -1356,44 +1357,44 @@
         .notice-card p,
         .dark-panel p,
         .team-card p {
-            color: rgba(219, 234, 254, 0.78) !important;
+            color: rgba(219, 234, 254, 0.78);
         }
 
         .group-opening-slide h4 {
-            color: #0f172a !important;
+            color: #0f172a;
             -webkit-text-fill-color: #0f172a;
             text-shadow: none;
         }
 
         .group-opening-slide p {
-            color: #475569 !important;
+            color: #475569;
         }
 
         .dark-panel .group-opening-slide :is(h1, h2, h3, h4, h5, h6, p, span, strong, li, .text-slate-900, .text-slate-800, .text-slate-700, .text-slate-600, .text-slate-500) {
-            color: #0f172a !important;
-            -webkit-text-fill-color: #0f172a !important;
-            text-shadow: none !important;
+            color: #0f172a;
+            -webkit-text-fill-color: #0f172a;
+            text-shadow: none;
         }
 
         .dark-panel .group-opening-slide > div:first-child p,
         .dark-panel .group-opening-slide .opening-step p {
-            color: #475569 !important;
-            -webkit-text-fill-color: #475569 !important;
+            color: #475569;
+            -webkit-text-fill-color: #475569;
         }
 
         .dark-panel .group-opening-slide > div:first-child p:first-child {
-            color: #1d4ed8 !important;
-            -webkit-text-fill-color: #1d4ed8 !important;
+            color: #1d4ed8;
+            -webkit-text-fill-color: #1d4ed8;
         }
 
         .dark-panel .group-opening-slide .opening-step-number {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
         }
 
         .dark-panel .group-opening-slide .group-cover-card :is(a, span, i) {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
         }
 
         .adm-pdf-panel {
@@ -1405,30 +1406,30 @@
         .adm-pdf-control {
             width: 100%;
             min-height: 3.1rem;
-            border: 1px solid rgba(148, 163, 184, 0.32) !important;
-            background: #f8fafc !important;
-            color: #0f172a !important;
-            -webkit-text-fill-color: #0f172a !important;
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            background: #f8fafc;
+            color: #0f172a;
+            -webkit-text-fill-color: #0f172a;
             border-radius: 0.9rem;
             box-shadow: 0 10px 24px rgba(2, 6, 23, 0.18);
         }
 
         .adm-pdf-control::placeholder {
-            color: #64748b !important;
-            -webkit-text-fill-color: #64748b !important;
+            color: #64748b;
+            -webkit-text-fill-color: #64748b;
         }
 
         .adm-pdf-control:focus {
-            border-color: rgba(96, 165, 250, 0.82) !important;
+            border-color: rgba(96, 165, 250, 0.82);
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18), 0 12px 28px rgba(2, 6, 23, 0.2);
             outline: none;
         }
 
         .adm-pdf-select {
             appearance: auto;
-            background-color: #ffffff !important;
-            color: #0f172a !important;
-            -webkit-text-fill-color: #0f172a !important;
+            background-color: #ffffff;
+            color: #0f172a;
+            -webkit-text-fill-color: #0f172a;
         }
 
         .adm-pdf-select option {
@@ -1478,21 +1479,21 @@
         }
 
         #adm-template-picker-category {
-            color: #93c5fd !important;
+            color: #93c5fd;
         }
 
         #adm-template-picker-title {
-            color: #ffffff !important;
-            -webkit-text-fill-color: #ffffff !important;
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
         }
 
         #adm-template-picker-description {
-            color: #bfdbfe !important;
-            -webkit-text-fill-color: #bfdbfe !important;
+            color: #bfdbfe;
+            -webkit-text-fill-color: #bfdbfe;
         }
 
         .adm-template-picker-trigger [data-picker-chevron] {
-            color: #bfdbfe !important;
+            color: #bfdbfe;
         }
 
         .adm-template-picker-panel {
@@ -2282,12 +2283,12 @@
 
         .documents-central,
         .documents-central * {
-            font-family: "Inter", Arial, sans-serif !important;
+            font-family: "Inter", Arial, sans-serif;
         }
 
         .documents-central :is(h2, h3, h4, h5),
         .documents-central :is(button, .documents-eyebrow, .documents-category-label, .documents-template-title) {
-            font-family: "Montserrat", "Inter", Arial, sans-serif !important;
+            font-family: "Montserrat", "Inter", Arial, sans-serif;
         }
 
         .documents-central {
@@ -2712,8 +2713,8 @@
             [class*="bg-slate-950"],
             [class*="bg-blue-950"]
         ) :is(h1, h2, h3, h4, h5, h6, li, .text-slate-900, .text-slate-800, .text-slate-700) {
-            color: #f8fafc !important;
-            -webkit-text-fill-color: #f8fafc !important;
+            color: #f8fafc;
+            -webkit-text-fill-color: #f8fafc;
             text-shadow: none;
         }
 
@@ -2734,25 +2735,25 @@
             [class*="bg-slate-950"],
             [class*="bg-blue-950"]
         ) :is(p, .text-slate-600, .text-slate-500, .text-slate-400) {
-            color: #dbeafe !important;
-            -webkit-text-fill-color: #dbeafe !important;
+            color: #dbeafe;
+            -webkit-text-fill-color: #dbeafe;
         }
 
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) .metallic-kicker,
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) [class*="uppercase"] {
-            color: #bfdbfe !important;
-            -webkit-text-fill-color: #bfdbfe !important;
+            color: #bfdbfe;
+            -webkit-text-fill-color: #bfdbfe;
             letter-spacing: 0.16em;
         }
 
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) .money-value {
-            color: #ded9e6 !important;
-            -webkit-text-fill-color: #ded9e6 !important;
+            color: #ded9e6;
+            -webkit-text-fill-color: #ded9e6;
         }
 
         #section-avisos .metal-button {
-            color: #0f172a !important;
-            -webkit-text-fill-color: #0f172a !important;
+            color: #0f172a;
+            -webkit-text-fill-color: #0f172a;
         }
 
         #section-treinamentos .training-card :is(h1, h2, h3, h4, h5, h6, p, span, li) {
@@ -2961,8 +2962,8 @@
         .home-command-header::after { content:""; position:absolute; inset:auto -8% -70% 35%; height:210px; border:1px solid rgba(191,219,254,.16); border-radius:50%; transform:rotate(-7deg); }
         .home-command-copy { position:relative; z-index:2; max-width:720px; }
         .home-eyebrow { display:inline-flex; align-items:center; gap:.45rem; color:#93c5fd; font-size:.68rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
-        .home-command-copy h2 { margin:.6rem 0 .35rem; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.75rem,4vw,3rem); font-weight:900; letter-spacing:-.045em; }
-        .home-command-copy p { color:#cbd5e1 !important; font-weight:600; }
+        .home-command-copy h2 { margin:.6rem 0 .35rem; color:#fff; font-family:'Montserrat',sans-serif; font-size:clamp(1.75rem,4vw,3rem); font-weight:900; letter-spacing:-.045em; }
+        .home-command-copy p { color:#cbd5e1; font-weight:600; }
         .home-command-copy blockquote { margin-top:1.35rem; color:#93c5fd; font-size:.8rem; font-weight:700; letter-spacing:.04em; }
         .home-command-mark { position:absolute; right:5%; top:50%; transform:translateY(-50%); color:rgba(219,234,254,.08); font-size:10rem; }
         .home-focus-pill { position:absolute; z-index:2; right:1.5rem; top:1.5rem; display:flex; align-items:center; gap:.5rem; padding:.55rem .8rem; border:1px solid rgba(255,255,255,.12); border-radius:999px; background:rgba(255,255,255,.07); font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; backdrop-filter:blur(10px); }
@@ -2977,7 +2978,7 @@
         .home-next-step { grid-column:span 6; }
         .home-card-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
         .home-card-heading span,.home-kpi-card>span { display:block; color:#64748b; font-size:.65rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
-        .home-card-heading h3 { margin:.2rem 0 0; color:#172033 !important; font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:850; }
+        .home-card-heading h3 { margin:.2rem 0 0; color:#172033; font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:850; }
         .home-card-heading>i { color:#2563eb; font-size:1.55rem; }
         .home-card-heading>strong { padding:.32rem .62rem; color:#1d4ed8; border-radius:999px; background:#dbeafe; font-size:.72rem; }
         .quick-action-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
@@ -3014,7 +3015,7 @@
         .sales-community-main { min-width:0; padding:1.35rem; overflow:hidden; }
         .sales-community-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
         .sales-community-heading span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
-        .sales-community-heading h2 { margin:.2rem 0; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
+        .sales-community-heading h2 { margin:.2rem 0; color:#fff; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
         .sales-community-heading p { color:#a9bad4; font-size:.75rem; }
         .sales-knowledge-strip { display:flex; align-items:center; gap:.65rem; margin-bottom:1.5rem; padding:.9rem 1rem; color:#172033; border-color:#dbe5f2; background:#fff; box-shadow:0 10px 25px rgba(15,35,80,.07); }
         .sales-knowledge-strip>div { margin-right:auto; }
@@ -3041,8 +3042,8 @@
         .sales-hunters-card { grid-column:span 8; }
         .sales-timeline-card { grid-column:1/-1; min-height:0 !important; }
         .hunter-compact-stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
-        .hunter-compact-stats>div { padding:.55rem .65rem !important; border-radius:.75rem !important; }
-        .hunter-compact-stats p:first-child { font-size:.53rem !important; letter-spacing:.1em !important; }
+        .hunter-compact-stats>div { padding:.55rem .65rem !important; border-radius:.75rem; }
+        .hunter-compact-stats p:first-child { font-size:.53rem !important; letter-spacing:.1em; }
         .hunter-compact-stats .money-value { margin-top:.15rem !important; font-size:1.05rem !important; }
         .sales-hunters-card #ranking-hunters-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
         .sales-hunters-card #ranking-hunters-list>* { margin:0 !important; padding:.6rem !important; }
@@ -3053,7 +3054,7 @@
             background:
                 radial-gradient(circle at 82% 8%, rgba(0,92,255,.2), transparent 27%),
                 radial-gradient(circle at 8% 88%, rgba(0,58,180,.16), transparent 25%),
-                linear-gradient(135deg,#020713 0%,#06132d 48%,#020817 100%) !important;
+                linear-gradient(135deg,#020713 0%,#06132d 48%,#020817 100%);
         }
         #content-viewport.operational-home-bg::before {
             content:""; position:fixed; inset:5rem 0 0 16rem; pointer-events:none; opacity:.4;
@@ -3071,7 +3072,7 @@
         .home-command-header::after { inset:-35% -3% auto auto; width:40%; height:160%; border:2px solid rgba(148,163,184,.34); box-shadow:0 0 18px rgba(37,99,235,.35),inset 0 0 18px rgba(37,99,235,.18); }
         .home-command-copy { max-width:68%; }
         .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(37,99,235,.55); }
-        .home-command-copy p { color:#d7e1f0 !important; }
+        .home-command-copy p { color:#d7e1f0; }
         .home-command-mark { right:3.5%; width:190px; height:190px; overflow:hidden; border:2px solid #b8c4d6; border-radius:50%; background:#061a45; box-shadow:0 0 0 6px rgba(30,64,175,.35),0 0 32px #075ef0,inset 0 0 22px #075ef0; }
         .home-command-mark img { width:100%; height:100%; object-fit:cover; object-position:center 16%; transform:scale(1.02); }
         .home-focus-pill { border-color:rgba(191,219,254,.28); background:rgba(3,13,35,.7); }
@@ -3083,10 +3084,10 @@
         .home-bento-card::after { content:""; position:absolute; left:15%; right:15%; top:-1px; height:2px; background:linear-gradient(90deg,transparent,#1d7fff,#eef6ff,#1d7fff,transparent); box-shadow:0 0 12px #1478ff; opacity:.72; }
         .home-bento-card:hover { border-color:#b9c6d8; box-shadow:inset 0 0 30px rgba(37,99,235,.15),0 0 22px rgba(0,102,255,.28); }
         .home-card-heading span,.home-kpi-card>span { color:#77aafc; }
-        .home-card-heading h3,.home-kpi-card strong { color:#f8fafc !important; text-shadow:0 2px 0 #000; }
+        .home-card-heading h3,.home-kpi-card strong { color:#f8fafc; text-shadow:0 2px 0 #000; }
         #section-inicio .home-command-copy h2,
         #section-inicio .home-card-heading h3,
-        #section-inicio .home-kpi-card strong { color:#f8fafc !important; }
+        #section-inicio .home-kpi-card strong { color:#f8fafc; }
         .home-card-heading>strong { color:#dbeafe; border:1px solid rgba(96,165,250,.3); background:rgba(37,99,235,.24); }
         .quick-action-grid button,.home-task-item { color:#e5edf8; border-color:rgba(148,163,184,.25); background:linear-gradient(145deg,rgba(11,33,77,.92),rgba(4,15,39,.96)); }
         .quick-action-grid button:hover { color:#fff; border-color:#60a5fa; background:linear-gradient(145deg,rgba(16,52,122,.98),rgba(5,24,66,.98)); }
@@ -3105,7 +3106,7 @@
 
         /* Outubro Rosa: homenagem na tela inicial. */
         #content-viewport.operational-home-bg {
-            background:radial-gradient(circle at 82% 8%,rgba(236,72,153,.22),transparent 32%),radial-gradient(circle at 8% 88%,rgba(190,24,93,.14),transparent 28%),linear-gradient(135deg,#100713 0%,#181126 48%,#080817 100%) !important;
+            background:radial-gradient(circle at 82% 8%,rgba(236,72,153,.22),transparent 32%),radial-gradient(circle at 8% 88%,rgba(190,24,93,.14),transparent 28%),linear-gradient(135deg,#100713 0%,#181126 48%,#080817 100%);
         }
         #content-viewport.operational-home-bg::before { background-image:radial-gradient(rgba(244,114,182,.35) 1px,transparent 1px); }
         #section-inicio .home-command-header {
@@ -3174,8 +3175,11 @@
             }
         }
 
+
+}
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
+<link rel="stylesheet" href="./src/styles/workspace.css">
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3268,7 +3272,6 @@
 
         </div>
 
-        <div class="hidden lg:block relative min-h-[560px]"></div>
       </div>
     </section>
 
@@ -3365,11 +3368,14 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="app-topbar-title hidden md:block">Início</h1>
-                <button id="management-feedback-alert" type="button" onclick="openFeedbackModal()" class="gestor-only ml-auto hidden relative items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-blue-300 hover:text-blue-700" title="Feedbacks e sugestões recebidos">
+                <div class="ml-auto flex items-center gap-3">
+                <button id="management-feedback-alert" type="button" onclick="openFeedbackModal()" class="gestor-only hidden relative items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-blue-300 hover:text-blue-700" title="Feedbacks e sugestões recebidos">
                     <i class="ph ph-bell-ringing text-xl"></i>
                     <span class="hidden sm:inline">Ouvidoria</span>
                     <span id="management-feedback-count" class="hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-center text-[10px] font-black text-white">0</span>
                 </button>
+                <button type="button" onclick="navigateTo('perfil')" class="topbar-profile inline-flex h-11 w-11 items-center justify-center rounded-lg" aria-label="Abrir meu perfil" title="Meu Workspace"><i class="ph ph-user-circle text-2xl" aria-hidden="true"></i></button>
+                </div>
             </div>
 
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
@@ -3387,13 +3393,10 @@
                 <div class="max-w-7xl mx-auto">
                     <header class="home-command-header">
                         <div class="home-command-copy">
-                            <span class="home-eyebrow"><svg viewBox="0 0 32 40" fill="none" aria-hidden="true"><path d="M10 4C12 1 20 1 22 4L25 12L20 21L29 34L21 39L16 28L11 39L3 34L12 21L7 12Z" fill="#f472b6"/><path d="M10 4C12 8 20 8 22 4M7 12L20 21M25 12L12 21L21 39" stroke="#be185d" stroke-width="2" stroke-linejoin="round"/></svg> Outubro Rosa · Platino apoia</span>
                             <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
                             <p id="home-date-role">Sua rotina começa aqui.</p>
                             <blockquote>Um mês de conscientização, acolhimento e cuidado com a vida.</blockquote>
                         </div>
-                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-human-mascot-home.png" alt=""></div>
-                        <div class="home-focus-pill"><span></span> Juntos pelo cuidado</div>
                     </header>
 
                     <div class="home-bento-grid">
@@ -3590,7 +3593,7 @@
                             <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-target text-green-500"></i> Setor Comercial</h2>
                             <p class="text-slate-500 mt-1">Manual de conversão, abordagens e fechamento de contratos.</p>
                         </div>
-                        <a href="script-comercial.pdf" target="_blank" rel="noopener noreferrer" download="script-comercial.pdf" class="metal-button hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm">
+                        <a href="script-comercial.pdf" target="_blank" rel="noopener noreferrer" download="script-comercial.pdf" class="metal-button inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm">
                             <i class="ph ph-file-pdf text-red-500 text-lg"></i> Baixar Script Completo
                         </a>
                     </div>
@@ -3766,7 +3769,7 @@
                             <div class="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500">
                                 <i class="ph ph-users-three text-base"></i> Gestão de pessoas
                             </div>
-                            <h2 class="text-2xl font-bold text-slate-800">Dashboard de Recursos Humanos</h2>
+                            <h2 class="text-2xl font-bold text-slate-800">Recursos Humanos</h2>
                             <p class="text-slate-500 mt-1">Ocorrências, talentos, desenvolvimento e rotinas trabalhistas em um só lugar.</p>
                         </div>
                         <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
@@ -4285,29 +4288,6 @@
                         </button>
                     </div>
 
-                    <div class="relative min-h-[430px] md:min-h-[330px] mb-8 overflow-hidden rounded-3xl border border-blue-500/20 bg-slate-950 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
-                        <img
-                            src="assets/representante-treinamentos.png"
-                            alt="Representante virtual da Platino apresentando os treinamentos"
-                            class="absolute bottom-0 right-0 h-[58%] w-full object-contain object-bottom md:inset-y-0 md:h-full md:w-[64%] md:object-right"
-                        >
-                        <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-transparent md:bg-gradient-to-r md:from-slate-950 md:via-slate-950/85 md:to-transparent"></div>
-                        <div class="relative z-10 flex min-h-[430px] max-w-xl flex-col justify-start p-7 pt-8 md:min-h-[330px] md:justify-center md:p-10">
-                            <span class="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
-                                <i class="ph ph-graduation-cap text-base"></i> Trilha de aprendizagem
-                            </span>
-                            <h3 class="text-2xl font-bold leading-tight text-white md:text-3xl">Olá! Vamos avançar juntos?</h3>
-                            <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100 md:text-base">
-                                Consulte os materiais oficiais e siga os processos da Platino com mais segurança, clareza e padrão de atendimento.
-                            </p>
-                            <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium text-blue-100">
-                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Comercial</span>
-                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Administrativo</span>
-                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Jurídico</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 sm:col-span-2">
                             <div>
@@ -4488,9 +4468,9 @@
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                             <div class="mb-6 rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 p-5 text-white shadow-lg">
                                 <div class="flex flex-col gap-5 md:flex-row md:items-center">
-                                    <div class="relative mx-auto h-32 w-32 shrink-0 md:mx-0">
+                                    <div class="monthly-goal-summary relative mx-auto h-32 w-32 shrink-0 md:mx-0">
                                         <svg class="h-32 w-32 -rotate-90" viewBox="0 0 120 120" aria-label="Progresso da meta mensal">
-                                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"></circle>
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#E7E9EE" stroke-width="10"></circle>
                                             <circle id="monthly-goal-ring" cx="60" cy="60" r="50" fill="none" stroke="#38bdf8" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" class="transition-all duration-700"></circle>
                                         </svg>
                                         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -4510,6 +4490,7 @@
                                             <input id="monthly-goal-input" type="text" inputmode="decimal" autocomplete="off" class="pointer-events-auto min-w-0 flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-white outline-none placeholder:text-blue-200/50 focus:border-sky-300" placeholder="Ex.: 50.000,00">
                                             <button id="monthly-goal-save" type="button" class="pointer-events-auto relative z-30 rounded-xl bg-sky-500 px-4 py-2 text-sm font-bold text-white hover:bg-sky-400 disabled:cursor-wait disabled:opacity-60">Salvar meta</button>
                                         </form>
+                                        <div class="monthly-goal-progress mt-3" role="progressbar" aria-label="Cumprimento da meta mensal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="monthly-goal-bar"></div></div>
                                         <p id="monthly-goal-status" class="mt-2 min-h-5 text-xs text-blue-100/70"></p>
                                     </div>
                                 </div>
@@ -4629,12 +4610,6 @@
 
                     <div class="suggestion-shell rounded-3xl p-6 md:p-8">
                         <form id="feedback-form" onsubmit="submitFeedback(event)" class="space-y-6">
-                            <div class="flex flex-wrap gap-2 mb-1">
-                                <span class="inline-flex items-center gap-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Feedback</span>
-                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Sugestões</span>
-                                <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 text-amber-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Reclamações</span>
-                                <span class="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Elogios</span>
-                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Qual o tipo de mensagem?</label>
@@ -5976,23 +5951,24 @@
         // GERAR INTERFACE DOS FLUXOS (ACCORDIONS)
         function renderAccordions(containerId, data) {
             const container = document.getElementById(containerId);
-            container.innerHTML = data.map(item => `
+            container.innerHTML = data.map((item, index) => `
                 <div class="dark-panel border border-white/10 rounded-xl overflow-hidden shadow-sm transition-colors">
-                    <button onclick="toggleAccordion('${item.id}')" class="w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors focus:outline-none">
-                        <div class="flex items-center gap-3">
+                    <div class="procedure-heading">
+                    <button type="button" id="toggle-${item.id}" aria-expanded="false" aria-controls="content-${item.id}" onclick="toggleAccordion('${item.id}')" class="procedure-toggle w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors focus:outline-none">
+                        <div class="procedure-title">
+                            <span class="procedure-number">${String(index + 1).padStart(2, '0')}</span>
                             <span class="icon-pill flex h-10 w-10 items-center justify-center rounded-xl text-xl">
                                 <i class="ph ${item.icon}"></i>
                             </span>
-                            <h3 class="font-semibold text-white text-lg">${item.title}</h3>
+                            <h3 class="font-semibold text-white text-lg">${item.title.replace(/^\d+\.\s*/, '')}</h3>
                         </div>
                         <div class="flex items-center gap-4">
-                            <span onclick="event.stopPropagation(); openFlowEditor('${item.id}')" class="gestor-only hidden text-blue-400 hover:text-blue-300 text-sm font-medium items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-white/10">
-                                <i class="ph ph-pencil-simple"></i> Editar
-                            </span>
                             <i id="icon-${item.id}" class="ph ph-caret-down text-blue-300 transition-transform"></i>
                         </div>
                     </button>
-                    <div id="content-${item.id}" class="accordion-content bg-transparent px-5">
+                    <button type="button" onclick="openFlowEditor('${item.id}')" class="procedure-edit gestor-only hidden items-center gap-1" aria-label="Editar ${item.title}"><i class="ph ph-pencil-simple" aria-hidden="true"></i> Editar</button>
+                    </div>
+                    <div id="content-${item.id}" role="region" aria-labelledby="toggle-${item.id}" class="accordion-content bg-transparent px-5">
                         <ul class="space-y-3 pb-4 pt-2 border-t border-white/10">
                             ${item.tasks.map(task => `
                                 <li class="flex items-start gap-3 text-sm text-blue-100">
@@ -6012,15 +5988,18 @@
             const content = document.getElementById(`content-${id}`);
             const icon = document.getElementById(`icon-${id}`);
             
+            document.getElementById(`toggle-${id}`)?.setAttribute('aria-expanded', String(!content.classList.contains('open')));
             if (content.classList.contains('open')) {
                 content.classList.remove('open');
                 icon.style.transform = 'rotate(0deg)';
             } else {
                 document.querySelectorAll('.accordion-content').forEach(el => el.classList.remove('open'));
                 document.querySelectorAll('.ph-caret-down').forEach(el => el.style.transform = 'rotate(0deg)');
+                document.querySelectorAll('.procedure-toggle').forEach(el => el.setAttribute('aria-expanded', 'false'));
                 
                 content.classList.add('open');
                 icon.style.transform = 'rotate(180deg)';
+                document.getElementById(`toggle-${id}`)?.setAttribute('aria-expanded', 'true');
             }
         }
 
@@ -10990,6 +10969,9 @@
         const result = Number(ranking.result) || 0;
         const rawPercent = amount > 0 ? (result / amount) * 100 : 0;
         const percent = Math.max(0, Math.min(rawPercent, 100));
+        const progressBar = document.getElementById("monthly-goal-bar");
+        progressBar.style.width = `${percent}%`;
+        progressBar.parentElement.setAttribute("aria-valuenow", String(Math.round(percent)));
         const ring = document.getElementById("monthly-goal-ring");
         ring.style.strokeDashoffset = String(314.16 * (1 - percent / 100));
         document.getElementById("monthly-goal-percent").textContent = `${Math.round(rawPercent)}%`;

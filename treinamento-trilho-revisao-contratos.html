@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trilho de Etapas - Revisão de Contratos</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@layer platino-legacy {
 
         /* ESTILOS PRINCIPAIS - TUDO EM PORTUGUES */
         :root {
@@ -594,9 +595,12 @@
             .controles-navegacao { gap: 10px; padding: 12px; }
             .botao-nav { flex: 1; padding: 11px 12px; font-size: 12px; }
         }
-    </style>
+
+}
+</style>
+<link rel="stylesheet" href="./src/styles/workspace.css">
 </head>
-<body>
+<body class="platino-training ">
 
     <!-- TRILHO DE ETAPAS (BARRA LATERAL) -->
     <div class="barra-lateral">
