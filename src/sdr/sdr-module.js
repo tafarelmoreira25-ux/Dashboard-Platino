@@ -186,15 +186,15 @@ function mount() {
           <button id="sdr-new-button" class="sdr-hero-primary" type="button"><i class="ph ph-user-plus"></i>Novo cliente</button>
         </div>
       </header>
-      <nav id="sdr-view-tabs" class="sdr-view-tabs"></nav>
+      <nav id="sdr-view-tabs" class="sdr-view-tabs" aria-label="Áreas da Central SDR"></nav>
       <section id="sdr-metrics" class="sdr-metrics"></section>
       <div id="sdr-layout" class="sdr-layout">
         <aside class="sdr-panel sdr-queue">
           <div class="flex items-center justify-between gap-2"><h3 class="font-black text-slate-800">Fila de leads</h3><span id="sdr-list-count" class="text-xs font-bold text-slate-500">0</span></div>
           <div class="sdr-filters mt-3">
-            <input id="sdr-search" class="sdr-control col-span-2" type="search" placeholder="Nome, telefone, CPF, protocolo, banco...">
-            <select id="sdr-status-filter" class="sdr-control"><option value="">Todos os status</option></select>
-            <select id="sdr-class-filter" class="sdr-control"><option value="">Todas as classificações</option><option>Quente</option><option>Morno</option><option>Frio</option></select>
+            <input id="sdr-search" class="sdr-control col-span-2" type="search" aria-label="Pesquisar leads" placeholder="Nome, telefone, CPF, protocolo, banco...">
+            <select id="sdr-status-filter" class="sdr-control" aria-label="Filtrar leads por status"><option value="">Todos os status</option></select>
+            <select id="sdr-class-filter" class="sdr-control" aria-label="Filtrar leads por classificação"><option value="">Todas as classificações</option><option>Quente</option><option>Morno</option><option>Frio</option></select>
           </div>
           <div id="sdr-lead-list" class="sdr-lead-list"></div>
         </aside>

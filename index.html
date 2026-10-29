@@ -9,6 +9,7 @@
     <link rel="apple-touch-icon" href="assets/platino-icon.png?v=20260722">
     <meta name="theme-color" content="#FFFFFF">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { corePlugins: { preflight: false } };</script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script type="importmap">
@@ -20,6 +21,7 @@
     </script>
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
+@layer platino-reset, platino-legacy;
 @layer platino-legacy {
         body { font-family: 'Inter', sans-serif; }
         
@@ -1093,17 +1095,6 @@
         main {
             min-height: 100vh;
             min-height: 100dvh;
-        }
-
-        @media (min-width: 768px) {
-            #sidebar {
-                transform: none !important;
-            }
-
-            #app-container > main {
-                margin-left: 16rem;
-                width: calc(100% - 16rem);
-            }
         }
 
         .app-topbar {
@@ -2929,7 +2920,7 @@
         .home-task-check { display:grid; place-items:center; width:1.35rem; height:1.35rem; min-height:0 !important; border:1.5px solid #93a4ba; border-radius:.42rem; color:transparent; }
         .home-task-item.is-done .home-task-check { color:#fff; border-color:#2563eb; background:#2563eb; }
         .home-task-item span { min-width:0; color:#334155; font-size:.77rem; font-weight:700; }
-        .home-task-delete { min-height:0 !important; color:#94a3b8; }
+        .home-task-delete { color:#94a3b8; }
         .home-task-empty { padding:1.2rem; border:1px dashed #cbd5e1; border-radius:1rem; color:#94a3b8; font-size:.76rem; text-align:center; }
         .home-kpi-icon { display:grid; place-items:center; width:2.5rem; height:2.5rem; margin-bottom:1rem; border-radius:.9rem; color:#1d4ed8; background:#dbeafe; font-size:1.25rem; }
         .home-kpi-card strong { display:block; margin:.35rem 0; color:#0f172a; font-family:'Montserrat',sans-serif; font-size:2rem; font-weight:900; }
@@ -3112,6 +3103,7 @@
 <link rel="stylesheet" href="./src/styles/workspace.css">
 <link rel="stylesheet" href="./src/styles/home-presentation.css">
 <script type="module" src="./src/home-presentation.js"></script>
+<script type="module" src="./src/workspace-shell.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3196,12 +3188,12 @@
                     <img class="platino-system-mark" src="assets/platino-icon.png" alt="Logo Platino">
                     <strong>PLATINO</strong>
                 </div>
-                <button onclick="toggleSidebar()" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
+                <button type="button" onclick="toggleSidebar()" aria-label="Fechar menu" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
                     <i class="ph ph-x text-xl"></i>
                 </button>
             </div>
 
-            <nav class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 flex flex-col gap-1.5">
+            <nav aria-label="Navegação principal" class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 flex flex-col gap-1.5">
                 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pb-2">Navegação</div>
                 
@@ -3258,10 +3250,10 @@
                         <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel</p>
                         <p id="user-role" class="text-[10px] text-[#8B9CB6] font-semibold uppercase tracking-wider truncate">Gestão Platino</p>
                     </div>
-                    <button id="change-password-open" type="button" class="text-[#8B9CB6] hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Alterar senha">
+                    <button id="change-password-open" type="button" aria-label="Alterar senha" class="text-[#8B9CB6] hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Alterar senha">
                         <i class="ph ph-key text-xl"></i>
                     </button>
-                    <button onclick="logoutPlatino()" class="text-[#8B9CB6] hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Sair do Sistema">
+                    <button type="button" onclick="logoutPlatino()" aria-label="Sair do sistema" class="text-[#8B9CB6] hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Sair do Sistema">
                         <i class="ph ph-sign-out text-xl"></i>
                     </button>
                 </div>
@@ -3281,6 +3273,9 @@
                     <i class="ph ph-bell-ringing text-xl"></i>
                     <span class="hidden sm:inline">Ouvidoria</span>
                     <span id="management-feedback-count" class="hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-center text-[10px] font-black text-white">0</span>
+                </button>
+                <button id="chat-toggle-btn" type="button" onclick="toggleChat()" aria-label="Abrir assistente Platino" aria-controls="chat-window" aria-expanded="false" class="topbar-chat inline-flex h-11 w-11 items-center justify-center rounded-lg" title="Assistente Platino">
+                    <img src="assets/platino-infohub-icon.png" alt="" width="32" height="32">
                 </button>
                 <button type="button" onclick="navigateTo('perfil')" class="topbar-profile inline-flex h-11 w-11 items-center justify-center rounded-lg" aria-label="Abrir meu perfil" title="Meu Workspace"><i class="ph ph-user-circle text-2xl" aria-hidden="true"></i></button>
                 </div>
@@ -3307,6 +3302,7 @@
                         </div>
                     </header>
 
+                    <div class="home-bento-grid">
                     <section id="home-presentation" class="home-presentation" aria-label="Apresentação institucional Platino OS" aria-roledescription="carrossel">
                         <div class="home-presentation-heading">
                             <h3>Platino OS</h3>
@@ -3324,7 +3320,6 @@
                         <p data-presentation-error hidden>Não foi possível carregar esta página. Utilize o link para abrir o PDF original.</p>
                     </section>
 
-                    <div class="home-bento-grid">
                         <article class="home-bento-card home-quick-actions">
                             <div class="home-card-heading">
                                 <div><span>Acesso inteligente</span><h3>Ações rápidas</h3></div>
@@ -4814,9 +4809,6 @@
             </div>
         </div>
 
-        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-blue-950 hover:bg-blue-900 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-all group overflow-hidden border border-blue-200/40">
-            <img src="assets/platino-infohub-icon.png" alt="Abrir chat" class="mascot-avatar">
-        </button>
     </div>
 
     </div>
@@ -6365,6 +6357,7 @@
                 document.getElementById('chat-input').focus();
             }
             chatOpen = !chatOpen;
+            btn.setAttribute('aria-expanded', String(chatOpen));
         }
 
         function appendMessage(text, sender) {
