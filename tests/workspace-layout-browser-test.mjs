@@ -96,14 +96,7 @@ try {
   assert.ok(await page.locator('#layout-fixture-table').evaluate(el=>el.parentElement.scrollWidth>el.parentElement.clientWidth));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await page.locator('#layout-fixture-table').evaluate(el=>el.parentElement.remove());
-  // Exercise existing home controls and department accordions without external writes.
-  await page.evaluate(() => window.navigateTo('inicio'));
-  await page.locator('#home-task-input').fill('Verificação visual local');
-  await page.locator('.home-task-form').evaluate(form => form.requestSubmit());
-  assert.ok(await page.locator('#home-task-list').innerText().then(text=>text.includes('Verificação visual local')));
-  await page.locator('.home-task-check').first().click();
-  assert.ok(await page.locator('.home-task-item.is-done').count());
-  await page.locator('.home-task-delete').first().click();
+  // Department accordions remain available after homepage simplification.
   for(const id of ['comercial','adm','juridico']) {
     await page.evaluate(id=>window.navigateTo(id),id);
     const accordion=page.locator(`#section-${id} .procedure-toggle`).first();

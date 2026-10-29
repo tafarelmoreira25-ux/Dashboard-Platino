@@ -10,7 +10,7 @@ O reset não estratificado do Tailwind também prevalecia sobre os componentes n
 
 ## Escopo revisado
 
-- Início: apresentação oficial de sete páginas, ações rápidas, prioridades, indicadores e próximo passo em uma grade comum. O PDF, a sequência e a reprodução foram preservados.
+- Início: apresentação oficial de sete páginas ocupando toda a largura disponível. Por solicitação posterior, os blocos de ações rápidas, prioridades, indicadores, próximo passo e os selos decorativos do rodapé foram removidos. O PDF, a sequência e a reprodução foram preservados.
 - Meu Workspace: perfil, foco, demandas, compromissos e metas.
 - Central de vendas: ranking, períodos, indicadores, equipe e materiais de apoio.
 - Comercial, Administrativo e Jurídico: cabeçalhos e accordions, incluindo expansão e recolhimento.
@@ -20,13 +20,13 @@ O reset não estratificado do Tailwind também prevalecia sobre os componentes n
 
 O script `src/workspace-shell.js` trata somente da apresentação: foco do drawer móvel, Escape, isolamento do menu fechado, rótulos associados aos campos e contêineres de rolagem para tabelas extensas. Não altera permissões ou regras de negócio.
 
-O botão do assistente foi integrado ao cabeçalho, preservando o mesmo chat e seu comportamento. Fechado, ele deixa de sobrepor filtros, tarefas e outros controles da área principal.
+O assistente mantém o botão circular flutuante com a logomarca no canto inferior direito, conforme a preferência atual. O mesmo chat, foco e comportamento de abertura e fechamento foram preservados.
 
 ## Validação
 
 O teste `tests/workspace-layout-browser-test.mjs` usa Chrome/Playwright, o HTML real e os renderizadores reais. As APIs e o Firebase ficam bloqueados; os estados do SDR são exercitados com dados locais de teste. Não há gravações no sistema real.
 
-Foram verificadas 275 combinações de tela/estado e largura: 1440, 1280, 1024, 768 e 390px. O teste verifica a posição da área principal, ausência de rolagem horizontal da página e do conteúdo, navegação móvel, Escape, tarefas, accordions e rolagem contida de tabelas. As capturas e o relatório JSON ficam em `tmp/layout-qa/`, ignorado pelo Git. As capturas principais foram inspecionadas visualmente.
+Foram verificadas 275 combinações de tela/estado e largura: 1440, 1280, 1024, 768 e 390px. O teste verifica a posição da área principal, ausência de rolagem horizontal da página e do conteúdo, navegação móvel, Escape, accordions e rolagem contida de tabelas. As capturas e o relatório JSON ficam em `tmp/layout-qa/`, ignorado pelo Git. As capturas principais foram inspecionadas visualmente.
 
 Passaram também os testes de redesign, apresentação institucional, segurança do login, campanha, avisos, persistência de chargebacks, ranking, interface SDR e remoção da interface de documentos. A leitura da planilha Hunter foi validada com acesso à rede.
 

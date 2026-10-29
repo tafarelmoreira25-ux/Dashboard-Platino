@@ -3268,17 +3268,6 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="app-topbar-title hidden md:block">Início</h1>
-                <div class="ml-auto flex items-center gap-3">
-                <button id="management-feedback-alert" type="button" onclick="openFeedbackModal()" class="gestor-only hidden relative items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-blue-300 hover:text-blue-700" title="Feedbacks e sugestões recebidos">
-                    <i class="ph ph-bell-ringing text-xl"></i>
-                    <span class="hidden sm:inline">Ouvidoria</span>
-                    <span id="management-feedback-count" class="hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-center text-[10px] font-black text-white">0</span>
-                </button>
-                <button id="chat-toggle-btn" type="button" onclick="toggleChat()" aria-label="Abrir assistente Platino" aria-controls="chat-window" aria-expanded="false" class="topbar-chat inline-flex h-11 w-11 items-center justify-center rounded-lg" title="Assistente Platino">
-                    <img src="assets/platino-infohub-icon.png" alt="" width="32" height="32">
-                </button>
-                <button type="button" onclick="navigateTo('perfil')" class="topbar-profile inline-flex h-11 w-11 items-center justify-center rounded-lg" aria-label="Abrir meu perfil" title="Meu Workspace"><i class="ph ph-user-circle text-2xl" aria-hidden="true"></i></button>
-                </div>
             </div>
 
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
@@ -3302,7 +3291,6 @@
                         </div>
                     </header>
 
-                    <div class="home-bento-grid">
                     <section id="home-presentation" class="home-presentation" aria-label="Apresentação institucional Platino OS" aria-roledescription="carrossel">
                         <div class="home-presentation-heading">
                             <h3>Platino OS</h3>
@@ -3319,61 +3307,6 @@
                         </div>
                         <p data-presentation-error hidden>Não foi possível carregar esta página. Utilize o link para abrir o PDF original.</p>
                     </section>
-
-                        <article class="home-bento-card home-quick-actions">
-                            <div class="home-card-heading">
-                                <div><span>Acesso inteligente</span><h3>Ações rápidas</h3></div>
-                                <i class="ph ph-lightning"></i>
-                            </div>
-                            <div class="quick-action-grid">
-                                <button type="button" onclick="navigateTo('sdr')"><i class="ph ph-user-plus"></i><span>Novo atendimento<small>Abrir jornada do lead</small></span><i class="ph ph-arrow-up-right"></i></button>
-                                <button type="button" onclick="navigateTo('drive')"><i class="ph ph-folder-open"></i><span>Acessar Drive<small>Pastas e documentos</small></span><i class="ph ph-arrow-up-right"></i></button>
-                                <button type="button" onclick="navigateTo('treinamentos')"><i class="ph ph-graduation-cap"></i><span>Treinamentos<small>Base operacional</small></span><i class="ph ph-arrow-up-right"></i></button>
-                            </div>
-                        </article>
-
-                        <article class="home-bento-card home-workflow-card">
-                            <div class="home-card-heading">
-                                <div><span>Minha rotina</span><h3>Prioridades de hoje</h3></div>
-                                <strong id="home-task-progress">0/0</strong>
-                            </div>
-                            <form class="home-task-form" onsubmit="addHomeTask(event)">
-                                <input id="home-task-input" type="text" maxlength="100" placeholder="Adicionar uma nova tarefa..." aria-label="Nova tarefa">
-                                <button type="submit" aria-label="Adicionar tarefa"><i class="ph ph-plus"></i></button>
-                            </form>
-                            <div id="home-task-list" class="home-task-list"></div>
-                        </article>
-
-                        <article class="home-bento-card home-kpi-card home-kpi-primary">
-                            <div class="home-kpi-icon"><i class="ph ph-check-circle"></i></div>
-                            <span>Concluídas hoje</span>
-                            <strong id="home-kpi-completed">0</strong>
-                            <small id="home-kpi-completed-label">Comece pela prioridade mais importante</small>
-                        </article>
-
-                        <article class="home-bento-card home-kpi-card">
-                            <div class="home-kpi-icon"><i class="ph ph-clock-countdown"></i></div>
-                            <span>Em andamento</span>
-                            <strong id="home-kpi-pending">0</strong>
-                            <small>Tarefas aguardando conclusão</small>
-                        </article>
-
-                        <article class="home-bento-card home-kpi-card">
-                            <div class="home-kpi-icon"><i class="ph ph-chart-line-up"></i></div>
-                            <span>Taxa de execução</span>
-                            <strong id="home-kpi-rate">0%</strong>
-                            <div class="home-progress"><span id="home-kpi-rate-bar"></span></div>
-                        </article>
-
-                        <article class="home-bento-card home-next-step">
-                            <div class="home-card-heading">
-                                <div><span>Próximo passo</span><h3>Mantenha o fluxo em movimento</h3></div>
-                                <i class="ph ph-compass"></i>
-                            </div>
-                            <p id="home-next-task">Adicione sua primeira prioridade para organizar o dia.</p>
-                            <button type="button" onclick="document.getElementById('home-task-input')?.focus()">Organizar minha rotina <i class="ph ph-arrow-right"></i></button>
-                        </article>
-                    </div>
                 </div>
             </section>
 
@@ -4462,12 +4395,6 @@
                     </div>
                 </div>
             </section>
-            
-        <div class="security-footer flex flex-wrap justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.16em] mt-5 mb-4">
-            <span class="rounded-full px-3 py-2"><i class="ph ph-shield-check"></i> Ambiente Seguro</span>
-            <span class="rounded-full px-3 py-2"><i class="ph ph-lock-key"></i> Acesso Restrito</span>
-            <span class="rounded-full px-3 py-2"><i class="ph ph-database"></i> Dados Protegidos</span>
-        </div>
         </div>
     </main>
 
@@ -4773,6 +4700,9 @@
     </div>
 
     <div id="chat-widget" class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
+        <button id="chat-toggle-btn" type="button" onclick="toggleChat()" aria-label="Abrir assistente Platino" aria-controls="chat-window" aria-expanded="false" title="Assistente Platino">
+            <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
+        </button>
         <div id="chat-window" inert aria-hidden="true" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
@@ -6249,45 +6179,7 @@
             }, 300);
         }
 
-        // HUB OPERACIONAL — ROTINA PESSOAL
-        const HOME_TASKS_KEY = 'platinoHomeTasksV1';
-
-        function loadHomeTasks() {
-            try {
-                const saved = JSON.parse(localStorage.getItem(HOME_TASKS_KEY) || '[]');
-                return Array.isArray(saved) ? saved : [];
-            } catch {
-                return [];
-            }
-        }
-
-        function saveHomeTasks(tasks) {
-            localStorage.setItem(HOME_TASKS_KEY, JSON.stringify(tasks.slice(0, 30)));
-        }
-
-        function addHomeTask(event) {
-            event?.preventDefault();
-            const input = document.getElementById('home-task-input');
-            const text = String(input?.value || '').trim();
-            if (!text) return;
-            const tasks = loadHomeTasks();
-            tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text, done: false, createdAt: new Date().toISOString() });
-            saveHomeTasks(tasks);
-            input.value = '';
-            renderHomeOperationalHub();
-        }
-
-        function toggleHomeTask(id) {
-            const tasks = loadHomeTasks().map(task => task.id === id ? { ...task, done: !task.done, completedAt: !task.done ? new Date().toISOString() : null } : task);
-            saveHomeTasks(tasks);
-            renderHomeOperationalHub();
-        }
-
-        function removeHomeTask(id) {
-            saveHomeTasks(loadHomeTasks().filter(task => task.id !== id));
-            renderHomeOperationalHub();
-        }
-
+        // Saudação da página inicial.
         function renderHomeOperationalHub() {
             const greeting = document.getElementById('home-greeting');
             if (!greeting) return;
@@ -6301,27 +6193,6 @@
             greeting.textContent = `${period}, ${firstName}.`;
             document.getElementById('home-date-role').textContent = `${dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1)} • ${role}`;
 
-            const tasks = loadHomeTasks();
-            const completed = tasks.filter(task => task.done).length;
-            const pending = tasks.length - completed;
-            const rate = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
-            const list = document.getElementById('home-task-list');
-            list.innerHTML = tasks.length ? tasks.map(task => `
-                <div class="home-task-item ${task.done ? 'is-done' : ''}">
-                    <button type="button" class="home-task-check" onclick="toggleHomeTask('${escapeHtml(task.id)}')" aria-label="${task.done ? 'Reabrir' : 'Concluir'} tarefa"><i class="ph-bold ph-check"></i></button>
-                    <span>${escapeHtml(task.text)}</span>
-                    <button type="button" class="home-task-delete" onclick="removeHomeTask('${escapeHtml(task.id)}')" aria-label="Excluir tarefa"><i class="ph ph-trash"></i></button>
-                </div>`).join('') : '<div class="home-task-empty"><i class="ph ph-check-square-offset"></i><br>Seu dia está livre. Adicione uma prioridade para começar.</div>';
-
-            document.getElementById('home-task-progress').textContent = `${completed}/${tasks.length}`;
-            document.getElementById('home-kpi-completed').textContent = String(completed);
-            document.getElementById('home-kpi-pending').textContent = String(pending);
-            document.getElementById('home-kpi-rate').textContent = `${rate}%`;
-            document.getElementById('home-kpi-rate-bar').style.width = `${rate}%`;
-            document.getElementById('home-kpi-completed-label').textContent = completed ? `${completed} prioridade${completed === 1 ? '' : 's'} finalizada${completed === 1 ? '' : 's'}` : 'Comece pela prioridade mais importante';
-            document.getElementById('home-next-task').textContent = !tasks.length
-                ? 'Adicione sua primeira prioridade para organizar o dia.'
-                : tasks.find(task => !task.done)?.text || 'Todas as prioridades foram concluídas. Excelente trabalho!';
         }
 
         function openSalesObjection(type) {
