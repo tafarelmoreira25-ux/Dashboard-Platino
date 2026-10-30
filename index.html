@@ -3104,6 +3104,8 @@
 <link rel="stylesheet" href="./src/styles/home-presentation.css">
 <script type="module" src="./src/home-presentation.js"></script>
 <script type="module" src="./src/workspace-shell.js"></script>
+<link rel="stylesheet" href="./src/styles/login.css">
+<script type="module" src="./src/login-ui.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3118,16 +3120,17 @@
     </div>
 </div>
 
-    <section id="login-screen" class="min-h-screen flex items-center px-4 py-8">
-      <div class="login-layout w-full mx-auto">
-        <div class="login-panel w-full p-7 md:p-8">
+    <section id="login-screen" aria-labelledby="login-title">
+      <div class="login-layout">
+        <div class="login-panel">
           <div class="login-brand">
             <img src="assets/platino-assessoria-logo-oficial.png" width="1448" height="1086" alt="Platino Assessoria" class="login-brand-image" decoding="async">
           </div>
+          <h1 id="login-title">Acesse seu workspace</h1>
 
-          <form id="login-form" class="space-y-4" autocomplete="on">
-            <div>
-              <label class="block text-sm text-slate-300 mb-2">E-mail</label>
+          <form id="login-form" autocomplete="on">
+            <div class="login-field">
+              <label for="login-email">E-mail</label>
               <input
                 id="login-email"
                 name="email"
@@ -3136,41 +3139,40 @@
                 autocapitalize="none"
                 spellcheck="false"
                 required
-                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
+                class="login-input"
+                aria-describedby="login-error"
                 placeholder="Digite seu e-mail"
               />
             </div>
 
-            <div>
-              <label class="block text-sm text-slate-300 mb-2">Senha</label>
+            <div class="login-field">
+              <label for="login-password">Senha</label>
+              <div class="login-password-control">
               <input
                 id="login-password"
                 name="password"
                 type="password"
                 autocomplete="current-password"
                 required
-                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
+                class="login-input"
+                aria-describedby="login-error"
                 placeholder="Digite sua senha"
               />
+                <button id="login-password-toggle" type="button" aria-label="Mostrar senha" aria-controls="login-password" aria-pressed="false"><i class="ph ph-eye" aria-hidden="true"></i></button>
+              </div>
             </div>
+
+            <button id="login-reset-password" type="button">Esqueci minha senha</button>
 
             <button
               id="login-button"
               type="submit"
-              class="metal-login-button w-full py-3.5 rounded-2xl font-bold transition focus:outline-none focus:ring-4 focus:ring-blue-500/25"
+              class="login-primary-button"
             >
               Entrar
             </button>
 
-            <button
-              id="login-reset-password"
-              type="button"
-              class="w-full rounded-xl px-3 py-2 text-sm font-semibold text-blue-200 transition hover:bg-white/10 hover:text-white"
-            >
-              Esqueci minha senha
-            </button>
-
-            <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
+            <p id="login-error" class="hidden text-red-300" role="status" aria-live="polite" aria-atomic="true"></p>
           </form>
 
         </div>
@@ -11257,6 +11259,7 @@
 
       loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (loginButton.disabled) return;
         const email = loginEmail.value.trim();
         const password = loginPassword.value.trim();
 
@@ -11276,7 +11279,8 @@
 
         try {
           loginButton.disabled = true;
-          loginButton.textContent = "Entrando...";
+          loginButton.textContent = "Entrando…";
+          loginButton.setAttribute("aria-busy", "true");
           loginAuthorizedForPage = true;
           await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
@@ -11286,6 +11290,7 @@
         } finally {
           loginButton.disabled = false;
           loginButton.textContent = "Entrar";
+          loginButton.removeAttribute("aria-busy");
         }
       });
 

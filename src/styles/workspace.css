@@ -325,16 +325,6 @@ body .chat-bubble-user { background: var(--selection) !important; color: var(--i
 body .chat-bubble-ai { background: var(--canvas) !important; color: var(--ink) !important; }
 body .dev-badge-container { display: none; }
 
-/* Login keeps its existing form, validation and Firebase flow. */
-body #login-screen { background: #FFFFFF; color: var(--ink); }
-body #login-screen .login-layout { max-width: 440px; }
-body #login-screen .login-panel { background: #FFFFFF; border: 0; border-radius: 0; box-shadow: none; }
-body #login-screen .login-brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; }
-/* Compensate for the original file's white margins without cropping or editing it. */
-body #login-screen .login-brand-image { display: block; width: 100%; max-width: 360px; height: auto; margin-block: -20%; object-fit: contain; }
-body #login-screen, body #login-screen *, body #login-screen *::before, body #login-screen *::after { animation: none !important; transition: none !important; }
-body #login-reset-password { color: var(--brand) !important; }
-
 /* SDR includes portfolio, registration, analysis, acceptance and settings. */
 body #section-sdr { --sdr-navy: var(--ink); --sdr-ocean: var(--brand); --sdr-ocean-dark: var(--brand); --sdr-surface: var(--surface); --sdr-canvas: var(--canvas); --sdr-line: var(--line); --sdr-muted: var(--muted); color: var(--ink); }
 body #section-sdr :is(h1,h2,h3,h4,button,input,select,textarea) { font-family: inherit; }
