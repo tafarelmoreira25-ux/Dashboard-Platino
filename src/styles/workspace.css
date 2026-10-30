@@ -480,3 +480,20 @@ body.platino-training .slide-container .two-column > * { min-width: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Light navigation shared across all application routes. */
+body #sidebar { background: var(--surface) !important; border-right: 1px solid var(--line) !important; }
+body #sidebar > div { border-color: var(--line) !important; }
+body #sidebar #user-name { color: #1d1d1f !important; }
+body #sidebar #user-role { color: #626269 !important; }
+body #sidebar > div:last-child button { color: #626269 !important; }
+body #sidebar > div:last-child button:hover { background: var(--canvas) !important; }
+body .platino-system-brand strong { color: #1d1d1f; }
+body #sidebar .platino-system-mark { object-fit: contain; }
+body #sidebar .nav-btn { color: #1d1d1f; }
+body #sidebar .nav-btn i { color: #626269; }
+body #sidebar .nav-btn:hover { color: #1d1d1f; background: var(--canvas); }
+body #sidebar .nav-btn.nav-active { color: var(--brand); background: var(--selection); border-color: #d5dff9; box-shadow: inset 3px 0 var(--brand); font-weight: 600; }
+body #sidebar .nav-btn.nav-active i { color: var(--brand); }
+body #sidebar :focus-visible { outline-color: var(--brand) !important; }
+body #sidebar nav > div { color: #626269 !important; }

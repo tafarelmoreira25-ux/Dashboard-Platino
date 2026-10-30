@@ -3281,33 +3281,45 @@
 
         </header>
 
-        <div id="content-viewport" class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+        <div id="content-viewport" class="flex-1 overflow-y-auto p-4 md:p-8 relative operational-home-bg">
             
             <section id="section-inicio" class="content-section animate-fade-in operational-home">
                 <div class="max-w-7xl mx-auto">
                     <header class="home-command-header">
                         <div class="home-command-copy">
-                            <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
-                            <p id="home-date-role">Sua rotina começa aqui.</p>
-                            <blockquote>Um mês de conscientização, acolhimento e cuidado com a vida.</blockquote>
+                            <h2 id="home-greeting">Olá.</h2>
+                            <p id="home-date-role"></p>
                         </div>
                     </header>
 
-                    <section id="home-presentation" class="home-presentation" aria-label="Apresentação institucional Platino OS" aria-roledescription="carrossel">
-                        <div class="home-presentation-heading">
-                            <h3>Platino OS</h3>
-                            <a href="./assets/platino-os/platino-os.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF original</a>
+                    <nav class="home-accesses" aria-label="Acessos principais">
+                        <a href="#section-perfil" data-home-route="perfil" class="home-access">
+                            <i class="ph ph-user-circle" aria-hidden="true"></i>
+                            <span><strong>Meu Workspace</strong><small>Seu espaço de trabalho.</small></span>
+                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                        </a>
+                        <a href="#section-avisos" data-home-route="avisos" class="home-access">
+                            <i class="ph ph-megaphone" aria-hidden="true"></i>
+                            <span><strong>Central de vendas</strong><small>Acompanhe suas oportunidades.</small></span>
+                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                        </a>
+                        <a href="#section-drive" data-home-route="drive" class="home-access">
+                            <i class="ph ph-folder" aria-hidden="true"></i>
+                            <span><strong>Drive</strong><small>Acesse arquivos e documentos.</small></span>
+                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                        </a>
+                    </nav>
+
+                    <section id="home-presentation" class="home-presentation" aria-labelledby="home-presentation-title">
+                        <img class="home-presentation-cover" src="./assets/platino-os/page-1.webp" width="1600" height="900" decoding="async" alt="Capa da apresentação Platino OS">
+                        <div class="home-presentation-copy">
+                            <h3 id="home-presentation-title">Conheça a Platino</h3>
+                            <p>Nossa equipe, nossos setores e a forma como trabalhamos.</p>
+                            <div class="home-presentation-actions">
+                                <button type="button" id="open-presentation" aria-haspopup="dialog">Ver apresentação</button>
+                                <a href="./assets/platino-os/platino-os.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF original</a>
+                            </div>
                         </div>
-                        <div class="home-presentation-stage" aria-live="off">
-                            <img width="1600" height="900" decoding="async" alt="Platino OS — página 1 de 7" data-presentation-image>
-                        </div>
-                        <div class="home-presentation-controls">
-                            <button type="button" data-presentation-prev aria-label="Página anterior">Anterior</button>
-                            <span data-presentation-counter role="status" aria-live="off">1 / 7</span>
-                            <button type="button" data-presentation-next aria-label="Próxima página">Próxima</button>
-                            <button type="button" data-presentation-toggle aria-pressed="false">Pausar</button>
-                        </div>
-                        <p data-presentation-error hidden>Não foi possível carregar esta página. Utilize o link para abrir o PDF original.</p>
                     </section>
                 </div>
             </section>
@@ -5611,6 +5623,7 @@
             });
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('nav-active');
+                btn.removeAttribute('aria-current');
             });
 
             const section = document.getElementById(`section-${sectionId}`);
@@ -5624,6 +5637,7 @@
             const activeBtn = document.getElementById(`nav-${sectionId}`);
             if(activeBtn) {
                 activeBtn.classList.add('nav-active');
+                activeBtn.setAttribute('aria-current', 'page');
             }
 
             const pageTitle = document.getElementById('page-title');
@@ -6188,12 +6202,12 @@
             const now = new Date();
             const hour = Number(new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' }).format(now));
             const period = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
-            const rawName = document.getElementById('user-name')?.textContent?.trim() || window.firebaseAuthUser?.displayName || 'Equipe Platino';
-            const firstName = rawName.split(/\s+/)[0];
-            const role = document.getElementById('user-role')?.textContent?.trim() || 'Operação Platino';
+            const rawName = document.getElementById('user-name')?.textContent?.trim() || window.firebaseAuthUser?.displayName || '';
+            const name = rawName.includes('@') ? window.firebaseAuthUser?.displayName || '' : rawName;
+            const firstName = name.split(/\s+/)[0];
             const dateLabel = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(now);
-            greeting.textContent = `${period}, ${firstName}.`;
-            document.getElementById('home-date-role').textContent = `${dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1)} • ${role}`;
+            greeting.textContent = firstName ? `${period}, ${firstName}.` : `${period}.`;
+            document.getElementById('home-date-role').textContent = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
 
         }
 

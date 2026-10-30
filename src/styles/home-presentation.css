@@ -1,36 +1,60 @@
-#section-inicio .home-presentation {
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  border: 1px solid var(--line, #e7e9ee);
-  border-radius: 8px;
-  overflow: hidden;
-  background: #fff;
-}
-.home-presentation-heading, .home-presentation-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-}
-.home-presentation-heading { justify-content: space-between; }
-.home-presentation-heading h3 { margin: 0; font-size: 16px; color: var(--navy, #102c69); }
-.home-presentation-heading a { font-size: 13px; color: var(--brand, #0735c5); text-decoration: underline; }
-.home-presentation-stage { aspect-ratio: 16 / 9; background: #f7f8fa; }
-.home-presentation-stage img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.home-presentation-stage img.is-changing { animation: presentation-reveal 400ms ease-out; }
-.home-presentation-controls { justify-content: center; flex-wrap: wrap; font-size: 14px; gap: 8px; }
-.home-presentation-controls button { min-height: 40px; border: 1px solid var(--line, #e7e9ee); border-radius: 6px; padding: 8px 12px; color: var(--navy, #102c69); background: #fff; cursor: pointer; }
-.home-presentation-controls button:hover { background: #edf2ff; }
-.home-presentation-controls button:focus-visible, .home-presentation-heading a:focus-visible { outline: 2px solid #0735c5; outline-offset: 3px; }
-.home-presentation-controls [data-presentation-toggle] { background: #102c69; color: #fff; }
-.home-presentation [data-presentation-error] { padding: 0 16px 12px; font-size: 12px; }
-@keyframes presentation-reveal { from { opacity: .25; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .home-presentation-stage img.is-changing { animation: none; }
+﻿/* Home follows the login's restrained typography and white surfaces. */
+body #content-viewport.operational-home-bg { background: #fff !important; padding: 36px 32px; }
+body #section-inicio { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+body #section-inicio > div { max-width: 1120px; margin-inline: auto; }
+body #section-inicio .home-command-header { min-height: 0; padding: 0; margin: 0 0 32px; border: 0; background: transparent; }
+body #section-inicio .home-command-copy { max-width: 100%; }
+body #section-inicio .home-command-copy h2 { margin: 0 0 8px; color: #1d1d1f; font-size: 28px; font-weight: 600; line-height: 1.25; letter-spacing: -.025em; }
+body #section-inicio .home-command-copy p { color: #626269; font-size: 14px; font-weight: 400; }
+body #section-inicio .home-accesses { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin-bottom: 36px; }
+body #section-inicio .home-access { display: flex; align-items: flex-start; gap: 12px; min-width: 0; padding: 20px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fafafb; color: #1d1d1f; }
+body #section-inicio .home-access[hidden] { display: none; }
+body #section-inicio .home-access:hover { background: #f4f5f7; border-color: #ccd0d8; }
+body #section-inicio .home-access > i { flex-shrink: 0; margin-top: 2px; font-size: 20px; color: #626269; }
+body #section-inicio .home-access > i:last-child { margin-left: auto; font-size: 16px; }
+body #section-inicio .home-access span { min-width: 0; }
+body #section-inicio .home-access strong { display: block; font-size: 16px; font-weight: 600; line-height: 1.4; }
+body #section-inicio .home-access small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.5; color: #626269; }
+body #section-inicio .home-presentation { display: flex; align-items: center; gap: 28px; min-width: 0; margin: 0; padding-top: 28px; border-top: 1px solid var(--line); }
+body .home-presentation-cover { display: block; flex: 0 0 220px; width: 220px; max-width: 100%; height: auto; object-fit: contain; border-radius: 8px; }
+body .home-presentation-copy { min-width: 0; }
+body .home-presentation-copy h3 { margin: 0 0 8px; font-size: 20px; font-weight: 600; color: #1d1d1f; }
+body .home-presentation-copy p { font-size: 14px; color: #626269; }
+body .home-presentation-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 20px; }
+body #open-presentation { min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--brand); background: var(--brand); color: white; font-size: 14px; font-weight: 500; }
+body #open-presentation:hover { background: #062ba0; }
+body .home-presentation-actions a, body .home-presentation-controls a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--brand); }
+body .home-presentation-actions a:hover, body .home-presentation-controls a:hover { text-decoration: underline; text-underline-offset: 3px; }
+body dialog.presentation-dialog { position: fixed; inset: 0; width: min(1280px,calc(100vw - 48px)); max-width: none; max-height: calc(100dvh - 48px); margin: auto; padding: 0; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: white; color: #1d1d1f; }
+body dialog.presentation-dialog[open] { display: flex; flex-direction: column; }
+body dialog.presentation-dialog::backdrop { background: rgb(29 29 31 / 50%); }
+body .presentation-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+body .presentation-dialog-header h2 { font-size: 18px; }
+body .presentation-dialog-header button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 8px; font-size: 22px; }
+body .presentation-dialog-header button:hover { background: var(--canvas); }
+body .presentation-reading-area { min-height: 0; overflow: auto; background: #f7f8fa; overscroll-behavior: contain; }
+body .presentation-reading-area img { display: block; width: 100%; max-width: none; height: auto; object-fit: contain; }
+body .presentation-reading-area img[hidden] { display: none; }
+body .home-presentation-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 20px; padding: 12px 20px; border-top: 1px solid var(--line); flex-shrink: 0; }
+body .presentation-pagination { display: flex; align-items: center; gap: 12px; }
+body .presentation-pagination button { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+body .presentation-pagination button:hover { background: var(--canvas); }
+body .presentation-pagination span { font-size: 13px; color: #626269; }
+body .presentation-dialog [data-presentation-error] { padding: 16px 20px; }
+@media (min-width: 768px) and (max-width: 1100px) {
+  body #section-inicio .home-access { flex-wrap: wrap; }
+  body #section-inicio .home-access span { flex-basis: calc(100% - 32px); }
+  body #section-inicio .home-access > i:last-child { display: none; }
 }
 @media (max-width: 767px) {
-  .home-presentation-heading, .home-presentation-controls { padding: 12px; }
-  .home-presentation-controls { gap: 8px; }
-  .home-presentation-controls button { padding-inline: 8px; }
+  body #content-viewport.operational-home-bg { padding: 28px 20px; }
+  body #section-inicio .home-accesses { grid-template-columns: minmax(0,1fr); gap: 12px; margin-bottom: 28px; }
+  body #section-inicio .home-access { padding: 18px 16px; }
+  body #section-inicio .home-presentation { flex-direction: column; align-items: flex-start; gap: 20px; padding-top: 24px; }
+  body .home-presentation-cover { flex-basis: auto; width: 220px; }
+  body dialog.presentation-dialog { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
+  /* Small PDF text remains readable with local panning, never page overflow. */
+  body .presentation-reading-area img { width: max(100%,900px); }
+  body .presentation-dialog-header, body .home-presentation-controls { padding: 12px; }
+  body .presentation-pagination { width: 100%; justify-content: space-between; gap: 8px; }
 }
