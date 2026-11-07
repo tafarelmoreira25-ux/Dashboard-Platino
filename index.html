@@ -3205,6 +3205,37 @@
             #section-inicio .home-ranking-link strong { margin-left:2.1rem; }
         }
 
+        /* Central de Vendas: apenas a apresentação desta aba muda. */
+        #section-avisos .sales-community-hub { display:block; min-height:0; }
+        #section-avisos .sales-community-main { min-height:0; padding:1rem 1.15rem; border-radius:1.15rem; box-shadow:0 8px 22px rgba(2,6,23,.12); }
+        #section-avisos .sales-community-heading { margin-bottom:.7rem; }
+        #section-avisos .sales-community-heading h2 { font-size:1.15rem; }
+        #section-avisos .sales-community-main .team-carousel { height:145px; min-height:145px; }
+        #section-avisos .sales-community-main .team-track { min-height:140px; gap:.6rem; padding-right:.6rem; animation-duration:95s; }
+        #section-avisos .sales-community-main .team-card { width:128px; min-width:128px; height:138px; min-height:138px !important; padding:.5rem; border-radius:.8rem; }
+        #section-avisos .sales-community-main .team-avatar { width:3.25rem !important; height:3.25rem !important; min-height:3.25rem; flex-basis:3.25rem; margin-bottom:.25rem !important; }
+        #section-avisos .sales-community-main .employee-name { font-size:.66rem; }
+        #section-avisos .sales-community-main .team-card>p.text-sm { font-size:.6rem; }
+        #section-avisos .team-carousel:focus-within .team-track { animation-play-state:paused; }
+        #section-avisos .sales-team-wall,
+        #section-avisos #avisos-highlight-card,
+        #section-avisos #avisos-placar-header,
+        #section-avisos .sales-support-grid,
+        #section-avisos .team-card .birthday-info,
+        #section-avisos .team-card .birthday-ribbon { display:none !important; }
+        #section-avisos #ranking-arena { border:1px solid rgba(148,163,184,.22); border-radius:1.2rem; box-shadow:0 10px 28px rgba(2,6,23,.15); }
+        #section-avisos #ranking-arena>.absolute:not(.ranking-skeleton) { display:none; }
+        #section-avisos .ranking-board,
+        #section-avisos .metal-level-card { border-color:rgba(148,163,184,.2); border-radius:.9rem; box-shadow:none; }
+        #section-avisos #ranking-month-label { color:#bfdbfe; font-size:.75rem; font-weight:700; }
+        #section-avisos #ranking-period-unavailable { margin:1rem 0; padding:1rem; border:1px solid rgba(251,191,36,.3); border-radius:.85rem; color:#fde68a; background:rgba(120,53,15,.16); font-size:.85rem; }
+        #section-avisos [data-ranking-content].hidden,
+        #section-avisos #ranking-lists.hidden { display:none !important; }
+        @media (prefers-reduced-motion: reduce) {
+            #section-avisos .team-track { animation:none !important; }
+            #section-avisos .team-carousel { overflow-x:auto; mask-image:none; }
+        }
+
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
 </head>
@@ -3494,12 +3525,9 @@
                         <div class="sales-community-main">
                             <div class="sales-community-heading">
                                 <div>
-                                    <span>Conexão Platino</span>
-                                    <h2>Nosso time, nossa força</h2>
-                                    <p>Conheça quem transforma desafios em resultados todos os dias.</p>
+                                    <h2>Mural da equipe</h2>
                                 </div>
                                 <div class="gestor-only hidden flex-wrap gap-2">
-                                    <button onclick="openAvisosEditor('birthdays')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-cake"></i> Aniversários</button>
                                     <button onclick="openAvisosEditor('carrossel')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-images-square"></i> Equipe</button>
                                 </div>
                             </div>
@@ -3517,7 +3545,7 @@
                         </aside>
                     </div>
 
-                    <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
+                    <div id="avisos-placar-header" class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
                         <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
                         <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
                         <div class="relative grid min-h-10 grid-cols-1 items-center gap-4 text-center lg:grid-cols-[1fr_auto_1fr]">
@@ -3564,6 +3592,7 @@
                         <div class="relative flex flex-col items-center justify-center gap-3 mb-6 text-center">
                             <div>
                                 <h3 class="metallic-title mt-1 text-2xl font-black flex items-center justify-center gap-2"><i class="text-2xl"></i> Ranking</h3>
+                                <p id="ranking-month-label" class="mt-1"></p>
                                 <p id="ranking-sync-status" class="mt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-100/70">Aguardando sincronização da planilha</p>
                             </div>
                             <button onclick="openRankingEditor()" class="gestor-only metal-button hidden items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition-colors shadow-sm whitespace-nowrap sm:absolute sm:right-0 sm:top-0">
@@ -3571,19 +3600,7 @@
                             </button>
                         </div>
 
-                        <div class="relative mb-5 flex flex-col items-center justify-center gap-3">
-                            <div class="flex max-w-full flex-wrap items-center justify-center gap-2" role="group" aria-label="Período do ranking">
-                                <button type="button" class="ranking-filter-button rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-bold text-blue-100 transition" data-ranking-period="today" aria-pressed="false" onclick="setRankingPeriod('today')">Hoje</button>
-                                <button type="button" class="ranking-filter-button rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-bold text-blue-100 transition" data-ranking-period="week" aria-pressed="false" onclick="setRankingPeriod('week')">Esta semana</button>
-                                <button type="button" class="ranking-filter-button rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-bold text-blue-100 transition" data-ranking-period="month" aria-pressed="true" onclick="setRankingPeriod('month')">Este mês</button>
-                                <button type="button" class="ranking-filter-button rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-bold text-blue-100 transition" data-ranking-period="custom" aria-pressed="false" onclick="setRankingPeriod('custom')">Personalizado</button>
-                            </div>
-                            <div id="ranking-custom-period" class="hidden w-full max-w-xl grid-cols-1 gap-2 rounded-xl border border-white/10 bg-white/5 p-3 sm:grid-cols-[1fr_1fr_auto]">
-                                <label class="grid gap-1 text-left text-[10px] font-bold uppercase tracking-wider text-blue-100/70">De <input id="ranking-period-from" type="date" class="rounded-lg border border-white/15 bg-slate-950/70 px-3 py-2 text-sm text-white"></label>
-                                <label class="grid gap-1 text-left text-[10px] font-bold uppercase tracking-wider text-blue-100/70">Até <input id="ranking-period-to" type="date" class="rounded-lg border border-white/15 bg-slate-950/70 px-3 py-2 text-sm text-white"></label>
-                                <button type="button" onclick="applyCustomRankingPeriod()" class="metal-button self-end rounded-lg px-4 py-2 text-sm font-bold">Aplicar</button>
-                            </div>
-                        </div>
+                        <p id="ranking-period-unavailable" class="hidden" role="status">Aguardando resultados oficiais do mês vigente.</p>
 
                         <div class="ranking-skeleton absolute inset-x-5 top-44 z-20 grid-cols-1 gap-3 md:grid-cols-2" aria-hidden="true">
                             <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
@@ -3665,7 +3682,7 @@
                             </div>
                         </div>
 
-                        <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
+                        <div id="ranking-lists" class="relative grid grid-cols-1 lg:grid-cols-2 gap-5">
                             <div class="ranking-board rounded-2xl p-4">
                                 <h4 class="ranking-sector-title mb-3 text-center text-lg font-black uppercase tracking-[0.22em]">Comercial</h4>
                                 <div id="ranking-comercial-list" class="space-y-2"></div>
@@ -6948,47 +6965,11 @@
         };
         let rankingSheetSyncTimer = null;
         let rankingSheetLastSignature = '';
-        let salesTimelineTimer = null;
         let salesTimelineEvents = [];
-        let activeRankingPeriod = 'month';
-        let activeRankingCustomRange = { from: '', to: '' };
         let chatOpen = false;
 
-        function updateRankingPeriodControls() {
-            document.querySelectorAll('[data-ranking-period]').forEach(button => {
-                button.setAttribute('aria-pressed', button.dataset.rankingPeriod === activeRankingPeriod ? 'true' : 'false');
-            });
-            const custom = document.getElementById('ranking-custom-period');
-            if (custom) {
-                custom.classList.toggle('hidden', activeRankingPeriod !== 'custom');
-                custom.classList.toggle('grid', activeRankingPeriod === 'custom');
-            }
-        }
-
-        function setRankingPeriod(period) {
-            activeRankingPeriod = ['today', 'week', 'month', 'custom'].includes(period) ? period : 'month';
-            updateRankingPeriodControls();
-            if (activeRankingPeriod !== 'custom') refreshRankingFromSheets(true);
-        }
-
-        function applyCustomRankingPeriod() {
-            const from = document.getElementById('ranking-period-from')?.value || '';
-            const to = document.getElementById('ranking-period-to')?.value || '';
-            if (!from || !to || from > to) {
-                updateRankingSyncStatus('Informe um período personalizado válido');
-                return;
-            }
-            activeRankingCustomRange = { from, to };
-            refreshRankingFromSheets(true);
-        }
-
         function getRankingSheetRequestUrl() {
-            const params = new URLSearchParams({ period: activeRankingPeriod });
-            if (activeRankingPeriod === 'custom') {
-                params.set('from', activeRankingCustomRange.from);
-                params.set('to', activeRankingCustomRange.to);
-            }
-            return `/api/ranking-sheet?${params.toString()}`;
+            return '/api/ranking-sheet?period=month';
         }
 
         function setRankingLoading(isLoading) {
@@ -7023,8 +7004,7 @@
                     })
                     .filter(item =>
                         (item.name || item.sold || item.goal)
-                        && !isInactiveTeamMember(item.name)
-                        && !normalizeClientSearchText(item.name).includes('nicole')
+                        && (sourceValue.source === 'googleSheets' || (!isInactiveTeamMember(item.name) && !normalizeClientSearchText(item.name).includes('nicole')))
                     );
             };
 
@@ -7086,6 +7066,7 @@
                 paidClients: normalizePaidClients(sourceValue.paidClients),
                 potentialClients: normalizePotentialClients(sourceValue.potentialClients),
                 source: sourceValue.source || 'manual',
+                periodStart: sourceValue.periodStart || null,
                 updatedAt: sourceValue.updatedAt || null,
                 updatedBy: sourceValue.updatedBy || 'Supervisão',
                 sourceHealth: sourceValue.sourceHealth || null
@@ -7245,6 +7226,28 @@
             renderRanking();
         }
 
+        function rankingIsCurrentMonth() {
+            const parts = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', timeZone: 'America/Sao_Paulo' }).formatToParts(new Date());
+            const year = parts.find(part => part.type === 'year')?.value;
+            const month = parts.find(part => part.type === 'month')?.value;
+            return rankingData?.source === 'googleSheets'
+                && rankingData.periodStart?.startsWith(`${year}-${month}`)
+                && rankingData.sourceHealth?.ranking?.ok === true
+                && String(rankingData.sourceHealth.ranking.sheet || '').toUpperCase() === getCurrentOperationalMonthKey();
+        }
+
+        function updateRankingPeriodState() {
+            const current = rankingIsCurrentMonth();
+            const label = document.getElementById('ranking-month-label');
+            if (label) label.textContent = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(new Date());
+            document.querySelectorAll('#ranking-arena [data-ranking-content], #ranking-lists').forEach(element => element.classList.toggle('hidden', !current));
+            const unavailable = document.getElementById('ranking-period-unavailable');
+            if (unavailable) {
+                unavailable.classList.toggle('hidden', current);
+                unavailable.textContent = `Resultados oficiais de ${getCurrentOperationalMonthKey()} indisponíveis. Nenhum dado de outro mês será exibido.`;
+            }
+        }
+
         function renderRanking() {
             renderRankingDepartment('comercial', rankingData.comercial, {
                 color: 'emerald',
@@ -7262,6 +7265,7 @@
             renderRankingPaidClients();
             renderSalesTimeline();
             updateRankingSyncStatus();
+            updateRankingPeriodState();
             window.dispatchEvent(new CustomEvent('platino-ranking-updated'));
         }
 
@@ -7540,15 +7544,15 @@
 
             if (rankingData?.source === 'googleSheets') {
                 const updated = rankingData.updatedAt
-                    ? new Date(rankingData.updatedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                    ? new Date(rankingData.updatedAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' })
                     : '';
                 const health = rankingData.sourceHealth || {};
                 const rankingRows = Number(health.ranking?.rows) || 0;
                 const hunterEmpty = health.hunters?.ok && health.hunters?.empty;
                 const failedSources = ['ranking', 'history', 'hunters'].filter(key => health[key] && health[key].ok === false && health[key].error);
                 statusEl.innerText = failedSources.length
-                    ? `Sincronização parcial: falha em ${failedSources.join(', ')}`
-                    : `Google Sheets sincronizado${updated ? ` às ${updated}` : ''} • ${rankingRows} resultado(s)${hunterEmpty ? ' • Hunters sem lançamentos' : ''}`;
+                    ? `Última sincronização bem-sucedida: ${updated || 'não registrada'} • falha parcial em ${failedSources.join(', ')}`
+                    : `Última sincronização bem-sucedida: ${updated || 'não registrada'} • ${rankingRows} resultado(s)${hunterEmpty ? ' • Hunters sem lançamentos' : ''}`;
                 statusEl.className = `mt-2 text-[10px] font-bold uppercase tracking-[0.18em] ${failedSources.length ? 'text-amber-100/90' : 'text-emerald-100/80'}`;
                 return;
             }
@@ -7859,18 +7863,21 @@
             setRankingLoading(true);
             try {
                 const response = await fetch(getRankingSheetRequestUrl(), { cache: 'no-store' });
-                if (response.status === 204 || response.status === 404) return;
+                if (response.status === 204 || response.status === 404) throw new Error('A aba mensal não retornou dados');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                 const sheetData = await response.json();
-                if (sheetData?.enabled === false) return;
+                if (sheetData?.enabled === false) throw new Error('A sincronização da planilha está desativada');
 
                 const normalized = normalizeRankingData({
                     ...sheetData,
                     source: 'googleSheets',
-                    updatedAt: sheetData.updatedAt || new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
                     updatedBy: 'Google Sheets'
                 });
+                if (String(sheetData?.sourceHealth?.ranking?.sheet || '').toUpperCase() !== getCurrentOperationalMonthKey()) {
+                    throw new Error('A aba do mês vigente não está disponível');
+                }
                 if (!normalized.comercial.length && !normalized.juridico.length) {
                     throw new Error(`A aba ${sheetData?.sourceHealth?.ranking?.sheet || 'mensal'} não retornou resultados`);
                 }
@@ -7886,7 +7893,13 @@
                     paidClients: normalized.paidClients,
                     potentialClients: normalized.potentialClients
                 });
-                if (!force && signature === rankingSheetLastSignature) return;
+                if (!force && signature === rankingSheetLastSignature) {
+                    rankingData.updatedAt = normalized.updatedAt;
+                    localStorage.setItem('platinoRanking', JSON.stringify(rankingData));
+                    updateRankingSyncStatus();
+                    updateRankingPeriodState();
+                    return;
+                }
 
                 rankingSheetLastSignature = signature;
                 rankingData = normalized;
@@ -7895,7 +7908,11 @@
                 renderRanking();
             } catch (error) {
                 console.warn('Não foi possível sincronizar o ranking com a planilha.', error);
-                updateRankingSyncStatus('Planilha não sincronizada; usando dado salvo/manual');
+                const lastSuccess = rankingData?.source === 'googleSheets' && rankingData.updatedAt
+                    ? new Date(rankingData.updatedAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' })
+                    : null;
+                updateRankingSyncStatus(lastSuccess ? `Planilha indisponível. Última sincronização bem-sucedida: ${lastSuccess}` : 'Planilha indisponível. Aguardando resultados oficiais.');
+                updateRankingPeriodState();
             } finally {
                 setRankingLoading(false);
             }
@@ -7903,30 +7920,23 @@
 
         function startRankingSheetSync() {
             if (rankingSheetSyncTimer) return;
-            updateRankingPeriodControls();
             refreshRankingFromSheets();
-            refreshSalesTimeline();
             rankingSheetSyncTimer = setInterval(refreshRankingFromSheets, RANKING_SHEET_SYNC_INTERVAL_MS);
-            salesTimelineTimer = setInterval(refreshSalesTimeline, RANKING_SHEET_SYNC_INTERVAL_MS);
         }
 
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) {
                 refreshRankingFromSheets(true);
-                refreshSalesTimeline();
             }
         });
         window.addEventListener('online', () => {
             refreshRankingFromSheets(true);
-            refreshSalesTimeline();
         });
 
         function stopRankingSheetSync() {
             if (!rankingSheetSyncTimer) return;
             clearInterval(rankingSheetSyncTimer);
             rankingSheetSyncTimer = null;
-            if (salesTimelineTimer) clearInterval(salesTimelineTimer);
-            salesTimelineTimer = null;
             rankingSheetLastSignature = '';
         }
 
@@ -8354,9 +8364,16 @@
             if (!container) return;
 
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
-            const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
+            // Filtro exclusivo do mural: os perfis continuam disponíveis nos outros módulos.
+            const hiddenFromMural = new Set([
+                'yasmim nogueira', 'yasmin nogueira', 'tabata rangel de lima',
+                'beatriz garcia', 'janaina rodrigues paiva', 'rafaela marcelino',
+                'jonatas silva ferraz'
+            ]);
+            const visibleTeam = team.filter(person => !hiddenFromMural.has(normalizePersonKey(person.name)));
+            const doubled = [...visibleTeam, ...visibleTeam]; // Duplicado para fazer o loop infinito
             const currentMonth = getCurrentBirthdayMonth();
-            const birthdayNames = team.filter(person => {
+            const birthdayNames = visibleTeam.filter(person => {
                 const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
                 return getBirthdayMonth(birthday) === currentMonth;
             }).map(person => formatPersonName(person.name));
@@ -8366,7 +8383,7 @@
                     ? birthdayNames.join(', ')
                     : 'Nenhum aniversário cadastrado neste mês';
             }
-            container.dataset.originalCount = String(team.length);
+            container.dataset.originalCount = String(visibleTeam.length);
             teamCarouselManualIndex = 0;
             container.style.transition = '';
             container.style.transform = '';
@@ -8379,7 +8396,7 @@
                 const photoPosition = person.photoPosition || 'center 22%';
 
                 return `
-                <div class="team-card ${isBirthdayMonth ? 'birthday-month' : ''} rounded-2xl p-4 text-center" ${index >= team.length ? 'aria-hidden="true"' : ''}>
+                <div class="team-card ${isBirthdayMonth ? 'birthday-month' : ''} rounded-2xl p-4 text-center" ${index >= visibleTeam.length ? 'aria-hidden="true"' : ''}>
                     ${isBirthdayMonth ? `<span class="birthday-ribbon" title="Aniversariante de ${escapeHtml(monthLabel)}"><i class="ph-fill ph-cake text-lg"></i></span>` : ''}
                     <div class="team-avatar mx-auto mb-3 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full text-2xl font-black">
                         ${person.photo
@@ -8388,7 +8405,7 @@
                         }
                     </div>
                     <h4 class="employee-name font-black text-white">${escapeHtml(formatPersonName(person.name) || 'Nome da equipe')}</h4>
-                    <p class="text-sm font-semibold text-blue-300">${escapeHtml(person.role || 'Função')}</p>
+                    <p class="text-sm font-semibold text-blue-300">${escapeHtml(normalizePersonKey(person.name) === 'giullian gabriellen' ? 'Supervisora Administrativo' : normalizePersonKey(person.name) === 'tafarel moreira' ? 'Setor Processual' : person.role || 'Função')}</p>
                     <p class="birthday-info mt-2 inline-flex items-center justify-center gap-1 rounded-full border ${isBirthdayMonth ? 'border-yellow-300/60 bg-yellow-300/15 text-yellow-100' : 'border-white/10 bg-white/5 text-blue-100/80'} px-2.5 py-1 text-[11px] font-semibold">
                         <i class="ph ${isBirthdayMonth ? 'ph-fill ph-cake' : 'ph-calendar-blank'}"></i>
                         ${birthday ? `Aniversário: ${escapeHtml(birthday)}` : 'Aniversário a confirmar'}
@@ -8410,7 +8427,7 @@
             if (!carousel || !track) return;
 
             const card = track.querySelector('.team-card');
-            const gap = 16;
+            const gap = parseFloat(getComputedStyle(track).columnGap) || 16;
             const cardWidth = card ? card.getBoundingClientRect().width + gap : 236;
             const originalCards = Math.max(Number(track.dataset.originalCount) || Math.floor(track.children.length / 2), 1);
             const step = Number(direction) < 0 ? -1 : 1;

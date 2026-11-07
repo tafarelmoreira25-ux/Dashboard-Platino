@@ -260,8 +260,8 @@ function getTeamGoalFromEntries(entries, sector) {
 }
 
 function getNetSoldValue(row, section) {
-  const netValue = parseMoney(row[section.netValueIndex]);
-  return netValue || parseMoney(row[section.valueIndex]);
+  // O ranking oficial contabiliza o lÃ­quido; bruto nÃ£o substitui um lÃ­quido ausente.
+  return parseMoney(row[section.netValueIndex]);
 }
 
 function parseSheetDate(value) {
@@ -737,6 +737,9 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
   for (const section of sections) {
     const grouped = new Map();
     const summary = extractSummaryData(tableRows, section);
+    const hasDatedSales = tableRows.slice(1).some(row =>
+      parseSheetDate(row[section.dateIndex]) && normalizeConsultantName(row[section.consultantIndex])
+    );
     teamGoals[section.sector] = summary.team.goal || DEFAULT_TEAM_GOALS[section.sector] || 0;
     teamTotals[section.sector] = summary.team.total || 0;
 
@@ -749,7 +752,9 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       if (!name || !sold) continue;
       if (section.sector === "comercial") metrics.comercialContracts += 1;
 
-      const canonicalName = getCanonicalConsultantName(name, section.sector);
+      const canonicalName = summary.entries.some(item => isRankingPersonName(item.name))
+        ? name
+        : getCanonicalConsultantName(name, section.sector);
       const key = normalizeNameKey(canonicalName);
       const current = grouped.get(key) || {
         name: canonicalName,
@@ -761,9 +766,26 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       grouped.set(key, current);
     }
 
+    const liveTransactionsTotal = roundMoney(Array.from(grouped.values())
+      .reduce((sum, item) => sum + (item.sold || 0), 0));
     const namedSummaryEntries = summary.entries.filter(item => isRankingPersonName(item.name));
+    const useDatedRanking = period.key === "month" && sections.length === 2
+      && grouped.size > 0 && namedSummaryEntries.length > 0
+      && summary.team.total > 0
+      && Math.abs(summary.team.total - liveTransactionsTotal) < 0.02;
     let rankingItems;
-    if (period.key === "month" && namedSummaryEntries.length) {
+    if (period.key === "month" && hasDatedSales && !grouped.size) {
+      // Uma aba reaproveitada em outro ano não pode apresentar o quadro antigo.
+      rankingItems = [];
+      teamTotals[section.sector] = 0;
+    } else if (useDatedRanking) {
+      // O quadro parcial não deve ocultar lançamentos quando o total oficial confere.
+      rankingItems = Array.from(grouped.values()).map(daily => {
+        const entry = namedSummaryEntries.find(item => normalizeNameKey(item.name) === normalizeNameKey(daily.name));
+        const goal = entry?.goal || daily.goal || 0;
+        return { ...daily, goal, gap: Math.max(goal - daily.sold, 0) };
+      });
+    } else if (period.key === "month" && namedSummaryEntries.length) {
       // O CSV do Google pode exportar apenas parte do bloco visual de resumo. Mantem
       // os consultores ativos cadastrados encontrados nos lancamentos e usa o resumo
       // somente para atualizar os valores que ele realmente trouxe.
@@ -787,8 +809,9 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
         });
       }
       for (const [key, daily] of grouped) {
-        if (!merged.has(key) && getDefaultIndividualGoal(daily.name, section.sector)) {
-          merged.set(key, daily);
+        const canonicalKey = normalizeNameKey(getCanonicalConsultantName(daily.name, section.sector));
+        if (!merged.has(canonicalKey) && getDefaultIndividualGoal(daily.name, section.sector)) {
+          merged.set(canonicalKey, daily);
         }
       }
       rankingItems = Array.from(merged.values());
@@ -802,15 +825,16 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     }
 
     rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
-    const liveTransactionsTotal = roundMoney(Array.from(grouped.values())
-      .reduce((sum, item) => sum + (item.sold || 0), 0));
     if (period.key !== "month") teamTotals[section.sector] = liveTransactionsTotal;
-    else teamTotals[section.sector] = Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal);
+    else teamTotals[section.sector] = rankingItems.length
+      ? Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal)
+      : 0;
 
     rankingItems.forEach(item => {
       rows.push({
         sector: section.sector,
-        name: getCanonicalConsultantName(item.name, section.sector),
+        name: useDatedRanking ? item.name : getCanonicalConsultantName(item.name, section.sector),
+        official: true,
         sold: item.sold,
         goal: item.goal || 0,
         gap: item.gap || Math.max((item.goal || 0) - (item.sold || 0), 0),
@@ -847,7 +871,7 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
   const consolidatedRows = new Map();
   for (const row of rows) {
     if (!ranking[row.sector] || !row.name) continue;
-    if (isInactiveConsultantName(row.name)) continue;
+    if (!row.official && isInactiveConsultantName(row.name)) continue;
     if (row.sector === "juridico" && normalizeNameKey(row.name).startsWith("NICOLE")) continue;
     const key = `${row.sector}|${normalizeNameKey(row.name)}`;
     const current = consolidatedRows.get(key) || {
