@@ -6662,38 +6662,51 @@
         // HUB OPERACIONAL — ROTINA PESSOAL
         const HOME_TASKS_KEY = 'platinoHomeTasksV1';
 
+        function homeTasksUserKey() {
+            const uid = window.firebaseAuthUser?.uid;
+            return uid ? `${HOME_TASKS_KEY}:${uid}` : null;
+        }
+
         function loadHomeTasks() {
+            const key = homeTasksUserKey();
+            if (!key) return [];
             try {
-                const saved = JSON.parse(localStorage.getItem(HOME_TASKS_KEY) || '[]');
-                return Array.isArray(saved) ? saved : [];
+                const saved = JSON.parse(localStorage.getItem(key) || '[]');
+                return Array.isArray(saved) ? saved.filter(task => task?.ownerUid === window.firebaseAuthUser.uid) : [];
             } catch {
                 return [];
             }
         }
 
         function saveHomeTasks(tasks) {
-            localStorage.setItem(HOME_TASKS_KEY, JSON.stringify(tasks.slice(0, 30)));
+            const key = homeTasksUserKey();
+            if (!key) return;
+            localStorage.setItem(key, JSON.stringify(tasks.filter(task => task?.ownerUid === window.firebaseAuthUser.uid).slice(0, 30)));
         }
 
         function addHomeTask(event) {
             event?.preventDefault();
+            const ownerUid = window.firebaseAuthUser?.uid;
+            if (!ownerUid) return;
             const input = document.getElementById('home-task-input');
             const text = String(input?.value || '').trim();
             if (!text) return;
             const tasks = loadHomeTasks();
-            tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text, done: false, createdAt: new Date().toISOString() });
+            tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, ownerUid, text, done: false, createdAt: new Date().toISOString() });
             saveHomeTasks(tasks);
             input.value = '';
             renderHomeOperationalHub();
         }
 
         function toggleHomeTask(id) {
+            if (!homeTasksUserKey()) return;
             const tasks = loadHomeTasks().map(task => task.id === id ? { ...task, done: !task.done, completedAt: !task.done ? new Date().toISOString() : null } : task);
             saveHomeTasks(tasks);
             renderHomeOperationalHub();
         }
 
         function removeHomeTask(id) {
+            if (!homeTasksUserKey()) return;
             saveHomeTasks(loadHomeTasks().filter(task => task.id !== id));
             renderHomeOperationalHub();
         }
@@ -11983,6 +11996,7 @@
           appContent.classList.add("hidden");
           window.clearGlobalSearch?.();
           window.firebaseAuthUser = null;
+          window.renderHomeOperationalHub?.();
           window.platinoUserRole = "equipe";
           window.platinoUserCanEditRh = false;
           window.dispatchEvent(new CustomEvent("platino-signed-out"));

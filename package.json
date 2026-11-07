@@ -7,6 +7,7 @@
     "audit:buttons": "node tests/button-interaction-audit.mjs",
     "test:avisos": "node tests/avisos-team-highlight-test.mjs && node tests/avisos-chargeback-persistence-test.mjs && node tests/avisos-team-update-test.mjs",
     "test:auth": "node tests/auth-login-security-test.mjs",
+    "test:home-tasks": "node tests/home-task-isolation-test.mjs",
     "test:campaign": "node tests/isabela-campaign-test.mjs",
     "test:documents-ui": "node tests/documents-ui-test.mjs",
     "test:documents-download": "node tests/document-download-test.mjs",
