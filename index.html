@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +7,8 @@
     <link rel="icon" type="image/png" href="assets/platino-icon.png?v=20260722">
     <link rel="shortcut icon" type="image/png" href="assets/platino-icon.png?v=20260722">
     <link rel="apple-touch-icon" href="assets/platino-icon.png?v=20260722">
-    <meta name="theme-color" content="#FFFFFF">
+    <meta name="theme-color" content="#071d65">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { corePlugins: { preflight: false } };</script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script type="importmap">
@@ -20,9 +19,7 @@
     }
     </script>
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
-@layer platino-reset, platino-legacy;
-@layer platino-legacy {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
         
         /* Ocultar scrollbar mas manter funcionalidade */
@@ -41,8 +38,8 @@
 
         .app-topbar {
             min-height: 5rem;
-            border-bottom: 1px solid rgba(43, 72, 112, 0.48);
-            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%);
+            border-bottom: 1px solid rgba(43, 72, 112, 0.48) !important;
+            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%) !important;
             box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
         }
 
@@ -63,7 +60,7 @@
         }
 
         .topbar-search-frame .ph {
-            color: #cbd5e1;
+            color: #cbd5e1 !important;
             z-index: 2;
             filter: drop-shadow(0 0 10px rgba(226, 232, 240, 0.12));
             transition: color 0.2s ease, transform 0.2s ease;
@@ -95,10 +92,10 @@
 
         .topbar-search-input {
             min-height: 3.25rem;
-            color: #e5edf7;
-            background: rgba(11, 19, 34, 0.92);
-            border: 1px solid rgba(139, 156, 182, 0.26);
-            border-radius: 999px;
+            color: #e5edf7 !important;
+            background: rgba(11, 19, 34, 0.92) !important;
+            border: 1px solid rgba(139, 156, 182, 0.26) !important;
+            border-radius: 999px !important;
             box-shadow:
                 0 12px 26px rgba(2, 6, 23, 0.22),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -112,12 +109,12 @@
 
         .topbar-search-frame:hover .ph,
         .topbar-search-frame:focus-within .ph {
-            color: #bfdbfe;
+            color: #bfdbfe !important;
         }
 
         .topbar-search-input:focus {
-            background: rgba(15, 25, 44, 0.98);
-            border-color: rgba(96, 165, 250, 0.42);
+            background: rgba(15, 25, 44, 0.98) !important;
+            border-color: rgba(96, 165, 250, 0.42) !important;
             box-shadow:
                 0 14px 30px rgba(0, 0, 0, 0.24),
                 0 0 0 4px rgba(59, 130, 246, 0.12),
@@ -306,8 +303,8 @@
         }
 
         .company-revenue-level .company-revenue-value {
-            color: #f8fafc;
-            -webkit-text-fill-color: #f8fafc;
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
             text-shadow: 0 0 18px rgba(147, 197, 253, 0.45);
         }
 
@@ -533,8 +530,8 @@
         #rh-action-panel {
             background:
                 radial-gradient(circle at 15% 0%, rgba(96, 165, 250, 0.18), transparent 35%),
-                linear-gradient(145deg, rgba(9, 43, 85, 0.96), rgba(5, 25, 51, 0.98));
-            border-color: rgba(203, 213, 225, 0.2);
+                linear-gradient(145deg, rgba(9, 43, 85, 0.96), rgba(5, 25, 51, 0.98)) !important;
+            border-color: rgba(203, 213, 225, 0.2) !important;
             color: #eaf1fb;
             box-shadow:
                 0 24px 56px rgba(2, 6, 23, 0.22),
@@ -629,13 +626,13 @@
             flex: 0 0 auto;
             position: relative;
             background:
-                linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98));
-            border-color: rgba(203, 213, 225, 0.18);
+                linear-gradient(145deg, rgba(10, 49, 94, 0.98), rgba(4, 22, 45, 0.98)) !important;
+            border-color: rgba(203, 213, 225, 0.18) !important;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .team-card.birthday-month {
-            border-color: rgba(251, 191, 36, 0.72);
+            border-color: rgba(251, 191, 36, 0.72) !important;
             box-shadow:
                 0 0 0 1px rgba(251, 191, 36, 0.25),
                 0 18px 42px rgba(251, 191, 36, 0.16),
@@ -863,21 +860,34 @@
         }
 
         #section-treinamentos .training-card > a {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
-            border: 1px solid rgba(147, 197, 253, 0.62);
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
+            border: 1px solid rgba(147, 197, 253, 0.62) !important;
             box-shadow:
                 0 14px 28px rgba(37, 99, 235, 0.26),
                 inset 0 1px 0 rgba(255, 255, 255, 0.22),
-                inset 0 -1px 0 rgba(15, 23, 42, 0.22);
+                inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
         }
 
         #section-treinamentos .training-card > a:hover {
             filter: brightness(1.05);
         }
 
+        .login-hero-bg {
+            background-image:
+                linear-gradient(90deg, rgba(2, 6, 23, 0.82) 0%, rgba(2, 6, 23, 0.58) 38%, rgba(2, 6, 23, 0.12) 72%),
+                url('assets/platino-login-bg.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-glow-overlay {
+            background:
+                radial-gradient(circle at 72% 32%, rgba(37, 99, 235, 0.12), transparent 30%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.34));
+        }
 
         .login-panel {
             background: linear-gradient(180deg, rgba(2, 6, 23, 0.82), rgba(15, 23, 42, 0.72));
@@ -903,14 +913,14 @@
             overflow: hidden;
             cursor: pointer;
             isolation: isolate;
-            color: #07111f;
+            color: #07111f !important;
             background:
-                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
-            border: 1px solid rgba(255, 255, 255, 0.72);
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.72) !important;
             box-shadow:
                 0 16px 36px rgba(0, 25, 80, 0.36),
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22) !important;
             transition: transform 0.2s, filter 0.2s;
         }
 
@@ -919,52 +929,52 @@
             overflow: hidden;
             cursor: pointer;
             isolation: isolate;
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 42%, #0f4fb8 100%);
-            border: 1px solid rgba(147, 197, 253, 0.62);
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 42%, #0f4fb8 100%) !important;
+            border: 1px solid rgba(147, 197, 253, 0.62) !important;
             box-shadow:
                 0 14px 28px rgba(37, 99, 235, 0.28),
                 inset 0 1px 0 rgba(255, 255, 255, 0.22),
-                inset 0 -1px 0 rgba(15, 23, 42, 0.22);
+                inset 0 -1px 0 rgba(15, 23, 42, 0.22) !important;
             transition: transform 0.2s, filter 0.2s;
         }
 
         #section-avisos .metal-button {
-            color: #07111f;
-            -webkit-text-fill-color: #07111f;
+            color: #07111f !important;
+            -webkit-text-fill-color: #07111f !important;
             background:
-                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%);
-            border: 1px solid rgba(255, 255, 255, 0.72);
+                linear-gradient(135deg, #f8fafc 0%, #b7c1cf 28%, #ffffff 48%, #8b97a8 72%, #e5edf7 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.72) !important;
             box-shadow:
                 0 16px 36px rgba(0, 25, 80, 0.36),
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
-                inset 0 -2px 8px rgba(15, 23, 42, 0.22);
+                inset 0 -2px 8px rgba(15, 23, 42, 0.22) !important;
         }
 
         .content-section:not(#section-avisos) :is(button, a)[class*="bg-slate-100"],
         .content-section:not(#section-avisos) :is(button, a)[class*="bg-slate-200"],
         .content-section:not(#section-avisos) :is(button, a)[class*="from-slate"],
         .content-section:not(#section-avisos) :is(button, a)[class*="to-slate"] {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
-            border-color: rgba(147, 197, 253, 0.58);
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
+            border-color: rgba(147, 197, 253, 0.58) !important;
             box-shadow:
                 0 12px 24px rgba(37, 99, 235, 0.24),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
         }
 
         #feedback-modal :is(button, a)[class*="bg-slate-100"],
         #feedback-modal :is(button, a)[class*="bg-slate-200"] {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
             background:
-                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%);
-            border-color: rgba(147, 197, 253, 0.58);
-            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+                linear-gradient(135deg, #1d4ed8 0%, #2563eb 46%, #0f4fb8 100%) !important;
+            border-color: rgba(147, 197, 253, 0.58) !important;
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22) !important;
         }
 
         .metal-login-button::before,
@@ -1010,6 +1020,58 @@
             filter: brightness(1.04);
         }
 
+        .login-feature-strip {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            width: 100%;
+            padding: 0.7rem 0.95rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(59, 130, 246, 0.08) 42%, rgba(15, 23, 42, 0.26)),
+                rgba(255, 255, 255, 0.04);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                0 14px 34px rgba(0, 0, 0, 0.18);
+            color: rgba(219, 234, 254, 0.86);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .login-feature-strip::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(110deg, transparent 8%, rgba(255, 255, 255, 0.18) 45%, transparent 62%);
+            transform: translateX(-120%);
+            animation: loginFeatureSheen 5.5s ease-in-out infinite;
+        }
+
+        .login-feature-strip span {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes loginFeatureSheen {
+            0%, 35% { transform: translateX(-120%); }
+            70%, 100% { transform: translateX(120%); }
+        }
+
+        @media (max-width: 640px) {
+            .login-feature-strip {
+                gap: 0.45rem;
+                padding-inline: 0.75rem;
+                font-size: 0.62rem;
+                letter-spacing: 0.13em;
+            }
+        }
 
         .security-footer {
             color: #dbeafe;
@@ -1044,7 +1106,7 @@
         main > .flex-1 {
             background:
                 radial-gradient(circle at 10% 0%, rgba(203, 213, 225, 0.52), transparent 30%),
-                linear-gradient(135deg, #ffffff 0%, #f8fafc 46%, #e5e7eb 100%);
+                linear-gradient(135deg, #ffffff 0%, #f8fafc 46%, #e5e7eb 100%) !important;
         }
 
         #app-container {
@@ -1059,7 +1121,7 @@
             min-height: 100vh;
             height: 100dvh;
             background:
-                linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%);
+                linear-gradient(180deg, #0F192C 0%, #0B1322 64%, #07111f 100%) !important;
         }
 
         .platino-system-brand {
@@ -1097,9 +1159,20 @@
             min-height: 100dvh;
         }
 
+        @media (min-width: 768px) {
+            #sidebar {
+                transform: none !important;
+            }
+
+            #app-container > main {
+                margin-left: 16rem;
+                width: calc(100% - 16rem);
+            }
+        }
+
         .app-topbar {
-            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%);
-            border-bottom-color: rgba(43, 72, 112, 0.48);
+            background: linear-gradient(180deg, #0F192C 0%, #0B1322 100%) !important;
+            border-bottom-color: rgba(43, 72, 112, 0.48) !important;
         }
 
         .app-topbar-title,
@@ -1131,7 +1204,7 @@
         .training-card h3,
         .team-card h4,
         #rh-action-panel h3 {
-            color: #f8fafc;
+            color: #f8fafc !important;
         }
 
         .portal-card p,
@@ -1139,14 +1212,14 @@
         .training-card p,
         .team-card p,
         #rh-action-panel p {
-            color: rgba(219, 234, 254, 0.76);
+            color: rgba(219, 234, 254, 0.76) !important;
         }
 
         .team-card h4,
         .employee-name,
         #avisos-highlight-name,
         .ranking-row p:first-child {
-            color: #ffffff;
+            color: #ffffff !important;
             text-transform: capitalize;
             letter-spacing: 0;
             text-shadow: 0 8px 22px rgba(2, 6, 23, 0.36);
@@ -1160,7 +1233,7 @@
         #avisos-week-revenue,
         .content-section [class*="text-3xl"].font-bold,
         .content-section [class*="text-3xl"].font-black {
-            color: var(--platino-gold);
+            color: var(--platino-gold) !important;
             -webkit-text-fill-color: var(--platino-gold);
             text-shadow: 0 0 18px rgba(250, 204, 21, 0.34);
         }
@@ -1186,8 +1259,8 @@
 
         .content-section:not(#section-avisos) h2,
         .content-section:not(#section-avisos) .section-title {
-            color: #0f172a;
-            background: none;
+            color: #0f172a !important;
+            background: none !important;
             -webkit-background-clip: initial;
             background-clip: initial;
             -webkit-text-fill-color: currentColor;
@@ -1200,26 +1273,26 @@
         }
 
         #section-treinamentos .training-card {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-color: rgba(148, 163, 184, 0.32);
+            background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+            border-color: rgba(148, 163, 184, 0.32) !important;
             color: #0f172a;
             box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
         }
 
         #section-treinamentos .training-card h3,
         #section-treinamentos .training-card p {
-            color: inherit;
+            color: inherit !important;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
 
         #section-treinamentos .training-card p {
-            color: #64748b;
+            color: #64748b !important;
         }
 
         .suggestion-shell {
             background:
-                linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96));
+                linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 249, 0.96)) !important;
             border: 1px solid rgba(148, 163, 184, 0.32);
             color: #0f172a;
             box-shadow: 0 22px 48px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -1227,15 +1300,15 @@
 
         .suggestion-shell label,
         .suggestion-shell p {
-            color: #334155;
+            color: #334155 !important;
         }
 
         .suggestion-shell input,
         .suggestion-shell select,
         .suggestion-shell textarea {
-            background: #ffffff;
-            border-color: #cbd5e1;
-            color: #0f172a;
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
             box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         }
 
@@ -1245,12 +1318,12 @@
         }
 
         #content-viewport.central-info-bg {
-            background: #16181A;
+            background: #16181A !important;
         }
 
         .content-section:not(#section-avisos) h3,
         .content-section:not(#section-avisos) h4 {
-            color: #0f172a;
+            color: #0f172a !important;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
@@ -1259,13 +1332,13 @@
         #section-inicio .bg-gradient-to-r p,
         #section-inicio .slide-item h2,
         #section-inicio .slide-item p {
-            color: #ffffff;
+            color: #ffffff !important;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
 
         #section-inicio .slide-item p {
-            color: #dbeafe;
+            color: #dbeafe !important;
         }
 
         .portal-card h3,
@@ -1274,7 +1347,7 @@
         .dark-panel h3,
         .team-card h4,
         #rh-action-panel h3 {
-            color: #f8fafc;
+            color: #f8fafc !important;
             -webkit-text-fill-color: currentColor;
             text-shadow: none;
         }
@@ -1283,44 +1356,44 @@
         .notice-card p,
         .dark-panel p,
         .team-card p {
-            color: rgba(219, 234, 254, 0.78);
+            color: rgba(219, 234, 254, 0.78) !important;
         }
 
         .group-opening-slide h4 {
-            color: #0f172a;
+            color: #0f172a !important;
             -webkit-text-fill-color: #0f172a;
             text-shadow: none;
         }
 
         .group-opening-slide p {
-            color: #475569;
+            color: #475569 !important;
         }
 
         .dark-panel .group-opening-slide :is(h1, h2, h3, h4, h5, h6, p, span, strong, li, .text-slate-900, .text-slate-800, .text-slate-700, .text-slate-600, .text-slate-500) {
-            color: #0f172a;
-            -webkit-text-fill-color: #0f172a;
-            text-shadow: none;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
+            text-shadow: none !important;
         }
 
         .dark-panel .group-opening-slide > div:first-child p,
         .dark-panel .group-opening-slide .opening-step p {
-            color: #475569;
-            -webkit-text-fill-color: #475569;
+            color: #475569 !important;
+            -webkit-text-fill-color: #475569 !important;
         }
 
         .dark-panel .group-opening-slide > div:first-child p:first-child {
-            color: #1d4ed8;
-            -webkit-text-fill-color: #1d4ed8;
+            color: #1d4ed8 !important;
+            -webkit-text-fill-color: #1d4ed8 !important;
         }
 
         .dark-panel .group-opening-slide .opening-step-number {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         .dark-panel .group-opening-slide .group-cover-card :is(a, span, i) {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         .adm-pdf-panel {
@@ -1332,30 +1405,30 @@
         .adm-pdf-control {
             width: 100%;
             min-height: 3.1rem;
-            border: 1px solid rgba(148, 163, 184, 0.32);
-            background: #f8fafc;
-            color: #0f172a;
-            -webkit-text-fill-color: #0f172a;
+            border: 1px solid rgba(148, 163, 184, 0.32) !important;
+            background: #f8fafc !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
             border-radius: 0.9rem;
             box-shadow: 0 10px 24px rgba(2, 6, 23, 0.18);
         }
 
         .adm-pdf-control::placeholder {
-            color: #64748b;
-            -webkit-text-fill-color: #64748b;
+            color: #64748b !important;
+            -webkit-text-fill-color: #64748b !important;
         }
 
         .adm-pdf-control:focus {
-            border-color: rgba(96, 165, 250, 0.82);
+            border-color: rgba(96, 165, 250, 0.82) !important;
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18), 0 12px 28px rgba(2, 6, 23, 0.2);
             outline: none;
         }
 
         .adm-pdf-select {
             appearance: auto;
-            background-color: #ffffff;
-            color: #0f172a;
-            -webkit-text-fill-color: #0f172a;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
         }
 
         .adm-pdf-select option {
@@ -1405,21 +1478,21 @@
         }
 
         #adm-template-picker-category {
-            color: #93c5fd;
+            color: #93c5fd !important;
         }
 
         #adm-template-picker-title {
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
         }
 
         #adm-template-picker-description {
-            color: #bfdbfe;
-            -webkit-text-fill-color: #bfdbfe;
+            color: #bfdbfe !important;
+            -webkit-text-fill-color: #bfdbfe !important;
         }
 
         .adm-template-picker-trigger [data-picker-chevron] {
-            color: #bfdbfe;
+            color: #bfdbfe !important;
         }
 
         .adm-template-picker-panel {
@@ -2202,14 +2275,19 @@
             }
         }
 
+        /* Identidade branca, azul e prata exclusiva da Central de Documentos. */
+        #section-documentos {
+            background: #ffffff;
+        }
+
         .documents-central,
         .documents-central * {
-            font-family: "Inter", Arial, sans-serif;
+            font-family: "Inter", Arial, sans-serif !important;
         }
 
         .documents-central :is(h2, h3, h4, h5),
         .documents-central :is(button, .documents-eyebrow, .documents-category-label, .documents-template-title) {
-            font-family: "Montserrat", "Inter", Arial, sans-serif;
+            font-family: "Montserrat", "Inter", Arial, sans-serif !important;
         }
 
         .documents-central {
@@ -2593,28 +2671,27 @@
             color: #ffffff;
         }
 
-        .ranking-sync-status[hidden] { display: none; }
-        .ranking-sync-status { display: flex; align-items: center; gap: 1rem; }
-        .ranking-sync-message { min-height: 2.8em; transition: opacity 220ms ease; }
-        .ranking-sync-message.is-fading { opacity: 0; }
-        .ranking-sync-indicator { display: flex; gap: .25rem; flex-shrink: 0; }
-        .ranking-sync-indicator span { width: .35rem; height: .35rem; border-radius: 50%; background: currentColor; animation: ranking-sync-pulse 1.4s ease-in-out infinite; }
-        .ranking-sync-indicator span:nth-child(2) { animation-delay: .18s; }
-        .ranking-sync-indicator span:nth-child(3) { animation-delay: .36s; }
-        @keyframes ranking-sync-pulse { 50% { opacity: .3; } }
-        .avisos-highlights-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
-        .avisos-highlight-person { display: flex; gap: 1rem; min-width: 0; padding: 1.5rem 0; }
-        .avisos-highlight-person + .avisos-highlight-person { border-top: 1px solid rgba(147,197,253,.15); }
-        .avisos-highlight-person .team-avatar { width: 4.5rem; height: 4.5rem; flex: 0 0 4.5rem; }
-        .avisos-highlight-details { min-width: 0; overflow-wrap: anywhere; }
-        @media (min-width: 1024px) {
-            .avisos-highlights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .avisos-highlight-person:first-child { padding-right: 1.5rem; }
-            .avisos-highlight-person + .avisos-highlight-person { border-top: 0; border-left: 1px solid rgba(147,197,253,.15); padding-left: 1.5rem; }
+        .ranking-loading [data-ranking-content] {
+            opacity: 0.2;
+            pointer-events: none;
         }
-        @media (prefers-reduced-motion: reduce) {
-            .ranking-sync-message { transition: none; }
-            .ranking-sync-indicator span { animation: none; }
+
+        .ranking-skeleton {
+            display: none;
+        }
+
+        .ranking-loading .ranking-skeleton {
+            display: grid;
+        }
+
+        .skeleton-line {
+            background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.2), rgba(255,255,255,.08));
+            background-size: 200% 100%;
+            animation: ranking-shimmer 1.2s linear infinite;
+        }
+
+        @keyframes ranking-shimmer {
+            to { background-position: -200% 0; }
         }
 
         :is(
@@ -2634,8 +2711,8 @@
             [class*="bg-slate-950"],
             [class*="bg-blue-950"]
         ) :is(h1, h2, h3, h4, h5, h6, li, .text-slate-900, .text-slate-800, .text-slate-700) {
-            color: #f8fafc;
-            -webkit-text-fill-color: #f8fafc;
+            color: #f8fafc !important;
+            -webkit-text-fill-color: #f8fafc !important;
             text-shadow: none;
         }
 
@@ -2656,25 +2733,25 @@
             [class*="bg-slate-950"],
             [class*="bg-blue-950"]
         ) :is(p, .text-slate-600, .text-slate-500, .text-slate-400) {
-            color: #dbeafe;
-            -webkit-text-fill-color: #dbeafe;
+            color: #dbeafe !important;
+            -webkit-text-fill-color: #dbeafe !important;
         }
 
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) .metallic-kicker,
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) [class*="uppercase"] {
-            color: #bfdbfe;
-            -webkit-text-fill-color: #bfdbfe;
+            color: #bfdbfe !important;
+            -webkit-text-fill-color: #bfdbfe !important;
             letter-spacing: 0.16em;
         }
 
         :is(.portal-card, .notice-card, .dark-panel, .performance-arena, .ranking-board, .team-card) .money-value {
-            color: #ded9e6;
-            -webkit-text-fill-color: #ded9e6;
+            color: #ded9e6 !important;
+            -webkit-text-fill-color: #ded9e6 !important;
         }
 
         #section-avisos .metal-button {
-            color: #0f172a;
-            -webkit-text-fill-color: #0f172a;
+            color: #0f172a !important;
+            -webkit-text-fill-color: #0f172a !important;
         }
 
         #section-treinamentos .training-card :is(h1, h2, h3, h4, h5, h6, p, span, li) {
@@ -2883,8 +2960,8 @@
         .home-command-header::after { content:""; position:absolute; inset:auto -8% -70% 35%; height:210px; border:1px solid rgba(191,219,254,.16); border-radius:50%; transform:rotate(-7deg); }
         .home-command-copy { position:relative; z-index:2; max-width:720px; }
         .home-eyebrow { display:inline-flex; align-items:center; gap:.45rem; color:#93c5fd; font-size:.68rem; font-weight:900; letter-spacing:.2em; text-transform:uppercase; }
-        .home-command-copy h2 { margin:.6rem 0 .35rem; color:#fff; font-family:'Montserrat',sans-serif; font-size:clamp(1.75rem,4vw,3rem); font-weight:900; letter-spacing:-.045em; }
-        .home-command-copy p { color:#cbd5e1; font-weight:600; }
+        .home-command-copy h2 { margin:.6rem 0 .35rem; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:clamp(1.75rem,4vw,3rem); font-weight:900; letter-spacing:-.045em; }
+        .home-command-copy p { color:#cbd5e1 !important; font-weight:600; }
         .home-command-copy blockquote { margin-top:1.35rem; color:#93c5fd; font-size:.8rem; font-weight:700; letter-spacing:.04em; }
         .home-command-mark { position:absolute; right:5%; top:50%; transform:translateY(-50%); color:rgba(219,234,254,.08); font-size:10rem; }
         .home-focus-pill { position:absolute; z-index:2; right:1.5rem; top:1.5rem; display:flex; align-items:center; gap:.5rem; padding:.55rem .8rem; border:1px solid rgba(255,255,255,.12); border-radius:999px; background:rgba(255,255,255,.07); font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; backdrop-filter:blur(10px); }
@@ -2899,7 +2976,7 @@
         .home-next-step { grid-column:span 6; }
         .home-card-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
         .home-card-heading span,.home-kpi-card>span { display:block; color:#64748b; font-size:.65rem; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
-        .home-card-heading h3 { margin:.2rem 0 0; color:#172033; font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:850; }
+        .home-card-heading h3 { margin:.2rem 0 0; color:#172033 !important; font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:850; }
         .home-card-heading>i { color:#2563eb; font-size:1.55rem; }
         .home-card-heading>strong { padding:.32rem .62rem; color:#1d4ed8; border-radius:999px; background:#dbeafe; font-size:.72rem; }
         .quick-action-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
@@ -2920,7 +2997,7 @@
         .home-task-check { display:grid; place-items:center; width:1.35rem; height:1.35rem; min-height:0 !important; border:1.5px solid #93a4ba; border-radius:.42rem; color:transparent; }
         .home-task-item.is-done .home-task-check { color:#fff; border-color:#2563eb; background:#2563eb; }
         .home-task-item span { min-width:0; color:#334155; font-size:.77rem; font-weight:700; }
-        .home-task-delete { color:#94a3b8; }
+        .home-task-delete { min-height:0 !important; color:#94a3b8; }
         .home-task-empty { padding:1.2rem; border:1px dashed #cbd5e1; border-radius:1rem; color:#94a3b8; font-size:.76rem; text-align:center; }
         .home-kpi-icon { display:grid; place-items:center; width:2.5rem; height:2.5rem; margin-bottom:1rem; border-radius:.9rem; color:#1d4ed8; background:#dbeafe; font-size:1.25rem; }
         .home-kpi-card strong { display:block; margin:.35rem 0; color:#0f172a; font-family:'Montserrat',sans-serif; font-size:2rem; font-weight:900; }
@@ -2931,13 +3008,20 @@
         .home-progress span { display:block; width:0; height:100%; border-radius:inherit; background:linear-gradient(90deg,#2563eb,#60a5fa); transition:width .3s ease; }
         .home-next-step p { color:#64748b; font-size:.8rem; }
         .home-next-step button { display:inline-flex; align-items:center; gap:.45rem; margin-top:1rem; color:#1d4ed8; font-size:.76rem; font-weight:850; }
-        .sales-community-hub { display:grid; grid-template-columns:minmax(0,1fr); gap:1rem; margin-bottom:1rem; }
-        .sales-community-main,.sales-knowledge-strip { border:1px solid rgba(96,165,250,.16); border-radius:1.5rem; color:#fff; background:linear-gradient(145deg,#08162d,#102e69); box-shadow:0 18px 38px rgba(2,6,23,.2); }
+        .sales-community-hub { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:1rem; margin-bottom:1rem; }
+        .sales-community-main,.sales-team-wall,.sales-knowledge-strip { border:1px solid rgba(96,165,250,.16); border-radius:1.5rem; color:#fff; background:linear-gradient(145deg,#08162d,#102e69); box-shadow:0 18px 38px rgba(2,6,23,.2); }
         .sales-community-main { min-width:0; padding:1.35rem; overflow:hidden; }
         .sales-community-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-        .sales-community-heading span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
-        .sales-community-heading h2 { margin:.2rem 0; color:#fff; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
+        .sales-community-heading span,.sales-wall-title span,.sales-knowledge-strip>div span { color:#60a5fa; font-size:.63rem; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
+        .sales-community-heading h2 { margin:.2rem 0; color:#fff !important; font-family:'Montserrat',sans-serif; font-size:1.4rem; font-weight:900; }
         .sales-community-heading p { color:#a9bad4; font-size:.75rem; }
+        .sales-team-wall { padding:1rem; background:linear-gradient(160deg,#0b1930,#111e35); }
+        .sales-wall-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:.8rem; }
+        .sales-wall-title i { color:#facc15; font-size:1.25rem; }
+        .sales-wall-item { display:flex; align-items:center; gap:.7rem; padding:.75rem 0; border-top:1px solid rgba(255,255,255,.08); }
+        .sales-wall-item>i { display:grid; place-items:center; flex:0 0 2.2rem; height:2.2rem; border-radius:.75rem; color:#93c5fd; background:rgba(59,130,246,.15); }
+        .sales-wall-item small { display:block; color:#8fa5c5; font-size:.6rem; text-transform:uppercase; letter-spacing:.08em; }
+        .sales-wall-item strong { display:block; margin-top:.15rem; color:#e5edf8; font-size:.69rem; line-height:1.3; }
         .sales-knowledge-strip { display:flex; align-items:center; gap:.65rem; margin-bottom:1.5rem; padding:.9rem 1rem; color:#172033; border-color:#dbe5f2; background:#fff; box-shadow:0 10px 25px rgba(15,35,80,.07); }
         .sales-knowledge-strip>div { margin-right:auto; }
         .sales-knowledge-strip>div strong { display:block; color:#1e293b; font-size:.75rem; }
@@ -2945,7 +3029,7 @@
         .sales-knowledge-strip button:hover { border-color:#60a5fa; box-shadow:0 0 18px rgba(59,130,246,.12); }
         #section-avisos .sales-community-main .team-card { min-width:205px; }
         /* Central de Vendas: ranking em primeiro plano, equipe e apoio compactos. */
-        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr); min-height:305px; height:auto; max-height:none; overflow:visible; }
+        #section-avisos .sales-community-hub { grid-template-columns:minmax(0,1fr) 230px; min-height:305px; height:auto; max-height:none; overflow:visible; }
         #section-avisos .sales-community-main { min-height:305px; padding:.9rem 1rem; }
         #section-avisos .sales-community-heading { margin-bottom:.55rem; }
         #section-avisos .sales-community-heading h2 { font-size:1.08rem; }
@@ -2958,13 +3042,17 @@
         #section-avisos .sales-community-main .team-card>p.text-sm { display:-webkit-box; min-height:1.55rem; overflow:hidden; font-size:.67rem; line-height:1.15; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
         #section-avisos .sales-community-main .birthday-info { min-height:1.75rem; margin-top:auto; padding:.25rem .45rem; font-size:.58rem; white-space:nowrap; }
         #section-avisos .sales-community-main .team-extra { display:none; }
+        #section-avisos .sales-team-wall { min-height:305px; height:auto; padding:.7rem .8rem; overflow:visible; }
+        #section-avisos .sales-wall-item { padding:.42rem 0; }
+        #section-avisos .sales-wall-item>i { flex-basis:1.85rem; height:1.85rem; }
         .sales-support-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:.85rem; align-items:start; }
-        .sales-history-card { grid-column:1/-1; }
-        .sales-hunters-card { grid-column:span 8; }
+        .sales-history-card { grid-column:span 4; }
+        .sales-chargeback-card { grid-column:span 3; }
+        .sales-hunters-card { grid-column:span 5; }
         .sales-timeline-card { grid-column:1/-1; min-height:0 !important; }
         .hunter-compact-stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
-        .hunter-compact-stats>div { padding:.55rem .65rem !important; border-radius:.75rem; }
-        .hunter-compact-stats p:first-child { font-size:.53rem !important; letter-spacing:.1em; }
+        .hunter-compact-stats>div { padding:.55rem .65rem !important; border-radius:.75rem !important; }
+        .hunter-compact-stats p:first-child { font-size:.53rem !important; letter-spacing:.1em !important; }
         .hunter-compact-stats .money-value { margin-top:.15rem !important; font-size:1.05rem !important; }
         .sales-hunters-card #ranking-hunters-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; }
         .sales-hunters-card #ranking-hunters-list>* { margin:0 !important; padding:.6rem !important; }
@@ -2975,7 +3063,7 @@
             background:
                 radial-gradient(circle at 82% 8%, rgba(0,92,255,.2), transparent 27%),
                 radial-gradient(circle at 8% 88%, rgba(0,58,180,.16), transparent 25%),
-                linear-gradient(135deg,#020713 0%,#06132d 48%,#020817 100%);
+                linear-gradient(135deg,#020713 0%,#06132d 48%,#020817 100%) !important;
         }
         #content-viewport.operational-home-bg::before {
             content:""; position:fixed; inset:5rem 0 0 16rem; pointer-events:none; opacity:.4;
@@ -2993,7 +3081,7 @@
         .home-command-header::after { inset:-35% -3% auto auto; width:40%; height:160%; border:2px solid rgba(148,163,184,.34); box-shadow:0 0 18px rgba(37,99,235,.35),inset 0 0 18px rgba(37,99,235,.18); }
         .home-command-copy { max-width:68%; }
         .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(37,99,235,.55); }
-        .home-command-copy p { color:#d7e1f0; }
+        .home-command-copy p { color:#d7e1f0 !important; }
         .home-command-mark { right:3.5%; width:190px; height:190px; overflow:hidden; border:2px solid #b8c4d6; border-radius:50%; background:#061a45; box-shadow:0 0 0 6px rgba(30,64,175,.35),0 0 32px #075ef0,inset 0 0 22px #075ef0; }
         .home-command-mark img { width:100%; height:100%; object-fit:cover; object-position:center 16%; transform:scale(1.02); }
         .home-focus-pill { border-color:rgba(191,219,254,.28); background:rgba(3,13,35,.7); }
@@ -3005,10 +3093,10 @@
         .home-bento-card::after { content:""; position:absolute; left:15%; right:15%; top:-1px; height:2px; background:linear-gradient(90deg,transparent,#1d7fff,#eef6ff,#1d7fff,transparent); box-shadow:0 0 12px #1478ff; opacity:.72; }
         .home-bento-card:hover { border-color:#b9c6d8; box-shadow:inset 0 0 30px rgba(37,99,235,.15),0 0 22px rgba(0,102,255,.28); }
         .home-card-heading span,.home-kpi-card>span { color:#77aafc; }
-        .home-card-heading h3,.home-kpi-card strong { color:#f8fafc; text-shadow:0 2px 0 #000; }
+        .home-card-heading h3,.home-kpi-card strong { color:#f8fafc !important; text-shadow:0 2px 0 #000; }
         #section-inicio .home-command-copy h2,
         #section-inicio .home-card-heading h3,
-        #section-inicio .home-kpi-card strong { color:#f8fafc; }
+        #section-inicio .home-kpi-card strong { color:#f8fafc !important; }
         .home-card-heading>strong { color:#dbeafe; border:1px solid rgba(96,165,250,.3); background:rgba(37,99,235,.24); }
         .quick-action-grid button,.home-task-item { color:#e5edf8; border-color:rgba(148,163,184,.25); background:linear-gradient(145deg,rgba(11,33,77,.92),rgba(4,15,39,.96)); }
         .quick-action-grid button:hover { color:#fff; border-color:#60a5fa; background:linear-gradient(145deg,rgba(16,52,122,.98),rgba(5,24,66,.98)); }
@@ -3025,43 +3113,16 @@
         .home-progress span { background:linear-gradient(90deg,#075eff,#e2e8f0,#1687ff); box-shadow:0 0 12px #1687ff; }
         .home-next-step button { color:#8fc1ff; }
 
-        /* Outubro Rosa: homenagem na tela inicial. */
-        #content-viewport.operational-home-bg {
-            background:radial-gradient(circle at 82% 8%,rgba(236,72,153,.22),transparent 32%),radial-gradient(circle at 8% 88%,rgba(190,24,93,.14),transparent 28%),linear-gradient(135deg,#100713 0%,#181126 48%,#080817 100%);
-        }
-        #content-viewport.operational-home-bg::before { background-image:radial-gradient(rgba(244,114,182,.35) 1px,transparent 1px); }
-        #section-inicio .home-command-header {
-            border-color:rgba(249,168,212,.6);
-            background:radial-gradient(circle at 90% 20%,rgba(219,39,119,.22),transparent 48%),linear-gradient(110deg,#140b1c,#25102b 58%,#321432);
-            box-shadow:0 0 0 4px rgba(236,72,153,.07),inset 0 0 34px rgba(219,39,119,.1),0 0 38px rgba(236,72,153,.14);
-        }
-        #section-inicio .home-command-header::before { background:linear-gradient(90deg,transparent,#ec4899,#fce7f3,#ec4899,transparent); box-shadow:0 0 14px #ec4899; }
-        #section-inicio .home-command-header::after { border-color:rgba(249,168,212,.3); box-shadow:0 0 18px rgba(236,72,153,.25); }
-        #section-inicio .home-command-copy h2 { text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 20px rgba(236,72,153,.3); }
-        #section-inicio .home-eyebrow,#section-inicio .home-command-copy blockquote { color:#f9a8d4; }
-        #section-inicio .home-eyebrow svg { width:1.4rem; height:1.7rem; flex-shrink:0; }
-        #section-inicio .home-command-mark { border-color:#f9a8d4; box-shadow:0 0 0 6px rgba(219,39,119,.18),0 0 32px rgba(236,72,153,.5),inset 0 0 22px rgba(236,72,153,.3); }
-        #section-inicio .home-focus-pill { color:#fce7f3; border-color:rgba(249,168,212,.4); background:rgba(49,12,36,.8); }
-        #section-inicio .home-focus-pill span { background:#f472b6; box-shadow:0 0 14px #ec4899; }
-        #section-inicio .home-bento-card { border-color:rgba(249,168,212,.35); }
-        #section-inicio .home-bento-card::after { background:linear-gradient(90deg,transparent,#ec4899,#fce7f3,#ec4899,transparent); box-shadow:0 0 12px #ec4899; }
-        #section-inicio .home-bento-card:hover { border-color:#f9a8d4; box-shadow:inset 0 0 30px rgba(236,72,153,.1),0 0 22px rgba(236,72,153,.18); }
-        #section-inicio .home-card-heading span,#section-inicio .home-kpi-card>span,#section-inicio .home-card-heading>i,#section-inicio .home-next-step button { color:#f9a8d4; }
-        #section-inicio .home-card-heading>strong { color:#fce7f3; border-color:rgba(249,168,212,.3); background:rgba(219,39,119,.2); }
-        #section-inicio .quick-action-grid button>i:first-child,#section-inicio .home-kpi-icon { border-color:rgba(249,168,212,.55); background:radial-gradient(circle,#be185d,#64113b 62%,#240d24); box-shadow:inset 0 0 10px rgba(244,114,182,.5),0 0 12px rgba(236,72,153,.25); }
-        #section-inicio .quick-action-grid button:hover { border-color:#f9a8d4; background:linear-gradient(145deg,#431331,#190d26); }
-        #section-inicio .home-task-form input:focus { border-color:#f472b6; box-shadow:0 0 0 3px rgba(236,72,153,.18); }
-        #section-inicio .home-task-form button,#section-inicio .home-task-item.is-done .home-task-check { background:#be185d; border-color:#f472b6; }
-        #section-inicio .home-kpi-primary { background:radial-gradient(circle at 30% 20%,rgba(219,39,119,.3),transparent 45%),linear-gradient(145deg,#35122e,#100b20); }
-        #section-inicio .home-progress span { background:linear-gradient(90deg,#db2777,#fce7f3,#f472b6); box-shadow:0 0 12px #ec4899; }
-
         @media (max-width: 1024px) {
             .home-quick-actions,.home-workflow-card { grid-column:span 12; }
             .home-kpi-card,.home-kpi-primary { grid-column:span 4; }
             .home-next-step { grid-column:span 12; }
             .sales-community-hub { grid-template-columns:1fr; }
+            .sales-team-wall { display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; }
+            .sales-wall-title { grid-column:1/-1; }
+            .sales-wall-item { border:1px solid rgba(255,255,255,.08); border-radius:1rem; padding:.75rem; }
             #section-avisos .sales-community-hub { max-height:none; grid-template-columns:1fr; }
-            .sales-history-card { grid-column:1/-1; }
+            .sales-history-card,.sales-chargeback-card { grid-column:span 6; }
             .sales-hunters-card { grid-column:1/-1; }
             .sales-timeline-card #sales-timeline-list { grid-template-columns:repeat(2,minmax(0,1fr)); }
         }
@@ -3072,8 +3133,10 @@
             .quick-action-grid { grid-template-columns:1fr; }
             .home-kpi-card,.home-kpi-primary { grid-column:span 12; min-height:145px; }
             .sales-community-heading,.sales-knowledge-strip { align-items:stretch; flex-direction:column; }
+            .sales-team-wall { grid-template-columns:1fr; }
+            .sales-wall-title { grid-column:auto; }
             .sales-knowledge-strip>div { margin:0 0 .25rem; }
-            .sales-history-card,.sales-hunters-card { grid-column:1/-1; }
+            .sales-history-card,.sales-chargeback-card,.sales-hunters-card { grid-column:1/-1; }
             .hunter-compact-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
             .sales-hunters-card #ranking-hunters-list,.sales-timeline-card #sales-timeline-list { grid-template-columns:1fr; }
         }
@@ -3096,16 +3159,8 @@
             }
         }
 
-
-}
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
-<link rel="stylesheet" href="./src/styles/workspace.css">
-<link rel="stylesheet" href="./src/styles/home-presentation.css">
-<script type="module" src="./src/home-presentation.js"></script>
-<script type="module" src="./src/workspace-shell.js"></script>
-<link rel="stylesheet" href="./src/styles/login.css">
-<script type="module" src="./src/login-ui.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3120,17 +3175,32 @@
     </div>
 </div>
 
-    <section id="login-screen" aria-labelledby="login-title">
-      <div class="login-layout">
-        <div class="login-panel">
-          <div class="login-brand">
-            <img src="assets/platino-assessoria-logo-oficial.png" width="1448" height="1086" alt="Platino Assessoria" class="login-brand-image" decoding="async">
-          </div>
-          <h1 id="login-title">Acesse seu workspace</h1>
+    <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
+      <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
+      <div class="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-[440px_1fr] gap-10 items-center">
+        <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
+          <div class="mb-8">
+            <div class="mt-5 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-white/8 border border-white/12 flex items-center justify-center shadow-lg shadow-blue-950/30">
+                <i class="ph ph-shield-check text-3xl text-blue-200"></i>
+              </div>
+              <div>
+                <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">PLATINO</h1>
+              </div>
+            </div>
 
-          <form id="login-form" autocomplete="on">
-            <div class="login-field">
-              <label for="login-email">E-mail</label>
+            <div class="login-feature-strip mt-6">
+              <span>Tecnologia</span>
+              <span aria-hidden="true">-</span>
+              <span>Controle</span>
+              <span aria-hidden="true">-</span>
+              <span>Suporte</span>
+            </div>
+          </div>
+
+          <form id="login-form" class="space-y-4" autocomplete="on">
+            <div>
+              <label class="block text-sm text-slate-300 mb-2">E-mail</label>
               <input
                 id="login-email"
                 name="email"
@@ -3139,44 +3209,50 @@
                 autocapitalize="none"
                 spellcheck="false"
                 required
-                class="login-input"
-                aria-describedby="login-error"
+                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
                 placeholder="Digite seu e-mail"
               />
             </div>
 
-            <div class="login-field">
-              <label for="login-password">Senha</label>
-              <div class="login-password-control">
+            <div>
+              <label class="block text-sm text-slate-300 mb-2">Senha</label>
               <input
                 id="login-password"
                 name="password"
                 type="password"
                 autocomplete="current-password"
                 required
-                class="login-input"
-                aria-describedby="login-error"
+                class="login-input w-full px-4 py-3 rounded-2xl text-slate-100 outline-none transition"
                 placeholder="Digite sua senha"
               />
-                <button id="login-password-toggle" type="button" aria-label="Mostrar senha" aria-controls="login-password" aria-pressed="false"><i class="ph ph-eye" aria-hidden="true"></i></button>
-              </div>
             </div>
-
-            <button id="login-reset-password" type="button">Esqueci minha senha</button>
 
             <button
               id="login-button"
               type="submit"
-              class="login-primary-button"
+              class="metal-login-button w-full py-3.5 rounded-2xl font-bold transition focus:outline-none focus:ring-4 focus:ring-blue-500/25"
             >
               Entrar
             </button>
 
-            <p id="login-error" class="hidden text-red-300" role="status" aria-live="polite" aria-atomic="true"></p>
+            <button
+              id="login-reset-password"
+              type="button"
+              class="w-full rounded-xl px-3 py-2 text-sm font-semibold text-blue-200 transition hover:bg-white/10 hover:text-white"
+            >
+              Esqueci minha senha
+            </button>
+
+            <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
+            <p class="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-blue-100/70">
+              <i class="ph ph-lock-key mt-0.5 text-sm text-blue-200" aria-hidden="true"></i>
+              <strong>Criptografia SSL de Ponta a Ponta</strong>
+            </p>
           </form>
 
         </div>
 
+        <div class="hidden lg:block relative min-h-[560px]"></div>
       </div>
     </section>
 
@@ -3190,12 +3266,12 @@
                     <img class="platino-system-mark" src="assets/platino-icon.png" alt="Logo Platino">
                     <strong>PLATINO</strong>
                 </div>
-                <button type="button" onclick="toggleSidebar()" aria-label="Fechar menu" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
+                <button onclick="toggleSidebar()" class="md:hidden ml-auto text-[#8B9CB6] hover:text-white">
                     <i class="ph ph-x text-xl"></i>
                 </button>
             </div>
 
-            <nav aria-label="Navegação principal" class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 flex flex-col gap-1.5">
+            <nav class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 flex flex-col gap-1.5">
                 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pb-2">Navegação</div>
                 
@@ -3229,6 +3305,9 @@
 
                 <div class="text-[10px] font-bold uppercase tracking-widest text-[#8B9CB6]/70 px-2 pt-5 pb-2">Recursos</div>
 
+                <button id="nav-documentos" onclick="navigateTo('documentos')" class="nav-btn">
+                    <i class="ph ph-files"></i> Documentos
+                </button>
                 <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn">
                     <i class="ph ph-books"></i> Treinamentos
                 </button>
@@ -3252,10 +3331,10 @@
                         <p id="user-name" class="text-sm font-medium text-white truncate">Tafarel</p>
                         <p id="user-role" class="text-[10px] text-[#8B9CB6] font-semibold uppercase tracking-wider truncate">Gestão Platino</p>
                     </div>
-                    <button id="change-password-open" type="button" aria-label="Alterar senha" class="text-[#8B9CB6] hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Alterar senha">
+                    <button id="change-password-open" type="button" class="text-[#8B9CB6] hover:text-blue-200 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Alterar senha">
                         <i class="ph ph-key text-xl"></i>
                     </button>
-                    <button type="button" onclick="logoutPlatino()" aria-label="Sair do sistema" class="text-[#8B9CB6] hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Sair do Sistema">
+                    <button onclick="logoutPlatino()" class="text-[#8B9CB6] hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-[#1E3557]" title="Sair do Sistema">
                         <i class="ph ph-sign-out text-xl"></i>
                     </button>
                 </div>
@@ -3270,6 +3349,11 @@
                     <i class="ph ph-list text-2xl"></i>
                 </button>
                 <h1 id="page-title" class="app-topbar-title hidden md:block">Início</h1>
+                <button id="management-feedback-alert" type="button" onclick="openFeedbackModal()" class="gestor-only ml-auto hidden relative items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 shadow-sm hover:border-blue-300 hover:text-blue-700" title="Feedbacks e sugestões recebidos">
+                    <i class="ph ph-bell-ringing text-xl"></i>
+                    <span class="hidden sm:inline">Ouvidoria</span>
+                    <span id="management-feedback-count" class="hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-center text-[10px] font-black text-white">0</span>
+                </button>
             </div>
 
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
@@ -3281,51 +3365,150 @@
 
         </header>
 
-        <div id="content-viewport" class="flex-1 overflow-y-auto p-4 md:p-8 relative operational-home-bg">
+        <div id="content-viewport" class="flex-1 overflow-y-auto p-4 md:p-8 relative">
             
             <section id="section-inicio" class="content-section animate-fade-in operational-home">
                 <div class="max-w-7xl mx-auto">
                     <header class="home-command-header">
                         <div class="home-command-copy">
-                            <h2 id="home-greeting">Olá.</h2>
-                            <p id="home-date-role"></p>
+                            <span class="home-eyebrow"><i class="ph-fill ph-sparkle"></i> Hub operacional</span>
+                            <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
+                            <p id="home-date-role">Sua rotina começa aqui.</p>
+                            <blockquote>“Clareza na prioridade. Excelência na execução.”</blockquote>
                         </div>
+                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-human-mascot-home.png" alt=""></div>
+                        <div class="home-focus-pill"><span></span> Operação ativa</div>
                     </header>
 
-                    <nav class="home-accesses" aria-label="Acessos principais">
-                        <a href="#section-perfil" data-home-route="perfil" class="home-access">
-                            <i class="ph ph-user-circle" aria-hidden="true"></i>
-                            <span><strong>Meu Workspace</strong><small>Seu espaço de trabalho.</small></span>
-                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-                        </a>
-                        <a href="#section-avisos" data-home-route="avisos" class="home-access">
-                            <i class="ph ph-megaphone" aria-hidden="true"></i>
-                            <span><strong>Central de vendas</strong><small>Acompanhe suas oportunidades.</small></span>
-                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-                        </a>
-                        <a href="#section-drive" data-home-route="drive" class="home-access">
-                            <i class="ph ph-folder" aria-hidden="true"></i>
-                            <span><strong>Drive</strong><small>Acesse arquivos e documentos.</small></span>
-                            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-                        </a>
-                    </nav>
-
-                    <section id="home-presentation" class="home-presentation" aria-labelledby="home-presentation-title">
-                        <img class="home-presentation-cover" src="./assets/platino-os/page-1.webp" width="1600" height="900" decoding="async" alt="Capa da apresentação Platino OS">
-                        <div class="home-presentation-copy">
-                            <h3 id="home-presentation-title">Conheça a Platino</h3>
-                            <p>Nossa equipe, nossos setores e a forma como trabalhamos.</p>
-                            <div class="home-presentation-actions">
-                                <button type="button" id="open-presentation" aria-haspopup="dialog">Ver apresentação</button>
-                                <a href="./assets/platino-os/platino-os.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF original</a>
+                    <div class="home-bento-grid">
+                        <article class="home-bento-card home-quick-actions">
+                            <div class="home-card-heading">
+                                <div><span>Acesso inteligente</span><h3>Ações rápidas</h3></div>
+                                <i class="ph ph-lightning"></i>
                             </div>
-                        </div>
-                    </section>
+                            <div class="quick-action-grid">
+                                <button type="button" onclick="navigateTo('documentos')"><i class="ph ph-file-plus"></i><span>Gerar documento<small>Modelos padronizados</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('sdr')"><i class="ph ph-user-plus"></i><span>Novo atendimento<small>Abrir jornada do lead</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('drive')"><i class="ph ph-folder-open"></i><span>Acessar Drive<small>Pastas e documentos</small></span><i class="ph ph-arrow-up-right"></i></button>
+                                <button type="button" onclick="navigateTo('treinamentos')"><i class="ph ph-graduation-cap"></i><span>Treinamentos<small>Base operacional</small></span><i class="ph ph-arrow-up-right"></i></button>
+                            </div>
+                        </article>
+
+                        <article class="home-bento-card home-workflow-card">
+                            <div class="home-card-heading">
+                                <div><span>Minha rotina</span><h3>Prioridades de hoje</h3></div>
+                                <strong id="home-task-progress">0/0</strong>
+                            </div>
+                            <form class="home-task-form" onsubmit="addHomeTask(event)">
+                                <input id="home-task-input" type="text" maxlength="100" placeholder="Adicionar uma nova tarefa..." aria-label="Nova tarefa">
+                                <button type="submit" aria-label="Adicionar tarefa"><i class="ph ph-plus"></i></button>
+                            </form>
+                            <div id="home-task-list" class="home-task-list"></div>
+                        </article>
+
+                        <article class="home-bento-card home-kpi-card home-kpi-primary">
+                            <div class="home-kpi-icon"><i class="ph ph-check-circle"></i></div>
+                            <span>Concluídas hoje</span>
+                            <strong id="home-kpi-completed">0</strong>
+                            <small id="home-kpi-completed-label">Comece pela prioridade mais importante</small>
+                        </article>
+
+                        <article class="home-bento-card home-kpi-card">
+                            <div class="home-kpi-icon"><i class="ph ph-clock-countdown"></i></div>
+                            <span>Em andamento</span>
+                            <strong id="home-kpi-pending">0</strong>
+                            <small>Tarefas aguardando conclusão</small>
+                        </article>
+
+                        <article class="home-bento-card home-kpi-card">
+                            <div class="home-kpi-icon"><i class="ph ph-chart-line-up"></i></div>
+                            <span>Taxa de execução</span>
+                            <strong id="home-kpi-rate">0%</strong>
+                            <div class="home-progress"><span id="home-kpi-rate-bar"></span></div>
+                        </article>
+
+                        <article class="home-bento-card home-next-step">
+                            <div class="home-card-heading">
+                                <div><span>Próximo passo</span><h3>Mantenha o fluxo em movimento</h3></div>
+                                <i class="ph ph-compass"></i>
+                            </div>
+                            <p id="home-next-task">Adicione sua primeira prioridade para organizar o dia.</p>
+                            <button type="button" onclick="document.getElementById('home-task-input')?.focus()">Organizar minha rotina <i class="ph ph-arrow-right"></i></button>
+                        </article>
+                    </div>
                 </div>
             </section>
 
             <section id="section-avisos" class="content-section hidden animate-fade-in">
                 <div class="max-w-7xl mx-auto">
+                    <div class="sales-community-hub">
+                        <div class="sales-community-main">
+                            <div class="sales-community-heading">
+                                <div>
+                                    <span>Conexão Platino</span>
+                                    <h2>Nosso time, nossa força</h2>
+                                    <p>Conheça quem transforma desafios em resultados todos os dias.</p>
+                                </div>
+                                <div class="gestor-only hidden flex-wrap gap-2">
+                                    <button onclick="openAvisosEditor('birthdays')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-cake"></i> Aniversários</button>
+                                    <button onclick="openAvisosEditor('carrossel')" class="metal-button inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold"><i class="ph ph-images-square"></i> Equipe</button>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <button type="button" id="team-carousel-prev" class="team-nav-button prev touch-manipulation" aria-label="Voltar no carrossel da equipe"><i class="ph ph-caret-left text-lg"></i></button>
+                                <div id="team-carousel" class="team-carousel manual-scroll"><div id="team-track" class="team-track"></div></div>
+                                <button type="button" id="team-carousel-next" class="team-nav-button next touch-manipulation" aria-label="Avançar no carrossel da equipe"><i class="ph ph-caret-right text-lg"></i></button>
+                            </div>
+                        </div>
+                        <aside class="sales-team-wall">
+                            <div class="sales-wall-title"><span>Mural da equipe</span><i class="ph ph-confetti"></i></div>
+                            <div id="sales-birthday-wall" class="sales-wall-item"><i class="ph-fill ph-cake"></i><div><small>Aniversariantes do mês</small><strong>Confira os destaques no carrossel</strong></div></div>
+                            <div class="sales-wall-item"><i class="ph ph-user-circle-plus"></i><div><small>Novos integrantes</small><strong>Boas-vindas ao time Platino</strong></div></div>
+                            <div class="sales-wall-item"><i class="ph-fill ph-trophy"></i><div><small>Destaques em vendas</small><strong>Acompanhe o ranking abaixo</strong></div></div>
+                        </aside>
+                    </div>
+
+                    <div class="mb-6 rounded-3xl bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 p-5 md:p-6 text-white shadow-xl shadow-slate-200/70 border border-blue-900/30 relative overflow-hidden">
+                        <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/20 blur-3xl"></div>
+                        <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-blue-300 via-slate-100 to-blue-600"></div>
+                        <div class="relative grid min-h-10 grid-cols-1 items-center gap-4 text-center lg:grid-cols-[1fr_auto_1fr]">
+                            <div class="hidden lg:block"></div>
+                            <div class="min-w-0">
+                                <h2 class="relative z-10 text-2xl font-bold sm:text-3xl">Placar operacional</h2>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-end">
+                                <button onclick="openAvisosEditor('highlight')" class="gestor-only metal-button hidden items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors shadow-sm whitespace-nowrap">
+                                    <i class="ph ph-pencil-simple text-lg"></i> Editar destaque
+                                </button>
+                                <span id="avisos-updated-tag" class="hidden bg-white/10 text-blue-100 border border-white/10 px-3 py-1 rounded-full text-xs font-semibold items-center gap-1 whitespace-nowrap">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="avisos-highlight-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 p-6 rounded-2xl shadow-md text-white relative overflow-hidden mb-6 border border-blue-900/30">
+                        <i class="ph-fill ph-star text-[150px] text-yellow-400/10 absolute -bottom-8 right-3"></i>
+                        <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-yellow-300 to-orange-500"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-5">
+                            <div class="w-20 h-20 flex-shrink-0 rounded-full overflow-hidden border border-slate-100/70 bg-blue-950 shadow-[0_0_28px_rgba(226,232,240,0.28)]">
+                                <img id="avisos-highlight-photo" src="assets/equipe/beatriz-garcia.png" alt="Foto de Beatriz Garcia" class="h-full w-full object-cover object-center">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <i class="ph-fill ph-star text-yellow-400 text-xl"></i>
+                                    <h3 id="avisos-highlight-title" class="metallic-title font-bold text-lg">Destaque da Operação</h3>
+                                    <span id="avisos-highlight-badge" class="bg-yellow-400/15 text-yellow-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-yellow-400/30">Equipe Platino</span>
+                                </div>
+                                <p id="avisos-highlight-name" class="font-black text-2xl">Equipe Platino</p>
+                                <p id="avisos-highlight-subtitle" class="text-slate-300 text-sm mt-1">Resultados do mês em atualização.</p>
+                            </div>
+                            <div class="md:text-right">
+                                    <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">Resultado alcançado</p>
+                                    <p id="avisos-highlight-value" class="silver-value text-3xl md:text-4xl font-black mt-1">—</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="ranking-arena" class="performance-arena rounded-3xl p-5 md:p-6 text-white mb-6 overflow-hidden relative">
                         <div class="absolute right-0 top-0 h-40 w-40 bg-white-0/20 rounded-full blur-3xl"></div>
                         <div class="absolute -left-10 bottom-0 h-40 w-40 bg-yellow-300/10 rounded-full blur-3xl"></div>
@@ -3353,12 +3536,9 @@
                             </div>
                         </div>
 
-                        <div id="ranking-sync-status" class="ranking-sync-status relative rounded-xl border border-blue-900/30 bg-slate-950/70 p-4 mb-5" role="status" aria-live="polite" hidden>
-                            <span class="ranking-sync-indicator text-blue-200" aria-hidden="true"><span></span><span></span><span></span></span>
-                            <div class="min-w-0">
-                                <p class="text-sm font-bold text-white">Sincronizando os resultados...</p>
-                                <p id="ranking-sync-message" class="ranking-sync-message text-xs text-slate-300 mt-1">Já vendeu hoje? 👀</p>
-                            </div>
+                        <div class="ranking-skeleton absolute inset-x-5 top-44 z-20 grid-cols-1 gap-3 md:grid-cols-2" aria-hidden="true">
+                            <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
+                            <div class="rounded-2xl border border-white/10 bg-slate-950/90 p-5"><div class="skeleton-line h-5 w-1/3 rounded"></div><div class="skeleton-line mt-4 h-14 rounded-xl"></div><div class="skeleton-line mt-3 h-14 rounded-xl"></div></div>
                         </div>
 
                         <div data-ranking-content class="relative grid grid-cols-1 lg:grid-cols-3 gap-3 mb-5">
@@ -3448,6 +3628,76 @@
                             </div>
                         </div>
 
+                        <div class="sales-support-grid relative mt-5">
+                                <div class="ranking-board sales-history-card rounded-2xl p-4">
+                                    <div class="mb-3 flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Histórico retroativo</p>
+                                            <h4 class="metallic-title text-lg font-black">Resultado anterior</h4>
+                                        </div>
+                                        <i class="ph ph-clock-counter-clockwise text-2xl text-blue-200/70"></i>
+                                    </div>
+                                    <div id="ranking-history-panel" class="space-y-3"></div>
+                                </div>
+                                <div class="ranking-board sales-chargeback-card rounded-2xl p-4 border-rose-300/20 bg-rose-950/20">
+                                    <div class="mb-3 flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-100/70">Chargebacks</p>
+                                            <h4 class="metallic-title text-lg font-black">Controle do mês</h4>
+                                        </div>
+                                        <button onclick="openAvisosEditor('chargebacks')" class="gestor-only hidden items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs font-bold text-rose-100 transition hover:bg-white/15">
+                                            <i class="ph ph-pencil-simple"></i> Editar
+                                        </button>
+                                    </div>
+                                    <div class="mb-3 rounded-xl border border-white/10 bg-white/5 p-3">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <span class="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-100/60">Quantidade no mês</span>
+                                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/20 text-rose-100 border border-rose-300/30">
+                                                <i class="ph ph-credit-card text-xl"></i>
+                                            </span>
+                                        </div>
+                                        <p id="avisos-chargebacks-count" class="mt-2 text-4xl font-black money-value">0</p>
+                                        <div class="mt-1 flex flex-wrap items-center justify-between gap-2 text-xs text-rose-100/70">
+                                            <span>charges registrados</span>
+                                            <span id="avisos-chargebacks-total" class="money-value font-black text-rose-100">R$ 0,00</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-rose-100/60">Charges recentes</p>
+                                        <div id="avisos-chargebacks-list" class="grid max-h-[28rem] gap-2 overflow-y-auto pr-1"></div>
+                                    </div>
+                                </div>
+                            <div class="ranking-board sales-hunters-card rounded-2xl p-4">
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Origem dos clientes</p>
+                                        <h4 class="metallic-title text-lg font-black">Hunters</h4>
+                                        <p id="ranking-hunters-source" class="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-200">HUNTER DO MÊS ATUAL</p>
+                                    </div>
+                                    <i class="ph ph-binoculars text-2xl text-blue-200/70"></i>
+                                </div>
+                                <div id="ranking-hunters-stats" class="hunter-compact-stats mb-3 grid gap-2"></div>
+                                <div id="ranking-hunters-list" class="space-y-2"></div>
+                            </div>
+
+                            <div id="sales-timeline-panel" class="ranking-board sales-timeline-card rounded-2xl p-4">
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-200/70">Atualizações da operação</p>
+                                    </div>
+                                    <div class="flex flex-wrap items-center justify-end gap-2">
+                                        <button type="button" id="timeline-add-message-button" class="timeline-editor-only hidden items-center gap-1.5 rounded-xl border border-blue-300/20 bg-blue-400/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-100 hover:bg-blue-400/20">
+                                            <i class="ph ph-plus-circle text-sm"></i> Adicionar frase
+                                        </button>
+                                        <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-200">
+                                            <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span> Ao vivo
+                                        </span>
+                                    </div>
+                                </div>
+                                <p id="sales-timeline-status" class="mb-3 text-[11px] text-blue-100/60">Conectando à planilha...</p>
+                                <div id="sales-timeline-list" class="space-y-3 pr-1" tabindex="0" role="feed" aria-label="Atualizações da operação"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -3459,11 +3709,146 @@
                             <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2"><i class="ph ph-target text-green-500"></i> Setor Comercial</h2>
                             <p class="text-slate-500 mt-1">Manual de conversão, abordagens e fechamento de contratos.</p>
                         </div>
-                        <a href="script-comercial.pdf" target="_blank" rel="noopener noreferrer" download="script-comercial.pdf" class="metal-button inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm">
+                        <a href="script-comercial.pdf" target="_blank" rel="noopener noreferrer" download="script-comercial.pdf" class="metal-button hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg font-medium shadow-sm">
                             <i class="ph ph-file-pdf text-red-500 text-lg"></i> Baixar Script Completo
                         </a>
                     </div>
                     <div class="space-y-4" id="com-accordions"></div>
+                </div>
+            </section>
+
+            <section id="section-documentos" class="content-section hidden animate-fade-in">
+                <div class="documents-central max-w-7xl mx-auto">
+                    <header class="documents-hero">
+                        <div class="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                            <div class="documents-hero-copy">
+                                <img src="assets/pdf-document-icon.png" alt="Ícone PDF do Gerador Inteligente de PDF" class="documents-pdf-hero-icon">
+                                <div>
+                                    <p class="documents-eyebrow">Documentos padronizados</p>
+                                    <h2 class="mt-2 text-3xl font-black tracking-tight text-white md:text-4xl">Gerador Inteligente de PDF</h2>
+                                    <p class="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100/70 md:text-base">Localize um modelo, preencha os dados e gere o documento padronizado.</p>
+                                </div>
+                            </div>
+                            <div class="documents-hero-aside">
+                                <span class="documents-local-indicator">Processamento seguro no navegador</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="documents-content">
+                        <div id="documents-library-view">
+                            <div class="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                                <div>
+                                    <p class="documents-category-label">Escolha do modelo</p>
+                                    <h3 class="mt-1 text-xl font-black text-white">Biblioteca de modelos</h3>
+                                    <p class="mt-1 text-sm text-blue-100/60">Pesquise ou filtre para encontrar rapidamente o documento.</p>
+                                </div>
+                                <span id="adm-template-count" class="text-xs font-bold text-blue-200/60">Modelos disponíveis</span>
+                            </div>
+
+                            <div class="documents-library-toolbar">
+                                <div class="documents-search">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                    <input id="adm-template-search" name="document_library_search" type="search" placeholder="Pesquisar por nome ou finalidade..." autocomplete="off" autocapitalize="none" spellcheck="false" oninput="renderAdmTemplateOptions(this.value)">
+                                    <button id="documents-search-clear" type="button" class="documents-search-clear hidden" onclick="clearDocumentsSearch()" aria-label="Limpar busca de documentos" title="Limpar busca">×</button>
+                                </div>
+                                <div id="documents-category-filters" class="documents-categories" aria-label="Filtrar modelos por categoria"></div>
+                            </div>
+
+                            <select id="adm-pdf-template" onchange="renderAdmPdfFields()" class="sr-only" aria-hidden="true" tabindex="-1">
+                                <option value="chargeback">Chargeback</option>
+                                <option value="citacao-intimacao-extrajudicial">Citação / Intimação Extrajudicial</option>
+                                <option value="citacao-judicial">Citação Judicial</option>
+                                <option value="contestacao-taxas-email">Contestação de Taxas por E-mail</option>
+                                <option value="declaracao-ausencia-carteira-trabalho">Declaração de Ausência de Carteira de Trabalho</option>
+                                <option value="declaracao-hipossuficiencia">Declaração de Hipossuficiência</option>
+                                <option value="declaracao-isencao-irpf">Declaração de Isenção de IRPF</option>
+                                <option value="notificacao-extrajudicial-platino">Notificação Extrajudicial Platino</option>
+                                <option value="procuracao-dra-juliane">Procuração Dra. Juliane</option>
+                                <option value="termo-ciencia-autorizacao-seguranca">Termo de Ciência e Autorização de Segurança</option>
+                                <option value="termo-compromisso-pagamento">Termo de Compromisso de Pagamento</option>
+                                <option value="modelo-termo-compromisso-pagamento">Modelo - Termo de Compromisso de Pagamento</option>
+                                <option value="recibo-prestacao-servicos">Recibo de Prestação de Serviços</option>
+                                <option value="termo-recompra">Termo de Recompra</option>
+                                <option value="relatorio-negociacao-acordo-homologacao">Relatório de Negociação — Acordo de Homologação</option>
+                                <option value="certidao-diligencia-contato-profissional">Certidão de Diligência e Contato Profissional</option>
+                                <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
+                                <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
+                            </select>
+                            <div id="adm-template-options" class="documents-template-options" role="listbox" aria-label="Modelos de documentos disponíveis"></div>
+                        </div>
+
+                        <div id="documents-form-view" class="hidden">
+                            <div class="documents-form-shell">
+                                <div class="documents-form-header">
+                                    <div class="flex min-w-0 items-center gap-3">
+                                        <button type="button" class="documents-back-button flex-shrink-0" onclick="showDocumentsLibrary()">
+                                            <span aria-hidden="true">←</span> <span class="hidden sm:inline">Biblioteca</span>
+                                        </button>
+                                        <span class="documents-template-icon flex-shrink-0"><img src="assets/document-library-icon-3d.png" alt="" class="documents-template-icon-image" aria-hidden="true"></span>
+                                        <div class="min-w-0">
+                                            <p id="adm-template-picker-category" class="documents-category-label">Documento</p>
+                                            <h3 id="adm-template-picker-title" class="mt-1 truncate text-lg font-black text-white">Modelo selecionado</h3>
+                                            <p id="adm-template-picker-description" class="mt-0.5 truncate text-xs text-blue-100/60">Preencha os dados solicitados.</p>
+                                        </div>
+                                    </div>
+                                    <div class="documents-progress">
+                                        <div class="flex items-center justify-between gap-4 text-[11px] font-bold text-blue-100/70">
+                                            <span id="documents-step-label">Etapa 1 de 1</span>
+                                            <span id="documents-progress-value">0%</span>
+                                        </div>
+                                        <div class="documents-progress-track"><div id="documents-progress-fill" class="documents-progress-fill"></div></div>
+                                    </div>
+                                </div>
+
+                                <form id="adm-pdf-form" onsubmit="event.preventDefault(); generateAdmPdf(event)">
+                                    <div class="documents-form-body">
+                                        <div class="documents-meta-grid">
+                                            <label class="documents-field-label">
+                                                Data do documento
+                                                <input id="adm-pdf-date" type="date" class="adm-pdf-control px-4 py-3 text-sm font-semibold">
+                                            </label>
+                                            <label class="documents-field-label">
+                                                Número do documento
+                                                <input id="adm-pdf-number" type="text" readonly class="adm-pdf-control px-4 py-3 text-sm font-black">
+                                            </label>
+                                            <label class="documents-field-label">
+                                                Nome do arquivo
+                                                <div class="relative">
+                                                    <input id="adm-pdf-file-name" type="text" readonly class="adm-pdf-control w-full px-4 py-3 pr-14 text-sm font-semibold" title="O arquivo será nomeado automaticamente com documento, cliente e número.">
+                                                    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">.pdf</span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div id="adm-pdf-fields"></div>
+                                    </div>
+
+                                    <div class="documents-form-footer">
+                                        <div>
+                                            <p id="adm-pdf-status" class="min-h-5 text-xs font-semibold text-blue-100/60"></p>
+                                            <p id="documents-draft-status" class="documents-draft-status"></p>
+                                        </div>
+                                        <div class="documents-step-actions">
+                                            <button id="documents-clear-button" type="button" onclick="resetAdmPdfForm()" class="documents-secondary-button">
+                                                Limpar
+                                            </button>
+                                            <button id="documents-prev-button" type="button" onclick="changeDocumentsStep(-1)" class="documents-secondary-button">
+                                                <span aria-hidden="true">←</span> Voltar
+                                            </button>
+                                            <button id="documents-next-button" type="button" onclick="changeDocumentsStep(1)" class="documents-primary-button">
+                                                Avançar <span aria-hidden="true">→</span>
+                                            </button>
+                                            <button id="adm-pdf-generate-button" type="button" onclick="generateAdmPdf(event)" class="documents-generate-button hidden">
+                                                <span>Gerar documento</span>
+                                            </button>
+                                            <div id="adm-pdf-download-links" class="hidden contents" aria-label="Downloads de PDF disponíveis"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -3500,7 +3885,7 @@
                             <div class="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500">
                                 <i class="ph ph-users-three text-base"></i> Gestão de pessoas
                             </div>
-                            <h2 class="text-2xl font-bold text-slate-800">Recursos Humanos</h2>
+                            <h2 class="text-2xl font-bold text-slate-800">Dashboard de Recursos Humanos</h2>
                             <p class="text-slate-500 mt-1">Ocorrências, talentos, desenvolvimento e rotinas trabalhistas em um só lugar.</p>
                         </div>
                         <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
@@ -4019,6 +4404,29 @@
                         </button>
                     </div>
 
+                    <div class="relative min-h-[430px] md:min-h-[330px] mb-8 overflow-hidden rounded-3xl border border-blue-500/20 bg-slate-950 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
+                        <img
+                            src="assets/representante-treinamentos.png"
+                            alt="Representante virtual da Platino apresentando os treinamentos"
+                            class="absolute bottom-0 right-0 h-[58%] w-full object-contain object-bottom md:inset-y-0 md:h-full md:w-[64%] md:object-right"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/80 to-transparent md:bg-gradient-to-r md:from-slate-950 md:via-slate-950/85 md:to-transparent"></div>
+                        <div class="relative z-10 flex min-h-[430px] max-w-xl flex-col justify-start p-7 pt-8 md:min-h-[330px] md:justify-center md:p-10">
+                            <span class="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                                <i class="ph ph-graduation-cap text-base"></i> Trilha de aprendizagem
+                            </span>
+                            <h3 class="text-2xl font-bold leading-tight text-white md:text-3xl">Olá! Vamos avançar juntos?</h3>
+                            <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100 md:text-base">
+                                Consulte os materiais oficiais e siga os processos da Platino com mais segurança, clareza e padrão de atendimento.
+                            </p>
+                            <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium text-blue-100">
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Comercial</span>
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Administrativo</span>
+                                <span class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5">Jurídico</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <div class="training-card flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 sm:col-span-2">
                             <div>
@@ -4199,9 +4607,9 @@
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                             <div class="mb-6 rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 p-5 text-white shadow-lg">
                                 <div class="flex flex-col gap-5 md:flex-row md:items-center">
-                                    <div class="monthly-goal-summary relative mx-auto h-32 w-32 shrink-0 md:mx-0">
+                                    <div class="relative mx-auto h-32 w-32 shrink-0 md:mx-0">
                                         <svg class="h-32 w-32 -rotate-90" viewBox="0 0 120 120" aria-label="Progresso da meta mensal">
-                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#E7E9EE" stroke-width="10"></circle>
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10"></circle>
                                             <circle id="monthly-goal-ring" cx="60" cy="60" r="50" fill="none" stroke="#38bdf8" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" class="transition-all duration-700"></circle>
                                         </svg>
                                         <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -4221,7 +4629,6 @@
                                             <input id="monthly-goal-input" type="text" inputmode="decimal" autocomplete="off" class="pointer-events-auto min-w-0 flex-1 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm text-white outline-none placeholder:text-blue-200/50 focus:border-sky-300" placeholder="Ex.: 50.000,00">
                                             <button id="monthly-goal-save" type="button" class="pointer-events-auto relative z-30 rounded-xl bg-sky-500 px-4 py-2 text-sm font-bold text-white hover:bg-sky-400 disabled:cursor-wait disabled:opacity-60">Salvar meta</button>
                                         </form>
-                                        <div class="monthly-goal-progress mt-3" role="progressbar" aria-label="Cumprimento da meta mensal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="monthly-goal-bar"></div></div>
                                         <p id="monthly-goal-status" class="mt-2 min-h-5 text-xs text-blue-100/70"></p>
                                     </div>
                                 </div>
@@ -4341,6 +4748,12 @@
 
                     <div class="suggestion-shell rounded-3xl p-6 md:p-8">
                         <form id="feedback-form" onsubmit="submitFeedback(event)" class="space-y-6">
+                            <div class="flex flex-wrap gap-2 mb-1">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-blue-100 text-blue-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Feedback</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Sugestões</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-amber-100 text-amber-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Reclamações</span>
+                                <span class="inline-flex items-center gap-2 rounded-full bg-green-100 text-green-700 text-[11px] font-semibold uppercase px-3 py-1 tracking-[0.18em]">Elogios</span>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-semibold text-slate-700 mb-2">Qual o tipo de mensagem?</label>
@@ -4409,6 +4822,12 @@
                     </div>
                 </div>
             </section>
+            
+        <div class="security-footer flex flex-wrap justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.16em] mt-5 mb-4">
+            <span class="rounded-full px-3 py-2"><i class="ph ph-shield-check"></i> Ambiente Seguro</span>
+            <span class="rounded-full px-3 py-2"><i class="ph ph-lock-key"></i> Acesso Restrito</span>
+            <span class="rounded-full px-3 py-2"><i class="ph ph-database"></i> Dados Protegidos</span>
+        </div>
         </div>
     </main>
 
@@ -4714,9 +5133,6 @@
     </div>
 
     <div id="chat-widget" class="fixed bottom-10 right-6 z-50 flex flex-col items-end">
-        <button id="chat-toggle-btn" type="button" onclick="toggleChat()" aria-label="Abrir assistente Platino" aria-controls="chat-window" aria-expanded="false" title="Assistente Platino">
-            <img src="assets/platino-infohub-icon.png" alt="" class="mascot-avatar">
-        </button>
         <div id="chat-window" inert aria-hidden="true" class="bg-white w-[350px] h-[500px] rounded-2xl shadow-2xl border border-slate-200 mb-4 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-right scale-0 opacity-0">
             <div class="bg-gradient-to-r from-blue-700 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
@@ -4753,6 +5169,9 @@
             </div>
         </div>
 
+        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-blue-950 hover:bg-blue-900 text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 transition-all group overflow-hidden border border-blue-200/40">
+            <img src="assets/platino-infohub-icon.png" alt="Abrir chat" class="mascot-avatar">
+        </button>
     </div>
 
     </div>
@@ -5567,6 +5986,7 @@
             sdr: 'SDR',
             rh: 'RH',
             financeiro: 'Financeiro',
+            documentos: 'Documentos',
             drive: 'Drive',
             treinamentos: 'Treinamentos',
             perfil: 'Perfil e Tarefas',
@@ -5623,7 +6043,6 @@
             });
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('nav-active');
-                btn.removeAttribute('aria-current');
             });
 
             const section = document.getElementById(`section-${sectionId}`);
@@ -5637,7 +6056,6 @@
             const activeBtn = document.getElementById(`nav-${sectionId}`);
             if(activeBtn) {
                 activeBtn.classList.add('nav-active');
-                activeBtn.setAttribute('aria-current', 'page');
             }
 
             const pageTitle = document.getElementById('page-title');
@@ -5677,24 +6095,23 @@
         // GERAR INTERFACE DOS FLUXOS (ACCORDIONS)
         function renderAccordions(containerId, data) {
             const container = document.getElementById(containerId);
-            container.innerHTML = data.map((item, index) => `
+            container.innerHTML = data.map(item => `
                 <div class="dark-panel border border-white/10 rounded-xl overflow-hidden shadow-sm transition-colors">
-                    <div class="procedure-heading">
-                    <button type="button" id="toggle-${item.id}" aria-expanded="false" aria-controls="content-${item.id}" onclick="toggleAccordion('${item.id}')" class="procedure-toggle w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors focus:outline-none">
-                        <div class="procedure-title">
-                            <span class="procedure-number">${String(index + 1).padStart(2, '0')}</span>
+                    <button onclick="toggleAccordion('${item.id}')" class="w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors focus:outline-none">
+                        <div class="flex items-center gap-3">
                             <span class="icon-pill flex h-10 w-10 items-center justify-center rounded-xl text-xl">
                                 <i class="ph ${item.icon}"></i>
                             </span>
-                            <h3 class="font-semibold text-white text-lg">${item.title.replace(/^\d+\.\s*/, '')}</h3>
+                            <h3 class="font-semibold text-white text-lg">${item.title}</h3>
                         </div>
                         <div class="flex items-center gap-4">
+                            <span onclick="event.stopPropagation(); openFlowEditor('${item.id}')" class="gestor-only hidden text-blue-400 hover:text-blue-300 text-sm font-medium items-center gap-1 transition-colors px-2 py-1 rounded hover:bg-white/10">
+                                <i class="ph ph-pencil-simple"></i> Editar
+                            </span>
                             <i id="icon-${item.id}" class="ph ph-caret-down text-blue-300 transition-transform"></i>
                         </div>
                     </button>
-                    <button type="button" onclick="openFlowEditor('${item.id}')" class="procedure-edit gestor-only hidden items-center gap-1" aria-label="Editar ${item.title}"><i class="ph ph-pencil-simple" aria-hidden="true"></i> Editar</button>
-                    </div>
-                    <div id="content-${item.id}" role="region" aria-labelledby="toggle-${item.id}" class="accordion-content bg-transparent px-5">
+                    <div id="content-${item.id}" class="accordion-content bg-transparent px-5">
                         <ul class="space-y-3 pb-4 pt-2 border-t border-white/10">
                             ${item.tasks.map(task => `
                                 <li class="flex items-start gap-3 text-sm text-blue-100">
@@ -5714,18 +6131,15 @@
             const content = document.getElementById(`content-${id}`);
             const icon = document.getElementById(`icon-${id}`);
             
-            document.getElementById(`toggle-${id}`)?.setAttribute('aria-expanded', String(!content.classList.contains('open')));
             if (content.classList.contains('open')) {
                 content.classList.remove('open');
                 icon.style.transform = 'rotate(0deg)';
             } else {
                 document.querySelectorAll('.accordion-content').forEach(el => el.classList.remove('open'));
                 document.querySelectorAll('.ph-caret-down').forEach(el => el.style.transform = 'rotate(0deg)');
-                document.querySelectorAll('.procedure-toggle').forEach(el => el.setAttribute('aria-expanded', 'false'));
                 
                 content.classList.add('open');
                 icon.style.transform = 'rotate(180deg)';
-                document.getElementById(`toggle-${id}`)?.setAttribute('aria-expanded', 'true');
             }
         }
 
@@ -6007,6 +6421,7 @@
                 'Central de vendas: ranking, resultados, equipe, aniversariantes, hunters e linha do tempo de vendas.',
                 'Comercial: manual de conversão, atendimento, fechamento e contratos.',
                 'Administrativo: GOV.BR, conferência e rotinas administrativas.',
+                'Documentos: biblioteca de modelos, formulários e geração local de documentos em PDF.',
                 'Jurídico: fluxo processual, citações, audiências e homologação.',
                 'RH: comunicados, frequência, treinamentos, calendário e solicitações.',
                 'Treinamentos: biblioteca oficial de PDFs, manuais e conteúdos interativos.',
@@ -6195,20 +6610,79 @@
             }, 300);
         }
 
-        // Saudação da página inicial.
+        // HUB OPERACIONAL — ROTINA PESSOAL
+        const HOME_TASKS_KEY = 'platinoHomeTasksV1';
+
+        function loadHomeTasks() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(HOME_TASKS_KEY) || '[]');
+                return Array.isArray(saved) ? saved : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveHomeTasks(tasks) {
+            localStorage.setItem(HOME_TASKS_KEY, JSON.stringify(tasks.slice(0, 30)));
+        }
+
+        function addHomeTask(event) {
+            event?.preventDefault();
+            const input = document.getElementById('home-task-input');
+            const text = String(input?.value || '').trim();
+            if (!text) return;
+            const tasks = loadHomeTasks();
+            tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text, done: false, createdAt: new Date().toISOString() });
+            saveHomeTasks(tasks);
+            input.value = '';
+            renderHomeOperationalHub();
+        }
+
+        function toggleHomeTask(id) {
+            const tasks = loadHomeTasks().map(task => task.id === id ? { ...task, done: !task.done, completedAt: !task.done ? new Date().toISOString() : null } : task);
+            saveHomeTasks(tasks);
+            renderHomeOperationalHub();
+        }
+
+        function removeHomeTask(id) {
+            saveHomeTasks(loadHomeTasks().filter(task => task.id !== id));
+            renderHomeOperationalHub();
+        }
+
         function renderHomeOperationalHub() {
             const greeting = document.getElementById('home-greeting');
             if (!greeting) return;
             const now = new Date();
             const hour = Number(new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', hour12: false, timeZone: 'America/Sao_Paulo' }).format(now));
             const period = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
-            const rawName = document.getElementById('user-name')?.textContent?.trim() || window.firebaseAuthUser?.displayName || '';
-            const name = rawName.includes('@') ? window.firebaseAuthUser?.displayName || '' : rawName;
-            const firstName = name.split(/\s+/)[0];
+            const rawName = document.getElementById('user-name')?.textContent?.trim() || window.firebaseAuthUser?.displayName || 'Equipe Platino';
+            const firstName = rawName.split(/\s+/)[0];
+            const role = document.getElementById('user-role')?.textContent?.trim() || 'Operação Platino';
             const dateLabel = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(now);
-            greeting.textContent = firstName ? `${period}, ${firstName}.` : `${period}.`;
-            document.getElementById('home-date-role').textContent = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
+            greeting.textContent = `${period}, ${firstName}.`;
+            document.getElementById('home-date-role').textContent = `${dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1)} • ${role}`;
 
+            const tasks = loadHomeTasks();
+            const completed = tasks.filter(task => task.done).length;
+            const pending = tasks.length - completed;
+            const rate = tasks.length ? Math.round((completed / tasks.length) * 100) : 0;
+            const list = document.getElementById('home-task-list');
+            list.innerHTML = tasks.length ? tasks.map(task => `
+                <div class="home-task-item ${task.done ? 'is-done' : ''}">
+                    <button type="button" class="home-task-check" onclick="toggleHomeTask('${escapeHtml(task.id)}')" aria-label="${task.done ? 'Reabrir' : 'Concluir'} tarefa"><i class="ph-bold ph-check"></i></button>
+                    <span>${escapeHtml(task.text)}</span>
+                    <button type="button" class="home-task-delete" onclick="removeHomeTask('${escapeHtml(task.id)}')" aria-label="Excluir tarefa"><i class="ph ph-trash"></i></button>
+                </div>`).join('') : '<div class="home-task-empty"><i class="ph ph-check-square-offset"></i><br>Seu dia está livre. Adicione uma prioridade para começar.</div>';
+
+            document.getElementById('home-task-progress').textContent = `${completed}/${tasks.length}`;
+            document.getElementById('home-kpi-completed').textContent = String(completed);
+            document.getElementById('home-kpi-pending').textContent = String(pending);
+            document.getElementById('home-kpi-rate').textContent = `${rate}%`;
+            document.getElementById('home-kpi-rate-bar').style.width = `${rate}%`;
+            document.getElementById('home-kpi-completed-label').textContent = completed ? `${completed} prioridade${completed === 1 ? '' : 's'} finalizada${completed === 1 ? '' : 's'}` : 'Comece pela prioridade mais importante';
+            document.getElementById('home-next-task').textContent = !tasks.length
+                ? 'Adicione sua primeira prioridade para organizar o dia.'
+                : tasks.find(task => !task.done)?.text || 'Todas as prioridades foram concluídas. Excelente trabalho!';
         }
 
         function openSalesObjection(type) {
@@ -6244,7 +6718,6 @@
                 document.getElementById('chat-input').focus();
             }
             chatOpen = !chatOpen;
-            btn.setAttribute('aria-expanded', String(chatOpen));
         }
 
         function appendMessage(text, sender) {
@@ -6378,23 +6851,23 @@
                 juridico: 480000
             },
             teamTotals: {
-                comercial: 0,
-                juridico: 0
+                comercial: 101114.37,
+                juridico: 160012.71
             },
             comercial: [
-                { name: 'Beatriz', sold: 0, goal: 40000 },
-                { name: 'Mariana', sold: 0, goal: 30000 },
-                { name: 'Fernanda Ramos', sold: 0, goal: 30000 },
-                { name: 'Geovanna Alves Xavier', sold: 0, goal: 30000 },
-                { name: 'Karen', sold: 0, goal: 15500 },
-                { name: 'Rafaela Marcelino', sold: 0, goal: 1542.84 },
-                { name: 'Roberta', sold: 0, goal: 1303.15 },
-                { name: 'Rayane', sold: 0, goal: 3000 }
+                { name: 'Beatriz', sold: 25036.76, goal: 40000 },
+                { name: 'Mariana', sold: 24106.64, goal: 30000 },
+                { name: 'Fernanda Ramos', sold: 22002.43, goal: 30000 },
+                { name: 'Geovanna Alves Xavier', sold: 20571.90, goal: 30000 },
+                { name: 'Karen', sold: 6250.65, goal: 15500 },
+                { name: 'Rafaela Marcelino', sold: 1542.84, goal: 1542.84 },
+                { name: 'Roberta', sold: 1303.15, goal: 1303.15 },
+                { name: 'Rayane', sold: 300, goal: 3000 }
             ],
             juridico: [
-                { name: 'Janaina Rodrigues Paiva', sold: 0, goal: 150000 },
-                { name: 'Tabata Rangel de Lima', sold: 0, goal: 150000 },
-                { name: 'Elaine Aparecida dos Santos', sold: 0, goal: 80000 }
+                { name: 'Janaina Rodrigues Paiva', sold: 107687.06, goal: 150000 },
+                { name: 'Tabata Rangel de Lima', sold: 49825.65, goal: 150000 },
+                { name: 'Elaine Aparecida dos Santos', sold: 2500, goal: 80000 }
             ],
             history: [
                 { month: 'Junho', comercial: 53499.65, juridico: 188207.80, companyTotal: 241707.45, goal: 460000 }
@@ -6413,8 +6886,6 @@
         };
         let rankingSheetSyncTimer = null;
         let rankingSheetLastSignature = '';
-        let monthlyHighlightsData = null;
-        let monthlyHighlightsRequest = null;
         let salesTimelineTimer = null;
         let salesTimelineEvents = [];
         let activeRankingPeriod = 'month';
@@ -6458,60 +6929,15 @@
             return `/api/ranking-sheet?${params.toString()}`;
         }
 
-        const rankingSyncMessages = [
-            'Já vendeu hoje? 👀',
-            'Quem será que subiu no ranking? 🏆',
-            'Conferindo as metas de hoje... 🎯',
-            'Será que teve meta batida hoje? 🚀',
-            'Somando os resultados... cada contrato conta 📈',
-            'Atualizando o placar... a disputa está acirrada 🔥',
-            'Buscando as últimas vendas... 🥇',
-            'Conferindo Comercial + Jurídico... ⚡'
-        ];
-        let rankingSyncRequests = 0;
-        let rankingSyncMessageTimer = null;
-        let rankingSyncFadeTimer = null;
-
-        function clearRankingSyncTimers() {
-            clearInterval(rankingSyncMessageTimer);
-            clearTimeout(rankingSyncFadeTimer);
-            rankingSyncMessageTimer = null;
-            rankingSyncFadeTimer = null;
-        }
-
-        window.addEventListener('pagehide', clearRankingSyncTimers);
-
         function setRankingLoading(isLoading) {
-            rankingSyncRequests = Math.max(0, rankingSyncRequests + (isLoading ? 1 : -1));
-            const loading = rankingSyncRequests > 0;
             const arena = document.getElementById('ranking-arena');
-            arena?.setAttribute('aria-busy', String(loading));
-            const status = document.getElementById('ranking-sync-status');
-            const message = document.getElementById('ranking-sync-message');
-            if (status) status.hidden = !loading;
-            if (!loading) {
-                clearRankingSyncTimers();
-                message?.classList.remove('is-fading');
-                return;
-            }
-            if (!message || rankingSyncMessageTimer !== null) return;
-            let index = 0;
-            message.textContent = rankingSyncMessages[index];
-            rankingSyncMessageTimer = setInterval(() => {
-                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                if (!reducedMotion) message.classList.add('is-fading');
-                rankingSyncFadeTimer = setTimeout(() => {
-                    index = (index + 1) % rankingSyncMessages.length;
-                    message.textContent = rankingSyncMessages[index];
-                    message.classList.remove('is-fading');
-                    rankingSyncFadeTimer = null;
-                }, reducedMotion ? 0 : 220);
-            }, 2800);
+            arena?.classList.toggle('ranking-loading', isLoading);
+            arena?.setAttribute('aria-busy', isLoading ? 'true' : 'false');
         }
 
         function normalizeRankingData(value = {}, options = {}) {
             const useFallback = options.useFallback === true;
-            const isCurrentMonthData = value.monthKey === getCurrentOperationalMonthKey();
+            const isCurrentMonthData = value.monthKey === defaultRankingData.monthKey || value.source === 'googleSheets';
             const sourceValue = isCurrentMonthData || useFallback ? value : defaultRankingData;
             const normalizeList = (items, fallback, sector) => {
                 const source = Array.isArray(items) && items.length
@@ -6600,10 +7026,7 @@
                 source: sourceValue.source || 'manual',
                 updatedAt: sourceValue.updatedAt || null,
                 updatedBy: sourceValue.updatedBy || 'Supervisão',
-                sourceHealth: sourceValue.sourceHealth || null,
-                period: sourceValue.period || '',
-                periodStart: sourceValue.periodStart || '',
-                periodEnd: sourceValue.periodEnd || ''
+                sourceHealth: sourceValue.sourceHealth || null
             };
 
             rankingSectors.forEach(sector => {
@@ -6761,7 +7184,6 @@
         }
 
         function renderRanking() {
-            renderAvisosHighlights();
             renderRankingDepartment('comercial', rankingData.comercial, {
                 color: 'emerald',
                 icon: 'ph-target',
@@ -7354,7 +7776,6 @@
 
         window.applyRemoteRanking = function (remoteData) {
             if (!remoteData?.comercial || !remoteData?.juridico) return;
-            if (remoteData.monthKey !== getCurrentOperationalMonthKey()) return;
 
             // Firebase/Firestore deve ter prioridade sobre localStorage e planilha.
             // Antes, quando o navegador estava com source = 'googleSheets', o sistema ignorava
@@ -7373,7 +7794,6 @@
             if (window.ENABLE_RANKING_SHEET_SYNC === false) return;
             if (window.location.protocol === 'file:') return;
 
-
             setRankingLoading(true);
             try {
                 const response = await fetch(getRankingSheetRequestUrl(), { cache: 'no-store' });
@@ -7382,9 +7802,6 @@
 
                 const sheetData = await response.json();
                 if (sheetData?.enabled === false) return;
-                if (sheetData.monthKey !== getCurrentOperationalMonthKey()) {
-                    throw new Error('A planilha retornou dados de outro mes.');
-                }
 
                 const normalized = normalizeRankingData({
                     ...sheetData,
@@ -7392,6 +7809,9 @@
                     updatedAt: sheetData.updatedAt || new Date().toISOString(),
                     updatedBy: 'Google Sheets'
                 });
+                if (!normalized.comercial.length && !normalized.juridico.length) {
+                    throw new Error(`A aba ${sheetData?.sourceHealth?.ranking?.sheet || 'mensal'} não retornou resultados`);
+                }
 
                 const signature = JSON.stringify({
                     comercial: normalized.comercial,
@@ -7440,7 +7860,6 @@
         });
 
         function stopRankingSheetSync() {
-            clearRankingSyncTimers();
             if (!rankingSheetSyncTimer) return;
             clearInterval(rankingSheetSyncTimer);
             rankingSheetSyncTimer = null;
@@ -7556,7 +7975,7 @@
             return birthdays.find(person => isSamePersonName(person.name, name));
         }
 
-      const AVISOS_HIGHLIGHT_VERSION = '2026-08-mariana-janaina';
+      const AVISOS_HIGHLIGHT_VERSION = '2026-07-beatriz-garcia';
       const AVISOS_CHARGEBACK_VERSION = '2026-08-chargebacks-v1';
 
       const defaultAvisosData = {
@@ -7575,15 +7994,13 @@
                 { category: 'Procedimentos', title: 'Novos procedimentos operacionais publicados.', text: 'Consulte os fluxos revisados antes de iniciar novas tratativas. Atente-se para não cometer erros.' }
             ],
             highlight: {
-                title: 'DESTAQUES DO MÊS DE AGOSTO',
-                name: 'Mariana Guijo e Janaina Rodrigues Paiva',
-                subtitle: 'Destaques Comercial e Jurídico de agosto',
-                value: '',
+                title: 'Destaque do mês de julho',
+                name: 'Beatriz Garcia',
+                subtitle: 'Ultrapassou sua meta em seu primeiro mês.',
+                value: 'R$ 21.078,50',
                 badge: 'Meta superada',
-                people: [
-                    { name: 'Mariana Guijo', sector: 'comercial', team: 'COMERCIAL', initials: 'MG' },
-                    { name: 'Janaina Rodrigues Paiva', sector: 'juridico', team: 'JURÍDICO', initials: 'JP', photo: 'assets/equipe/janaina-rodrigues-paiva.jpeg', photoPosition: 'center 24%' }
-                ]
+                photo: 'assets/equipe/beatriz-garcia.png',
+                photoPosition: 'center center'
             },
             week: {
                 contracts: '0',
@@ -7762,11 +8179,6 @@
             renderAvisos();
         }
 
-        function renderAvisosHighlights() {
-            document.getElementById('avisos-highlight-card')?.remove();
-            document.getElementById('avisos-highlights')?.remove();
-        }
-
         function renderAvisos() {
             const setTextIfExists = (id, value) => {
                 const element = document.getElementById(id);
@@ -7776,7 +8188,17 @@
             setTextIfExists('avisos-main-title', avisosData.main.title);
             setTextIfExists('avisos-main-text', avisosData.main.text);
             setTextIfExists('avisos-main-meta', avisosData.main.meta);
-            renderAvisosHighlights();
+            document.getElementById('avisos-highlight-title').innerText = avisosData.highlight.title;
+            document.getElementById('avisos-highlight-name').innerText = avisosData.highlight.name;
+            document.getElementById('avisos-highlight-subtitle').innerText = avisosData.highlight.subtitle;
+            document.getElementById('avisos-highlight-value').innerText = avisosData.highlight.value;
+            document.getElementById('avisos-highlight-badge').innerText = avisosData.highlight.badge;
+            const highlightPhoto = document.getElementById('avisos-highlight-photo');
+            if (highlightPhoto) {
+                highlightPhoto.src = avisosData.highlight.photo || defaultAvisosData.highlight.photo;
+                highlightPhoto.alt = `Foto de ${avisosData.highlight.name || defaultAvisosData.highlight.name}`;
+                highlightPhoto.style.objectPosition = avisosData.highlight.photoPosition || defaultAvisosData.highlight.photoPosition || 'center center';
+            }
             setTextIfExists('avisos-week-contracts', avisosData.week.contracts);
             setTextIfExists('avisos-week-laudos', avisosData.week.laudos);
             setTextIfExists('avisos-week-distratos', avisosData.week.distratos);
@@ -7787,8 +8209,17 @@
             renderTeamCarousel();
             renderSalesTimeline();
 
+            const updatedTag = document.getElementById('avisos-updated-tag');
             if (avisosData.updatedAt) {
+                const date = new Date(avisosData.updatedAt);
+                updatedTag.innerHTML = `<i class="ph ph-clock"></i> ${date.toLocaleDateString('pt-BR')} às ${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+                updatedTag.classList.remove('hidden');
+                updatedTag.classList.add('flex');
                 setTextIfExists('avisos-main-meta', `${avisosData.main.meta} • Publicado por ${avisosData.updatedBy}`);
+            } else {
+                updatedTag.innerHTML = '';
+                updatedTag.classList.add('hidden');
+                updatedTag.classList.remove('flex');
             }
         }
 
@@ -7863,6 +8294,16 @@
             const team = avisosData.team && avisosData.team.length ? avisosData.team : defaultAvisosData.team;
             const doubled = [...team, ...team]; // Duplicado para fazer o loop infinito
             const currentMonth = getCurrentBirthdayMonth();
+            const birthdayNames = team.filter(person => {
+                const birthday = formatBirthdayDate(person.birthday || findBirthdayForName(person.name, avisosData.birthdays)?.date || '');
+                return getBirthdayMonth(birthday) === currentMonth;
+            }).map(person => formatPersonName(person.name));
+            const birthdayWall = document.getElementById('sales-birthday-wall');
+            if (birthdayWall) {
+                birthdayWall.querySelector('strong').textContent = birthdayNames.length
+                    ? birthdayNames.join(', ')
+                    : 'Nenhum aniversário cadastrado neste mês';
+            }
             container.dataset.originalCount = String(team.length);
             teamCarouselManualIndex = 0;
             container.style.transition = '';
@@ -8295,6 +8736,12 @@
             getFlowCollections().forEach(collection => renderAccordions(collection.containerId, collection.data));
             loadRhNotes();
             renderRhMiniMural();
+            applyAdmTemplateNames();
+            syncAdmTemplatePicker();
+            if (!document.getElementById('adm-template-picker-panel')?.hidden) {
+                renderAdmTemplateOptions(document.getElementById('adm-template-search')?.value || '');
+            }
+
             const rhStatus = document.getElementById('rh-notes-status');
             if (rhStatus) {
                 rhStatus.innerText = 'Sincronizado para todos os logins';
@@ -10182,14 +10629,7 @@
             }
         }
 
-        function isAdmPdfBlob(blob) {
-            return blob instanceof Blob && blob.size > 4 && /^application\/pdf(?:;|$)/i.test(blob.type || '');
-        }
-
         function downloadAdmPdfBlob(blob, fileName) {
-            if (!isAdmPdfBlob(blob)) {
-                throw new Error('O gerador não retornou um arquivo PDF válido. Tente novamente.');
-            }
             if (typeof navigator.msSaveOrOpenBlob === 'function') {
                 navigator.msSaveOrOpenBlob(blob, fileName);
                 return;
@@ -10198,17 +10638,6 @@
             if (!links) throw new Error('O botão de download do PDF não está disponível. Atualize a página.');
             const url = URL.createObjectURL(blob);
             admPdfDownloadUrls.push(url);
-            const isAppleMobile = /iP(?:ad|hone|od)/i.test(navigator.userAgent)
-                || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-            // Safari no iPhone/iPad ignora com frequência o atributo download para blob URLs.
-            // Abrir o PDF permite que o usuário use a opção nativa "Salvar em Arquivos".
-            if (isAppleMobile) {
-                window.location.assign(url);
-                setTimeout(() => URL.revokeObjectURL(url), 5 * 60 * 1000);
-                return;
-            }
-
             const link = document.createElement('a');
             link.href = url;
             link.download = fileName;
@@ -10254,9 +10683,6 @@
                     throw new Error(payload?.detail || payload?.error || `O servidor respondeu HTTP ${response.status}.`);
                 }
                 blob = await response.blob();
-                if (!isAdmPdfBlob(blob)) {
-                    throw new Error('O servidor respondeu sem um PDF válido. Atualize a página e tente novamente.');
-                }
             }
 
             await assertValidAdmPdfBlob(blob);
@@ -10481,6 +10907,9 @@
             renderAccordions('com-accordions', fluxosComercial);
             renderAccordions('adm-accordions', fluxosAdmin);
             renderAccordions('jur-accordions', fluxosJuridico);
+            resetAdmPdfForm();
+            renderAdmTemplateOptions();
+            checkAdmPdfGeneratorAvailability();
             loadRhNotes();
             renderRhMiniMural();
             
@@ -10627,9 +11056,6 @@
         const result = Number(ranking.result) || 0;
         const rawPercent = amount > 0 ? (result / amount) * 100 : 0;
         const percent = Math.max(0, Math.min(rawPercent, 100));
-        const progressBar = document.getElementById("monthly-goal-bar");
-        progressBar.style.width = `${percent}%`;
-        progressBar.parentElement.setAttribute("aria-valuenow", String(Math.round(percent)));
         const ring = document.getElementById("monthly-goal-ring");
         ring.style.strokeDashoffset = String(314.16 * (1 - percent / 100));
         document.getElementById("monthly-goal-percent").textContent = `${Math.round(rawPercent)}%`;
@@ -11273,7 +11699,6 @@
 
       loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (loginButton.disabled) return;
         const email = loginEmail.value.trim();
         const password = loginPassword.value.trim();
 
@@ -11293,8 +11718,7 @@
 
         try {
           loginButton.disabled = true;
-          loginButton.textContent = "Entrando…";
-          loginButton.setAttribute("aria-busy", "true");
+          loginButton.textContent = "Entrando...";
           loginAuthorizedForPage = true;
           await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
@@ -11304,7 +11728,6 @@
         } finally {
           loginButton.disabled = false;
           loginButton.textContent = "Entrar";
-          loginButton.removeAttribute("aria-busy");
         }
       });
 

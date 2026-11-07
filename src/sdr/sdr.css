@@ -1,4 +1,3 @@
-@layer platino-legacy {
 #section-sdr {
   --sdr-navy: #123a59;
   --sdr-ocean: #0878bd;
@@ -89,14 +88,14 @@
   text-transform: uppercase;
 }
 
-#section-sdr .sdr-command-hero .sdr-title {
+.sdr-command-hero .sdr-title {
   color: #fff;
   font-size: clamp(1.55rem, 3vw, 2.25rem);
   letter-spacing: -0.035em;
 }
 
 .sdr-command-hero .sdr-title span { color: #dbeafe; font-weight: 720; }
-#section-sdr .sdr-command-hero .sdr-subtitle { max-width: 46rem; color: #d6e5f4; line-height: 1.6; }
+.sdr-command-hero .sdr-subtitle { max-width: 46rem; color: #d6e5f4; line-height: 1.6; }
 
 .sdr-command-status {
   display: inline-flex;
@@ -926,5 +925,4 @@ button.sdr-portfolio-metric:hover,
   .sdr-document-option > button { grid-column: 1 / -1; width: 100%; }
   .sdr-metric { min-height: 3.9rem; }
   .sdr-result-grid { grid-template-columns: 1fr; }
-}
 }

@@ -21,7 +21,6 @@ import { gerarRelatorioAtualizacaoProcessoPdf } from "./dynamicPdf/relatorioAtua
 import { gerarLaudoPericialContabilPdf } from "./dynamicPdf/laudoPericialContabilPdf.js";
 import { gerarTermoCienciaSegurancaPdfComAssets } from "./dynamicPdf/termoCienciaSegurancaPdf.js";
 import { gerarTermoCompromissoPagamentoPdf } from "./dynamicPdf/termoCompromissoPagamentoPdf.js";
-import { textoSeguroParaPdf } from "./pdfHelpers.js";
 
 const ASSET_URLS = {
   "assinatura-manuscrita-rafael.png": new URL("../../modelos/assinatura-manuscrita-rafael.png", import.meta.url),
@@ -40,18 +39,7 @@ const ASSET_URLS = {
 };
 
 function texto(valor) {
-  return textoSeguroParaPdf(valor).trim();
-}
-
-function sanitizarDadosPdf(valor) {
-  if (typeof valor === "string") return textoSeguroParaPdf(valor);
-  if (Array.isArray(valor)) return valor.map(sanitizarDadosPdf);
-  if (valor && Object.getPrototypeOf(valor) === Object.prototype) {
-    return Object.fromEntries(
-      Object.entries(valor).map(([chave, item]) => [chave, sanitizarDadosPdf(item)]),
-    );
-  }
-  return valor;
+  return String(valor ?? "").trim();
 }
 
 function separarLocal(valor) {
@@ -175,7 +163,6 @@ function extrairResumoProcessual(resumo) {
 }
 
 export async function gerarPdfDinamico(templateKey, data = {}) {
-  data = sanitizarDadosPdf(data);
   const extraido = extrairResumoProcessual(data.resumoProcesso);
   const dadosRelatorio = Object.fromEntries(
     Object.keys({ ...extraido, ...data }).map((chave) => [chave, texto(data[chave]) || texto(extraido[chave])]),

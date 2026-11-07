@@ -7,4 +7,3 @@ firebase-service-account.json
 
 .vercel
 .env*
-/tmp/layout-qa/

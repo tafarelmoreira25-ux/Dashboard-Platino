@@ -28,10 +28,10 @@ assert.match(
   /amount: parseRankingValue\(item\?\.amount \?\? item\?\.value \?\? item\?\.valor \?\? ''\)/,
   'A normalização deve preservar o valor de cada chargeback.'
 );
-assert.doesNotMatch(
+assert.match(
   html,
-  /class="ranking-board sales-chargeback-card|id="avisos-highlight-card"/,
-  'Os cards de chargebacks e destaque do m?s devem permanecer removidos.'
+  /avisos-chargebacks-total/,
+  'A Central de Vendas deve exibir o total financeiro dos chargebacks.'
 );
 assert.match(
   html,
