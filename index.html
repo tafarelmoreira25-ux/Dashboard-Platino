@@ -3159,6 +3159,52 @@
             }
         }
 
+        /* Refinamento restrito à aba Início. */
+        body:has(#section-inicio:not(.hidden)) #page-title { visibility:hidden; }
+        #section-inicio .home-command-header {
+            min-height:0; padding:clamp(1.35rem,3vw,2rem); border-color:rgba(148,163,184,.24);
+            border-radius:1.35rem; box-shadow:0 12px 30px rgba(2,8,23,.18);
+        }
+        #section-inicio .home-command-header::before,
+        #section-inicio .home-command-header::after { content:none; }
+        #section-inicio .home-command-copy { max-width:100%; }
+        #section-inicio .home-command-copy h2 { text-shadow:none; }
+        #section-inicio .home-bento-card {
+            padding:1.2rem; border-color:rgba(148,163,184,.22); border-radius:1.2rem;
+            box-shadow:0 10px 24px rgba(2,8,23,.16);
+        }
+        #section-inicio .home-bento-card::after { content:none; }
+        #section-inicio .home-bento-card:hover { transform:translateY(-1px); border-color:rgba(147,197,253,.42); box-shadow:0 13px 28px rgba(2,8,23,.2); }
+        #section-inicio .home-card-heading { align-items:center; gap:.75rem; margin-bottom:.9rem; }
+        #section-inicio .home-card-heading h3 { font-size:1.06rem; text-shadow:none; }
+        #section-inicio .home-card-heading>i { font-size:1.3rem; }
+        #section-inicio .home-kpi-icon,
+        #section-inicio .quick-action-grid button>i:first-child { border-color:rgba(147,197,253,.2); box-shadow:none; }
+        #section-inicio .quick-action-grid button { gap:.65rem; padding:.72rem .8rem; border-radius:.85rem; }
+        #section-inicio .quick-action-grid button:hover { box-shadow:none; }
+        #section-inicio :is(.quick-action-grid button,.home-task-form button,.home-task-check,.home-task-delete,.home-next-step button,.home-ranking-link):focus-visible { outline:2px solid #93c5fd !important; outline-offset:2px; }
+        #section-inicio .home-task-form input,
+        #section-inicio .home-task-form button,
+        #section-inicio .home-task-item { border-radius:.8rem; }
+        #section-inicio .home-task-item { padding:.65rem .72rem; }
+        #section-inicio .home-kpi-card strong { text-shadow:none; }
+        #section-inicio .home-ranking-link {
+            display:flex; align-items:center; gap:.75rem; margin-top:1rem; padding:.8rem .9rem;
+            border:1px solid rgba(147,197,253,.22); border-radius:.85rem; color:#e8eef8;
+            background:rgba(147,197,253,.07); text-align:left; text-decoration:none;
+        }
+        #section-inicio .home-ranking-link:hover { border-color:rgba(147,197,253,.5); background:rgba(147,197,253,.12); }
+        #section-inicio .home-ranking-link>i:first-child { flex:none; color:#93c5fd; font-size:1.35rem; }
+        #section-inicio .home-ranking-link span { min-width:0; flex:1; font-size:.78rem; font-weight:700; }
+        #section-inicio .home-ranking-link small { display:block; margin-top:.15rem; color:#a9bad4; font-size:.68rem; font-weight:500; }
+        #section-inicio .home-ranking-link strong { color:#bfdbfe; font-size:.7rem; font-weight:800; white-space:nowrap; }
+        #section-inicio .home-ranking-link>i:last-child { color:#93c5fd; font-size:1rem; }
+        @media (max-width: 560px) {
+            #section-inicio .home-ranking-link { flex-wrap:wrap; }
+            #section-inicio .home-ranking-link span { flex-basis:calc(100% - 3rem); }
+            #section-inicio .home-ranking-link strong { margin-left:2.1rem; }
+        }
+
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
 </head>
@@ -3374,10 +3420,7 @@
                             <span class="home-eyebrow"><i class="ph-fill ph-sparkle"></i> Hub operacional</span>
                             <h2 id="home-greeting">Bom dia, equipe Platino.</h2>
                             <p id="home-date-role">Sua rotina começa aqui.</p>
-                            <blockquote>“Clareza na prioridade. Excelência na execução.”</blockquote>
                         </div>
-                        <div class="home-command-mark" aria-hidden="true"><img src="assets/platino-human-mascot-home.png" alt=""></div>
-                        <div class="home-focus-pill"><span></span> Operação ativa</div>
                     </header>
 
                     <div class="home-bento-grid">
@@ -3392,6 +3435,12 @@
                                 <button type="button" onclick="navigateTo('drive')"><i class="ph ph-folder-open"></i><span>Acessar Drive<small>Pastas e documentos</small></span><i class="ph ph-arrow-up-right"></i></button>
                                 <button type="button" onclick="navigateTo('treinamentos')"><i class="ph ph-graduation-cap"></i><span>Treinamentos<small>Base operacional</small></span><i class="ph ph-arrow-up-right"></i></button>
                             </div>
+                            <button type="button" class="home-ranking-link" onclick="navigateTo('avisos')" aria-label="Ver ranking completo na Central de Vendas">
+                                <i class="ph ph-trophy" aria-hidden="true"></i>
+                                <span>Ranking de Vendas<small>Acompanhe as equipes Comercial e Jurídico.</small></span>
+                                <strong>Ver ranking completo</strong>
+                                <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+                            </button>
                         </article>
 
                         <article class="home-bento-card home-workflow-card">
