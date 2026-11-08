@@ -29,6 +29,14 @@ assert.equal(result.teamTotals.comercial, 600);
 assert.equal(result.teamTotals.juridico, 900);
 assert.equal(result.metrics.comercialContracts, 3);
 
+const exportRows = csv.split('\n');
+exportRows[5] = exportRows[5].replace('"Michelli"', '""').replace('"Julia"', '""');
+const csvWithoutVisualNames = rowsFromPlatinoSideBySideCsv(exportRows.join('\n'));
+assert.deepEqual(csvWithoutVisualNames.rows.filter(item => item.sector === 'comercial').map(item => item.name),
+  ['Michele', 'Geovana', 'Geovanna'],
+  'O CSV que omite nomes visuais do resumo deve preservar todos os lançamentos datados.');
+assert.equal(csvWithoutVisualNames.teamTotals.comercial, 600);
+
 const nextYear = new Date().getFullYear() + 1;
 const oldMonth = rowsFromPlatinoSideBySideCsv(csv, {
   key: 'month', start: new Date(nextYear, 10, 1), end: new Date(nextYear, 10, 30)

@@ -758,6 +758,7 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       const key = normalizeNameKey(canonicalName);
       const current = grouped.get(key) || {
         name: canonicalName,
+        rawName: name,
         sold: 0,
         goal: 0,
         gap: 0
@@ -769,8 +770,10 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     const liveTransactionsTotal = roundMoney(Array.from(grouped.values())
       .reduce((sum, item) => sum + (item.sold || 0), 0));
     const namedSummaryEntries = summary.entries.filter(item => isRankingPersonName(item.name));
+    const unnamedMatches = matchUnnamedSummaryEntries(grouped, summary.entries);
     const useDatedRanking = period.key === "month" && sections.length === 2
-      && grouped.size > 0 && namedSummaryEntries.length > 0
+      && grouped.size > 0
+      && (namedSummaryEntries.length > 0 || unnamedMatches.length < grouped.size)
       && summary.team.total > 0
       && Math.abs(summary.team.total - liveTransactionsTotal) < 0.02;
     let rankingItems;
@@ -782,7 +785,8 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       // O quadro parcial não deve ocultar lançamentos quando o total oficial confere.
       rankingItems = Array.from(grouped.values()).map(daily => {
         const entry = namedSummaryEntries.find(item => normalizeNameKey(item.name) === normalizeNameKey(daily.name));
-        const goal = entry?.goal || daily.goal || 0;
+        const unnamed = unnamedMatches.find(item => normalizeNameKey(item.name) === normalizeNameKey(daily.name));
+        const goal = entry?.goal || unnamed?.goal || daily.goal || 0;
         return { ...daily, goal, gap: Math.max(goal - daily.sold, 0) };
       });
     } else if (period.key === "month" && namedSummaryEntries.length) {
@@ -833,7 +837,7 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
     rankingItems.forEach(item => {
       rows.push({
         sector: section.sector,
-        name: useDatedRanking ? item.name : getCanonicalConsultantName(item.name, section.sector),
+        name: useDatedRanking ? (item.rawName || item.name) : getCanonicalConsultantName(item.name, section.sector),
         official: true,
         sold: item.sold,
         goal: item.goal || 0,
