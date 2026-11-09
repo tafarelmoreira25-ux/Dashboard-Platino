@@ -47,31 +47,20 @@
 .sdr-command-hero {
   position: relative;
   display: flex;
-  min-height: 10.5rem;
+  min-height: 7rem;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 1rem;
   overflow: visible;
-  padding: clamp(1.35rem, 3vw, 2.1rem);
+  padding: clamp(1rem, 2vw, 1.35rem);
   border: 1px solid rgba(148, 163, 184, 0.32);
   border-radius: 1.35rem;
-  background:
-    radial-gradient(circle at 86% 0%, rgba(96, 165, 250, 0.2), transparent 34%),
-    linear-gradient(120deg, #071a35 0%, #10335f 58%, #314350 100%);
-  box-shadow: 0 22px 45px rgba(15, 36, 61, 0.17);
+  background: #123a59;
+  box-shadow: 0 6px 18px rgba(18, 58, 89, 0.1);
 }
 
 .sdr-command-hero::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 20rem;
-  height: 9rem;
-  border: 1px solid rgba(191, 219, 254, 0.13);
-  border-radius: 50%;
-  transform: rotate(-10deg);
-  pointer-events: none;
+  content: none;
 }
 
 .sdr-command-copy,
@@ -137,7 +126,7 @@
   transition: transform 160ms ease, background 160ms ease;
 }
 
-.sdr-hero-primary { color: #0b2b54; background: linear-gradient(135deg, #fff1ab, #f4cf63); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2); }
+.sdr-hero-primary { color: #0b2b54; background: #f5d978; }
 .sdr-hero-secondary { border: 1px solid rgba(255, 255, 255, 0.34); color: #f8fbff; background: rgba(255, 255, 255, 0.11); backdrop-filter: blur(10px); }
 .sdr-hero-primary:hover,.sdr-hero-secondary:hover { transform: translateY(-1px); }
 
@@ -170,9 +159,9 @@
 }
 
 .sdr-primary {
-  background: linear-gradient(135deg, var(--sdr-ocean-dark), var(--sdr-ocean));
+  background: var(--sdr-ocean-dark);
   color: #fff;
-  box-shadow: 0 10px 20px rgba(8, 120, 189, 0.2);
+  box-shadow: none;
 }
 
 .sdr-primary:hover { transform: translateY(-1px); }
@@ -312,10 +301,10 @@
   overflow: hidden;
   padding: 0.85rem 0.95rem;
   border: 1px solid #d7e0e7;
-  border-top: 3px solid #7aa2ca;
+  border-top: 2px solid #7aa2ca;
   border-radius: 0.9rem;
   background: #fff;
-  box-shadow: 0 12px 28px rgba(18, 58, 89, 0.06);
+  box-shadow: 0 3px 12px rgba(18, 58, 89, 0.05);
   text-align: left;
   transition: 160ms ease;
 }
@@ -344,7 +333,7 @@ button.sdr-portfolio-metric:hover,
 .sdr-conversion-metric {
   border-color: #d0ad48;
   border-top-color: #f2cb55;
-  background: linear-gradient(145deg, #174a82, #0d325c);
+  background: #174a82;
 }
 
 .sdr-conversion-metric > span,
@@ -415,6 +404,18 @@ button.sdr-portfolio-metric:hover,
   gap: 1rem;
 }
 
+#section-sdr [hidden] { display: none !important; }
+.sdr-layout.sdr-single-panel { grid-template-columns: minmax(0, 1fr); }
+.sdr-layout:not(.sdr-single-panel) { grid-template-columns: minmax(0, 1fr); }
+.sdr-page-size-label { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.5rem; color: var(--sdr-muted); font-size: 0.72rem; }
+.sdr-page-size-label select { width: 5rem; min-height: 2.3rem; }
+.sdr-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.8rem; }
+.sdr-page-summary { flex: 1 1 100%; color: var(--sdr-muted); font-size: 0.72rem; }
+.sdr-pagination button { min-height: 2rem; padding: 0.3rem 0.55rem; border: 1px solid var(--sdr-line); border-radius: 0.5rem; color: var(--sdr-navy); background: #fff; font-size: 0.72rem; }
+.sdr-pagination button[aria-current="page"] { background: #eaf6fc; border-color: #72b5d9; font-weight: 800; }
+.sdr-pagination button:disabled { opacity: 0.45; cursor: not-allowed; }
+.sdr-pagination button:focus-visible, .sdr-view-tab:focus-visible { outline: 2px solid var(--sdr-ocean); outline-offset: 2px; }
+
 .sdr-queue {
   min-width: 0;
   border-radius: 1.2rem;
@@ -461,10 +462,9 @@ button.sdr-portfolio-metric:hover,
 
 .sdr-lead-list {
   display: grid;
-  max-height: 64vh;
   gap: 0.55rem;
   margin-top: 0.85rem;
-  overflow: auto;
+  overflow: visible;
 }
 
 .sdr-lead-card {
@@ -882,9 +882,9 @@ button.sdr-portfolio-metric:hover,
 
 @media (min-width: 1180px) {
   .sdr-metrics-primary { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .sdr-layout { grid-template-columns: minmax(19rem, 0.68fr) minmax(0, 1.62fr); }
-  .sdr-queue { position: sticky; top: 5.6rem; max-height: calc(100vh - 6.5rem); overflow: hidden; }
-  .sdr-lead-list { max-height: calc(100vh - 15rem); }
+  .sdr-layout { grid-template-columns: minmax(0, 1fr); }
+  .sdr-queue { position: static; max-height: none; overflow: visible; }
+  .sdr-lead-list { max-height: none; }
   .sdr-workspace { display: flex; height: min(48rem, calc(100vh - 6.5rem)); flex-direction: column; }
   .sdr-form-body { overflow-y: auto; scrollbar-gutter: stable; }
 }

@@ -3,9 +3,12 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  getCountFromServer,
   limit,
   onSnapshot,
   query,
+  startAfter,
   serverTimestamp,
   setDoc,
   where
@@ -63,8 +66,10 @@ const DEFAULT_BANKS = Object.freeze([
 const state = {
   app: null, auth: null, db: null, user: null, profile: null, role: "collaborator",
   leads: [], notifications: [], banks: [...DEFAULT_BANKS], rules: [], assignableUsers: [], events: [], comments: [],
-  activeId: "", step: 0, view: "sdr", metricFilter: "", saveTimer: 0,
-  stop: [], detailStops: [], booted: false, duplicatePayload: null
+  activeId: "", activeLead: null, step: 0, view: "sdr", section: "portfolio", metricFilter: "", saveTimer: 0,
+  page: 1, pageSize: 10, pageCursors: [null], pageTotal: null, pageHasNext: false, listRequest: 0,
+  filters: { search: "", status: "", classification: "" }, metricCounts: {},
+  stop: [], detailStops: [], stopList: null, booted: false, duplicatePayload: null
 };
 
 const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -80,7 +85,7 @@ const setPath = (object, path, value) => {
 };
 
 function currentLead() {
-  return state.leads.find(item => item.id === state.activeId) || loadLocalDraft() || null;
+  return state.leads.find(item => item.id === state.activeId) || state.activeLead || loadLocalDraft() || null;
 }
 
 function resolveRole(profile = {}, user = state.user) {
@@ -127,6 +132,13 @@ async function api(action, payload = {}) {
   if (response.status === 401) response = await send(true);
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || "Não foi possível concluir a operação.");
+  if (["lead.create", "lead.assign", "lead.accept", "lead.return", "lead.outcome", "consent.record", "analysis.run", "document.register", "contact.record"].includes(action)) {
+    queueMicrotask(() => {
+      state.metricCounts = {};
+      if (["portfolio", "returns"].includes(state.section)) loadLeadPage();
+      loadIndicatorCounts(state.section === "indicators");
+    });
+  }
   return result;
 }
 
@@ -172,10 +184,10 @@ function mount() {
     <div class="sdr-shell space-y-4">
       <header class="sdr-command-hero">
         <div class="sdr-command-copy">
-          <span class="sdr-command-eyebrow">Carteira de prospecção</span>
-          <h2 class="sdr-title">Central Hunter <span>· ${esc(hunterDisplayName())}</span></h2>
+          <span class="sdr-command-eyebrow">Qualificação comercial</span>
+          <h2 class="sdr-title">SDR <span>· ${esc(hunterDisplayName())}</span></h2>
           <p class="sdr-subtitle">Cadastre clientes potenciais, construa o perfil, gere a análise e encaminhe oportunidades qualificadas.</p>
-          <div class="sdr-command-status"><span></span> Carteira sincronizada em tempo real</div>
+          <div class="sdr-command-status"><span></span> Carteira atualizada ao navegar e ao salvar</div>
         </div>
         <div class="sdr-command-actions">
           <div class="sdr-notifications">
@@ -187,16 +199,19 @@ function mount() {
         </div>
       </header>
       <nav id="sdr-view-tabs" class="sdr-view-tabs"></nav>
+      <nav id="sdr-section-tabs" class="sdr-view-tabs" aria-label="Seções da SDR"></nav>
       <section id="sdr-metrics" class="sdr-metrics"></section>
       <div id="sdr-layout" class="sdr-layout">
         <aside class="sdr-panel sdr-queue">
-          <div class="flex items-center justify-between gap-2"><h3 class="font-black text-slate-800">Fila de leads</h3><span id="sdr-list-count" class="text-xs font-bold text-slate-500">0</span></div>
+          <div class="flex items-center justify-between gap-2"><h3 id="sdr-list-heading" class="font-black text-slate-800">Carteira de leads</h3><span id="sdr-list-count" class="text-xs font-bold text-slate-500">0</span></div>
           <div class="sdr-filters mt-3">
             <input id="sdr-search" class="sdr-control col-span-2" type="search" placeholder="Nome, telefone, CPF, protocolo, banco...">
             <select id="sdr-status-filter" class="sdr-control"><option value="">Todos os status</option></select>
             <select id="sdr-class-filter" class="sdr-control"><option value="">Todas as classificações</option><option>Quente</option><option>Morno</option><option>Frio</option></select>
+            <label class="sdr-page-size-label">Por página <select id="sdr-page-size" class="sdr-control"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></label>
           </div>
           <div id="sdr-lead-list" class="sdr-lead-list"></div>
+          <nav id="sdr-pagination" class="sdr-pagination" aria-label="Páginas de leads"></nav>
         </aside>
         <main id="sdr-workspace" class="sdr-panel sdr-workspace"></main>
       </div>
@@ -204,26 +219,29 @@ function mount() {
     <div id="sdr-modal" class="sdr-modal" hidden><div id="sdr-modal-card" class="sdr-modal-card"></div></div>`;
   bindShell();
   renderViewTabs();
+  renderSectionTabs();
   renderStatusFilter();
   renderAll();
 }
 
 function bindShell() {
   document.getElementById("sdr-new-button").onclick = () => startNew();
-  document.getElementById("sdr-refresh-button").onclick = () => {
-    subscribeLeads();
-    showToast("Carteira atualizada e sincronização renovada.", "success");
+  document.getElementById("sdr-refresh-button").onclick = async () => {
+    await loadLeadPage();
+    await loadIndicatorCounts(state.section === "indicators");
+    showToast("Carteira atualizada.", "success");
   };
-  document.getElementById("sdr-search").oninput = renderQueue;
-  document.getElementById("sdr-status-filter").onchange = renderQueue;
-  document.getElementById("sdr-class-filter").onchange = renderQueue;
+  document.getElementById("sdr-search").oninput = debounceFilters;
+  document.getElementById("sdr-status-filter").onchange = resetListFilters;
+  document.getElementById("sdr-class-filter").onchange = resetListFilters;
+  document.getElementById("sdr-page-size").onchange = () => { state.pageSize = Number(document.getElementById("sdr-page-size").value); resetListFilters(); };
   document.getElementById("sdr-notification-button").onclick = toggleNotifications;
   window.addEventListener("online", () => { setSaveStatus("Conexão restaurada. Sincronizando..."); flushCurrentDraft(); });
   window.addEventListener("offline", () => setSaveStatus("Sem conexão. Alterações protegidas neste dispositivo."));
 }
 
 function renderViewTabs() {
-  const tabs = [["sdr", "Central SDR"]];
+  const tabs = [["sdr", "Qualificação"]];
   if (canConsult()) tabs.push(["consultant", "Leads recebidos"]);
   if (canManage()) tabs.push(["settings", "Configurações"]);
   if (!tabs.some(([key]) => key === state.view)) state.view = tabs[0]?.[0] || "sdr";
@@ -233,9 +251,34 @@ function renderViewTabs() {
   document.querySelectorAll("[data-view]").forEach(button => button.onclick = () => {
     state.view = button.dataset.view;
     state.activeId = "";
+    state.activeLead = null;
+    state.metricCounts = {};
+    state.section = "portfolio";
     renderViewTabs();
+    renderSectionTabs();
     subscribeLeads();
     renderAll();
+  });
+}
+
+function renderSectionTabs() {
+  const sections = [["portfolio", "Carteira de leads"], ["returns", "Retornos"], ["indicators", "Indicadores"], ["registration", "Cadastro e qualificação"]];
+  const nav = document.getElementById("sdr-section-tabs");
+  nav.hidden = state.view === "settings";
+  nav.innerHTML = sections.map(([key, label]) => `<button type="button" class="sdr-view-tab" data-section="${key}" aria-selected="${state.section === key}">${label}</button>`).join("");
+  nav.querySelectorAll("[data-section]").forEach(button => button.onclick = () => {
+    state.section = button.dataset.section;
+    if (state.section === "registration" || state.section === "indicators") {
+      state.stopList?.();
+      state.stopList = null;
+      state.listRequest += 1;
+    }
+    if (state.section === "returns") state.metricFilter = "returns";
+    else if (state.metricFilter === "returns") state.metricFilter = "";
+    renderSectionTabs();
+    renderAll();
+    if (state.section === "indicators") loadIndicatorCounts(true);
+    if (state.section === "returns" || state.section === "portfolio") resetListFilters();
   });
 }
 
@@ -246,7 +289,7 @@ const metrics = [
   ["hot", "Quentes"], ["warm", "Mornos"], ["cold", "Frios"], ["forwarded", "Encaminhados"],
   ["negotiation", "Em negociação"], ["approved", "Lead Aprovado"], ["rejected", "Lead Reprovado"]
 ];
-const primaryMetricKeys = new Set(["portfolio", "pending", "forwarded", "approved"]);
+const primaryMetricKeys = new Set(["portfolio", "pending", "qualifying", "forwarded"]);
 
 function metricMatch(key, lead) {
   const today = new Date().toISOString().slice(0, 10);
@@ -272,29 +315,72 @@ function metricMatch(key, lead) {
 
 function renderMetrics() {
   const metricButton = ([key, label]) => `<button type="button" class="sdr-metric" data-metric="${key}" aria-pressed="${state.metricFilter === key}">
-    <span>${esc(label)}</span><strong>${state.leads.filter(lead => metricMatch(key, lead)).length}</strong>
+    <span>${esc(label)}</span><strong>${state.metricCounts[key] ?? "—"}</strong>
   </button>`;
   const primary = [
     { key: "portfolio", label: "Clientes na carteira", icon: "ph-address-book", tone: "blue" },
     { key: "pending", label: "Pendentes", icon: "ph-clock-countdown", tone: "amber" },
-    { key: "forwarded", label: "Encaminhados", icon: "ph-paper-plane-tilt", tone: "green" },
-    { key: "approved", label: "Aprovados", icon: "ph-seal-check", tone: "rose" }
+    { key: "qualifying", label: "Em qualificação", icon: "ph-user-focus", tone: "blue" },
+    { key: "forwarded", label: "Encaminhados", icon: "ph-paper-plane-tilt", tone: "green" }
   ];
   const secondary = metrics.filter(([key]) => !primaryMetricKeys.has(key));
-  const approved = state.leads.filter(lead => metricMatch("approved", lead)).length;
-  const conversion = state.leads.length ? Math.round((approved / state.leads.length) * 100) : 0;
-  document.getElementById("sdr-metrics").innerHTML = `<div class="sdr-metrics-primary">${primary.map(item => `<button type="button" class="sdr-portfolio-metric" data-tone="${item.tone}" data-metric="${item.key}" aria-pressed="${state.metricFilter === item.key}"><span><i class="ph ${item.icon}"></i>${esc(item.label)}</span><strong>${state.leads.filter(lead => metricMatch(item.key, lead)).length}</strong></button>`).join("")}
-      <article class="sdr-portfolio-metric sdr-conversion-metric" data-tone="navy"><span><i class="ph ph-trend-up"></i>Conversão</span><strong>${conversion}%</strong><small>${approved} fechamento(s)</small></article>
+  const total = state.metricCounts.portfolio;
+  const approved = state.metricCounts.approved;
+  const conversion = total === undefined || approved === undefined ? "—" : `${total ? Math.round((approved / total) * 100) : 0}%`;
+  document.getElementById("sdr-metrics").innerHTML = `<div class="sdr-metrics-primary">${primary.map(item => `<button type="button" class="sdr-portfolio-metric" data-tone="${item.tone}" data-metric="${item.key}" aria-pressed="${state.metricFilter === item.key}"><span><i class="ph ${item.icon}"></i>${esc(item.label)}</span><strong>${state.metricCounts[item.key] ?? "—"}</strong></button>`).join("")}
+      <article class="sdr-portfolio-metric sdr-conversion-metric" data-tone="navy"><span><i class="ph ph-trend-up"></i>Conversão</span><strong>${conversion}</strong><small>${approved ?? "—"} fechamento(s)</small></article>
     </div>
-    <details class="sdr-metrics-more" ${secondary.some(([key]) => state.metricFilter === key) ? "open" : ""}>
+    ${state.section === "indicators" ? `<details class="sdr-metrics-more" open>
       <summary><span><i class="ph ph-chart-bar"></i>Mais indicadores</span><i class="ph ph-caret-down"></i></summary>
       <div class="sdr-metrics-secondary">${secondary.map(metricButton).join("")}</div>
-    </details>`;
+    </details>` : ""}`;
   document.querySelectorAll("[data-metric]").forEach(button => button.onclick = () => {
     state.metricFilter = state.metricFilter === button.dataset.metric ? "" : button.dataset.metric;
+    state.section = "portfolio";
+    renderSectionTabs();
     renderMetrics();
-    renderQueue();
+    resetListFilters();
   });
+}
+
+function leadScopeConstraints() {
+  if (canManage()) return [];
+  return [where(state.view === "consultant" ? "assignedConsultantId" : "ownerSdrId", "==", state.user.uid)];
+}
+
+function metricConstraints(key) {
+  const today = new Date().toISOString().slice(0, 10);
+  const statuses = {
+    new: ["Novo lead"], waiting: ["Aguardando contato", "Aguardando informações", "Aguardando aceite"],
+    returns: ["Retorno agendado"], qualifying: ["Em qualificação"],
+    forwarded: ["Encaminhado", "Recebido pelo consultor"], negotiation: ["Em negociação"],
+    approved: ["LEAD APROVADO"], rejected: ["LEAD REPROVADO"]
+  };
+  if (key === "pending") return [where("status", "not-in", ["Encaminhado", "Recebido pelo consultor", "LEAD APROVADO", "LEAD REPROVADO", "Arquivado"])];
+  if (key === "today") return [where("nextContactAt", ">=", today), where("nextContactAt", "<", `${today}T24`)];
+  if (key === "overdue") return [where("nextContactAt", ">", ""), where("nextContactAt", "<", today), where("status", "not-in", ["LEAD APROVADO", "LEAD REPROVADO", "Arquivado"])];
+  if (["hot", "warm", "cold"].includes(key)) return [where("commercialClassification", "==", { hot: "Quente", warm: "Morno", cold: "Frio" }[key])];
+  if (statuses[key]) return [where("status", statuses[key].length === 1 ? "==" : "in", statuses[key].length === 1 ? statuses[key][0] : statuses[key])];
+  return [];
+}
+
+async function loadIndicatorCounts(all = false) {
+  if (!state.db || !state.user) return;
+  const uid = state.user.uid;
+  const view = state.view;
+  const keys = (all ? metrics.map(([key]) => key) : ["portfolio", "pending", "qualifying", "forwarded", "approved"])
+    .filter(key => state.metricCounts[key] === undefined);
+  const ref = collection(state.db, "sdrLeads");
+  await Promise.all(keys.map(async key => {
+    try {
+      const result = await getCountFromServer(query(ref, ...leadScopeConstraints(), ...metricConstraints(key)));
+      if (state.user?.uid !== uid || state.view !== view) return;
+      state.metricCounts[key] = result.data().count;
+    } catch (error) {
+      console.warn(`Indicador SDR ${key}:`, error);
+    }
+  }));
+  if (state.user?.uid === uid && state.view === view) renderMetrics();
 }
 
 function renderStatusFilter() {
@@ -302,11 +388,8 @@ function renderStatusFilter() {
   document.getElementById("sdr-status-filter").innerHTML = `<option value="">Todos os status</option>${statuses.map(item => `<option>${item}</option>`).join("")}`;
 }
 
-function filteredLeads() {
-  const search = normalizeSearch(document.getElementById("sdr-search")?.value);
-  const status = document.getElementById("sdr-status-filter")?.value || "";
-  const classification = document.getElementById("sdr-class-filter")?.value || "";
-  return state.leads.filter(lead => {
+function leadMatchesFilters(lead) {
+  const { search, status, classification } = state.filters;
     if (state.metricFilter && !metricMatch(state.metricFilter, lead)) return false;
     if (status && lead.status !== status) return false;
     if (classification && lead.commercialClassification !== classification) return false;
@@ -315,7 +398,117 @@ function filteredLeads() {
       lead.contract?.bankName, lead.contract?.contractType
     ].join(" ")).includes(search)) return false;
     return true;
-  });
+}
+
+let filterTimer = 0;
+function debounceFilters() {
+  clearTimeout(filterTimer);
+  filterTimer = setTimeout(resetListFilters, 250);
+}
+
+function resetListFilters() {
+  clearTimeout(filterTimer);
+  state.filters = {
+    search: normalizeSearch(document.getElementById("sdr-search")?.value),
+    status: document.getElementById("sdr-status-filter")?.value || "",
+    classification: document.getElementById("sdr-class-filter")?.value || ""
+  };
+  state.page = 1;
+  state.pageCursors = [null];
+  state.pageTotal = null;
+  loadLeadPage();
+}
+
+function leadQueryConstraints() {
+  const constraints = [...leadScopeConstraints()];
+  // O filtro de status é aplicado no servidor; a busca textual sem índice é
+  // percorrida em lotes sob demanda, sem carregar a coleção na inicialização.
+  const status = state.filters.status || (state.section === "returns" ? "Retorno agendado" : "");
+  if (canManage() && status) constraints.push(where("status", "==", status));
+  else if (canManage() && state.filters.classification) constraints.push(where("commercialClassification", "==", state.filters.classification));
+  return constraints;
+}
+
+async function loadLeadPage() {
+  if (!state.db || !state.user || !root?.querySelector("#sdr-lead-list")) return;
+  state.stopList?.();
+  state.stopList = null;
+  const request = ++state.listRequest;
+  const uid = state.user.uid;
+  const ref = collection(state.db, "sdrLeads");
+  const base = leadQueryConstraints();
+  let cursor = state.pageCursors[state.page - 1] || null;
+  if (!state.filters.search && !state.filters.classification && !state.metricFilter && (!state.filters.status || canManage()) && (state.section !== "returns" || canManage())) {
+    const pageQuery = query(ref, ...base, ...(cursor ? [startAfter(cursor)] : []), limit(state.pageSize + 1));
+    state.stopList = onSnapshot(pageQuery, snapshot => {
+      if (request !== state.listRequest || state.user?.uid !== uid) return;
+      const visible = snapshot.docs.slice(0, state.pageSize);
+      state.leads = visible.map(item => ({ id: item.id, ...item.data() }));
+      state.pageHasNext = snapshot.size > state.pageSize;
+      state.pageCursors[state.page] = visible.at(-1) || cursor;
+      renderQueue();
+    }, error => showToast(`Não foi possível sincronizar a página: ${error.message}`, "error"));
+    if (state.pageTotal === null) {
+      try {
+        const count = await getCountFromServer(query(ref, ...base));
+        if (request === state.listRequest) { state.pageTotal = count.data().count; renderLeadPagination(); }
+      } catch { /* A numeração continua disponível sem a contagem total. */ }
+    }
+    return;
+  }
+  const matches = [];
+  let exhausted = false;
+  try {
+    while (matches.length <= state.pageSize && !exhausted) {
+      const batchSize = Math.min(51, state.pageSize + 1);
+      const pageQuery = query(ref, ...base, ...(cursor ? [startAfter(cursor)] : []), limit(batchSize));
+      const snapshot = await getDocs(pageQuery);
+      if (request !== state.listRequest || state.user?.uid !== uid) return;
+      for (const item of snapshot.docs) {
+        const lead = { id: item.id, ...item.data() };
+        if (leadMatchesFilters(lead)) matches.push({ lead, snapshot: item });
+        if (matches.length > state.pageSize) break;
+      }
+      cursor = snapshot.docs.at(-1) || cursor;
+      exhausted = snapshot.size < batchSize;
+      if (!snapshot.size) exhausted = true;
+    }
+    const visible = matches.slice(0, state.pageSize);
+    state.leads = visible.map(item => item.lead);
+    state.pageHasNext = matches.length > state.pageSize;
+    state.pageCursors[state.page] = visible.at(-1)?.snapshot || cursor;
+    if (state.pageTotal === null && !state.filters.search && !state.metricFilter && !state.filters.classification && (!state.filters.status || canManage())) {
+      try {
+        const count = await getCountFromServer(query(ref, ...base));
+        if (request !== state.listRequest) return;
+        state.pageTotal = count.data().count;
+      } catch { state.pageTotal = null; }
+    } else state.pageTotal = null;
+    if (request !== state.listRequest) return;
+    renderQueue();
+  } catch (error) {
+    if (request === state.listRequest) showToast(`Não foi possível consultar a carteira: ${error.message}`, "error");
+  }
+}
+
+function changeLeadPage(page) {
+  if (page < 1 || (page > state.page && !state.pageHasNext)) return;
+  if (page > state.page + 1 || !state.pageCursors[page - 1] && page > 1) return;
+  state.page = page;
+  loadLeadPage();
+  document.getElementById("sdr-list-heading")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function renderLeadPagination() {
+  const totalPages = state.pageTotal === null ? null : Math.max(1, Math.ceil(state.pageTotal / state.pageSize));
+  const pages = totalPages === null
+    ? [Math.max(1, state.page - 1), state.page, ...(state.pageHasNext ? [state.page + 1] : [])]
+    : Array.from({ length: Math.min(5, totalPages) }, (_, index) => Math.max(1, Math.min(state.page - 2, totalPages - 4)) + index).filter(page => page <= totalPages);
+  document.getElementById("sdr-pagination").innerHTML = `<span class="sdr-page-summary">Página ${state.page}${state.pageTotal === null ? "" : ` de ${totalPages} · ${state.pageTotal} registros`}</span>
+    <button type="button" data-page="${state.page - 1}" ${state.page === 1 ? "disabled" : ""} aria-label="Página anterior">Anterior</button>
+    ${[...new Set(pages)].map(page => `<button type="button" data-page="${page}" ${page === state.page ? 'aria-current="page"' : ""} ${page > state.page + 1 || page > state.page && !state.pageHasNext ? "disabled" : ""}>${page}</button>`).join("")}
+    <button type="button" data-page="${state.page + 1}" ${state.pageHasNext ? "" : "disabled"} aria-label="Próxima página">Próxima</button>`;
+  document.querySelectorAll("#sdr-pagination [data-page]").forEach(button => button.onclick = () => changeLeadPage(Number(button.dataset.page)));
 }
 
 function badgeClass(lead) {
@@ -326,8 +519,9 @@ function badgeClass(lead) {
 }
 
 function renderQueue() {
-  const items = filteredLeads();
-  document.getElementById("sdr-list-count").textContent = `${items.length} lead(s)`;
+  const items = state.leads;
+  document.getElementById("sdr-list-heading").textContent = state.section === "returns" ? "Retornos" : "Carteira de leads";
+  document.getElementById("sdr-list-count").textContent = `${items.length} nesta página`;
   document.getElementById("sdr-lead-list").innerHTML = items.length ? items.map(lead => `
     <button type="button" class="sdr-lead-card" data-lead="${esc(lead.id)}" aria-selected="${state.activeId === lead.id}">
       <div class="flex items-start justify-between gap-2"><strong class="truncate text-sm text-slate-800">${esc(lead.fullName || "Sem nome")}</strong><span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span></div>
@@ -336,14 +530,21 @@ function renderQueue() {
       <p class="mt-2 text-[10px] text-slate-400">${esc(lead.protocol || "Protocolo ao criar")}${lead.nextContactAt ? ` · Próximo: ${esc(formatDateTime(lead.nextContactAt))}` : ""}</p>
     </button>`).join("") : `<div class="sdr-empty"><span><i class="ph ph-users-three mb-2 block text-3xl"></i>Nenhum lead para os filtros selecionados.</span></div>`;
   document.querySelectorAll("[data-lead]").forEach(button => button.onclick = () => openLead(button.dataset.lead));
+  renderLeadPagination();
 }
 
 function renderAll() {
   const queue = document.querySelector(".sdr-queue");
-  if (queue) queue.style.display = "";
+  const layout = document.getElementById("sdr-layout");
+  if (queue) queue.hidden = state.view === "settings" || ["registration", "indicators"].includes(state.section);
+  document.getElementById("sdr-workspace").hidden = state.section !== "registration" && state.view !== "settings";
+  layout.classList.toggle("sdr-single-panel", state.view === "settings" || state.section === "registration");
+  layout.classList.toggle("is-editing", state.view === "settings" || state.section === "registration");
+  document.getElementById("sdr-metrics").hidden = state.view === "settings" || state.section === "registration";
   renderMetrics();
-  renderQueue();
+  if (!queue?.hidden) renderQueue();
   if (state.view === "settings") return renderSettings();
+  if (state.section !== "registration") return;
   const lead = currentLead();
   if (!lead) return renderEmptyWorkspace();
   if (state.view === "consultant") renderConsultantWorkspace(lead);
@@ -358,15 +559,29 @@ function renderEmptyWorkspace() {
 function startNew() {
   if (!canCreateLead()) return showToast("Faça login para criar um lead.", "error");
   state.activeId = "";
+  state.activeLead = null;
   state.step = 0;
+  state.section = "registration";
   saveLocalDraft(emptyLead());
+  renderSectionTabs();
   renderAll();
   document.getElementById("sdr-layout").classList.add("is-editing");
 }
 
-function openLead(id) {
+async function openLead(id) {
+  let lead = state.leads.find(item => item.id === id);
+  if (!lead) {
+    try {
+      const snapshot = await getDoc(doc(state.db, "sdrLeads", id));
+      if (!snapshot.exists() || !state.user) return showToast("Lead não encontrado ou sem acesso.", "error");
+      lead = { id: snapshot.id, ...snapshot.data() };
+    } catch (error) { return showToast(`Não foi possível abrir o lead: ${error.message}`, "error"); }
+  }
   state.activeId = id;
+  state.activeLead = lead;
   state.step = 0;
+  state.section = "registration";
+  renderSectionTabs();
   document.getElementById("sdr-layout").classList.add("is-editing");
   subscribeLeadDetails(id);
   renderAll();
@@ -701,6 +916,7 @@ function applyShortcut(button, lead) {
 
 async function moveStep(direction, lead) {
   collectWorkspace(lead);
+  const previousStatus = lead.status;
   if (direction > 0 && !validateCurrentStep(lead)) return;
   if (direction > 0 && state.step === 0 && !lead.id) {
     const created = await saveLead(lead, true);
@@ -719,6 +935,10 @@ async function moveStep(direction, lead) {
     if (!await saveLead(lead, false)) return;
   }
   state.step = Math.max(0, Math.min(state.step + direction, SDR_STEPS.length - 1));
+  if (lead.status !== previousStatus) {
+    state.metricCounts = {};
+    loadIndicatorCounts();
+  }
   saveLocalDraft(lead);
   renderSdrWorkspace(lead);
   document.getElementById("sdr-workspace").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1096,7 +1316,6 @@ async function addComment(lead) {
 
 function renderSettings() {
   document.getElementById("sdr-layout").classList.add("is-editing");
-  document.querySelector(".sdr-queue").style.display = "none";
   document.getElementById("sdr-workspace").innerHTML = `<div class="sdr-form-body"><section class="sdr-form-card"><h3>Catálogo de bancos</h3><p>${state.banks.length} instituição(ões) ativa(s).</p><div class="sdr-grid two"><input id="sdr-new-bank" class="sdr-control" placeholder="Nome da instituição"><button id="sdr-add-bank" class="sdr-primary" type="button">Adicionar banco</button></div></section><section class="sdr-form-card"><h3>Regras de cálculo</h3><p>Ao salvar, a versão anterior da mesma combinação de contrato e banco é desativada e preservada para auditoria.</p><div class="sdr-grid two mt-4">
     <input id="sdr-rule-name" class="sdr-control" placeholder="Nome da regra">
     <select id="sdr-rule-contract" class="sdr-control"><option value="">Regra geral</option>${["Financiamento de veículo", "Financiamento de imóvel", "Empréstimo pessoal", "Empréstimo consignado", "Refinanciamento", "Renegociação", "Outro"].map(item => `<option>${item}</option>`).join("")}</select>
@@ -1193,26 +1412,15 @@ function renderNotifications() {
 
 function subscribeLeads() {
   state.stop.splice(0).forEach(stop => stop?.());
+  state.stopList?.();
+  state.stopList = null;
   state.detailStops.splice(0).forEach(stop => stop?.());
   if (!state.db || !state.user) return;
-  let leadsQuery = query(collection(state.db, "sdrLeads"), limit(500));
-  if (!canManage()) {
-    leadsQuery = state.view === "consultant"
-      ? query(collection(state.db, "sdrLeads"), where("assignedConsultantId", "==", state.user.uid), limit(500))
-      : query(collection(state.db, "sdrLeads"), where("ownerSdrId", "==", state.user.uid), limit(500));
-  }
-  state.stop.push(onSnapshot(leadsQuery, snapshot => {
-    state.leads = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
-    // O autosave gera snapshots enquanto o atendente ainda está digitando.
-    // Atualizamos fila e indicadores sem reconstruir o formulário aberto, para
-    // preservar foco, blocos expandidos e posição da rolagem durante a ligação.
-    if (document.getElementById("sdr-step-form") && document.getElementById("sdr-layout")?.classList.contains("is-editing")) {
-      renderMetrics();
-      renderQueue();
-      return;
-    }
-    renderAll();
-  }, error => showToast(`Não foi possível sincronizar a fila: ${error.message}`, "error")));
+  state.page = 1;
+  state.pageCursors = [null];
+  state.pageTotal = null;
+  loadLeadPage();
+  loadIndicatorCounts();
   state.stop.push(onSnapshot(query(collection(state.db, "sdrNotifications"), where("userId", "==", state.user.uid), limit(100)), snapshot => {
     state.notifications = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
     document.getElementById("sdr-notification-count").textContent = state.notifications.filter(item => !item.readAt).length;
@@ -1250,7 +1458,9 @@ async function boot(context) {
   if (state.booted || !root || !context?.auth?.currentUser) return;
   state.booted = true;
   Object.assign(state, context, { user: context.auth.currentUser });
-  const profileSnapshot = await getDoc(doc(state.db, "users", state.user.uid));
+  const uid = state.user.uid;
+  const profileSnapshot = await getDoc(doc(state.db, "users", uid));
+  if (context.auth.currentUser?.uid !== uid || !state.booted) return;
   state.profile = profileSnapshot.data() || {};
   state.role = resolveRole(state.profile);
   window.platinoUserOperationalRole = state.role;
@@ -1270,9 +1480,19 @@ window.addEventListener("platino-firebase-ready", event => boot(event.detail));
 if (window.platinoFirebaseContext?.auth?.currentUser) boot(window.platinoFirebaseContext);
 
 window.addEventListener("platino-signed-out", () => {
+  clearTimeout(state.saveTimer);
+  clearTimeout(filterTimer);
   state.stop.splice(0).forEach(stop => stop?.());
+  state.stopList?.();
+  state.stopList = null;
   state.detailStops.splice(0).forEach(stop => stop?.());
   state.booted = false;
+  state.listRequest += 1;
   state.leads = [];
+  state.activeLead = null;
+  state.metricCounts = {};
+  state.user = null;
+  state.profile = null;
+  state.db = null;
   if (root) root.innerHTML = "";
 });
