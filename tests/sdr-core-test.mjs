@@ -12,6 +12,7 @@ import {
   getForwardingMissingFields,
   isValidCpf,
   maskPhone,
+  resolveFirestoreLeadRole,
   roleCan,
   validateLeadRegistration
 } from "../src/sdr/sdr-core.js";
@@ -153,5 +154,18 @@ assert.equal(roleCan("lead.read", "collaborator", { uid: "equipe-1", ownerSdrId:
 assert.equal(roleCan("lead.read", "consultant", { uid: "c-1", assignedConsultantId: "c-1" }), true);
 assert.equal(roleCan("lead.read", "consultant", { uid: "c-2", assignedConsultantId: "c-1" }), false);
 assert.equal(roleCan("lead.outcome", "sdr", { uid: "sdr-1", ownerSdrId: "sdr-1" }), false);
+
+// A UI must not infer Firestore read privileges from sector or global hints.
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { sector: "Comercial" } }), "collaborator");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { sector: "Jurídico" } }), "collaborator");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { sector: "Gestão" } }), "collaborator");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { operationalRole: "manager" } }), "manager");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { operationalRole: "sdr" } }), "sdr");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { operationalRole: "consultor" } }), "consultant");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { role: "manager", operationalRole: "collaborator" } }), "collaborator");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: { operationalRole: "collaborator" }, tokenRole: "manager" }), "manager");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "pessoa@example.com", profile: {}, hasProfile: false, tokenRole: "sdr" }), "sdr");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "nicolas@platino.com", profile: {} }), "consultant");
+assert.equal(resolveFirestoreLeadRole({ uid: "u-1", email: "gestao@platino.com", profile: {} }), "manager");
 
 console.log("SDR core: validações, cálculo, status, máscaras e permissões aprovados.");

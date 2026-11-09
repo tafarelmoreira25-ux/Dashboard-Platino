@@ -62,6 +62,38 @@ export const SDR_ROLES = Object.freeze({
   ADMIN: "admin"
 });
 
+// Keep client query scope aligned with firestore.rules. Sector labels and
+// global UI role hints are not evidence that Firestore grants a broad read.
+export function resolveFirestoreLeadRole({ uid = "", email = "", profile = {}, tokenRole = "", hasProfile = true } = {}) {
+  const address = String(email).trim().toLowerCase();
+  const managementEmails = new Set([
+    "gestao@platino.com", "tafarel@platino.com", "tafarel.moreira@platino.com",
+    "tafarelmoreira@platino.com", "supervisao@platino.com", "diretoria@platino.com",
+    "admin@platino.com", "isabela@platino.com", "vanessa@platino.com"
+  ]);
+  const sdrEmails = new Set([
+    "comercial@platino.com", "roberta@platino.com", "janaina@platino.com",
+    "rafaela@platino.com", "fernanda@platino.com", "geovanna@platino.com",
+    "giullian@hunter.com"
+  ]);
+  const consultantEmails = new Set([
+    "giullian@platino.com", "nicolas@platino.com", "tabata@platino.com", "elaine@platino.com"
+  ]);
+  const claim = String(tokenRole).trim().toLowerCase();
+  const declared = hasProfile
+    ? (Object.hasOwn(profile, "operationalRole") ? profile.operationalRole : Object.hasOwn(profile, "role") ? profile.role : tokenRole)
+    : tokenRole;
+  const role = String(declared ?? "").trim().toLowerCase();
+  if (uid === "yRW5stqXWZT7ovrQyn1Fd3WNuta2" || managementEmails.has(address) || ["admin", "manager"].includes(claim) || ["admin", "manager", "gestor", "supervisor"].includes(role)) {
+    return role === "admin" || claim === "admin" ? "admin" : "manager";
+  }
+  if (sdrEmails.has(address) || /^[a-z0-9._-]+\.sdr@platino\.com$/.test(address) || role === "sdr") return "sdr";
+  if (consultantEmails.has(address) || ["consultant", "consultor", "consultor_comercial", "analyst", "analista"].includes(role)) {
+    return ["analyst", "analista"].includes(role) ? "analyst" : "consultant";
+  }
+  return "collaborator";
+}
+
 const MONEY_FORMATTER = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL"

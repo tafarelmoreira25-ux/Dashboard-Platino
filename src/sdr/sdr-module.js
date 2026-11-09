@@ -25,6 +25,7 @@ import {
   normalizeDigits,
   normalizeSearch,
   parsePtBrMoney,
+  resolveFirestoreLeadRole,
   sanitizeText,
   validateLeadRegistration
 } from "./sdr-core.js";
@@ -32,19 +33,6 @@ import { scanLeadPage, SDR_SEARCH_SCAN_LIMIT } from "./sdr-query-policy.js";
 
 const root = document.getElementById("sdr-root");
 const CACHE_KEY = "platinoSdrWorkspaceV2";
-const MANAGEMENT_EMAILS = new Set([
-  "gestao@platino.com", "tafarel@platino.com", "tafarel.moreira@platino.com",
-  "tafarelmoreira@platino.com", "supervisao@platino.com", "diretoria@platino.com",
-  "admin@platino.com", "isabela@platino.com", "vanessa@platino.com"
-]);
-const SDR_EMAILS = new Set([
-  "comercial@platino.com", "roberta@platino.com", "janaina@platino.com",
-  "rafaela@platino.com", "fernanda@platino.com", "geovanna@platino.com",
-  "giullian@hunter.com"
-]);
-const CONSULTANT_EMAILS = new Set([
-  "giullian@platino.com", "nicolas@platino.com", "tabata@platino.com", "elaine@platino.com"
-]);
 const DEFAULT_BANKS = Object.freeze([
   { id: "banco-bv", name: "Banco BV", featured: true },
   { id: "santander", name: "Santander", featured: true },
@@ -151,20 +139,6 @@ const setPath = (object, path, value) => {
 
 function currentLead() {
   return state.leads.find(item => item.id === state.activeId) || state.activeLead || loadLocalDraft() || null;
-}
-
-function resolveRole(profile = {}, user = state.user) {
-  const email = normalizeSearch(user?.email);
-  if (MANAGEMENT_EMAILS.has(email) || window.platinoUserRole === "gestor") return "manager";
-  if (SDR_EMAILS.has(email) || /^[a-z0-9._-]+\.sdr@platino\.com$/i.test(email)) return "sdr";
-  if (CONSULTANT_EMAILS.has(email)) return "consultant";
-  const role = normalizeSearch(profile.operationalRole || profile.role);
-  if (["admin", "manager", "sdr", "consultant", "analyst"].includes(role)) return role;
-  if (["gestor", "supervisor"].includes(role)) return "manager";
-  const sector = normalizeSearch(profile.sector || window.platinoUserSector);
-  if (/sdr|comercial/.test(sector)) return "sdr";
-  if (/jurid|consult/.test(sector)) return "consultant";
-  return "collaborator";
 }
 
 function canManage() { return ["admin", "manager"].includes(state.role); }
@@ -1633,10 +1607,16 @@ async function boot(context) {
   state.booted = true;
   Object.assign(state, context, { user: context.auth.currentUser });
   const uid = state.user.uid;
-  const profileSnapshot = await trackedDoc(doc(state.db, "users", uid), "profile");
+  const [profileSnapshot, tokenResult] = await Promise.all([
+    trackedDoc(doc(state.db, "users", uid), "profile"),
+    state.user.getIdTokenResult().catch(() => null)
+  ]);
   if (context.auth.currentUser?.uid !== uid || !state.booted) return;
   state.profile = profileSnapshot.data() || {};
-  state.role = resolveRole(state.profile);
+  state.role = resolveFirestoreLeadRole({
+    uid, email: state.user.email, profile: state.profile,
+    tokenRole: tokenResult?.claims?.role, hasProfile: profileSnapshot.exists()
+  });
   window.platinoUserOperationalRole = state.role;
   window.sdrApplyAccess = () => {
     document.getElementById("nav-sdr")?.classList.toggle("hidden", !canAccessSdr());

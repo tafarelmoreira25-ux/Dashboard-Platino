@@ -116,12 +116,13 @@ assert.match(moduleSource, /function canCreateLead\(\) \{ return Boolean\(state\
 assert.match(moduleSource, /const tabs = \[\["sdr", "Qualificação"\]\];/);
 assert.doesNotMatch(api, /Somente SDR ou gestão pode criar leads/);
 assert.match(api, /assertActionPermission\("lead\.create", actor\)/);
-assert.match(moduleSource, /comercial@platino\.com/);
-assert.match(moduleSource, /giullian@hunter\.com/);
+assert.match(coreSource, /comercial@platino\.com/);
+assert.match(coreSource, /giullian@hunter\.com/);
 assert.match(api, /giullian@hunter\.com/);
 assert.match(firestoreRules, /giullian@hunter\.com/);
 assert.match(html, /giullian@hunter\.com/);
-assert.match(moduleSource, /\\\.sdr@platino\\\.com/);
+assert.match(coreSource, /\\\.sdr@platino\\\.com/);
+assert.match(moduleSource, /resolveFirestoreLeadRole\(/);
 assert.match(api, /resolveAccountRole\(consultant\)/);
 assert.match(api, /resolveAccountRole\(data\)/);
 assert.match(firestoreRules, /sdr@platino\[\.\]com/);
