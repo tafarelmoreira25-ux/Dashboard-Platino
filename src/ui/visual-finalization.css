@@ -25,6 +25,21 @@
 #section-inicio .home-card-heading h3,
 #section-inicio .home-kpi-card strong { font-weight: 600; }
 
+/* Workspace light surfaces retain readable labels and values. Dark goal panels keep their own colors. */
+#section-perfil .workspace-main-card { color: var(--ui-ink); border-color: var(--ui-line); }
+#section-perfil .workspace-stat-card { border: 1px solid var(--ui-line); }
+#section-perfil .workspace-stat-card p { color: #334b63; }
+#section-perfil .workspace-stat-card strong { color: var(--ui-ink); }
+#section-perfil #reminder-form { border: 1px solid var(--ui-line); background: #f8fafc; }
+#section-perfil #reminder-form label { color: #334b63; border-color: #cbd5e1; }
+#section-perfil #reminder-form label span:first-child { color: #334b63; }
+#section-perfil :is(#profile-name-input, #reminder-title, #reminder-type, #reminder-date,
+  #reminder-time, #reminder-priority, #reminder-notes) { color: var(--ui-ink); }
+#section-perfil :is(#profile-name-input, #reminder-title, #reminder-type,
+  #reminder-priority, #reminder-notes) { border-color: #cbd5e1; }
+#section-perfil :is(#profile-name-input, #reminder-title, #reminder-notes)::placeholder { color: var(--ui-muted); }
+#section-perfil :is(#profile-status, #reminder-status) { color: var(--ui-muted); }
+
 #section-treinamentos .training-welcome {
   position: relative;
   display: flex;
