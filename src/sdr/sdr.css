@@ -47,7 +47,7 @@
 .sdr-command-hero {
   position: relative;
   display: flex;
-  min-height: 7rem;
+  min-height: 4.7rem;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -67,57 +67,21 @@
 .sdr-command-actions { position: relative; z-index: 1; }
 .sdr-command-copy { max-width: 50rem; }
 
-.sdr-command-eyebrow {
-  display: block;
-  margin-bottom: 0.42rem;
-  color: #f7d97d;
-  font-size: 0.62rem;
-  font-weight: 900;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
 .sdr-command-hero .sdr-title {
   color: #fff;
-  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
   letter-spacing: -0.035em;
 }
-
-.sdr-command-hero .sdr-title span { color: #dbeafe; font-weight: 720; }
-.sdr-command-hero .sdr-subtitle { max-width: 46rem; color: #d6e5f4; line-height: 1.6; }
 
 /* The global content-section heading and paragraph rules target this view too. */
 #section-sdr .sdr-command-hero .sdr-title {
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
 }
-#section-sdr .sdr-command-hero .sdr-title span {
-  color: #dbeafe;
-  -webkit-text-fill-color: #dbeafe;
-}
-#section-sdr .sdr-command-hero .sdr-subtitle { color: #d6e5f4; }
 #section-sdr .sdr-shell :is(h3, h4) {
   color: var(--sdr-navy) !important;
   -webkit-text-fill-color: currentColor;
   text-shadow: none;
-}
-
-.sdr-command-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.9rem;
-  color: #9fc4e9;
-  font-size: 0.68rem;
-  font-weight: 750;
-}
-
-.sdr-command-status span {
-  width: 0.48rem;
-  height: 0.48rem;
-  border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.12), 0 0 12px rgba(52, 211, 153, 0.7);
 }
 
 .sdr-command-actions {
@@ -150,12 +114,6 @@
   color: var(--sdr-navy);
   font-size: clamp(1.2rem, 2.2vw, 1.75rem);
   font-weight: 900;
-}
-
-.sdr-subtitle {
-  margin-top: 0.25rem;
-  color: var(--sdr-muted);
-  font-size: 0.82rem;
 }
 
 .sdr-primary,
@@ -947,7 +905,6 @@ button.sdr-portfolio-metric:hover,
   .sdr-command-actions { justify-content: stretch; }
   .sdr-command-actions > button { flex: 1 1 auto; }
   .sdr-command-actions .sdr-notifications { flex: 0 0 auto; }
-  .sdr-subtitle { display: none; }
   .sdr-layout.is-editing .sdr-queue { display: none; }
   .sdr-layout:not(.is-editing) .sdr-workspace { display: none; }
   .sdr-lead-header { top: 0; }

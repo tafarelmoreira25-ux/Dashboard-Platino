@@ -3238,6 +3238,8 @@
 
 </style>
 <link rel="stylesheet" href="./src/sdr/sdr.css">
+<link rel="stylesheet" href="./src/rh/rh.css">
+<link rel="stylesheet" href="./src/ui/section-cleanup.css">
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen overflow-auto relative">
 
@@ -3507,14 +3509,6 @@
                             <div class="home-progress"><span id="home-kpi-rate-bar"></span></div>
                         </article>
 
-                        <article class="home-bento-card home-next-step">
-                            <div class="home-card-heading">
-                                <div><span>Próximo passo</span><h3>Mantenha o fluxo em movimento</h3></div>
-                                <i class="ph ph-compass"></i>
-                            </div>
-                            <p id="home-next-task">Adicione sua primeira prioridade para organizar o dia.</p>
-                            <button type="button" onclick="document.getElementById('home-task-input')?.focus()">Organizar minha rotina <i class="ph ph-arrow-right"></i></button>
-                        </article>
                     </div>
                 </div>
             </section>
@@ -3945,205 +3939,55 @@
             </section>
 
             <section id="section-rh" class="content-section hidden animate-fade-in">
-                <div class="max-w-6xl mx-auto">
-                    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <div class="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500">
-                                <i class="ph ph-users-three text-base"></i> Gestão de pessoas
-                            </div>
-                            <h2 class="text-2xl font-bold text-slate-800">Dashboard de Recursos Humanos</h2>
-                            <p class="text-slate-500 mt-1">Ocorrências, talentos, desenvolvimento e rotinas trabalhistas em um só lugar.</p>
-                        </div>
-                        <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Central operacional
-                        </span>
-                    </div>
+                <div class="rh-hub max-w-6xl mx-auto">
+                    <nav class="rh-view-tabs" aria-label="Áreas do RH">
+                        <button type="button" data-rh-view="mural" aria-current="page" onclick="switchRhView('mural')"><i class="ph ph-push-pin"></i> Mural RH</button>
+                        <button type="button" data-rh-view="duvidas" onclick="switchRhView('duvidas')"><i class="ph ph-chat-circle-dots"></i> Dúvidas frequentes</button>
+                    </nav>
 
-                    <div class="mb-8">
-                        <div class="mb-4 flex items-center gap-3">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm"><i class="ph-fill ph-push-pin"></i></span>
-                            <div>
-                                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">Informações fixadas</p>
-                                <h3 class="font-bold text-slate-800">Comunicados importantes do RH</h3>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                            <figure class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-3 shadow-sm">
-                                <img src="assets/rh/comunicado-registro-de-ponto.png" alt="Comunicado do Departamento Pessoal sobre o registro correto de ponto" class="h-auto w-full rounded-xl" loading="lazy">
-                                <figcaption class="px-2 pb-1 pt-3 text-xs font-semibold text-slate-600"><i class="ph ph-clock mr-1 text-blue-600"></i> Registro correto de ponto</figcaption>
-                            </figure>
-                            <figure class="overflow-hidden rounded-2xl border border-blue-100 bg-white p-3 shadow-sm">
-                                <img src="assets/rh/calendario-ultimos-sabados-2026.png" alt="Calendário dos últimos sábados de julho a dezembro de 2026" class="h-auto w-full rounded-xl" loading="lazy">
-                                <figcaption class="px-2 pb-1 pt-3 text-xs font-semibold text-slate-600"><i class="ph ph-calendar-check mr-1 text-blue-600"></i> Últimos sábados de 2026</figcaption>
-                            </figure>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 flex items-center gap-3">
-                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white"><i class="ph ph-lightning"></i></span>
-                        <div>
-                            <h3 class="font-bold text-slate-800">Ocorrências e Rotina</h3>
-                            <p class="text-xs text-slate-500">Ações rápidas para o acompanhamento diário.</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_1.25fr]">
-                        <button type="button" onclick="openRhPanel('frequencia')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-blue-400 hover:shadow-lg">
-                            <div class="flex items-start justify-between">
-                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/20 text-blue-300"><i class="ph ph-clock-counter-clockwise text-2xl"></i></span>
-                                <i class="ph ph-arrow-up-right text-blue-300/50 transition-colors group-hover:text-blue-400"></i>
-                            </div>
-                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-400">Acesso rápido</p>
-                            <h4 class="mt-1 font-bold text-white">Frequência e Ponto</h4>
-                            <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Registrar atrasos, faltas, justificativas e ajustes de ponto.</p>
-                        </button>
-
-                        <button type="button" onclick="openRhPanel('conduta')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-violet-400 hover:shadow-lg">
-                            <div class="flex items-start justify-between">
-                                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/20 text-violet-300"><i class="ph ph-identification-badge text-2xl"></i></span>
-                                <i class="ph ph-arrow-up-right text-violet-300/50 transition-colors group-hover:text-violet-400"></i>
-                            </div>
-                            <p class="mt-5 text-[10px] font-bold uppercase tracking-[0.16em] text-violet-400">Acesso rápido</p>
-                            <h4 class="mt-1 font-bold text-white">Conduta e Postura</h4>
-                            <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Apontamentos de uniforme, crachá, postura e orientações aplicadas.</p>
-                        </button>
-
-                        <div class="relative overflow-hidden portal-card rounded-2xl p-5 shadow-sm transition-all hover:border-amber-400 border border-white/10 group">
-                            <i class="ph-fill ph-push-pin absolute right-4 top-4 rotate-12 text-xl text-amber-500"></i>
-                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-400">Mural da semana</p>
-                            <textarea id="rh-weekly-notes" rows="4" class="mt-3 w-full resize-none rounded-xl border border-white/20 bg-white/5 p-3 text-sm leading-relaxed text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20" placeholder="Adicione lembretes rápidos para a equipe..."></textarea>
-                            <div class="mt-3 flex items-center justify-between gap-3">
-                                <span id="rh-notes-status" class="text-[11px] text-amber-400/80">Aguardando sincronização</span>
-                                <div class="flex flex-wrap items-center justify-end gap-2">
-                                    <button type="button" onclick="openRhPanel('mural')" class="rounded-lg px-3 py-1.5 text-xs font-bold transition hover:bg-white/10">Abrir central</button>
-                                    <button type="button" onclick="saveRhNotes()" class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-600">Salvar mural</button>
+                    <div id="rh-view-mural" class="rh-view">
+                        <div class="rh-board">
+                            <div class="rh-board-bar"><span><i class="ph-fill ph-push-pin"></i> Avisos e lembretes</span><span class="rh-board-mark" aria-hidden="true"></span></div>
+                            <div class="rh-board-grid">
+                                <figure class="rh-paper rh-pinned-document">
+                                    <img src="assets/rh/comunicado-registro-de-ponto.png" alt="Comunicado do Departamento Pessoal sobre o registro correto de ponto" loading="lazy">
+                                    <figcaption>Registro correto de ponto</figcaption>
+                                </figure>
+                                <figure class="rh-paper rh-pinned-document">
+                                    <img src="assets/rh/calendario-ultimos-sabados-2026.png" alt="Calendário dos últimos sábados de julho a dezembro de 2026" loading="lazy">
+                                    <figcaption>Últimos sábados de 2026</figcaption>
+                                </figure>
+                                <div class="rh-paper rh-weekly-paper">
+                                    <label for="rh-weekly-notes">Lembretes da semana</label>
+                                    <textarea id="rh-weekly-notes" rows="4" readonly placeholder="Nenhum lembrete publicado."></textarea>
+                                    <div class="rh-weekly-actions">
+                                        <span id="rh-notes-status" role="status"></span>
+                                        <button type="button" class="rh-editor-only hidden" onclick="saveRhNotes()">Salvar lembretes</button>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="rh-mini-mural-list" class="rh-notice-grid" aria-live="polite"></div>
                         </div>
-                    </div>
-
-                    <div class="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[0.85fr_1.15fr]">
-                        <div class="rh-editor-only hidden portal-card rounded-2xl p-5">
-                            <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">Publicar no RH</p>
-                            <div class="mt-4 grid gap-3">
-                                <select id="rh-mini-type" class="rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300">
+                        <details class="rh-publish rh-editor-only hidden">
+                            <summary><i class="ph ph-plus-circle"></i> Publicar aviso ou resposta</summary>
+                            <div class="rh-publish-fields">
+                                <select id="rh-mini-type" aria-label="Tipo de publicação">
                                     <option value="Comunicado">Comunicado</option>
                                     <option value="DP">DP</option>
                                     <option value="Treinamento">Treinamento</option>
                                     <option value="Contabilidade">Contabilidade</option>
+                                    <option value="Dúvida frequente">Dúvida frequente</option>
                                 </select>
-                                <input id="rh-mini-title" class="rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Título da informação">
-                                <textarea id="rh-mini-message" rows="4" class="resize-none rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-emerald-300" placeholder="Detalhes para a equipe"></textarea>
-                                <div class="flex items-center justify-between gap-3">
-                                    <span id="rh-mini-status" class="text-[11px] text-emerald-200/70"></span>
-                                    <button type="button" onclick="saveRhMiniNotice()" class="rounded-lg bg-emerald-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-emerald-600">
-                                        <i class="ph ph-paper-plane-right"></i> Publicar
-                                    </button>
-                                </div>
+                                <input id="rh-mini-title" maxlength="160" placeholder="Título ou pergunta" aria-label="Título ou pergunta">
+                                <textarea id="rh-mini-message" rows="3" maxlength="2000" placeholder="Comunicado ou resposta para a equipe" aria-label="Comunicado ou resposta"></textarea>
+                                <div class="rh-publish-actions"><span id="rh-mini-status" role="status"></span><button type="button" onclick="saveRhMiniNotice()">Publicar</button></div>
                             </div>
-                        </div>
-
-                        <div class="portal-card rounded-2xl p-5">
-                            <div class="mb-3 flex items-center justify-between gap-3">
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">Mini mural</p>
-                                    <h4 class="mt-1 font-bold text-white">Informações do RH</h4>
-                                </div>
-                                <i class="ph ph-megaphone text-2xl text-blue-200/70"></i>
-                            </div>
-                            <div id="rh-mini-mural-list" class="grid gap-2"></div>
-                        </div>
+                        </details>
                     </div>
 
-                    <div class="mb-3 mt-8 flex items-center gap-3">
-                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white"><i class="ph ph-trend-up"></i></span>
-                        <div>
-                            <h3 class="font-bold text-slate-800">Talentos e Desenvolvimento</h3>
-                            <p class="text-xs text-slate-500">Acompanhamento de candidatos e evolução da equipe.</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        <button type="button" onclick="openRhPanel('recrutamento')" class="group relative overflow-hidden portal-card rounded-2xl p-6 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-blue-400">
-                            <div class="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl"></div>
-                            <div class="relative">
-                                <div class="flex items-start justify-between">
-                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-blue-200"><i class="ph ph-user-plus text-2xl"></i></span>
-                                    <i class="ph ph-arrow-up-right text-blue-300"></i>
-                                </div>
-                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-300">R&S</p>
-                                <h4 class="mt-1 text-xl font-bold">Recrutamento e Seleção</h4>
-                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100">Centralize candidatos, currículos, entrevistas e o andamento das novas contratações.</p>
-                            </div>
-                        </button>
-
-                        <button type="button" onclick="openRhPanel('desenvolvimento')" class="group relative overflow-hidden portal-card rounded-2xl p-6 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-cyan-400">
-                            <div class="absolute -bottom-16 -right-8 h-44 w-44 rounded-full bg-cyan-500/20 blur-3xl"></div>
-                            <div class="relative">
-                                <div class="flex items-start justify-between">
-                                    <span class="flex h-12 w-12 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-cyan-200"><i class="ph ph-student text-2xl"></i></span>
-                                    <i class="ph ph-arrow-up-right text-cyan-300"></i>
-                                </div>
-                                <p class="mt-7 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">T&D</p>
-                                <h4 class="mt-1 text-xl font-bold">Desenvolvimento e Performance</h4>
-                                <p class="mt-3 max-w-md text-sm leading-relaxed text-blue-100">Documente treinamentos, evolução, pontos de apoio e ações para manter a equipe motivada e segura.</p>
-                            </div>
-                        </button>
-                    </div>
-
-                    <div class="mb-3 mt-8 flex items-center gap-3">
-                        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-200 text-slate-700"><i class="ph ph-files"></i></span>
-                        <div>
-                            <h3 class="font-bold text-slate-800">Burocracia e Contabilidade</h3>
-                            <p class="text-xs text-slate-500">Documentos, informações contábeis e processos de saída.</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                        <button type="button" onclick="openRhPanel('contabilidade')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg">
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300"><i class="ph ph-calculator text-2xl"></i></span>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-400">Documentos e dúvidas</p>
-                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-emerald-400"></i>
-                                    </div>
-                                    <h4 class="mt-1 font-bold text-white">Central da Contabilidade</h4>
-                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Folha, holerites, benefícios, informações mensais e dúvidas contábeis.</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        <button type="button" onclick="openRhPanel('jornada')" class="group portal-card rounded-2xl p-5 text-left shadow-sm transition-all hover:-translate-y-1 hover:border-sky-400 hover:shadow-lg">
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-sky-500/20 text-sky-300"><i class="ph ph-sparkle text-2xl"></i></span>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-sky-400">Interativo</p>
-                                        <i class="ph ph-arrow-up-right text-slate-300 group-hover:text-sky-300"></i>
-                                    </div>
-                                    <h4 class="mt-1 font-bold text-white">Jornada e Check-ins</h4>
-                                    <p class="mt-2 text-sm leading-relaxed text-blue-100/70">Acompanhe clima, alinhamentos rápidos e próximos passos da equipe.</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-
-                    <div id="rh-action-panel" class="mt-6 hidden rounded-2xl border border-blue-200 bg-white p-6 shadow-lg">
-                        <div class="flex items-start justify-between gap-4">
-                            <div class="flex items-start gap-4">
-                                <span id="rh-action-icon" class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="ph ph-check-square-offset text-2xl"></i></span>
-                                <div>
-                                    <p class="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600">Painel de orientação</p>
-                                    <h3 id="rh-action-title" class="mt-1 text-xl font-bold text-slate-800"></h3>
-                                    <p id="rh-action-description" class="mt-2 text-sm leading-relaxed text-slate-500"></p>
-                                </div>
-                            </div>
-                            <button type="button" onclick="closeRhPanel()" class="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Fechar painel">
-                                <i class="ph ph-x text-xl"></i>
-                            </button>
-                        </div>
-                        <div id="rh-action-checklist" class="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2"></div>
+                    <div id="rh-view-duvidas" class="rh-view" hidden>
+                        <div class="rh-faq-intro"><span>Respostas publicadas pelo RH</span><button type="button" onclick="openRhQuestion()"><i class="ph ph-paper-plane-tilt"></i> Enviar dúvida</button></div>
+                        <div id="rh-faq-list" class="rh-faq-list" aria-live="polite"></div>
                     </div>
                 </div>
             </section>
@@ -4634,6 +4478,12 @@
                         </button>
                     </div>
 
+                    <nav class="workspace-view-tabs" aria-label="Áreas do Meu Workspace">
+                        <button type="button" data-workspace-view="routine" aria-current="page" onclick="setWorkspaceView('routine')">Minha rotina</button>
+                        <button type="button" data-workspace-view="goals" onclick="setWorkspaceView('goals')">Minhas metas</button>
+                        <button type="button" data-workspace-view="notes" onclick="setWorkspaceView('notes')">Minhas anotações</button>
+                    </nav>
+
                     <div class="overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-5 text-white shadow-xl">
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
@@ -4671,7 +4521,7 @@
                             </form>
                         </div>
                         <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                            <div class="mb-6 rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 p-5 text-white shadow-lg">
+                            <div id="workspace-goal-panel" class="mb-6 rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-950 via-blue-950 to-blue-800 p-5 text-white shadow-lg" hidden>
                                 <div class="flex flex-col gap-5 md:flex-row md:items-center">
                                     <div class="relative mx-auto h-32 w-32 shrink-0 md:mx-0">
                                         <svg class="h-32 w-32 -rotate-90" viewBox="0 0 120 120" aria-label="Progresso da meta mensal">
@@ -4700,7 +4550,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div>
+                                <div id="workspace-record-heading">
                                     <h3 class="text-xl font-bold text-slate-800">Minha área de trabalho</h3>
                                     <p class="text-sm text-slate-500">Demandas, tarefas, recados, metas e lembretes privados.</p>
                                 </div>
@@ -4749,6 +4599,7 @@
                             <div id="reminder-list" class="mt-5 space-y-3">
                                 <p class="py-8 text-center text-sm text-slate-400">Carregando seus lembretes...</p>
                             </div>
+                            <button id="workspace-load-more" type="button" class="mt-4 hidden rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-50">Carregar mais</button>
                         </div>
                     </div>
                 </div>
@@ -5457,7 +5308,7 @@
         window.platinoUserRole = window.platinoUserRole || 'equipe';
 
         const managementSharedDefaults = {
-            rhWeeklyNotes: '• Conferir ajustes de ponto pendentes\n• Atualizar andamento das vagas abertas\n• Enviar documentos mensais à contabilidade',
+            rhWeeklyNotes: '',
             rhMiniNotices: [],
             quickEditorRecords: {},
             flowOverrides: {},
@@ -5472,11 +5323,11 @@
             financeiroRegistros: JSON.parse(localStorage.getItem('platinoFinanceiroRegistros') || '[]'),
             rhMiniNotices: JSON.parse(localStorage.getItem('platinoRhMiniNotices') || '[]'),
             templateNameOverrides: JSON.parse(localStorage.getItem('platinoTemplateNameOverrides') || '{}'),
-            rhWeeklyNotes: localStorage.getItem('platinoRhWeeklyNotes') || managementSharedDefaults.rhWeeklyNotes
+            rhWeeklyNotes: localStorage.getItem('platinoRhWeeklyNotes') ?? managementSharedDefaults.rhWeeklyNotes
         };
 
         function persistManagementSharedLocally() {
-            localStorage.setItem('platinoRhWeeklyNotes', managementSharedData.rhWeeklyNotes || managementSharedDefaults.rhWeeklyNotes);
+            localStorage.setItem('platinoRhWeeklyNotes', managementSharedData.rhWeeklyNotes ?? managementSharedDefaults.rhWeeklyNotes);
             localStorage.setItem('platinoQuickEditorRecords', JSON.stringify(managementSharedData.quickEditorRecords || {}));
             localStorage.setItem('platinoFlowOverrides', JSON.stringify(managementSharedData.flowOverrides || {}));
             localStorage.setItem('platinoFinanceiroRegistros', JSON.stringify((managementSharedData.financeiroRegistros || []).slice(0, 50)));
@@ -5558,6 +5409,8 @@
                 el.setAttribute('aria-hidden', canEditRh ? 'false' : 'true');
                 if ('disabled' in el) el.disabled = !canEditRh;
             });
+            const rhNotes = document.getElementById('rh-weekly-notes');
+            if (rhNotes) rhNotes.readOnly = !canEditRh;
             const canEditNotices = isNoticeEditorUser();
             document.querySelectorAll('.notice-editor-only').forEach(el => {
                 el.classList.toggle('hidden', !canEditNotices);
@@ -5951,39 +5804,48 @@
         function loadRhNotes() {
             const notes = document.getElementById('rh-weekly-notes');
             if (!notes) return;
-            notes.value = managementSharedData.rhWeeklyNotes || localStorage.getItem('platinoRhWeeklyNotes') || managementSharedDefaults.rhWeeklyNotes;
+            notes.value = managementSharedData.rhWeeklyNotes ?? '';
         }
 
         function renderRhMiniMural() {
             const list = document.getElementById('rh-mini-mural-list');
-            if (!list) return;
+            const faq = document.getElementById('rh-faq-list');
+            if (!list || !faq) return;
+            const all = Array.isArray(managementSharedData.rhMiniNotices) ? managementSharedData.rhMiniNotices : [];
+            const questions = all.filter(item => item.type === 'Dúvida frequente').slice(0, 10);
+            const notices = all.filter(item => item.type !== 'Dúvida frequente').slice(0, 6);
+            list.innerHTML = notices.length ? notices.map(item => `
+                <article class="rh-paper rh-notice">
+                    <div class="rh-notice-meta"><span>${escapeHtml(item.type || 'Comunicado')}</span><time>${escapeHtml(item.date || '')}</time></div>
+                    <h3>${escapeHtml(item.title || 'Aviso do RH')}</h3>
+                    <p>${escapeHtml(item.message || '')}</p>
+                </article>
+            `).join('') : '<p class="rh-empty">Nenhum aviso publicado pelo RH.</p>';
+            faq.innerHTML = questions.length ? questions.map(item => `
+                <details class="rh-faq-item">
+                    <summary>${escapeHtml(item.title || 'Dúvida')}</summary>
+                    <p>${escapeHtml(item.message || '')}</p>
+                </details>
+            `).join('') : '<p class="rh-empty">Ainda não há respostas publicadas. Envie sua dúvida para o RH.</p>';
+        }
 
-            const notices = Array.isArray(managementSharedData.rhMiniNotices)
-                ? managementSharedData.rhMiniNotices.slice(0, 6)
-                : [];
+        function switchRhView(view) {
+            const selected = view === 'duvidas' ? 'duvidas' : 'mural';
+            document.getElementById('rh-view-mural').hidden = selected !== 'mural';
+            document.getElementById('rh-view-duvidas').hidden = selected !== 'duvidas';
+            document.querySelectorAll('[data-rh-view]').forEach(button => {
+                if (button.dataset.rhView === selected) button.setAttribute('aria-current', 'page');
+                else button.removeAttribute('aria-current');
+            });
+        }
 
-            if (!notices.length) {
-                list.innerHTML = `
-                    <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-blue-100/75">
-                        Nenhuma informação publicada ainda.
-                    </div>
-                `;
-                return;
-            }
-
-            list.innerHTML = notices.map(item => `
-                <div class="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">${escapeHtml(item.type || 'Comunicado')}</p>
-                            <h5 class="mt-1 truncate font-black text-white">${escapeHtml(item.title || 'Informação do RH')}</h5>
-                        </div>
-                        <span class="whitespace-nowrap text-[10px] font-semibold text-blue-100/60">${escapeHtml(item.date || '')}</span>
-                    </div>
-                    <p class="mt-2 text-sm leading-relaxed text-blue-100/75">${escapeHtml(item.message || '')}</p>
-                    <p class="mt-2 text-[10px] font-semibold text-blue-100/50">${escapeHtml(item.savedBy || 'RH')}</p>
-                </div>
-            `).join('');
+        function openRhQuestion() {
+            navigateTo('ideias');
+            const sector = document.getElementById('feedback-sector');
+            const subject = document.getElementById('feedback-subject');
+            if (sector) sector.value = 'rh';
+            if (subject) subject.value = 'Dúvida para o RH';
+            subject?.focus();
         }
 
         async function saveRhMiniNotice() {
@@ -6759,9 +6621,6 @@
             document.getElementById('home-kpi-rate').textContent = `${rate}%`;
             document.getElementById('home-kpi-rate-bar').style.width = `${rate}%`;
             document.getElementById('home-kpi-completed-label').textContent = completed ? `${completed} prioridade${completed === 1 ? '' : 's'} finalizada${completed === 1 ? '' : 's'}` : 'Comece pela prioridade mais importante';
-            document.getElementById('home-next-task').textContent = !tasks.length
-                ? 'Adicione sua primeira prioridade para organizar o dia.'
-                : tasks.find(task => !task.done)?.text || 'Todas as prioridades foram concluídas. Excelente trabalho!';
         }
 
         function openSalesObjection(type) {
@@ -8808,7 +8667,7 @@
                 financeiroRegistros: Array.isArray(remoteData.financeiroRegistros)
                     ? remoteData.financeiroRegistros
                     : (managementSharedData.financeiroRegistros || []),
-                rhWeeklyNotes: remoteData.rhWeeklyNotes || managementSharedData.rhWeeklyNotes || managementSharedDefaults.rhWeeklyNotes
+                rhWeeklyNotes: remoteData.rhWeeklyNotes ?? managementSharedData.rhWeeklyNotes ?? managementSharedDefaults.rhWeeklyNotes
             };
             persistManagementSharedLocally();
             loadFlowOverrides();
@@ -11094,9 +10953,25 @@
       let stopMonthlyGoalSubscription = null;
       let accountManagementApi = null;
       let currentWorkspaceItems = [];
+      let workspaceView = "routine";
+      let workspaceVisibleCount = 12;
       let currentMonthlyGoal = null;
       let currentProfileDisplayName = "";
       let workspaceNotificationTimer = null;
+
+      window.setWorkspaceView = view => {
+        workspaceView = ["routine", "goals", "notes"].includes(view) ? view : "routine";
+        workspaceVisibleCount = 12;
+        document.querySelectorAll("[data-workspace-view]").forEach(button => {
+          if (button.dataset.workspaceView === workspaceView) button.setAttribute("aria-current", "page");
+          else button.removeAttribute("aria-current");
+        });
+        const goalPanel = document.getElementById("workspace-goal-panel");
+        if (goalPanel) goalPanel.hidden = workspaceView !== "goals";
+        const typeInput = document.getElementById("reminder-type");
+        if (typeInput) typeInput.value = { routine: "task", goals: "goal", notes: "note" }[workspaceView];
+        renderReminders(currentWorkspaceItems);
+      };
 
       const htmlSafe = value => String(value ?? "")
         .replaceAll("&", "&amp;")
@@ -11172,6 +11047,7 @@
 
       function renderReminders(items) {
         const list = document.getElementById("reminder-list");
+        if (!list) return;
         const due = getDueReminders(items);
         currentWorkspaceItems = items;
         renderWorkspaceFocus(items);
@@ -11181,11 +11057,22 @@
         document.getElementById("workspace-goal-count").textContent = countByType("goal");
         document.getElementById("workspace-note-count").textContent = countByType("note");
         document.getElementById("reminder-due-count").textContent = `${due.length} vencido${due.length === 1 ? "" : "s"}`;
-        if (!items.length) {
-          list.innerHTML = '<p class="py-8 text-center text-sm text-slate-400">Nenhum lembrete cadastrado.</p>';
+        checkWorkspaceNotifications();
+        const filtered = items.filter(item => {
+          const type = item.type || "task";
+          return workspaceView === "routine" ? ["task", "reminder"].includes(type) : workspaceView === "goals" ? type === "goal" : type === "note";
+        });
+        const visibleItems = filtered.slice(0, workspaceVisibleCount);
+        const loadMore = document.getElementById("workspace-load-more");
+        if (loadMore) {
+          loadMore.classList.toggle("hidden", visibleItems.length >= filtered.length);
+          loadMore.onclick = () => { workspaceVisibleCount += 12; renderReminders(currentWorkspaceItems); };
+        }
+        if (!filtered.length) {
+          list.innerHTML = '<p class="py-8 text-center text-sm text-slate-600">Nenhum registro nesta área.</p>';
           return;
         }
-        list.innerHTML = items.map(item => {
+        list.innerHTML = visibleItems.map(item => {
           const type = item.type || "task";
           const typeLabels = { task: "Tarefa", reminder: "Lembrete", goal: "Meta", note: "Recado" };
           const typeStyles = {
@@ -11221,7 +11108,7 @@
             </article>`;
         }).join("");
         list.querySelectorAll("[data-reminder-id]").forEach((card, index) => {
-          const item = items[index];
+          const item = visibleItems[index];
           card.querySelector("[data-reminder-complete]").addEventListener("click", () =>
             updateReminder({ auth, db }, item.id, { completed: !item.completed })
               .catch(error => setWorkspaceStatus("reminder-status", error.message, "error"))
@@ -11235,7 +11122,6 @@
             }
           });
         });
-        checkWorkspaceNotifications();
       }
 
       function renderWorkspaceFocus(items) {
@@ -12026,6 +11912,10 @@
             stopReminderSubscription();
             stopReminderSubscription = null;
           }
+          currentWorkspaceItems = [];
+          workspaceVisibleCount = 12;
+          const reminderList = document.getElementById("reminder-list");
+          if (reminderList) reminderList.textContent = "";
           if (stopMonthlyGoalSubscription) {
             stopMonthlyGoalSubscription();
             stopMonthlyGoalSubscription = null;

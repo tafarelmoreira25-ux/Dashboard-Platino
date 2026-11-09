@@ -147,11 +147,6 @@ function canConsult() { return canManage() || ["consultant", "analyst"].includes
 function canCreateLead() { return Boolean(state.user); }
 function canAccessSdr() { return canCreateLead(); }
 
-function hunterDisplayName() {
-  const rawName = state.profile?.displayName || state.user?.displayName || state.user?.email?.split("@")[0] || "Hunter";
-  return String(rawName).trim().split(/\s+/).slice(0, 2).join(" ");
-}
-
 async function api(action, payload = {}) {
   if (!state.auth?.currentUser) throw new Error("Faça login para continuar.");
   if (!navigator.onLine) throw new Error("Sem conexão. O rascunho permanece salvo neste dispositivo.");
@@ -238,10 +233,7 @@ function mount() {
     <div class="sdr-shell space-y-4">
       <header class="sdr-command-hero">
         <div class="sdr-command-copy">
-          <span class="sdr-command-eyebrow">Qualificação comercial</span>
-          <h2 class="sdr-title">SDR — Qualificação <span>· ${esc(hunterDisplayName())}</span></h2>
-          <p class="sdr-subtitle">Cadastre clientes potenciais, construa o perfil, gere a análise e encaminhe oportunidades qualificadas.</p>
-          <div class="sdr-command-status"><span></span> Carteira atualizada ao navegar e ao salvar</div>
+          <h2 class="sdr-title">Central Hunter</h2>
         </div>
         <div class="sdr-command-actions">
           <div class="sdr-notifications">

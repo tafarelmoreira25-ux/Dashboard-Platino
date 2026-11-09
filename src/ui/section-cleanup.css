@@ -1,0 +1,47 @@
+/* Page names remain in the sidebar. Preserve action controls in each section. */
+#page-title,
+#section-inicio .home-command-header,
+#section-adm > div > .mb-8:first-child,
+#section-juridico > div > .mb-8:first-child,
+#section-financeiro > div > .mb-8:first-child,
+#section-contas > div > div:first-child,
+#section-documentos .documents-hero,
+#section-treinamentos > div > .relative.mb-8 { display: none !important; }
+
+#section-comercial > div > .mb-8:first-child > div:first-child,
+#section-treinamentos > div > .mb-8:first-child > div:first-child,
+#section-perfil > div > div:first-child > div:first-child,
+#section-drive > div > .mb-8:first-child > .relative > div:first-child,
+#section-ideias > div > .mb-8:first-child > div:nth-child(-n+2) { display: none !important; }
+
+#section-comercial > div > .mb-8:first-child,
+#section-treinamentos > div > .mb-8:first-child,
+#section-ideias > div > .mb-8:first-child { margin-bottom: 1rem; }
+#section-drive > div > .mb-8:first-child { padding: .7rem 1rem; margin-bottom: 1rem; }
+#section-drive > div > .mb-8:first-child > .absolute { display: none; }
+#section-perfil > div > div:first-child { justify-content: flex-end; }
+#section-perfil > div > .overflow-hidden.border-slate-800,
+#section-perfil #workspace-record-heading { display: none !important; }
+#section-perfil .workspace-view-tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
+#section-perfil .workspace-view-tabs button { min-height: 2.55rem; padding: .55rem .85rem; border: 1px solid #a9b7c6; border-radius: .7rem; background: #fff; color: #263d55; font-size: .84rem; font-weight: 700; }
+#section-perfil .workspace-view-tabs button[aria-current="page"] { border-color: #075b8f; background: #075b8f; color: #fff; }
+#section-perfil .workspace-view-tabs button:hover:not([aria-current="page"]) { background: #eef6fb; }
+#section-perfil #workspace-goal-panel[hidden] { display: none !important; }
+@media (min-width: 1025px) { #section-inicio .home-kpi-primary { grid-column: span 3; } }
+
+/* The existing global heading rule makes text dark on dark cards. */
+.content-section:not(#section-avisos) :is(.portal-card, .dark-panel, .notice-card, [class*="from-slate-950"], [class*="from-blue-950"]) :is(h2, h3, h4) {
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    text-shadow: none;
+}
+.content-section:not(#section-avisos) :is(.portal-card, .dark-panel, .notice-card, [class*="from-slate-950"], [class*="from-blue-950"]) p {
+    color: #dbeafe !important;
+}
+.content-section:not(#section-avisos) :is(button, a, input, select, textarea, summary):focus-visible {
+    outline: 2px solid #075b8f;
+    outline-offset: 2px;
+}
+.content-section:not(#section-avisos) :is(.portal-card, .dark-panel, [class*="from-slate-950"], [class*="from-blue-950"]) :is(button, a, input, select, textarea, summary):focus-visible {
+    outline-color: #f5d978;
+}
