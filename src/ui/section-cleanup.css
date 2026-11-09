@@ -5,8 +5,7 @@
 #section-juridico > div > .mb-8:first-child,
 #section-financeiro > div > .mb-8:first-child,
 #section-contas > div > div:first-child,
-#section-documentos .documents-hero,
-#section-treinamentos > div > .relative.mb-8 { display: none !important; }
+#section-documentos .documents-hero { display: none !important; }
 
 #section-comercial > div > .mb-8:first-child > div:first-child,
 #section-treinamentos > div > .mb-8:first-child > div:first-child,

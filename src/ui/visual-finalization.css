@@ -1,0 +1,111 @@
+/* Operational surfaces only; the sidebar, topbar, chat and modals keep their own palette. */
+#content-viewport {
+  --ui-background: #ffffff;
+  --ui-surface: #ffffff;
+  --ui-ink: #27374c;
+  --ui-muted: #52657a;
+  --ui-line: #e5e9f0;
+  --ui-navy: #101d33;
+  background: var(--ui-background);
+}
+
+#content-viewport .content-section :is(h2, h3, h4, h5) {
+  font-family: "Inter", system-ui, Arial, sans-serif;
+  letter-spacing: -0.015em;
+}
+
+#content-viewport .content-section :is(.rounded-2xl, .rounded-3xl).bg-white {
+  border-color: var(--ui-line);
+}
+
+#section-inicio .home-bento-card:not(.home-kpi-primary) {
+  border-color: var(--ui-line);
+  background: var(--ui-surface);
+}
+#section-inicio .home-card-heading h3,
+#section-inicio .home-kpi-card strong { font-weight: 600; }
+
+#section-treinamentos .training-welcome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 11rem;
+  overflow: hidden;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--ui-line);
+  border-radius: 1.1rem;
+  background: #101d33;
+}
+#section-treinamentos .training-welcome::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 20, 43, .98), rgba(6, 20, 43, .8) 54%, transparent);
+}
+#section-treinamentos .training-welcome-copy { position: relative; z-index: 1; min-width: 0; max-width: 68%; }
+#section-treinamentos .training-welcome h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 600;
+}
+#section-treinamentos .training-welcome p {
+  margin: .4rem 0 0;
+  color: #dbe7f4;
+  font-size: .87rem;
+  line-height: 1.5;
+}
+#section-treinamentos .training-welcome img {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+}
+
+#section-documentos .documents-central {
+  --docs-ink: var(--ui-ink);
+  --docs-muted: var(--ui-muted);
+  --docs-line: var(--ui-line);
+  background: var(--ui-surface);
+}
+#section-documentos :is(.documents-content, .documents-form-body) { background: var(--ui-surface); }
+#section-documentos .documents-template-title,
+#section-documentos .documents-form-header :is(h2, h3),
+#section-documentos .documents-step :is(h3, h4) {
+  color: var(--docs-ink);
+  -webkit-text-fill-color: currentColor;
+}
+#section-documentos .documents-template-title { font-weight: 600; }
+#section-documentos :is(.documents-template-description, .documents-template-purpose,
+  .documents-field-help, .documents-draft-status, .documents-summary-item span) {
+  color: var(--docs-muted);
+}
+#section-documentos .documents-field-label {
+  color: #334b63;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+#section-documentos .documents-summary-item strong { color: var(--docs-ink); }
+#section-documentos .documents-template-card[aria-selected="true"] {
+  border-color: #0878bd;
+  background: #f0f8fd;
+}
+#section-documentos :is(.documents-primary-button, .documents-generate-button) {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+#section-documentos :is(input, select, textarea):not([type="hidden"]) { color: var(--docs-ink); }
+#section-documentos :is(input, select, textarea):focus-visible,
+#section-documentos :is(button, [role="option"]):focus-visible {
+  outline: 2px solid #0878bd;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  #section-treinamentos .training-welcome { padding: .85rem 1rem; }
+  #section-treinamentos .training-welcome-copy { max-width: 75%; }
+}

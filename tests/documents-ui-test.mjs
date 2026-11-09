@@ -42,7 +42,7 @@ assert.match(
   html,
   /\.documents-central,\s*\.documents-central \*\s*\{\s*font-family: "Inter"/
 );
-assert.match(html, /\.documents-central :is\(h2, h3, h4, h5\)[\s\S]*?font-family: "Montserrat"/);
+assert.match(html, /\.documents-central :is\(h2, h3, h4, h5, button, \.documents-eyebrow, \.documents-category-label, \.documents-template-title\)[\s\S]*?font-family: "Inter"/);
 assert.match(html, /--docs-ink: #173a5e;/);
 assert.match(html, /--docs-accent: #0878bd;/);
 assert.match(html, /--docs-line: #cbd4dc;/);
@@ -53,7 +53,7 @@ assert.match(html, /const categoryOrder = \['Todos', 'Defesa', 'Extrajudicial', 
 assert.match(html, /\.documents-categories\s*\{[\s\S]*?flex-wrap: wrap;[\s\S]*?overflow: visible;/);
 assert.match(html, /\.documents-template-options\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 assert.match(html, /@media \(max-width: 759px\)[\s\S]*?\.documents-template-options,[\s\S]*?grid-template-columns: 1fr;/);
-assert.match(html, /name="document_global_search"[\s\S]*?autocomplete="off"[\s\S]*?placeholder="Pesquisar no sistema\.\.\."/);
+assert.match(html, /name="platino_site_search"[\s\S]*?autocomplete="off"[\s\S]*?placeholder="Pesquisar no sistema\.\.\."/);
 assert.match(html, /function clearGlobalSearch\(\)/);
 assert.match(html, /window\.addEventListener\('pageshow', clearGlobalSearch\)/);
 assert.match(html, /name="document_library_search"/);
