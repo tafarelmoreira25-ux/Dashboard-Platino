@@ -20,8 +20,7 @@ $templates = @(
   'relatorio-atualizacao-processo-judicial',
   'recibo-prestacao-servicos',
   'termo-recompra',
-  'relatorio-negociacao-acordo-homologacao',
-  'certidao-diligencia-contato-profissional'
+  'relatorio-negociacao-acordo-homologacao'
 )
 
 $sampleImageBytes = [IO.File]::ReadAllBytes((Join-Path $PSScriptRoot 'modelos\contestacao-taxas-email-fundo.jpg'))

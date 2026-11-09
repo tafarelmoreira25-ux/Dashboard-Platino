@@ -68,7 +68,6 @@ const expectedCategories = {
   'citacao-intimacao-extrajudicial': 'Extrajudicial',
   'notificacao-extrajudicial-platino': 'Extrajudicial',
   'contestacao-taxas-email': 'Extrajudicial',
-  'certidao-diligencia-contato-profissional': 'Extrajudicial',
   'termo-ciencia-autorizacao-seguranca': 'Termos',
   'termo-compromisso-pagamento': 'Termos',
   'modelo-termo-compromisso-pagamento': 'Termos',
@@ -98,7 +97,7 @@ const optionEntries = Array.from(
   documentsSection.matchAll(/<option value="([^"]+)">([^<]+)<\/option>/g),
   match => ({ value: match[1], label: match[2] })
 );
-assert.equal(optionEntries.length, 18, 'A biblioteca deve manter os 18 modelos existentes.');
+assert.equal(optionEntries.length, 17, 'A biblioteca deve manter os 17 modelos disponíveis.');
 assert.deepEqual(
   new Set(optionEntries.map(option => option.value)),
   new Set(Object.keys(expectedCategories)),
@@ -106,21 +105,16 @@ assert.deepEqual(
 );
 assert.equal(
   optionEntries.filter(option => expectedCategories[option.value] === 'Extrajudicial').length,
-  4,
-  'A pasta Extrajudicial deve conter quatro modelos.'
+  3,
+  'A pasta Extrajudicial deve conter três modelos.'
 );
 assert.equal(
   optionEntries.filter(option => expectedCategories[option.value] === 'Termos').length,
   5,
   'A pasta Termos deve conter cinco modelos.'
 );
-assert.deepEqual(
-  optionEntries
-    .filter(option => option.label.toLocaleLowerCase('pt-BR').includes('certidão'))
-    .map(option => option.value),
-  ['certidao-diligencia-contato-profissional'],
-  'A busca textual deve localizar a Certidão pelo nome.'
-);
+assert.doesNotMatch(documentsSection, /certidao-diligencia-contato-profissional/);
+assert.doesNotMatch(catalog, /certidao-diligencia-contato-profissional/);
 
 assert.match(html, /function renderAdmTemplateOptions\(query = ''\)/);
 assert.match(html, /info\.purpose.*toLocaleLowerCase\('pt-BR'\)\.includes\(normalizedQuery\)/);

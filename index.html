@@ -3831,7 +3831,6 @@
                                 <option value="recibo-prestacao-servicos">Recibo de Prestação de Serviços</option>
                                 <option value="termo-recompra">Termo de Recompra</option>
                                 <option value="relatorio-negociacao-acordo-homologacao">Relatório de Negociação — Acordo de Homologação</option>
-                                <option value="certidao-diligencia-contato-profissional">Certidão de Diligência e Contato Profissional</option>
                                 <option value="relatorio-atualizacao-processo-judicial">Relatório de Atualização do Processo Judicial</option>
                                 <option value="laudo-pericial-contabil">Laudo Pericial Contábil — Financiamento de Veículo</option>
                             </select>
@@ -9095,57 +9094,6 @@
                 },
                 blocks: []
             },
-            'certidao-diligencia-contato-profissional': {
-                title: 'Certidão de Diligência e Contato Profissional',
-                source: 'certidao-diligencia-contato-profissional.docx',
-                fields: [
-                    'cliente', 'genero', 'nacionalidade', 'estadoCivil', 'profissao',
-                    'cpf', 'estado', 'banco', 'consultor', 'horaAssinatura'
-                ],
-                requiredFields: [
-                    'cliente', 'genero', 'nacionalidade', 'estadoCivil', 'profissao',
-                    'cpf', 'estado', 'banco', 'consultor', 'horaAssinatura'
-                ],
-                groups: {
-                    cliente: 'Identificação do cliente',
-                    genero: 'Identificação do cliente',
-                    nacionalidade: 'Identificação do cliente',
-                    estadoCivil: 'Identificação do cliente',
-                    profissao: 'Identificação do cliente',
-                    cpf: 'Identificação do cliente',
-                    estado: 'Dados da diligência',
-                    banco: 'Dados da diligência',
-                    consultor: 'Responsáveis e assinatura',
-                    horaAssinatura: 'Responsáveis e assinatura'
-                },
-                customLabels: {
-                    cliente: 'Nome do cliente',
-                    genero: 'Gênero para flexão do texto',
-                    cpf: 'CPF do cliente',
-                    estado: 'Estado / Cidade da comarca',
-                    banco: 'Instituição financeira',
-                    consultor: 'Nome do consultor',
-                    horaAssinatura: 'Horário da assinatura (com segundos)'
-                },
-                fieldTypes: {
-                    genero: 'select'
-                },
-                fieldOptions: {
-                    genero: [
-                        { value: '', label: 'Selecione o gênero gramatical' },
-                        { value: 'feminino', label: 'Feminino' },
-                        { value: 'masculino', label: 'Masculino' },
-                        { value: 'neutro', label: 'Neutro' }
-                    ]
-                },
-                placeholders: {
-                    estado: 'Ex.: São Paulo/SP',
-                    banco: 'Informe a instituição financeira',
-                    consultor: 'Informe o nome do consultor',
-                    horaAssinatura: 'Ex.: 14:35:20'
-                },
-                blocks: []
-            },
             'relatorio-negociacao-acordo-homologacao': {
                 title: 'Relatório de Negociação — Acordo de Homologação',
                 source: 'relatorio-negociacao-acordo-homologacao.docx',
@@ -9552,7 +9500,6 @@
             'recibo-prestacao-servicos': { category: 'Termos', icon: 'ph-receipt', description: 'Recibo institucional de pagamento por serviços.', purpose: 'Comprovar o recebimento de uma prestação de serviços.' },
             'termo-recompra': { category: 'Termos', icon: 'ph-arrows-clockwise', description: 'Termo de reconhecimento, recompra e desistência.', purpose: 'Registrar a recompra após contestação de pagamento.' },
             'relatorio-negociacao-acordo-homologacao': { category: 'Homologação', icon: 'ph-handshake', description: 'Relatório das tratativas para acordo de homologação.', purpose: 'Atualizar valores, proposta e manifestação do cliente.' },
-            'certidao-diligencia-contato-profissional': { category: 'Extrajudicial', icon: 'ph-certificate', description: 'Certidão de diligência e contato profissional.', purpose: 'Registrar a diligência e os esclarecimentos processuais.' },
             'relatorio-atualizacao-processo-judicial': { category: 'Judicial', icon: 'ph-briefcase', description: 'Relatório de andamento e movimentações.', purpose: 'Atualizar o cliente sobre o processo judicial.' },
             'laudo-pericial-contabil': { category: 'Perícia', icon: 'ph-chart-line-up', description: 'Análise pericial de financiamento de veículo.', purpose: 'Documentar a análise técnica e os cálculos.' }
         };

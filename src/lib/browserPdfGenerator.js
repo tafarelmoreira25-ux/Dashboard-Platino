@@ -10,7 +10,6 @@ import { gerarIntimacaoExtrajudicialPdf } from "./dynamicPdf/intimacaoExtrajudic
 import { gerarModeloTermoCompromissoPagamentoPdf } from "./dynamicPdf/modeloTermoCompromissoPagamentoPdf.js";
 import { gerarNotificacaoExtrajudicialPdf } from "./dynamicPdf/notificacaoExtrajudicialPdf.js";
 import {
-  gerarCertidaoDiligenciaContatoProfissionalPdf,
   gerarReciboPrestacaoServicosPdf,
   gerarRelatorioNegociacaoHomologacaoPdf,
   gerarTermoRecompraPdf,
@@ -243,16 +242,6 @@ export async function gerarPdfDinamico(templateKey, data = {}) {
       }, {
         assinaturaBytes: await asset("documentos-institucionais-assinatura.png"),
         carimboBytes: await asset("documentos-institucionais-carimbo.png"),
-      }),
-    "certidao-diligencia-contato-profissional": async () =>
-      gerarCertidaoDiligenciaContatoProfissionalPdf({
-        ...data,
-        ...comum,
-      }, {
-        assinaturaPlatinoBytes: await asset("certidao-diligencia-assinatura-platino.png"),
-        clicksignBytes: await asset("certidao-diligencia-clicksign.png"),
-        seloReproducaoBytes: await asset("certidao-diligencia-selo-reproducao.png"),
-        icpBrasilBytes: await asset("certidao-diligencia-icp-brasil.png"),
       }),
     "relatorio-atualizacao-processo-judicial": async () =>
       gerarRelatorioAtualizacaoProcessoPdf({
