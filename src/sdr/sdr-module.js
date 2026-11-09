@@ -28,6 +28,7 @@ import {
   sanitizeText,
   validateLeadRegistration
 } from "./sdr-core.js";
+import { scanLeadPage, SDR_SEARCH_SCAN_LIMIT } from "./sdr-query-policy.js";
 
 const root = document.getElementById("sdr-root");
 const CACHE_KEY = "platinoSdrWorkspaceV2";
@@ -67,10 +68,74 @@ const state = {
   app: null, auth: null, db: null, user: null, profile: null, role: "collaborator",
   leads: [], notifications: [], banks: [...DEFAULT_BANKS], rules: [], assignableUsers: [], events: [], comments: [],
   activeId: "", activeLead: null, step: 0, view: "sdr", section: "portfolio", metricFilter: "", saveTimer: 0,
-  page: 1, pageSize: 10, pageCursors: [null], pageTotal: null, pageHasNext: false, listRequest: 0,
-  filters: { search: "", status: "", classification: "" }, metricCounts: {},
-  stop: [], detailStops: [], stopList: null, booted: false, duplicatePayload: null
+  page: 1, pageSize: 10, pageCursors: [null], pageTotal: null, pageCountUnavailable: false, pageHasNext: false, listRequest: 0,
+  listError: "", listLoading: false, pageCache: new Map(),
+  filters: { search: "", status: "", classification: "" }, metricCounts: {}, metricPending: new Set(), metricGeneration: 0,
+  stop: [], notificationUid: "", stopAux: [], detailStops: [], stopList: null, booted: false, duplicatePayload: null
 };
+
+const sdrDevMode = ["localhost", "127.0.0.1"].includes(location.hostname);
+function invalidateMetricCounts() {
+  state.metricCounts = {};
+  state.metricPending = new Set();
+  state.metricGeneration += 1;
+}
+const sdrReadStats = { queriesStarted: {}, snapshotEvents: {}, documentsDelivered: {}, cacheHits: {}, activeListeners: {}, peakListeners: 0 };
+if (sdrDevMode) {
+  window.sdrDevReadStats = () => structuredClone(sdrReadStats);
+  window.sdrDevResetReadStats = () => {
+    sdrReadStats.queriesStarted = {};
+    sdrReadStats.snapshotEvents = {};
+    sdrReadStats.documentsDelivered = {};
+    sdrReadStats.cacheHits = {};
+    sdrReadStats.peakListeners = Object.values(sdrReadStats.activeListeners).reduce((sum, count) => sum + count, 0);
+  };
+}
+function recordRequest(label) {
+  if (!sdrDevMode) return;
+  sdrReadStats.queriesStarted[label] = (sdrReadStats.queriesStarted[label] || 0) + 1;
+}
+function recordDelivery(label, documents) {
+  if (!sdrDevMode) return;
+  sdrReadStats.documentsDelivered[label] = (sdrReadStats.documentsDelivered[label] || 0) + documents;
+}
+async function trackedDocs(reference, label) {
+  recordRequest(label);
+  const snapshot = await getDocs(reference);
+  recordDelivery(label, snapshot.size);
+  return snapshot;
+}
+async function trackedCount(reference, label) {
+  recordRequest(label);
+  const result = await getCountFromServer(reference);
+  return result;
+}
+async function trackedDoc(reference, label) {
+  recordRequest(label);
+  const result = await getDoc(reference);
+  recordDelivery(label, result.exists() ? 1 : 0);
+  return result;
+}
+function trackedSnapshot(reference, label, callback, onError) {
+  if (sdrDevMode) {
+    recordRequest(label);
+    sdrReadStats.activeListeners[label] = (sdrReadStats.activeListeners[label] || 0) + 1;
+    sdrReadStats.peakListeners = Math.max(sdrReadStats.peakListeners, Object.values(sdrReadStats.activeListeners).reduce((sum, count) => sum + count, 0));
+  }
+  let first = true;
+  const stop = onSnapshot(reference, snapshot => {
+    if (sdrDevMode) {
+      sdrReadStats.snapshotEvents[label] = (sdrReadStats.snapshotEvents[label] || 0) + 1;
+      sdrReadStats.documentsDelivered[label] = (sdrReadStats.documentsDelivered[label] || 0) + (first ? snapshot.size : snapshot.docChanges().length);
+    }
+    first = false;
+    callback(snapshot);
+  }, onError);
+  return () => {
+    stop();
+    if (sdrDevMode) sdrReadStats.activeListeners[label] = Math.max(0, (sdrReadStats.activeListeners[label] || 0) - 1);
+  };
+}
 
 const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
@@ -132,19 +197,34 @@ async function api(action, payload = {}) {
   if (response.status === 401) response = await send(true);
   const result = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(result.error || "Não foi possível concluir a operação.");
+  if (action === "lead.save") state.pageCache.clear();
   if (["lead.create", "lead.assign", "lead.accept", "lead.return", "lead.outcome", "consent.record", "analysis.run", "document.register", "contact.record"].includes(action)) {
     queueMicrotask(() => {
-      state.metricCounts = {};
-      if (["portfolio", "returns"].includes(state.section)) loadLeadPage();
-      loadIndicatorCounts(state.section === "indicators");
+      state.pageCache.clear();
+      invalidateMetricCounts();
+      if (["portfolio", "returns"].includes(state.section)) loadLeadPage("write");
+      if (["portfolio", "returns", "indicators"].includes(state.section)) loadIndicatorCounts(state.section === "indicators");
     });
   }
   return result;
 }
 
 function cache() {
+  if (!state.user?.uid) return {};
   try {
-    return JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+    const key = `${CACHE_KEY}:${state.user.uid}`;
+    const scoped = JSON.parse(localStorage.getItem(key) || "{}");
+    const marker = `${key}:migrated`;
+    if (!localStorage.getItem(marker)) {
+      const legacy = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+      for (const [id, draft] of Object.entries(legacy)) {
+        if (draft?.lead?.ownerSdrId !== state.user.uid || scoped[id]) continue;
+        scoped[id] = draft;
+      }
+      localStorage.setItem(key, JSON.stringify(scoped));
+      localStorage.setItem(marker, "1");
+    }
+    return scoped;
   } catch { return {}; }
 }
 
@@ -152,7 +232,7 @@ function saveLocalDraft(lead) {
   if (!lead) return;
   const data = cache();
   data[lead.id || "new"] = { lead, step: state.step, savedAt: new Date().toISOString() };
-  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+  localStorage.setItem(`${CACHE_KEY}:${state.user.uid}`, JSON.stringify(data));
 }
 
 function loadLocalDraft() {
@@ -163,7 +243,7 @@ function loadLocalDraft() {
 function clearLocalDraft(id) {
   const data = cache();
   delete data[id || "new"];
-  localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+  localStorage.setItem(`${CACHE_KEY}:${state.user.uid}`, JSON.stringify(data));
 }
 
 function emptyLead() {
@@ -227,14 +307,17 @@ function mount() {
 function bindShell() {
   document.getElementById("sdr-new-button").onclick = () => startNew();
   document.getElementById("sdr-refresh-button").onclick = async () => {
-    await loadLeadPage();
+    state.pageCache.clear();
+    state.pageCountUnavailable = false;
+    invalidateMetricCounts();
+    await loadLeadPage("refresh");
     await loadIndicatorCounts(state.section === "indicators");
     showToast("Carteira atualizada.", "success");
   };
   document.getElementById("sdr-search").oninput = debounceFilters;
-  document.getElementById("sdr-status-filter").onchange = resetListFilters;
-  document.getElementById("sdr-class-filter").onchange = resetListFilters;
-  document.getElementById("sdr-page-size").onchange = () => { state.pageSize = Number(document.getElementById("sdr-page-size").value); resetListFilters(); };
+  document.getElementById("sdr-status-filter").onchange = () => resetListFilters("filter");
+  document.getElementById("sdr-class-filter").onchange = () => resetListFilters("filter");
+  document.getElementById("sdr-page-size").onchange = () => { state.pageSize = Number(document.getElementById("sdr-page-size").value); resetListFilters("page-size"); };
   document.getElementById("sdr-notification-button").onclick = toggleNotifications;
   window.addEventListener("online", () => { setSaveStatus("Conexão restaurada. Sincronizando..."); flushCurrentDraft(); });
   window.addEventListener("offline", () => setSaveStatus("Sem conexão. Alterações protegidas neste dispositivo."));
@@ -252,7 +335,8 @@ function renderViewTabs() {
     state.view = button.dataset.view;
     state.activeId = "";
     state.activeLead = null;
-    state.metricCounts = {};
+    invalidateMetricCounts();
+    state.pageCache.clear();
     state.section = "portfolio";
     renderViewTabs();
     renderSectionTabs();
@@ -268,6 +352,7 @@ function renderSectionTabs() {
   nav.innerHTML = sections.map(([key, label]) => `<button type="button" class="sdr-view-tab" data-section="${key}" aria-selected="${state.section === key}">${label}</button>`).join("");
   nav.querySelectorAll("[data-section]").forEach(button => button.onclick = () => {
     state.section = button.dataset.section;
+    updateAuxSubscriptions();
     if (state.section === "registration" || state.section === "indicators") {
       state.stopList?.();
       state.stopList = null;
@@ -278,7 +363,10 @@ function renderSectionTabs() {
     renderSectionTabs();
     renderAll();
     if (state.section === "indicators") loadIndicatorCounts(true);
-    if (state.section === "returns" || state.section === "portfolio") resetListFilters();
+    if (state.section === "returns" || state.section === "portfolio") {
+      resetListFilters("section");
+      loadIndicatorCounts();
+    }
   });
 }
 
@@ -339,7 +427,7 @@ function renderMetrics() {
     state.section = "portfolio";
     renderSectionTabs();
     renderMetrics();
-    resetListFilters();
+    resetListFilters("metric");
   });
 }
 
@@ -368,19 +456,23 @@ async function loadIndicatorCounts(all = false) {
   if (!state.db || !state.user) return;
   const uid = state.user.uid;
   const view = state.view;
+  const generation = state.metricGeneration;
+  const pending = state.metricPending;
   const keys = (all ? metrics.map(([key]) => key) : ["portfolio", "pending", "qualifying", "forwarded", "approved"])
-    .filter(key => state.metricCounts[key] === undefined);
+    .filter(key => state.metricCounts[key] === undefined && !pending.has(key));
+  keys.forEach(key => pending.add(key));
   const ref = collection(state.db, "sdrLeads");
   await Promise.all(keys.map(async key => {
     try {
-      const result = await getCountFromServer(query(ref, ...leadScopeConstraints(), ...metricConstraints(key)));
-      if (state.user?.uid !== uid || state.view !== view) return;
+      const result = await trackedCount(query(ref, ...leadScopeConstraints(), ...metricConstraints(key)), `indicator:${key}`);
+      if (state.user?.uid !== uid || state.view !== view || state.metricGeneration !== generation) return;
       state.metricCounts[key] = result.data().count;
     } catch (error) {
       console.warn(`Indicador SDR ${key}:`, error);
-    }
+      if (state.user?.uid === uid && state.view === view && state.metricGeneration === generation) state.metricCounts[key] = null;
+    } finally { pending.delete(key); }
   }));
-  if (state.user?.uid === uid && state.view === view) renderMetrics();
+  if (state.user?.uid === uid && state.view === view && state.metricGeneration === generation) renderMetrics();
 }
 
 function renderStatusFilter() {
@@ -403,10 +495,10 @@ function leadMatchesFilters(lead) {
 let filterTimer = 0;
 function debounceFilters() {
   clearTimeout(filterTimer);
-  filterTimer = setTimeout(resetListFilters, 250);
+  filterTimer = setTimeout(() => resetListFilters("typing"), 250);
 }
 
-function resetListFilters() {
+function resetListFilters(reason = "filter") {
   clearTimeout(filterTimer);
   state.filters = {
     search: normalizeSearch(document.getElementById("sdr-search")?.value),
@@ -416,7 +508,9 @@ function resetListFilters() {
   state.page = 1;
   state.pageCursors = [null];
   state.pageTotal = null;
-  loadLeadPage();
+  state.pageCountUnavailable = false;
+  state.pageCache.clear();
+  loadLeadPage(reason);
 }
 
 function leadQueryConstraints() {
@@ -429,7 +523,7 @@ function leadQueryConstraints() {
   return constraints;
 }
 
-async function loadLeadPage() {
+async function loadLeadPage(reason = "page") {
   if (!state.db || !state.user || !root?.querySelector("#sdr-lead-list")) return;
   state.stopList?.();
   state.stopList = null;
@@ -438,56 +532,91 @@ async function loadLeadPage() {
   const ref = collection(state.db, "sdrLeads");
   const base = leadQueryConstraints();
   let cursor = state.pageCursors[state.page - 1] || null;
+  const cacheKey = JSON.stringify([uid, state.view, state.section, state.filters, state.metricFilter, state.pageSize, state.page]);
+  const cached = state.pageCache.get(cacheKey);
+  if (cached && Date.now() - cached.at < 10_000) {
+    if (sdrDevMode) sdrReadStats.cacheHits[reason] = (sdrReadStats.cacheHits[reason] || 0) + 1;
+    Object.assign(state, { leads: cached.leads, pageHasNext: cached.hasNext, listError: "", listLoading: false });
+    state.pageCursors[state.page] = cached.nextCursor;
+    renderQueue();
+    return;
+  }
+  state.leads = [];
+  state.listError = "";
+  state.listLoading = true;
+  if (!document.querySelector(".sdr-queue")?.hidden) renderQueue();
   if (!state.filters.search && !state.filters.classification && !state.metricFilter && (!state.filters.status || canManage()) && (state.section !== "returns" || canManage())) {
     const pageQuery = query(ref, ...base, ...(cursor ? [startAfter(cursor)] : []), limit(state.pageSize + 1));
-    state.stopList = onSnapshot(pageQuery, snapshot => {
+    state.stopList = trackedSnapshot(pageQuery, `lead-page:${reason}`, snapshot => {
       if (request !== state.listRequest || state.user?.uid !== uid) return;
       const visible = snapshot.docs.slice(0, state.pageSize);
       state.leads = visible.map(item => ({ id: item.id, ...item.data() }));
+      state.listError = "";
+      state.listLoading = false;
       state.pageHasNext = snapshot.size > state.pageSize;
       state.pageCursors[state.page] = visible.at(-1) || cursor;
       renderQueue();
-    }, error => showToast(`Não foi possível sincronizar a página: ${error.message}`, "error"));
-    if (state.pageTotal === null) {
+    }, error => {
+      if (request !== state.listRequest) return;
+      state.leads = [];
+      state.pageHasNext = false;
+      state.listLoading = false;
+      state.listError = `Não foi possível sincronizar esta consulta: ${error.message}`;
+      renderQueue();
+    });
+    if (state.pageTotal === null && !state.pageCountUnavailable) {
       try {
-        const count = await getCountFromServer(query(ref, ...base));
+        const count = await trackedCount(query(ref, ...base), "lead-total");
         if (request === state.listRequest) { state.pageTotal = count.data().count; renderLeadPagination(); }
-      } catch { /* A numeração continua disponível sem a contagem total. */ }
+      } catch { state.pageCountUnavailable = true; }
     }
     return;
   }
-  const matches = [];
-  let exhausted = false;
   try {
-    while (matches.length <= state.pageSize && !exhausted) {
-      const batchSize = Math.min(51, state.pageSize + 1);
-      const pageQuery = query(ref, ...base, ...(cursor ? [startAfter(cursor)] : []), limit(batchSize));
-      const snapshot = await getDocs(pageQuery);
-      if (request !== state.listRequest || state.user?.uid !== uid) return;
-      for (const item of snapshot.docs) {
-        const lead = { id: item.id, ...item.data() };
-        if (leadMatchesFilters(lead)) matches.push({ lead, snapshot: item });
-        if (matches.length > state.pageSize) break;
-      }
-      cursor = snapshot.docs.at(-1) || cursor;
-      exhausted = snapshot.size < batchSize;
-      if (!snapshot.size) exhausted = true;
+    const result = await scanLeadPage({
+      pageSize: state.pageSize, cursor, maxDocuments: SDR_SEARCH_SCAN_LIMIT,
+      isCurrent: () => request === state.listRequest && state.user?.uid === uid,
+      fetchBatch: async (after, size) => {
+        const pageQuery = query(ref, ...base, ...(after ? [startAfter(after)] : []), limit(size));
+        const snapshot = await trackedDocs(pageQuery, `lead-filter-scan:${reason}`);
+        return snapshot.docs;
+      },
+      matches: item => leadMatchesFilters({ id: item.id, ...item.data() })
+    });
+    if (result.cancelled) return;
+    if (!result.complete) {
+      state.leads = [];
+      state.pageHasNext = false;
+      state.listLoading = false;
+      state.listError = `Busca não concluída após ${result.scanned} documentos consultados. Nenhum resultado parcial foi exibido. Refine os filtros; a pesquisa completa exige indexação dos registros.`;
+      renderQueue();
+      return;
     }
-    const visible = matches.slice(0, state.pageSize);
-    state.leads = visible.map(item => item.lead);
-    state.pageHasNext = matches.length > state.pageSize;
-    state.pageCursors[state.page] = visible.at(-1)?.snapshot || cursor;
-    if (state.pageTotal === null && !state.filters.search && !state.metricFilter && !state.filters.classification && (!state.filters.status || canManage())) {
+    state.leads = result.items.map(item => ({ id: item.id, ...item.data() }));
+    state.listError = "";
+    state.listLoading = false;
+    state.pageHasNext = result.hasNext;
+    state.pageCursors[state.page] = result.nextCursor;
+    for (const [key, value] of state.pageCache) if (Date.now() - value.at >= 10_000) state.pageCache.delete(key);
+    if (state.pageCache.size >= 8) state.pageCache.delete(state.pageCache.keys().next().value);
+    state.pageCache.set(cacheKey, { at: Date.now(), leads: state.leads, hasNext: result.hasNext, nextCursor: result.nextCursor });
+    if (state.pageTotal === null && !state.pageCountUnavailable && !state.filters.search && !state.metricFilter && !state.filters.classification && (!state.filters.status || canManage())) {
       try {
-        const count = await getCountFromServer(query(ref, ...base));
+        const count = await trackedCount(query(ref, ...base), "lead-total");
         if (request !== state.listRequest) return;
         state.pageTotal = count.data().count;
-      } catch { state.pageTotal = null; }
+      } catch { state.pageCountUnavailable = true; }
     } else state.pageTotal = null;
     if (request !== state.listRequest) return;
     renderQueue();
   } catch (error) {
-    if (request === state.listRequest) showToast(`Não foi possível consultar a carteira: ${error.message}`, "error");
+    if (request === state.listRequest) {
+      state.leads = [];
+      state.pageHasNext = false;
+      state.listLoading = false;
+      state.listError = `Não foi possível consultar a carteira: ${error.message}`;
+      renderQueue();
+    }
   }
 }
 
@@ -495,11 +624,15 @@ function changeLeadPage(page) {
   if (page < 1 || (page > state.page && !state.pageHasNext)) return;
   if (page > state.page + 1 || !state.pageCursors[page - 1] && page > 1) return;
   state.page = page;
-  loadLeadPage();
+  loadLeadPage("page");
   document.getElementById("sdr-list-heading")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderLeadPagination() {
+  if (state.listError || state.listLoading) {
+    document.getElementById("sdr-pagination").innerHTML = "";
+    return;
+  }
   const totalPages = state.pageTotal === null ? null : Math.max(1, Math.ceil(state.pageTotal / state.pageSize));
   const pages = totalPages === null
     ? [Math.max(1, state.page - 1), state.page, ...(state.pageHasNext ? [state.page + 1] : [])]
@@ -521,8 +654,8 @@ function badgeClass(lead) {
 function renderQueue() {
   const items = state.leads;
   document.getElementById("sdr-list-heading").textContent = state.section === "returns" ? "Retornos" : "Carteira de leads";
-  document.getElementById("sdr-list-count").textContent = `${items.length} nesta página`;
-  document.getElementById("sdr-lead-list").innerHTML = items.length ? items.map(lead => `
+  document.getElementById("sdr-list-count").textContent = state.listLoading ? "Buscando..." : state.listError ? "Busca interrompida" : `${items.length} nesta página`;
+  document.getElementById("sdr-lead-list").innerHTML = state.listLoading ? '<div class="sdr-empty" role="status">Consultando a carteira...</div>' : state.listError ? `<div class="sdr-empty" role="status">${esc(state.listError)}</div>` : items.length ? items.map(lead => `
     <button type="button" class="sdr-lead-card" data-lead="${esc(lead.id)}" aria-selected="${state.activeId === lead.id}">
       <div class="flex items-start justify-between gap-2"><strong class="truncate text-sm text-slate-800">${esc(lead.fullName || "Sem nome")}</strong><span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span></div>
       <p class="mt-1 text-xs text-slate-500">${esc(maskPhone(lead.phone))} · ${esc(lead.status || "Rascunho")}</p>
@@ -558,10 +691,20 @@ function renderEmptyWorkspace() {
 
 function startNew() {
   if (!canCreateLead()) return showToast("Faça login para criar um lead.", "error");
+  if (state.view !== "sdr") {
+    state.view = "sdr";
+    invalidateMetricCounts();
+    state.pageCache.clear();
+    renderViewTabs();
+  }
   state.activeId = "";
   state.activeLead = null;
   state.step = 0;
   state.section = "registration";
+  state.stopList?.();
+  state.stopList = null;
+  state.listRequest += 1;
+  updateAuxSubscriptions();
   saveLocalDraft(emptyLead());
   renderSectionTabs();
   renderAll();
@@ -572,15 +715,25 @@ async function openLead(id) {
   let lead = state.leads.find(item => item.id === id);
   if (!lead) {
     try {
-      const snapshot = await getDoc(doc(state.db, "sdrLeads", id));
+      const snapshot = await trackedDoc(doc(state.db, "sdrLeads", id), "lead-detail");
       if (!snapshot.exists() || !state.user) return showToast("Lead não encontrado ou sem acesso.", "error");
       lead = { id: snapshot.id, ...snapshot.data() };
     } catch (error) { return showToast(`Não foi possível abrir o lead: ${error.message}`, "error"); }
+  }
+  if (state.view === "settings") {
+    state.view = "sdr";
+    invalidateMetricCounts();
+    state.pageCache.clear();
+    renderViewTabs();
   }
   state.activeId = id;
   state.activeLead = lead;
   state.step = 0;
   state.section = "registration";
+  state.stopList?.();
+  state.stopList = null;
+  state.listRequest += 1;
+  updateAuxSubscriptions();
   renderSectionTabs();
   document.getElementById("sdr-layout").classList.add("is-editing");
   subscribeLeadDetails(id);
@@ -936,8 +1089,7 @@ async function moveStep(direction, lead) {
   }
   state.step = Math.max(0, Math.min(state.step + direction, SDR_STEPS.length - 1));
   if (lead.status !== previousStatus) {
-    state.metricCounts = {};
-    loadIndicatorCounts();
+    invalidateMetricCounts();
   }
   saveLocalDraft(lead);
   renderSdrWorkspace(lead);
@@ -1411,7 +1563,11 @@ function renderNotifications() {
 }
 
 function subscribeLeads() {
-  state.stop.splice(0).forEach(stop => stop?.());
+  if (state.notificationUid !== state.user?.uid) {
+    state.stop.splice(0).forEach(stop => stop?.());
+    state.notificationUid = state.user?.uid || "";
+  }
+  state.stopAux.splice(0).forEach(stop => stop?.());
   state.stopList?.();
   state.stopList = null;
   state.detailStops.splice(0).forEach(stop => stop?.());
@@ -1419,23 +1575,38 @@ function subscribeLeads() {
   state.page = 1;
   state.pageCursors = [null];
   state.pageTotal = null;
-  loadLeadPage();
-  loadIndicatorCounts();
-  state.stop.push(onSnapshot(query(collection(state.db, "sdrNotifications"), where("userId", "==", state.user.uid), limit(100)), snapshot => {
+  state.pageCountUnavailable = false;
+  state.pageCache.clear();
+  if (state.view !== "settings" && ["portfolio", "returns"].includes(state.section)) {
+    loadLeadPage("open");
+    loadIndicatorCounts();
+  }
+  if (!state.stop.length) state.stop.push(trackedSnapshot(query(collection(state.db, "sdrNotifications"), where("userId", "==", state.user.uid), limit(100)), "notifications", snapshot => {
     state.notifications = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
     document.getElementById("sdr-notification-count").textContent = state.notifications.filter(item => !item.readAt).length;
     renderNotifications();
   }));
-  state.stop.push(onSnapshot(query(collection(state.db, "sdrBankCatalog"), where("isActive", "==", true), limit(200)), snapshot => {
+  updateAuxSubscriptions();
+}
+
+function updateAuxSubscriptions() {
+  if (!state.db || !state.user || (state.view !== "settings" && state.section !== "registration")) {
+    state.stopAux.splice(0).forEach(stop => stop?.());
+    return;
+  }
+  if (state.stopAux.length) return;
+  state.stopAux.push(trackedSnapshot(query(collection(state.db, "sdrBankCatalog"), where("isActive", "==", true), limit(200)), "bank-catalog", snapshot => {
     const remoteBanks = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
     state.banks = mergeBankCatalog(remoteBanks);
     if (state.view === "settings" || state.step === 2) renderAll();
   }));
-  state.stop.push(onSnapshot(query(collection(state.db, "sdrSimulationRules"), limit(200)), snapshot => {
+  state.stopAux.push(trackedSnapshot(query(collection(state.db, "sdrSimulationRules"), limit(200)), "simulation-rules", snapshot => {
     state.rules = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.version || 0) - (a.version || 0));
     if (state.view === "settings") renderAll();
   }));
-  if (canSdr()) api("users.assignable").then(result => {
+  const uid = state.user.uid;
+  if (canSdr() && state.view !== "settings") api("users.assignable").then(result => {
+    if (state.user?.uid !== uid) return;
     state.assignableUsers = result.users || [];
     if (state.step === SDR_STEPS.length - 1 && state.view === "sdr") renderAll();
   }).catch(() => {});
@@ -1443,11 +1614,12 @@ function subscribeLeads() {
 
 function subscribeLeadDetails(id) {
   state.detailStops.splice(0).forEach(stop => stop?.());
-  const commentsStop = onSnapshot(query(collection(state.db, "sdrLeadComments"), where("leadId", "==", id), limit(200)), snapshot => {
+  if (state.view !== "consultant") return;
+  const commentsStop = trackedSnapshot(query(collection(state.db, "sdrLeadComments"), where("leadId", "==", id), limit(200)), "lead-comments", snapshot => {
     state.comments = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
     if (state.view === "consultant") renderAll();
   });
-  const eventsStop = onSnapshot(query(collection(state.db, "sdrLeadEvents"), where("leadId", "==", id), limit(300)), snapshot => {
+  const eventsStop = trackedSnapshot(query(collection(state.db, "sdrLeadEvents"), where("leadId", "==", id), limit(300)), "lead-events", snapshot => {
     state.events = snapshot.docs.map(item => ({ id: item.id, ...item.data() })).sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
     if (state.view === "consultant") renderAll();
   });
@@ -1455,11 +1627,13 @@ function subscribeLeadDetails(id) {
 }
 
 async function boot(context) {
-  if (state.booted || !root || !context?.auth?.currentUser) return;
+  if (!root || !context?.auth?.currentUser) return;
+  if (state.booted && state.user?.uid === context.auth.currentUser.uid) return;
+  if (state.booted) clearSdrSession();
   state.booted = true;
   Object.assign(state, context, { user: context.auth.currentUser });
   const uid = state.user.uid;
-  const profileSnapshot = await getDoc(doc(state.db, "users", uid));
+  const profileSnapshot = await trackedDoc(doc(state.db, "users", uid), "profile");
   if (context.auth.currentUser?.uid !== uid || !state.booted) return;
   state.profile = profileSnapshot.data() || {};
   state.role = resolveRole(state.profile);
@@ -1479,20 +1653,46 @@ async function boot(context) {
 window.addEventListener("platino-firebase-ready", event => boot(event.detail));
 if (window.platinoFirebaseContext?.auth?.currentUser) boot(window.platinoFirebaseContext);
 
-window.addEventListener("platino-signed-out", () => {
+function clearSdrSession() {
   clearTimeout(state.saveTimer);
   clearTimeout(filterTimer);
   state.stop.splice(0).forEach(stop => stop?.());
+  state.notificationUid = "";
+  state.stopAux.splice(0).forEach(stop => stop?.());
   state.stopList?.();
   state.stopList = null;
   state.detailStops.splice(0).forEach(stop => stop?.());
   state.booted = false;
   state.listRequest += 1;
   state.leads = [];
+  state.notifications = [];
+  state.banks = [...DEFAULT_BANKS];
+  state.rules = [];
+  state.assignableUsers = [];
+  state.events = [];
+  state.comments = [];
+  state.activeId = "";
   state.activeLead = null;
-  state.metricCounts = {};
+  state.view = "sdr";
+  state.section = "portfolio";
+  state.metricFilter = "";
+  state.filters = { search: "", status: "", classification: "" };
+  state.page = 1;
+  state.pageCursors = [null];
+  state.pageTotal = null;
+  state.pageCountUnavailable = false;
+  state.pageHasNext = false;
+  state.listError = "";
+  state.listLoading = false;
+  invalidateMetricCounts();
+  state.pageCache.clear();
   state.user = null;
   state.profile = null;
   state.db = null;
+  state.auth = null;
+  state.app = null;
+  state.role = "collaborator";
   if (root) root.innerHTML = "";
-});
+}
+
+window.addEventListener("platino-signed-out", clearSdrSession);

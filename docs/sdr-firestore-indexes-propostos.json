@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ownerSdrId", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "assignedConsultantId", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ownerSdrId", "order": "ASCENDING" }, { "fieldPath": "commercialClassification", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "assignedConsultantId", "order": "ASCENDING" }, { "fieldPath": "commercialClassification", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ownerSdrId", "order": "ASCENDING" }, { "fieldPath": "nextContactAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "assignedConsultantId", "order": "ASCENDING" }, { "fieldPath": "nextContactAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ownerSdrId", "order": "ASCENDING" }, { "fieldPath": "nextContactAt", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "assignedConsultantId", "order": "ASCENDING" }, { "fieldPath": "nextContactAt", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] },
+    { "collectionGroup": "sdrLeads", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "nextContactAt", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] }
+  ],
+  "fieldOverrides": []
+}

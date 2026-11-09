@@ -1,5 +1,7 @@
 # Diagnóstico da reestruturação da SDR
 
+Atualização: a auditoria e os limites de busca da etapa seguinte estão em `docs/sdr-performance-audit.md`. As limitações abaixo descrevem o estado do commit inicial da reestruturação.
+
 ## Origem dos dados e fluxo preservado
 
 - A SDR usa Firebase Authentication, Firestore e a API `api/sdr.js` com Firebase Admin. Não usa Supabase nem Google Sheets.

@@ -16,7 +16,7 @@
     "test:ranking": "node tests/ranking-sheet-summary-test.mjs && node tests/ranking-current-month-sheet-test.mjs",
     "test:ranking-summary": "node tests/ranking-summary-source-test.mjs",
     "test:laudo": "node tests/laudo-pericial-contabil-test.mjs",
-    "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-ui-test.mjs",
+    "test:sdr": "node tests/sdr-core-test.mjs && node tests/sdr-query-policy-test.mjs && node tests/sdr-ui-test.mjs",
     "test:sdr:pdf": "node tests/sdr-analysis-pdf-test.mjs",
     "migrate:sdr": "node migrations/001-sdr-module-v1.mjs"
   },
