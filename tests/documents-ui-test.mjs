@@ -53,7 +53,7 @@ assert.match(html, /const categoryOrder = \['Todos', 'Defesa', 'Extrajudicial', 
 assert.match(html, /\.documents-categories\s*\{[\s\S]*?flex-wrap: wrap;[\s\S]*?overflow: visible;/);
 assert.match(html, /\.documents-template-options\s*\{[\s\S]*?grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 assert.match(html, /@media \(max-width: 759px\)[\s\S]*?\.documents-template-options,[\s\S]*?grid-template-columns: 1fr;/);
-assert.match(html, /name="platino_site_search"[\s\S]*?autocomplete="off"[\s\S]*?placeholder="Pesquisar no sistema\.\.\."/);
+assert.match(html, /type="search" id="global-search" name="global-search"[\s\S]*?autocomplete="off"[\s\S]*?aria-label="Pesquisar no sistema"[\s\S]*?placeholder="Pesquisar no sistema\.\.\."/);
 assert.match(html, /function clearGlobalSearch\(\)/);
 assert.match(html, /window\.addEventListener\('pageshow', clearGlobalSearch\)/);
 assert.match(html, /name="document_library_search"/);

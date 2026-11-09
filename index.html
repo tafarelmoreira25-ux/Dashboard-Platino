@@ -3415,7 +3415,7 @@
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
                 <div class="topbar-search-frame relative" role="search" aria-label="Busca global do sistema">
                     <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
-                    <input type="search" id="global-search-input" name="platino_site_search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                    <input type="search" id="global-search" name="global-search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" aria-autocomplete="none" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
                 </div>
             </div>
 
@@ -6454,7 +6454,7 @@
 
         // LÓGICA DA BUSCA E MODAL
         function clearGlobalSearch() {
-            const input = document.getElementById('global-search-input');
+            const input = document.getElementById('global-search');
             if (!input) return;
             input.value = '';
             input.defaultValue = '';
@@ -6592,7 +6592,7 @@
             const query = type === 'golpe'
                 ? 'Como responder à objeção: isso é golpe?'
                 : 'Como responder à objeção: não tenho dinheiro agora?';
-            const input = document.getElementById('global-search-input');
+            const input = document.getElementById('global-search');
             if (input) {
                 input.value = query;
                 input.focus();
