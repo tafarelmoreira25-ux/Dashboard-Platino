@@ -79,6 +79,34 @@ export function normalizeSearch(value) {
     .trim();
 }
 
+// Kept separate from the current substring search until historical leads are backfilled.
+export function normalizeLeadTextKey(value) {
+  return normalizeSearch(value).replace(/\s+/g, " ");
+}
+
+export function readableDuplicateMatches(actor, leads) {
+  if (!actor?.uid) return [];
+  return leads.filter(lead => roleCan("lead.read", actor.role, {
+    uid: actor.uid,
+    ownerSdrId: lead.ownerSdrId,
+    assignedConsultantId: lead.assignedConsultantId
+  })).map(lead => ({
+    id: lead.id,
+    fullName: lead.fullName,
+    phone: lead.phone,
+    status: lead.status,
+    ownerSdrName: lead.ownerSdrName,
+    lastContactAt: lead.lastContactAt
+  }));
+}
+
+export function duplicatePreview(actor, leads, justification = "") {
+  const matches = readableDuplicateMatches(actor, leads);
+  return matches.length && !String(justification).trim()
+    ? { duplicate: true, matches }
+    : null;
+}
+
 export function sanitizeText(value, maxLength = 4000) {
   return String(value ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, maxLength);
 }

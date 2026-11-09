@@ -6,8 +6,10 @@ import {
   assertTransition,
   calculateSimulation,
   createCorrectionNumber,
+  duplicatePreview,
   getForwardingMissingFields,
   normalizeDigits,
+  normalizeLeadTextKey,
   roleCan,
   sanitizeText,
   validateLeadRegistration
@@ -203,8 +205,11 @@ function cleanLeadInput(input = {}, previous = {}) {
     ...previous,
     id: sanitizeText(input.id || previous.id, 128),
     protocol: previous.protocol || sanitizeText(input.protocol, 80),
+    protocolKey: normalizeLeadTextKey(previous.protocol || sanitizeText(input.protocol, 80)),
     externalCode: sanitizeText(input.externalCode, 80),
+    externalCodeKey: normalizeLeadTextKey(sanitizeText(input.externalCode, 80)),
     fullName: sanitizeText(input.fullName, 120),
+    fullNameKey: normalizeLeadTextKey(sanitizeText(input.fullName, 120)),
     phone: sanitizeText(input.phone, 32),
     phoneKey: normalizeDigits(input.phone),
     email: sanitizeText(input.email, 254).toLowerCase(),
@@ -307,16 +312,10 @@ async function createLead(actor, input) {
     duplicates.push(...snapshot.docs.map(item => ({ id: item.id, ...item.data() })));
   }
   const uniqueDuplicates = [...new Map(duplicates.map(item => [item.id, item])).values()];
-  if (uniqueDuplicates.length && !sanitizeText(input.duplicateJustification, 1000)) {
-    return { duplicate: true, matches: uniqueDuplicates.map(item => ({
-      id: item.id,
-      fullName: item.fullName,
-      phone: item.phone,
-      status: item.status,
-      ownerSdrName: item.ownerSdrName,
-      lastContactAt: item.lastContactAt
-    })) };
-  }
+  // Admin SDK bypasses Firestore rules. Never return an inaccessible match,
+  // including its ID or a distinct "duplicate" response that can be probed.
+  const preview = duplicatePreview(actor, uniqueDuplicates, sanitizeText(input.duplicateJustification, 1000));
+  if (preview) return preview;
 
   const leadReference = adminDb().collection("sdrLeads").doc();
   const dateKey = formatDateKey();
@@ -327,6 +326,7 @@ async function createLead(actor, input) {
       ...initial,
       id: leadReference.id,
       protocol,
+      protocolKey: normalizeLeadTextKey(protocol),
       status: "Novo lead",
       ownerSdrId: actor.uid,
       ownerSdrName: actor.name,
@@ -338,9 +338,10 @@ async function createLead(actor, input) {
     transaction.set(leadReference, lead);
     await writeEvent(transaction, leadReference.id, actor, "lead.created", { protocol });
     if (uniqueDuplicates.length) {
-      await writeAudit(transaction, leadReference.id, actor, "lead.duplicate.override", {}, {
+      const justification = sanitizeText(input.duplicateJustification, 1000);
+      await writeAudit(transaction, leadReference.id, actor, justification ? "lead.duplicate.override" : "lead.duplicate.hidden", {}, {
         duplicateIds: uniqueDuplicates.map(item => item.id)
-      }, input.duplicateJustification);
+      }, justification || "Duplicidade fora do escopo de leitura; cadastro permitido sem divulgar o registro.");
     }
     return lead;
   });
