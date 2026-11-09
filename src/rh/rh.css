@@ -38,6 +38,7 @@
 #section-rh .rh-publish-actions { display: flex; justify-content: space-between; align-items: center; gap: .7rem; }
 #section-rh #rh-mini-status { color: #4b3a2c !important; font-size: .75rem; }
 #section-rh .rh-faq-intro { display: flex; justify-content: space-between; align-items: center; gap: .8rem; margin-bottom: 1rem; color: #443526; font-size: .88rem; font-weight: 700; }
+#section-rh .rh-faq-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 #section-rh .rh-faq-list { display: grid; gap: .65rem; }
 #section-rh .rh-faq-item { border: 1px solid #d4c1a5; border-radius: .75rem; background: #fffaf1; }
 #section-rh .rh-faq-item summary { cursor: pointer; padding: .9rem 1rem; color: #3d3025; font-size: .86rem; font-weight: 800; }
