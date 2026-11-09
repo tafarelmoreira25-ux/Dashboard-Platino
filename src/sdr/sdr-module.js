@@ -265,7 +265,7 @@ function mount() {
       <header class="sdr-command-hero">
         <div class="sdr-command-copy">
           <span class="sdr-command-eyebrow">Qualificação comercial</span>
-          <h2 class="sdr-title">SDR <span>· ${esc(hunterDisplayName())}</span></h2>
+          <h2 class="sdr-title">SDR — Qualificação <span>· ${esc(hunterDisplayName())}</span></h2>
           <p class="sdr-subtitle">Cadastre clientes potenciais, construa o perfil, gere a análise e encaminhe oportunidades qualificadas.</p>
           <div class="sdr-command-status"><span></span> Carteira atualizada ao navegar e ao salvar</div>
         </div>
@@ -660,7 +660,7 @@ function renderQueue() {
       <div class="flex items-start justify-between gap-2"><strong class="truncate text-sm text-slate-800">${esc(lead.fullName || "Sem nome")}</strong><span class="sdr-badge ${badgeClass(lead)}">${esc(lead.commercialClassification || "Frio")} · ${Number(lead.commercialScore) || 0}%</span></div>
       <p class="mt-1 text-xs text-slate-500">${esc(maskPhone(lead.phone))} · ${esc(lead.status || "Rascunho")}</p>
       <div class="mt-2 flex flex-wrap gap-1"><span class="sdr-badge">${esc(lead.origin || "Origem não informada")}</span>${lead.assignedConsultantName ? `<span class="sdr-badge forwarded">${esc(lead.assignedConsultantName)}</span>` : ""}</div>
-      <p class="mt-2 text-[10px] text-slate-400">${esc(lead.protocol || "Protocolo ao criar")}${lead.nextContactAt ? ` · Próximo: ${esc(formatDateTime(lead.nextContactAt))}` : ""}</p>
+      <p class="sdr-lead-meta">${esc(lead.protocol || "Protocolo ao criar")}${lead.nextContactAt ? ` · Próximo: ${esc(formatDateTime(lead.nextContactAt))}` : ""}</p>
     </button>`).join("") : `<div class="sdr-empty"><span><i class="ph ph-users-three mb-2 block text-3xl"></i>Nenhum lead para os filtros selecionados.</span></div>`;
   document.querySelectorAll("[data-lead]").forEach(button => button.onclick = () => openLead(button.dataset.lead));
   renderLeadPagination();
@@ -916,10 +916,10 @@ function bankSelect(lead) {
 
 function analysisStep(lead) {
   const a = lead.analysis || {};
-  return `<section class="sdr-form-card"><h3>ANÁLISE PRELIMINAR DO CONTRATO</h3><p>O cálculo e a análise utilizam tecnologia inteligente para gerar um diagnóstico baseado nas normas e diretrizes do Bacen.</p>
+  return `<section class="sdr-form-card"><h3>Análise preliminar do contrato</h3><p>O cálculo e a análise utilizam tecnologia inteligente para gerar um diagnóstico baseado nas normas e diretrizes do Bacen.</p>
     <button id="sdr-run-analysis" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}><i class="ph ph-calculator"></i>CALCULAR SIMULAÇÃO PRELIMINAR</button>
     <div id="sdr-analysis-loading" class="mt-4 hidden"><p id="sdr-analysis-message" class="mb-2 text-xs font-bold text-sky-800">Organizando os dados do contrato</p><div class="sdr-analysis-progress"><span></span></div></div>
-    ${a.correctionNumber ? `<div class="mt-5"><p class="text-xs font-black uppercase text-emerald-700">ANÁLISE CONCLUÍDA!</p><h4 class="mt-1 text-lg font-black text-slate-800">MARGEM DE REDUÇÃO E ESTORNO DETECTADA COM SUCESSO.</h4><div class="sdr-result-grid mt-4">${[
+    ${a.correctionNumber ? `<div class="mt-5"><p class="text-xs font-black uppercase text-emerald-700">Análise concluída</p><h4 class="mt-1 text-lg font-black text-slate-800">Margem de redução e estorno detectada com sucesso.</h4><div class="sdr-result-grid mt-4">${[
       ["PARCELA ATUAL", formatMoney(a.currentInstallment)], ["NOVA PARCELA ESTIMADA", formatMoney(a.estimatedInstallment)],
       ["REDUÇÃO POR PARCELA", formatMoney(a.installmentReduction)], ["ESTORNO", formatMoney(a.estimatedRefund)],
       ["REDUÇÃO TOTAL DO CONTRATO", formatMoney(a.totalContractReduction)], ["SITUAÇÃO", "APROVADA"]
@@ -957,14 +957,14 @@ function consentStep(lead) {
 }
 
 function assignmentStep(lead) {
-  return `<section class="sdr-form-card"><h3>ENCAMINHAR LEAD POTENCIAL</h3><p>Somente usuários ativos com perfil Analista, Consultor ou Gestão são apresentados.</p><div class="sdr-grid two">
+  return `<section class="sdr-form-card"><h3>Encaminhar lead potencial</h3><p>Somente usuários ativos com perfil Analista, Consultor ou Gestão são apresentados.</p><div class="sdr-grid two">
     <label class="sdr-field">Consultor responsável <span class="sdr-required">*</span><select class="sdr-control" data-sdr-field="assignment.consultantId"><option value="">Selecione</option>${state.assignableUsers.map(user => `<option value="${esc(user.id)}" ${lead.assignment?.consultantId === user.id ? "selected" : ""}>${esc(user.displayName)} · ${esc(user.operationalRole)} · ${user.activeLeads} ativo(s)</option>`).join("")}</select></label>
     ${input("Prioridade", "assignment.priority", lead, { options: ["Normal", "Urgente", "Alta", "Baixa"] })}
     ${input("Prazo recomendado", "assignment.deadline", lead, { type: "datetime-local" })}
     ${input("Motivo do encaminhamento", "assignment.reason", lead)}
   </div>${input("Orientação do SDR", "assignment.instructions", lead, { as: "textarea" })}${input("Pontos importantes", "assignment.importantPoints", lead, { as: "textarea" })}
   <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">${getForwardingMissingFields(lead).length ? `Pendências: ${esc(getForwardingMissingFields(lead).join(", "))}` : "Todos os requisitos obrigatórios estão preenchidos."}</div>
-  <button id="sdr-assign-lead" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}>FINALIZAR E ENCAMINHAR</button></section>`;
+  <button id="sdr-assign-lead" type="button" class="sdr-primary mt-4" ${!lead.id ? "disabled" : ""}>Finalizar e encaminhar</button></section>`;
 }
 
 function bindWorkspace(lead) {
@@ -1452,7 +1452,7 @@ function returnModal(lead) {
 }
 
 function outcomeModal(lead) {
-  showModal(`<h3 class="text-lg font-black">RESULTADO DA TRATATIVA</h3><div class="sdr-grid mt-4">
+  showModal(`<h3 class="text-lg font-black">Resultado da tratativa</h3><div class="sdr-grid mt-4">
     ${inputRaw("Resultado", "modal-outcome", ["LEAD APROVADO", "LEAD REPROVADO", "Em acompanhamento", "Retorno agendado", "Sem contato", "Devolvido ao SDR"])}
     <input id="modal-service" class="sdr-control" placeholder="Serviço contratado"><input id="modal-value" class="sdr-control" type="number" min="0" step="0.01" placeholder="Valor contratado">
     ${inputRaw("Forma de pagamento", "modal-payment", ["", "Pix", "Cartão", "Boleto", "Transferência", "Dinheiro", "Outro"])}
