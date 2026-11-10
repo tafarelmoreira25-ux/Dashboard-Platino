@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -62,6 +62,20 @@ async function checkBrowser(name, executable) {
     await waitFor(() => evaluate('document.readyState === "complete" && !!document.getElementById("login-form")'));
     const initial = await evaluate('({login: !!document.getElementById("login-form"), search: !!document.getElementById("global-search"), inertSearch: !!document.getElementById("global-search-template")?.content.querySelector("#global-search")})');
     assert.deepEqual(initial, { login: true, search: false, inertSearch: true });
+    await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+    const mobile = await waitFor(async () => {
+      const geometry = await evaluate(`(() => {
+        const panel = document.querySelector('.login-panel').getBoundingClientRect();
+        return {viewport: innerWidth, left: panel.left, right: panel.right, width: panel.width};
+      })()`);
+      return geometry.viewport === 390 && geometry;
+    });
+    assert.ok(mobile.left >= 0 && mobile.right <= mobile.viewport + 1, `${name}: login fora da tela em 390 px: ${JSON.stringify(mobile)}`);
+    if (process.env.PLATINO_SCREENSHOT_DIR) {
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      await writeFile(join(process.env.PLATINO_SCREENSHOT_DIR, `platino-login-${name.toLowerCase()}-mobile.png`), Buffer.from(screenshot.data, 'base64'));
+    }
     const afterMount = await evaluate(`(() => {
       const login = document.getElementById('login-screen');
       const template = document.getElementById('global-search-template');
