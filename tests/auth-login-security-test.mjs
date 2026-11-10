@@ -54,4 +54,9 @@ assert.match(
   "O retorno pelo cache de navegação deve exigir nova autenticação.",
 );
 
+assert.match(html, /loginScreen\.remove\(\);[\s\S]*?globalSearchFrame\.append\(globalSearchInput\)/);
+assert.match(html, /globalSearchTemplate\.content\.append\(globalSearchInput\);[\s\S]*?appContent\.before\(loginScreen\)/);
+assert.doesNotMatch(html, /setTimeout\(\(\) => window\.clearGlobalSearch/);
+assert.doesNotMatch(html, /window\.addEventListener\('pageshow', clearGlobalSearch\)/);
+
 console.log("Segurança do login aprovada: senha obrigatória e sessão sem persistência.");

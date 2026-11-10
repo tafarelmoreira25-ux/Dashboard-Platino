@@ -1020,59 +1020,6 @@
             filter: brightness(1.04);
         }
 
-        .login-feature-strip {
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.65rem;
-            width: 100%;
-            padding: 0.7rem 0.95rem;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            background:
-                linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(59, 130, 246, 0.08) 42%, rgba(15, 23, 42, 0.26)),
-                rgba(255, 255, 255, 0.04);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.16),
-                0 14px 34px rgba(0, 0, 0, 0.18);
-            color: rgba(219, 234, 254, 0.86);
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .login-feature-strip::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(110deg, transparent 8%, rgba(255, 255, 255, 0.18) 45%, transparent 62%);
-            transform: translateX(-120%);
-            animation: loginFeatureSheen 5.5s ease-in-out infinite;
-        }
-
-        .login-feature-strip span {
-            position: relative;
-            z-index: 1;
-        }
-
-        @keyframes loginFeatureSheen {
-            0%, 35% { transform: translateX(-120%); }
-            70%, 100% { transform: translateX(120%); }
-        }
-
-        @media (max-width: 640px) {
-            .login-feature-strip {
-                gap: 0.45rem;
-                padding-inline: 0.75rem;
-                font-size: 0.62rem;
-                letter-spacing: 0.13em;
-            }
-        }
-
         .security-footer {
             color: #dbeafe;
         }
@@ -3233,27 +3180,8 @@
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
-      <div class="relative z-10 w-full max-w-6xl mx-auto grid lg:grid-cols-[440px_1fr] gap-10 items-center">
+      <div class="relative z-10 w-full max-w-md mx-auto">
         <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
-          <div class="mb-8">
-            <div class="mt-5 flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-white/8 border border-white/12 flex items-center justify-center shadow-lg shadow-blue-950/30">
-                <i class="ph ph-shield-check text-3xl text-blue-200"></i>
-              </div>
-              <div>
-                <h1 class="text-4xl font-medium tracking-tight text-[#D1D1D1] leading-none" style="font-family: 'Inter', sans-serif;">PLATINO</h1>
-              </div>
-            </div>
-
-            <div class="login-feature-strip mt-6">
-              <span>Tecnologia</span>
-              <span aria-hidden="true">-</span>
-              <span>Controle</span>
-              <span aria-hidden="true">-</span>
-              <span>Suporte</span>
-            </div>
-          </div>
-
           <form id="login-form" class="space-y-4" autocomplete="on">
             <div>
               <label class="block text-sm text-slate-300 mb-2">E-mail</label>
@@ -3300,15 +3228,9 @@
             </button>
 
             <p id="login-error" class="hidden text-red-300 text-sm text-center"></p>
-            <p class="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-blue-100/70">
-              <i class="ph ph-lock-key mt-0.5 text-sm text-blue-200" aria-hidden="true"></i>
-              <strong>Criptografia SSL de Ponta a Ponta</strong>
-            </p>
           </form>
 
         </div>
-
-        <div class="hidden lg:block relative min-h-[560px]"></div>
       </div>
     </section>
 
@@ -3415,7 +3337,9 @@
             <div class="topbar-search-shell absolute left-1/2 top-1/2 max-w-md w-full -translate-x-1/2 -translate-y-1/2 px-4 sm:px-0">
                 <div class="topbar-search-frame relative" role="search" aria-label="Busca global do sistema">
                     <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
-                    <input type="search" id="global-search" name="global-search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" aria-autocomplete="none" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                    <template id="global-search-template">
+                        <input type="search" id="global-search" name="global-search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" aria-autocomplete="none" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                    </template>
                 </div>
             </div>
 
@@ -6462,8 +6386,6 @@
         }
 
         window.clearGlobalSearch = clearGlobalSearch;
-        document.addEventListener('DOMContentLoaded', clearGlobalSearch);
-        window.addEventListener('pageshow', clearGlobalSearch);
 
         async function handleSearch(event) {
             if (event.key === 'Enter') {
@@ -11519,6 +11441,9 @@
 
       const loginScreen = document.getElementById("login-screen");
       const appContent = document.getElementById("app-content");
+      const globalSearchTemplate = document.getElementById("global-search-template");
+      const globalSearchFrame = globalSearchTemplate.parentElement;
+      const globalSearchInput = globalSearchTemplate.content.getElementById("global-search");
       const loginForm = document.getElementById("login-form");
       const loginButton = document.getElementById("login-button");
       const loginResetPassword = document.getElementById("login-reset-password");
@@ -11786,10 +11711,15 @@
           return;
         }
         if (user) {
+          // Keep credential fields and the global search out of the DOM together.
+          loginScreen.remove();
+          if (!globalSearchInput.isConnected) {
+            globalSearchInput.value = "";
+            globalSearchInput.defaultValue = "";
+            globalSearchFrame.append(globalSearchInput);
+          }
           loginScreen.classList.add("hidden");
           appContent.classList.remove("hidden");
-          window.clearGlobalSearch?.();
-          window.setTimeout(() => window.clearGlobalSearch?.(), 250);
           updateUserAccess(user);
           window.platinoFirebaseContext = { app, auth, db };
           window.dispatchEvent(new CustomEvent("platino-firebase-ready", {
@@ -11808,9 +11738,11 @@
             initializeAccountManagement();
           }
         } else {
-          loginScreen.classList.remove("hidden");
           appContent.classList.add("hidden");
           window.clearGlobalSearch?.();
+          globalSearchTemplate.content.append(globalSearchInput);
+          appContent.before(loginScreen);
+          loginScreen.classList.remove("hidden");
           window.firebaseAuthUser = null;
           window.renderHomeOperationalHub?.();
           window.platinoUserRole = "equipe";

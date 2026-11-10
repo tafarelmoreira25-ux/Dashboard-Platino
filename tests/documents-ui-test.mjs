@@ -55,7 +55,7 @@ assert.match(html, /\.documents-template-options\s*\{[\s\S]*?grid-template-colum
 assert.match(html, /@media \(max-width: 759px\)[\s\S]*?\.documents-template-options,[\s\S]*?grid-template-columns: 1fr;/);
 assert.match(html, /type="search" id="global-search" name="global-search"[\s\S]*?autocomplete="off"[\s\S]*?aria-label="Pesquisar no sistema"[\s\S]*?placeholder="Pesquisar no sistema\.\.\."/);
 assert.match(html, /function clearGlobalSearch\(\)/);
-assert.match(html, /window\.addEventListener\('pageshow', clearGlobalSearch\)/);
+assert.match(html, /<template id="global-search-template">[\s\S]*?id="global-search"[\s\S]*?<\/template>/);
 assert.match(html, /name="document_library_search"/);
 assert.match(html, /function clearDocumentsSearch\(\)/);
 assert.match(html, /id="documents-search-clear"/);
