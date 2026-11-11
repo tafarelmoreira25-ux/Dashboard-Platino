@@ -3180,7 +3180,7 @@
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
-      <div class="relative z-10 w-full max-w-md mx-auto">
+      <div class="relative z-10 w-full max-w-md ml-0 md:ml-16">
         <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
           <form id="login-form" class="space-y-4" autocomplete="on">
             <div>
@@ -3338,7 +3338,7 @@
                 <div class="topbar-search-frame relative" role="search" aria-label="Busca global do sistema">
                     <i class="ph ph-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 text-xl"></i>
                     <template id="global-search-template">
-                        <input type="search" id="global-search" name="global-search" value="" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" aria-autocomplete="none" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
+                        <input type="search" id="global-search" value="" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="search" enterkeyhint="search" role="searchbox" aria-autocomplete="none" data-lpignore="true" data-form-type="other" aria-label="Pesquisar no sistema" aria-controls="search-modal" placeholder="Pesquisar no sistema..." class="topbar-search-input w-full pl-16 pr-4 py-2 text-sm transition-all outline-none" onkeypress="handleSearch(event)">
                     </template>
                 </div>
             </div>
