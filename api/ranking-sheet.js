@@ -47,7 +47,8 @@ const DEFAULT_INDIVIDUAL_GOALS = {
 };
 const CONSULTANT_NAME_ALIASES = {
   comercial: [
-    { name: "Mariana", aliases: ["Mariane"] }
+    { name: "Mariana", aliases: ["Mariane"] },
+    { name: "Geovanna Alves Xavier", aliases: ["Geovana", "Geovanna", "Geovana Alves Xavier"] }
   ],
   juridico: []
 };
@@ -233,15 +234,23 @@ function getDefaultIndividualGoal(name, sector) {
 
 function getCanonicalConsultantName(name, sector) {
   const normalizedName = normalizeConsultantName(name);
+  const aliasMatch = (CONSULTANT_NAME_ALIASES[sector] || []).find(item =>
+    [item.name, ...item.aliases].some(alias => normalizeNameKey(alias) === normalizeNameKey(normalizedName))
+  );
+  if (aliasMatch) return aliasMatch.name;
   const match = (DEFAULT_INDIVIDUAL_GOALS[sector] || [])
     .find(item => isSameConsultantName(item.name, normalizedName));
   if (match?.name) return match.name;
+  return normalizedName;
+}
 
-  const aliasMatch = (CONSULTANT_NAME_ALIASES[sector] || []).find(item =>
-    isSameConsultantName(item.name, normalizedName)
-    || item.aliases.some(alias => isSameConsultantName(alias, normalizedName))
-  );
-  return aliasMatch?.name || normalizedName;
+function validateConsultantSector(name, sector) {
+  if (!['comercial', 'juridico'].includes(sector)) throw new Error(`Setor inválido para ${name || 'colaborador sem nome'}`);
+  const otherSector = sector === 'comercial' ? 'juridico' : 'comercial';
+  if (getCanonicalConsultantName(name, otherSector) !== normalizeConsultantName(name)
+      || (DEFAULT_INDIVIDUAL_GOALS[otherSector] || []).some(item => isSameConsultantName(item.name, name))) {
+    throw new Error(`Colaborador ${name} atribuído ao setor ${sector}, mas cadastrado em ${otherSector}`);
+  }
 }
 
 function applyDefaultIndividualGoal(item, sector) {
@@ -752,9 +761,8 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       if (!name || !sold) continue;
       if (section.sector === "comercial") metrics.comercialContracts += 1;
 
-      const canonicalName = summary.entries.some(item => isRankingPersonName(item.name))
-        ? name
-        : getCanonicalConsultantName(name, section.sector);
+      validateConsultantSector(name, section.sector);
+      const canonicalName = getCanonicalConsultantName(name, section.sector);
       const key = normalizeNameKey(canonicalName);
       const current = grouped.get(key) || {
         name: canonicalName,
@@ -814,7 +822,7 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
       }
       for (const [key, daily] of grouped) {
         const canonicalKey = normalizeNameKey(getCanonicalConsultantName(daily.name, section.sector));
-        if (!merged.has(canonicalKey) && getDefaultIndividualGoal(daily.name, section.sector)) {
+        if (!merged.has(canonicalKey)) {
           merged.set(canonicalKey, daily);
         }
       }
@@ -830,14 +838,12 @@ function rowsFromPlatinoSideBySideCsv(text, period = getRankingPeriod({ query: {
 
     rankingItems.forEach(item => applyDefaultIndividualGoal(item, section.sector));
     if (period.key !== "month") teamTotals[section.sector] = liveTransactionsTotal;
-    else teamTotals[section.sector] = rankingItems.length
-      ? Math.max(teamTotals[section.sector] || 0, liveTransactionsTotal)
-      : 0;
+    else teamTotals[section.sector] = grouped.size ? liveTransactionsTotal : 0;
 
     rankingItems.forEach(item => {
       rows.push({
         sector: section.sector,
-        name: useDatedRanking ? (item.rawName || item.name) : getCanonicalConsultantName(item.name, section.sector),
+        name: getCanonicalConsultantName(item.name, section.sector),
         official: true,
         sold: item.sold,
         goal: item.goal || 0,
@@ -873,14 +879,21 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
   };
 
   const consolidatedRows = new Map();
+  const unmappedNames = new Set();
   for (const row of rows) {
-    if (!ranking[row.sector] || !row.name) continue;
+    if (!row.name) continue;
+    validateConsultantSector(row.name, row.sector);
     if (!row.official && isInactiveConsultantName(row.name)) continue;
     if (row.sector === "juridico" && normalizeNameKey(row.name).startsWith("NICOLE")) continue;
-    const key = `${row.sector}|${normalizeNameKey(row.name)}`;
+    const canonicalName = getCanonicalConsultantName(row.name, row.sector);
+    if (canonicalName === normalizeConsultantName(row.name)
+        && !(DEFAULT_INDIVIDUAL_GOALS[row.sector] || []).some(item => normalizeNameKey(item.name) === normalizeNameKey(canonicalName))) {
+      unmappedNames.add(`${row.sector}: ${row.name}`);
+    }
+    const key = `${row.sector}|${normalizeNameKey(canonicalName)}`;
     const current = consolidatedRows.get(key) || {
       sector: row.sector,
-      name: row.name,
+      name: canonicalName,
       sold: 0,
       goal: 0,
       gap: 0,
@@ -891,9 +904,10 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
     current.goal = Math.max(current.goal, Number(row.goal) || 0);
     current.teamGoal = Math.max(current.teamGoal, Number(row.teamGoal) || 0);
     current.teamGap = Math.max(current.teamGap, Number(row.teamGap) || 0);
-    current.gap = Number.isFinite(Number(row.gap)) ? Number(row.gap) : Math.max(current.goal - current.sold, 0);
+    current.gap = Math.max(current.goal - current.sold, 0);
     consolidatedRows.set(key, current);
   }
+  if (unmappedNames.size) console.warn('Ranking: colaboradores sem mapeamento confirmado:', [...unmappedNames]);
 
   for (const row of consolidatedRows.values()) {
     ranking[row.sector].push({
@@ -908,14 +922,13 @@ function buildRanking(rows, explicitTeamGoals = {}, explicitTeamTotals = {}, met
 
   for (const sector of ["comercial", "juridico"]) {
     const items = ranking[sector];
+    items.sort((a, b) => b.sold - a.sold || a.name.localeCompare(b.name, 'pt-BR'));
     const teamGoal = explicitTeamGoals[sector] || Math.max(0, ...items.map(item => item.teamGoal || 0));
     const teamGaps = items.map(item => item.teamGap || 0).filter(value => value > 0);
     const soldTotal = roundMoney(items.reduce((sum, item) => sum + (item.sold || 0), 0));
 
     ranking.teamGoals[sector] = teamGoal;
-    ranking.teamTotals[sector] = roundMoney(explicitTeamTotals[sector] || (teamGoal && teamGaps.length
-      ? Math.max(teamGoal - Math.min(...teamGaps), 0)
-      : soldTotal));
+    ranking.teamTotals[sector] = soldTotal;
   }
 
   ranking.metrics.companyTotal = roundMoney((ranking.teamTotals.comercial || 0) + (ranking.teamTotals.juridico || 0));

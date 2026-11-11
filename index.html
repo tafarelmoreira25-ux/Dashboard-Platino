@@ -3180,7 +3180,7 @@
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
-      <div class="relative z-10 w-full max-w-md ml-0 md:ml-16">
+      <div class="relative z-10 w-full max-w-md mx-auto lg:mx-0 lg:ml-16">
         <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
           <form id="login-form" class="space-y-4" autocomplete="on">
             <div>
@@ -7627,6 +7627,16 @@
                 if (!normalized.comercial.length && !normalized.juridico.length) {
                     throw new Error(`A aba ${sheetData?.sourceHealth?.ranking?.sheet || 'mensal'} não retornou resultados`);
                 }
+                for (const sector of rankingSectors) {
+                    const names = normalized[sector].map(item => item.name.toLocaleLowerCase('pt-BR'));
+                    if (new Set(names).size !== names.length) throw new Error(`Ranking ${sector} contém colaboradores duplicados`);
+                    const total = normalized[sector].reduce((sum, item) => sum + item.sold, 0);
+                    if (Math.abs(total - normalized.teamTotals[sector]) > 0.02) {
+                        throw new Error(`Total do ranking ${sector} diverge dos valores consolidados`);
+                    }
+                    normalized[sector].sort((a, b) => b.sold - a.sold || a.name.localeCompare(b.name, 'pt-BR'));
+                }
+                normalized.updatedAt = new Date().toISOString();
 
                 const signature = JSON.stringify({
                     comercial: normalized.comercial,

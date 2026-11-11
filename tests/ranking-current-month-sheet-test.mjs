@@ -20,7 +20,7 @@ const comercial = result.rows.filter(item => item.sector === 'comercial');
 const juridico = result.rows.filter(item => item.sector === 'juridico');
 
 assert.deepEqual(comercial.map(item => [item.name, item.sold]), [
-  ['Michele', 100], ['Geovana', 200], ['Geovanna', 300]
+  ['Michele', 100], ['Geovanna Alves Xavier', 500]
 ]);
 assert.deepEqual(juridico.map(item => [item.name, item.sold]), [
   ['Julia', 400], ['Felipe', 500]
@@ -33,7 +33,7 @@ const exportRows = csv.split('\n');
 exportRows[5] = exportRows[5].replace('"Michelli"', '""').replace('"Julia"', '""');
 const csvWithoutVisualNames = rowsFromPlatinoSideBySideCsv(exportRows.join('\n'));
 assert.deepEqual(csvWithoutVisualNames.rows.filter(item => item.sector === 'comercial').map(item => item.name),
-  ['Michele', 'Geovana', 'Geovanna'],
+  ['Michele', 'Geovanna Alves Xavier'],
   'O CSV que omite nomes visuais do resumo deve preservar todos os lançamentos datados.');
 assert.equal(csvWithoutVisualNames.teamTotals.comercial, 600);
 
