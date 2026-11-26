@@ -35,3 +35,4 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
   console.log('Use Ctrl+C to stop. Dynamic PDF generator is ready.');
 });
+

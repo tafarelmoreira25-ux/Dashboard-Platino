@@ -1,0 +1,2 @@
+# Preserve upstream distributions and licenses; review application code separately.
+assets/vendor/process-reports/** -text -whitespace linguist-vendored
