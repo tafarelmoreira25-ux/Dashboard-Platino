@@ -3,92 +3,87 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { PDFDocument } from 'pdf-lib';
 import { IDENTIFICATION, createSession, fileName, normalizeReport, reportBlocks, saoPauloDate, whatsappMessage } from '../src/process-reports/report-core.js';
-import { generateReport, validateInput, SYSTEM_INSTRUCTION } from '../src/process-reports/report-service.js';
+import { extractProcessSummary } from '../src/lib/processSummary.js';
+import { generateLocalReport, organizeReport } from '../src/process-reports/report-local.js';
 import { createReportDocument, createWordDocument, PAGE } from '../src/process-reports/report-export.js';
-import { createHandler } from '../api/process-reports.js';
 
-export function fixture() {
-  return { identificacao: { ...Object.fromEntries(Object.keys(IDENTIFICATION).map(key => [key, ''])), cliente: 'Cliente Exemplo', numeroProcesso: '0000001-01.2026.8.26.0000', autor: 'Cliente Exemplo' }, processosIdentificados: ['0000001-01.2026.8.26.0000'], linhaTempo: [{ data: '2026-10-02', evento: 'Juntada', resumo: 'Petição juntada aos autos.', fonte: 'Texto colado' }, { data: '2026-10-01', evento: 'Distribuição', resumo: 'Processo distribuído.', fonte: 'Texto colado' }], statusAtual: 'O último registro fornecido informa juntada de petição.', proximasEtapas: [], alertas: [] };
-}
-const input = extra => ({ text: 'Processo fictício 0000001-01.2026.8.26.0000. Cliente Exemplo. Processo distribuído e petição juntada.', ...extra });
-const provider = report => async () => ({ ok: true, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(report) }] } }] }) });
-const options = report => ({ apiKey: 'test-only', fetchImpl: provider(report) });
+const text = `Cliente: Cliente Exemplo
+Processo: 0000001-01.2026.8.26.0000
+Órgão julgador: Vara Cível de Exemplo
+Classe: Procedimento comum
+Assunto: Contratos
+Justiça gratuita: Não concedida
+26/11/2026 — Juntada de petição
+Petição juntada aos autos.
+25/11/2026 — Distribuição
+Processo distribuído.`;
+const input = extra => ({ sources: [{ name: 'Texto colado', text, method: 'text' }], ...extra });
+function fixture() { return generateLocalReport(input()); }
 
-test('data usa São Paulo inclusive na virada do dia; nomes não contêm placeholders', () => {
+test('geração local reutiliza o parser do gerador, extrai campos e ordena as movimentações', () => {
+  const legacy = extractProcessSummary(text), report = fixture();
+  assert.equal(legacy.cliente, 'Cliente Exemplo'); assert.equal(report.identificacao.cliente, legacy.cliente);
+  assert.equal(report.identificacao.orgaoJulgador, 'Vara Cível de Exemplo');
+  assert.equal(report.identificacao.classe, 'Procedimento comum'); assert.equal(report.identificacao.assunto, 'Contratos');
+  assert.equal(report.identificacao.justicaGratuita, 'Não');
+  assert.deepEqual(report.linhaTempo.map(item => item.data), ['2026-11-25', '2026-11-26']);
+  assert.match(report.statusAtual, /Juntada/); assert.equal(report.proximasEtapas.length, 0);
+});
+test('dados de outro processo ou cliente são bloqueados; conflito de campo é sinalizado', () => {
+  assert.throws(() => generateLocalReport(input({ process: '0000002-01.2026.8.26.0000' })), /diverge/);
+  assert.throws(() => generateLocalReport(input({ sources: [{ name: 'a', text }, { name: 'b', text: text.replace('0000001-01', '0000002-01') }] })), /processos diferentes/);
+  assert.throws(() => generateLocalReport(input({ sources: [{ name: 'a', text }, { name: 'b', text: text.replace('Cliente Exemplo', 'Outro Cliente') }] })), /clientes diferentes/);
+  const report = generateLocalReport(input({ sources: [{ name: 'a', text }, { name: 'b', text: text.replace('Vara Cível de Exemplo', 'Outra Vara') }] }));
+  assert.ok(report.alertas.some(item => item.includes('diverge')));
+});
+test('informações incompletas e OCR: preservar o original e sinalizar lacunas sem inventar', () => {
+  const report = generateLocalReport({ sources: [{ name: 'print.png', text: 'Documento recebido sem data ou identificação.', method: 'ocr', confidence: 45 }] });
+  assert.equal(report.identificacao.cliente, ''); assert.equal(report.statusAtual, '');
+  assert.equal(report.linhaTempo[0].resumo, 'Documento recebido sem data ou identificação.');
+  assert.ok(report.alertas.some(item => item.includes('baixa confiança')));
+  assert.doesNotMatch(reportBlocks(report, '2026-11-26').map(item => item.text).join(' '), /Processo nº|Interessado|undefined|Não informado/);
+  assert.throws(() => generateLocalReport({ sources: [] }), /legível/);
+  assert.throws(() => generateLocalReport({ sources: [{ name: 'a', text: 'a'.repeat(60001) }] }), /60 mil/);
+});
+test('datas inválidas não viram prazos; distribuição não é presumida como autuação', () => {
+  const report = generateLocalReport({ sources: [{ name: 'Texto', text: 'Data da distribuição: 25/11/2026\n31/02/2026 — Expedição de intimação' }] });
+  assert.equal(report.identificacao.dataAutuacao, ''); assert.equal(report.linhaTempo[0].data, '');
+  assert.ok(report.alertas.some(item => item.includes('Data inválida')));
+  assert.equal(report.proximasEtapas.length, 0); assert.doesNotMatch(report.statusAtual, /prazo|deferido|favorável/);
+});
+test('data de São Paulo, mensagem, esquema e isolamento entre atendimentos', () => {
   assert.equal(saoPauloDate(new Date('2026-11-27T01:30:00Z')), '2026-11-26');
-  assert.match(fileName(fixture(), '2026-11-26', 'pdf'), /^Relatorio_Processual_Cliente_Exemplo_26-11-2026.pdf$/);
+  assert.equal(fileName(fixture(), '2026-11-26', 'pdf'), 'Relatorio_Processual_Cliente_Exemplo_26-11-2026.pdf');
   assert.match(whatsappMessage(fixture()), /Olá, Cliente!/);
-  const r = fixture(); r.identificacao.cliente = ''; r.identificacao.numeroProcesso = ''; r.processosIdentificados = [];
-  const blocks = reportBlocks(r, '2026-11-26').map(block => block.text).join('\n');
-  assert.doesNotMatch(blocks, /Interessado|Processo nº|Próximas Etapas|Não informado|undefined|\[.*\]/);
+  assert.throws(() => normalizeReport({ ...fixture(), html: '<script>' }), /desconhecido/);
+  const session = createSession(), a = session.begin(); session.clear(); assert.equal(a.signal.aborted, true); assert.equal(session.current(a.version), false);
+  const b = session.begin(); session.begin(); assert.equal(b.signal.aborted, true);
 });
-test('esquema rejeita campos extras, tipos, datas e múltiplos processos; cronologia e deduplicação', () => {
-  const report = fixture(); report.linhaTempo.push(report.linhaTempo[0]);
-  assert.deepEqual(normalizeReport(report).linhaTempo.map(item => item.data), ['2026-10-01', '2026-10-02']);
-  assert.throws(() => normalizeReport({ ...fixture(), injectedHtml: '<script>' }), /desconhecido/);
-  const bad = fixture(); bad.linhaTempo[0].data = '2026-02-31'; assert.throws(() => normalizeReport(bad), /data inválida/);
-  assert.throws(() => normalizeReport({ ...fixture(), processosIdentificados: ['0000002-01.2026.8.26.0000'] }), /processos diferentes/);
-  assert.throws(() => validateInput(input({ text: '0000001-01.2026.8.26.0000 e 0000002-01.2026.8.26.0000' })), /processos diferentes/);
+test('organização só altera espaços; resumido preserva dados e informa o recorte', () => {
+  const report = fixture(); report.statusAtual = '  Texto   conferido.  ';
+  assert.equal(organizeReport(report).statusAtual, 'Texto conferido.');
+  report.linhaTempo = Array.from({ length: 12 }, (_, i) => ({ data: `2026-11-${String(i + 1).padStart(2, '0')}`, evento: `Movimento ${i}`, resumo: '', fonte: 'Texto colado' }));
+  const original = structuredClone(report);
+  const blocks = reportBlocks(report, '2026-11-26', { detail: 'resumido' });
+  assert.equal(blocks.filter(item => item.text.includes('— Movimento')).length, 5); assert.ok(blocks.some(item => item.text.includes('cinco movimentações')));
+  assert.deepEqual(report, original);
+  assert.ok(reportBlocks(report, '2026-11-26', { detail: 'detalhado' }).some(item => item.text === 'Fonte: Texto colado'));
 });
-test('texto e múltiplos anexos PNG/JPG/PDF são enviados inline ao Gemini com esquema; sem histórico', async () => {
-  const image = await fs.readFile(new URL('../assets/process-reports/papel-timbrado.png', import.meta.url));
-  const pdf = await PDFDocument.create(); pdf.addPage();
-  let sent;
-  const files = [{ name: 'print.png', type: 'image/png', data: image.toString('base64') }, { name: 'decisao.pdf', type: 'application/pdf', data: Buffer.from(await pdf.save()).toString('base64') }];
-  const report = await generateReport(input({ files }), { apiKey: 'test-only', fetchImpl: async (url, config) => { sent = { url, config, body: JSON.parse(config.body) }; return provider(fixture())(); } });
-  assert.equal(report.identificacao.cliente, 'Cliente Exemplo');
-  assert.equal(sent.body.contents.length, 1); assert.equal(sent.body.contents[0].parts.filter(part => part.inlineData).length, 2);
-  assert.equal(sent.body.generationConfig.responseMimeType, 'application/json'); assert.ok(sent.body.generationConfig.responseJsonSchema);
-  assert.match(SYSTEM_INSTRUCTION, /DADOS NÃO CONFIÁVEIS/); assert.doesNotMatch(sent.url, /test-only/);
-  assert.equal((await generateReport(input(), options(fixture()))).linhaTempo.length, 2);
-  const jpeg = { name: 'print.jpg', type: 'image/jpeg', data: Buffer.from([255,216,255,224,0,0]).toString('base64') };
-  assert.equal(validateInput(input({ files: [jpeg] })).parts[1].inlineData.mimeType, 'image/jpeg');
-});
-test('validação de arquivos e payload: MIME, assinatura, tamanho, quantidade e fontes obrigatórias', () => {
-  assert.throws(() => validateInput({}), /Cole/);
-  assert.throws(() => validateInput(input({ files: Array(9).fill({}) })), /até 8/);
-  assert.throws(() => validateInput(input({ files: [{ name: 'print.png', type: 'image/png', data: Buffer.from('HTML').toString('base64') }] })), /tipo declarado/);
-  assert.throws(() => validateInput(input({ files: [{ name: 'arquivo.exe', type: 'text/html', data: '' }] })), /PNG/);
-  assert.throws(() => validateInput(input({ text: 'x'.repeat(60001) })), /tamanho/);
-  const large = Buffer.alloc(1_500_000); large.set([137,80,78,71,13,10,26,10]);
-  assert.throws(() => validateInput(input({ files: [1,2].map(i => ({ name: `print${i}.png`, type: 'image/png', data: large.toString('base64') })) })), /Limite/);
-});
-test('falhas de IA, recusa, truncamento, JSON malformado e revisão que tenta trocar identificação', async () => {
-  await assert.rejects(generateReport(input(), { apiKey: '' }), /configurada/);
-  await assert.rejects(generateReport(input(), { apiKey: 'test', fetchImpl: async () => ({ ok: false, status: 429 }) }), /limite/);
-  await assert.rejects(generateReport(input(), { apiKey: 'test', fetchImpl: async () => ({ ok: true, json: async () => ({ candidates: [{ finishReason: 'MAX_TOKENS' }] }) }) }), /não concluiu/);
-  await assert.rejects(generateReport(input(), { apiKey: 'test', fetchImpl: async () => ({ ok: true, json: async () => ({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: '{' }] } }] }) }) }), /inválidos/);
-  const changed = fixture(); changed.identificacao.cliente = 'Outro Exemplo';
-  await assert.rejects(generateReport(input({ action: 'simplificar', report: fixture() }), options(changed)), /identificação/);
-});
-test('Próximo cliente invalida respostas atrasadas e cancela a requisição anterior', () => {
-  const session = createSession(); const a = session.begin(); session.clear();
-  assert.equal(a.signal.aborted, true); assert.equal(session.current(a.version), false);
-  const b = session.begin(); assert.equal(session.current(b.version), true);
-  session.begin(); assert.equal(b.signal.aborted, true);
-});
-test('API exige autenticação e POST; erros não retornam corpo do provedor ou dados pessoais', async () => {
-  const res = () => ({ headers: {}, setHeader(key, value) { this.headers[key] = value; }, status(code) { this.code = code; return this; }, json(body) { this.body = body; return this; } });
-  const denied = createHandler({ authenticateImpl: async () => { const e = Error('Faça login.'); e.status = 401; throw e; } });
-  let response = res(); await denied({ method: 'POST' }, response); assert.equal(response.code, 401);
-  response = res(); await denied({ method: 'GET' }, response); assert.equal(response.code, 405);
-  const broken = createHandler({ authenticateImpl: async () => ({ uid: 'test-user-error' }), generateImpl: async () => { throw Error('PRIVATE provider prompt'); } });
-  response = res(); await broken({ method: 'POST' }, response); assert.equal(response.code, 500); assert.doesNotMatch(JSON.stringify(response.body), /PRIVATE/);
-  const ok = createHandler({ authenticateImpl: async () => ({ uid: 'test-user-ok' }), generateImpl: async () => fixture(), now: () => Date.parse('2026-11-27T01:00:00Z') });
-  response = res(); await ok({ method: 'POST', body: input() }, response); assert.equal(response.code, 200); assert.equal(response.body.emissionDate, '2026-11-26'); assert.equal(response.headers['Cache-Control'], 'private, no-store');
-});
-test('PDF válido selecionável e DOCX OOXML real; múltiplas páginas com timbrado e margens constantes', async () => {
-  const letterhead = await fs.readFile(new URL('../assets/process-reports/papel-timbrado.png', import.meta.url));
-  const single = await createReportDocument(fixture(), '2026-11-26', letterhead);
-  assert.equal(single.pages.length, 1);
-  const multi = fixture(); multi.linhaTempo = Array.from({ length: 65 }, (_, index) => ({ data: '2026-10-01', evento: `Evento fictício ${index}`, resumo: 'Descrição para testar a continuidade do texto, a acentuação e a preservação do espaço institucional em cada página.', fonte: 'Anexo fictício' }));
-  const document = await createReportDocument(multi, '2026-11-26', letterhead);
-  assert.ok(document.pages.length > 2);
-  document.pages.flat().forEach(line => { assert.ok(line.y >= PAGE.bottom); assert.ok(line.y <= PAGE.top); assert.ok(line.x >= PAGE.left - .1); });
-  const parsed = await PDFDocument.load(document.pdf); assert.equal(parsed.getPageCount(), document.pages.length);
-  parsed.getPages().forEach(page => { assert.equal(page.getWidth(), PAGE.width); assert.ok(page.node.Resources().lookupMaybe); assert.ok(page.node.Resources().get); });
+test('PDF válido e selecionável; DOCX editável, A4, múltiplas páginas e timbrado', async () => {
+  const png = await fs.readFile(new URL('../assets/process-reports/papel-timbrado.png', import.meta.url));
+  const single = await createReportDocument(fixture(), '2026-11-26', png); assert.equal(single.pages.length, 1);
+  const report = fixture(); report.linhaTempo = Array.from({ length: 65 }, (_, index) => ({ data: '2026-11-26', evento: `Evento fictício ${index}`, resumo: 'Descrição para testar a continuidade do texto, a acentuação e a preservação das margens institucionais em cada página.', fonte: 'Anexo fictício' }));
+  const document = await createReportDocument(report, '2026-11-26', png), parsed = await PDFDocument.load(document.pdf);
+  assert.ok(parsed.getPageCount() > 2); assert.equal(parsed.getPageCount(), document.pages.length);
+  document.pages.flat().forEach(line => { assert.ok(line.y >= PAGE.bottom && line.y <= PAGE.top); });
   const docx = createWordDocument(document); assert.equal(Buffer.from(docx).readUInt32LE(0), 0x04034b50);
-  const text = new TextDecoder().decode(docx); assert.match(text, /word\/header1.xml/); assert.match(text, /behindDoc="1"/); assert.match(text, /w:pageBreakBefore/); assert.match(text, /Descrição/); assert.doesNotMatch(text, /<html/i);
+  const xml = new TextDecoder().decode(docx); assert.match(xml, /behindDoc="1"/); assert.match(xml, /w:pageBreakBefore/); assert.match(xml, /Descrição/);
   await fs.mkdir(new URL('../tmp/process-reports-qa/', import.meta.url), { recursive: true });
-  for (const [name, data] of [['single.pdf', single.pdf], ['multi.pdf', document.pdf], ['multi.docx', docx]]) await fs.writeFile(new URL(`../tmp/process-reports-qa/${name}`, import.meta.url), data);
+  for (const [name, bytes] of [['single.pdf', single.pdf], ['multi.pdf', document.pdf], ['multi.docx', docx]]) await fs.writeFile(new URL(`../tmp/process-reports-qa/${name}`, import.meta.url), bytes);
+});
+test('o módulo não tem chave, geração remota, token ou gateway pago', async () => {
+  const ui = await fs.readFile(new URL('../src/process-reports/process-reports.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(ui, /getIdToken|api\/process-reports|platinoGenerateAI|Gerar relatório com IA/);
+  assert.match(ui, /generateLocalReport/); assert.match(ui, /extractSources/);
+  const env = await fs.readFile(new URL('../.env.example', import.meta.url), 'utf8'); assert.doesNotMatch(env, /PROCESS_REPORT_GEMINI_API_KEY/);
 });

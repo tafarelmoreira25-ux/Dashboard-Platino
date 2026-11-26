@@ -9,13 +9,10 @@ import listUsersHandler from './api/admin/list-users.js';
 import setUserDisabledHandler from './api/admin/set-user-disabled.js';
 import setUserOperationalRoleHandler from './api/admin/set-user-operational-role.js';
 import sdrHandler from './api/sdr.js';
-import processReportsHandler from './api/process-reports.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Parse the bounded multimodal payload before the legacy global parser.
-app.post('/api/process-reports', express.json({ limit: '4mb' }), (req, res) => processReportsHandler(req, res));
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true }));
 

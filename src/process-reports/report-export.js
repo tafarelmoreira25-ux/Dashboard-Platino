@@ -27,7 +27,7 @@ function wrap(text, font, size, width) {
   return lines;
 }
 
-export async function createReportDocument(input, date, letterheadBytes) {
+export async function createReportDocument(input, date, letterheadBytes, { detail = 'completo' } = {}) {
   const report = normalizeReport(input);
   if (!letterheadBytes?.length) throw new Error('Importe o papel timbrado oficial antes de exportar.');
   const pdf = await PDFDocument.create();
@@ -38,7 +38,7 @@ export async function createReportDocument(input, date, letterheadBytes) {
   const width = PAGE.width - PAGE.left - PAGE.right;
   const pages = [[]]; let y = PAGE.top;
   const next = () => { if (pages.length >= 40) throw new Error('O relatório excedeu 40 páginas. Reduza o conteúdo.'); pages.push([]); y = PAGE.top; };
-  for (const block of reportBlocks(report, date)) {
+  for (const block of reportBlocks(report, date, { detail })) {
     const bold = ['title', 'heading', 'signature'].includes(block.kind);
     const size = block.kind === 'title' ? 12 : block.kind === 'heading' ? 11 : 10.5;
     const font = bold ? fonts.bold : fonts.regular;

@@ -1,5 +1,5 @@
-// Shared by the API, editor and exporters. No customer data is persisted here.
-export const LIMITS = Object.freeze({ files: 8, fileBytes: 2_000_000, totalBytes: 2_800_000, text: 60_000 });
+// Shared by the local generator, editor and exporters. No customer data is persisted here.
+export const LIMITS = Object.freeze({ files: 8, fileBytes: 10_000_000, totalBytes: 30_000_000, text: 60_000 });
 export const IDENTIFICATION = Object.freeze({
   numeroProcesso: 'Número do processo', cliente: 'Interessado(a) / Autor(a)',
   orgaoJulgador: 'Órgão julgador', magistrado: 'Magistrado', classe: 'Classe processual',
@@ -65,7 +65,7 @@ export function whatsappMessage(report) {
   const first = report.identificacao.cliente.trim().split(/\s+/)[0];
   return `${first ? `Olá, ${first}!` : 'Olá!'} Tudo bem?\n\nSegue o relatório atualizado referente ao acompanhamento do seu processo judicial, contendo as informações sobre as últimas movimentações e a situação atual.\n\nContinuamos acompanhando o andamento processual e permanecemos à disposição para esclarecimentos.\n\nAtenciosamente,\nEquipe Platino Soluções Financeiras.`;
 }
-export function reportBlocks(report, date) {
+export function reportBlocks(report, date, { detail = 'completo' } = {}) {
   const blocks = [];
   const add = (text, kind = 'text') => { if (text?.trim()) blocks.push({ text: text.trim(), kind }); };
   add('RELATÓRIO DE ACOMPANHAMENTO PROCESSUAL', 'title');
@@ -78,7 +78,9 @@ export function reportBlocks(report, date) {
   if (fields.length) { add('1. Identificação do Processo e Partes', 'heading'); fields.forEach(([key, label]) => add(`${label}: ${report.identificacao[key]}`)); }
   if (report.linhaTempo.length) {
     add('2. Linha do Tempo do Andamento', 'heading');
-    report.linhaTempo.forEach(item => add(`${item.data ? `${shortDate(item.data)} — ` : ''}${item.evento}${item.resumo ? `: ${item.resumo}` : ''}`));
+    const events = detail === 'resumido' ? [...report.linhaTempo.filter(item => item.data).slice(-5), ...report.linhaTempo.filter(item => !item.data)] : report.linhaTempo;
+    if (detail === 'resumido' && events.length < report.linhaTempo.length) add('Síntese com as cinco movimentações datadas mais recentes entre as informações fornecidas.');
+    events.forEach(item => { add(`${item.data ? `${shortDate(item.data)} — ` : ''}${item.evento}${item.resumo ? `: ${item.resumo}` : ''}`); if (detail === 'detalhado' && item.fonte) add(`Fonte: ${item.fonte}`); });
   }
   if (report.statusAtual) { add('3. Status Atual', 'heading'); add(report.statusAtual); }
   if (report.proximasEtapas.length) { add('4. Próximas Etapas', 'heading'); report.proximasEtapas.forEach(text => add(text)); }

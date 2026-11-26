@@ -1,41 +1,53 @@
-# Gerador de Relatórios Processuais
+# Gerador de Relatórios Processuais sem chave de IA
 
-O módulo integra a navegação existente em `index.html`, sem substituir a Central de Documentos ou seus modelos. Usa JavaScript ES modules, Express local, função Node na Vercel, Firebase Auth/Admin e `pdf-lib` já existentes. Não acrescenta dependências ou migrações.
+O módulo funciona no próprio navegador, seguindo o fluxo do gerador de documentos existente: extrair dados, conferir, editar e baixar. Não exige chave de IA, assinatura ou serviço de geração cobrado por uso. Não envia textos, imagens ou PDFs a provedores de IA. O login do sistema existente é preservado.
 
-## Arquivos da implementação
+## Funcionamento
 
-Modificados: `index.html` (menu e seção), `server.mjs` (rota e limite de payload), `package.json` (comando de teste), `.env.example` (configuração do gateway) e `.gitignore` (artefatos locais de QA).
+1. Cole o texto processual, selecione PNG/JPG/PDF, arraste arquivos ou cole um print com Ctrl+V.
+2. Clique em **Gerar relatório**. Textos são organizados por regras, PDFs textuais são lidos com PDF.js e imagens/PDFs digitalizados passam por OCR Tesseract em português no navegador.
+3. Confira identificação, datas, movimentos e alertas. O texto extraído fica disponível em **Conferir texto extraído das fontes**. Edite os campos e o conteúdo quando necessário.
+4. Marque a conferência e baixe PDF, Word, ambos ou PDF com cópia da mensagem. Não há envio automático pelo WhatsApp.
+5. Use **Próximo cliente** para cancelar leituras pendentes e limpar os dados, anexos, relatório, mensagem e textos extraídos. O detalhamento e o papel timbrado são preservados.
 
-Criados: `api/process-reports.js` (API autenticada), `src/process-reports/report-core.js` (esquema, datas, template e isolamento), `report-service.js` (entrada multimodal e gateway Gemini), `report-export.js` (PDF e DOCX), `process-reports.js` (interface e editor), `process-reports.css` (layout responsivo), `assets/process-reports/papel-timbrado.png` (PNG original), `tests/process-reports.test.mjs`, `tests/process-reports-ui.mjs` e este documento.
+O campo **Observações para o relatório** acrescenta o texto revisado pelo operador ao status. Ele não é um prompt. **Organizar espaçamentos** ajusta somente espaços e quebras; não reescreve nem interpreta juridicamente o conteúdo.
 
-## Configuração
+## Extração e limites
 
-Defina `PROCESS_REPORT_GEMINI_API_KEY` somente no backend e `PROCESS_REPORT_MODEL` com um modelo Gemini multimodal que aceite PDFs e JSON Schema. O padrão é `gemini-3.5-flash`, o identificador já utilizado no projeto, configurável conforme disponibilidade da conta. Nunca use prefixos de variável pública. O Firebase Admin utiliza as configurações já existentes no projeto.
+A função já existente `extractAdmProcessSummary` passou a usar o módulo compartilhado `src/lib/processSummary.js`, com as mesmas regras de separação dos campos. O novo `report-local.js` reutiliza essa função, organiza eventos datados, elimina duplicatas e sinaliza conflitos. Distribuição não é presumida como autuação, e expedição de intimação não gera cálculo de prazo. Próximas etapas aparecem somente se expressamente fornecidas.
 
-A integração antiga `window.platinoGenerateAI` usa Firebase AI Logic no navegador e só expõe uma chamada textual. O novo gateway mantém o provedor Gemini e acrescenta processamento inline de múltiplos anexos, esquema JSON, autenticação e limites no servidor. Não utiliza histórico de conversas nem a Files API. A chave do gateway precisa ser configurada antes do primeiro uso real.
+Não há interpretação generativa de decisões ou reescrita livre por IA. As informações reconhecidas são transcritas e organizadas no template institucional. Campos não identificados ficam omitidos no documento, com avisos para revisão. OCR pode errar nomes, números e datas; sempre confira o original. Processos diferentes ou nomes de clientes distintos nas fontes bloqueiam a geração até a separação ou conferência dos anexos.
 
-`POST /api/process-reports` exige Bearer Firebase e verifica o perfil ativo em `users`. O acesso segue a Central de Documentos, disponível aos usuários ativos autenticados. O payload é limitado a 4 MB no Express e a 8 anexos, 2 MB por arquivo e 2,8 MB de bytes totais; são aceitos PNG, JPEG e PDF, com verificação de assinatura. O limite menor de bytes permite o transporte base64 dentro do limite de payload da hospedagem. Há limite local de seis gerações por minuto e uma simultânea por usuário; em múltiplas instâncias esse limite não é global.
+São permitidos 8 arquivos, até 10 MB por arquivo e 30 MB no total. Cada PDF pode conter até 30 páginas, com 60 páginas no atendimento. Imagens podem ter até 24 megapixels. O total de texto é limitado a 60 mil caracteres e 150 registros; o exportador admite até 40 páginas. Limites evitam sobrecarregar o navegador e são informados sem omissão silenciosa de páginas.
 
-## Dados e revisão
+**Resumido** apresenta as cinco movimentações datadas mais recentes e as sem data, informando o recorte no texto. **Completo** inclui todos os registros. **Detalhado** acrescenta a fonte de cada registro. A escolha não altera os dados guardados no editor.
 
-Fontes, rascunho e arquivos permanecem em memória no navegador e na requisição ao provedor. O módulo não cria registros, histórico, tabelas ou arquivos processuais públicos. A auditoria encontrou consulta comercial por nome (`/api/consultar`) e leads SDR, mas nenhum cadastro de processos por número ou histórico institucional de relatórios equivalente para vincular. Não são criados clientes automaticamente nem feitas associações por aproximação de nome.
+## Documentos e papel timbrado
 
-O JSON tem identificação, processos detectados, eventos com fonte, status, próximas etapas e alertas. A validação local rejeita formatos inválidos e múltiplos processos detectados. Textos são exibidos como texto escapado. A IA recebe regras para não inventar eventos, prazos ou resultados e tratar anexos como dados. Essas regras não substituem a conferência humana: os alertas e as fontes ficam acessíveis no editor e a exportação exige confirmação de revisão. Não há cálculo de prazo processual.
+O PNG original do Google Drive foi incorporado sem reconstrução em `assets/process-reports/papel-timbrado.png`. Fonte: https://drive.google.com/file/d/1zf0emmW62eDL6gp5sahNyQV79FFFITbk/view . O original mede 1545 × 2000 pixels e é encaixado proporcionalmente na página A4, preservando cabeçalho, marca d'água e rodapé. Também há importação manual do PNG institucional.
 
-Alterar as fontes invalida o relatório para exportação. A revisão de linguagem conserva os dados de identificação. “Próximo cliente” aborta e invalida solicitações, descarta URLs temporárias e limpa texto, cliente, número, instruções, anexos, relatório e mensagem. A mesma limpeza ocorre ao sair do sistema. A preferência de detalhamento e o papel timbrado são preservados. Nenhum rascunho com dados pessoais é salvo em localStorage.
+PDF e DOCX usam o mesmo conteúdo e paginação. O PDF contém texto selecionável; a prévia A4 usa as mesmas coordenadas em SVG, com páginas e zoom. O DOCX é ZIP OOXML válido com texto editável, papel timbrado ancorado no cabeçalho atrás do texto em todas as páginas e numeração no rodapé. Helvetica no PDF e Arial no Word têm métricas próximas; alterações posteriores no Word podem mudar a paginação. A conferência visual final no Word da operação continua recomendada.
 
-## Papel timbrado e exportação
+## Segurança e configuração
 
-O PNG original fornecido no Google Drive foi incorporado em `assets/process-reports/papel-timbrado.png`, sem reconstrução. Fonte: https://drive.google.com/file/d/1zf0emmW62eDL6gp5sahNyQV79FFFITbk/view . O arquivo original mede 1545 × 2000 pixels; ele é encaixado proporcionalmente na página A4, sem cortes ou distorção. As margens de texto reservam cabeçalho e rodapé. Uma substituição manual em PNG pode ser mantida neste navegador; use o arquivo oficial e confira as margens na prévia.
+Nenhuma variável de IA é necessária. A rota `/api/process-reports`, o gateway Gemini e as variáveis `PROCESS_REPORT_GEMINI_API_KEY` e `PROCESS_REPORT_MODEL` foram removidos desta implementação. Outros módulos existentes, inclusive o assistente do sistema, não são alterados por essa mudança.
 
-PDF e DOCX são gerados localmente a partir do mesmo conteúdo e paginação. O PDF contém texto vetorial selecionável. A prévia A4 usa as mesmas linhas, coordenadas, tamanhos e imagem do exportador, desenhados em SVG selecionável, com paginação e zoom; ela funciona também em navegadores sem visualizador PDF embutido. O DOCX é um pacote ZIP OOXML válido, com texto editável, cabeçalho com imagem ancorada atrás do texto em todas as páginas e rodapé com numeração. A fonte PDF é Helvetica e o Word usa Arial; a paginação é explicitada por quebras para preservar o layout. Alterações posteriores no Word podem causar reflow. Caracteres fora da codificação suportada pela fonte PDF são sinalizados para revisão em vez de serem silenciosamente removidos.
+Os leitores são bibliotecas e modelos abertos incluídos em `assets/vendor/process-reports/`, carregados do mesmo site sob demanda; não dependem de CDN na execução. Versões e licenças estão no NOTICE desse diretório. O primeiro uso de OCR pode demorar mais para carregar o motor local. A velocidade depende do computador e da legibilidade dos arquivos.
 
-Há downloads PDF, DOCX, ambos e PDF com cópia da mensagem. “Ambos” prepara dois arquivos; navegadores podem pedir autorização para múltiplos downloads. Não há envio automático pelo WhatsApp.
+Anexos, texto e rascunhos ficam somente em memória. Não há tabelas, migrações, histórico automático ou arquivos de clientes em diretórios públicos. O armazenamento local guarda apenas preferências e o timbrado institucional. Não há cadastro de processos por número ou histórico institucional de relatórios equivalente identificado no projeto; não são criados clientes nem vínculos por aproximação de nome.
 
-## Validação
+## Arquivos
 
-Execute `npm run test:process-reports` e os scripts existentes em `package.json`. Não há lint ou build configurados neste projeto estático. Os testes usam exclusivamente dados fictícios e provedor simulado, cobrindo texto, anexos, limites, resposta estruturada, erros, isolamento, API e exportações de uma e várias páginas. Arquivos de QA ficam em `tmp/process-reports-qa/` e não devem ser publicados.
+- Integração e navegação: `index.html` e `package.json`.
+- Parser compartilhado com o gerador atual: `src/lib/processSummary.js`.
+- Gerador e validação: `src/process-reports/report-local.js` e `report-core.js`.
+- OCR e leitura de PDF: `src/process-reports/source-reader.js` e recursos locais em `assets/vendor/process-reports/`.
+- Interface: `src/process-reports/process-reports.js` e `process-reports.css`.
+- Exportações: `src/process-reports/report-export.js` e PNG institucional.
+- Validação: `tests/process-reports.test.mjs` e `tests/process-reports-ui.mjs`.
 
-O teste opcional `node tests/process-reports-ui.mjs` requer Playwright e um Chromium disponível no ambiente de QA. Pode-se definir `PROCESS_REPORT_BROWSER_CHANNEL=msedge` para usar Edge instalado. O teste abre uma sessão isolada, sem perfil do usuário, com autenticação e IA simuladas; ele confere também cópia de mensagem, downloads, colagem, arraste, responsividade e limpeza durante requisições pendentes.
+## Testes
 
-Antes da produção, configure o segredo do gateway e faça uma geração real com fontes fictícias em ambiente autenticado, validando disponibilidade e cota do modelo. Nenhuma chamada paga ou credencial real é incluída nos testes automatizados. Abra o DOCX no Word da operação para conferir fontes e compatibilidade antes do primeiro envio.
+`npm run test:process-reports` verifica extração local, campos, conflitos, datas, informações incompletas, detalhamento, mensagem, isolamento e exportações de uma e várias páginas. `node tests/process-reports-ui.mjs` requer Playwright e um Chromium de QA; `PROCESS_REPORT_BROWSER_CHANNEL=msedge` usa Edge em sessão isolada. O teste de navegador usa OCR real de PNG/JPG e PDF digitalizado, leitura real de PDF textual, downloads, edição, colagem, arraste, limpeza e responsividade. Também verifica ausência de uploads POST e de solicitações HTTP a outros domínios. Todos os dados são fictícios.
+
+Não há lint ou build configurados no projeto. Os recursos do leitor são distribuições estáticas e não acrescentam dependências de produção ao package.json. O teste legado que consulta uma planilha real de clientes fica fora da validação com dados fictícios.
