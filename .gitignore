@@ -7,3 +7,6 @@ firebase-service-account.json
 
 .vercel
 .env*
+/tmp/process-reports-qa/
+/.tools/process-reports-deps/
+

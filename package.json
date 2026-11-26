@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file-if-exists=.env.local server.mjs",
+    "test:process-reports": "node --test tests/process-reports.test.mjs",
     "audit:buttons": "node tests/button-interaction-audit.mjs",
     "test:avisos": "node tests/avisos-team-highlight-test.mjs && node tests/avisos-chargeback-persistence-test.mjs && node tests/avisos-team-update-test.mjs",
     "test:auth": "node tests/auth-login-security-test.mjs",
@@ -25,3 +26,4 @@
     "pdf-lib": "^1.17.1"
   }
 }
+

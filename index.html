@@ -18,6 +18,7 @@
         }
     }
     </script>
+    <link rel="stylesheet" href="./src/process-reports/process-reports.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -3308,6 +3309,9 @@
                 <button id="nav-documentos" onclick="navigateTo('documentos')" class="nav-btn">
                     <i class="ph ph-files"></i> Documentos
                 </button>
+                <button id="nav-relatorios-processuais" onclick="navigateTo('relatorios-processuais')" class="nav-btn">
+                    <i class="ph ph-file-text"></i> Relatórios Processuais
+                </button>
                 <button id="nav-treinamentos" onclick="navigateTo('treinamentos')" class="nav-btn">
                     <i class="ph ph-books"></i> Treinamentos
                 </button>
@@ -3717,6 +3721,9 @@
                 </div>
             </section>
 
+            <section id="section-relatorios-processuais" class="content-section hidden animate-fade-in">
+                <div id="process-reports-root"></div>
+            </section>
             <section id="section-documentos" class="content-section hidden animate-fade-in">
                 <div class="documents-central max-w-7xl mx-auto">
                     <header class="documents-hero">
@@ -6059,7 +6066,7 @@
             }
 
             const pageTitle = document.getElementById('page-title');
-            if (pageTitle) pageTitle.innerText = titles[sectionId] || 'Platino Hub';
+            if (pageTitle) pageTitle.innerText = sectionId === 'relatorios-processuais' ? 'Relatórios Processuais' : titles[sectionId] || 'Platino Hub';
 
             const contentViewport = document.getElementById('content-viewport');
             if (contentViewport) {
@@ -12000,6 +12007,8 @@
       startFirebase();
     </script>
     <script type="module" src="./src/sdr/sdr-module.js"></script>
+    <script type="module" src="./src/process-reports/process-reports.js"></script>
 </body>
 
 </html>
+
