@@ -45,6 +45,23 @@ test('informações incompletas e OCR: preservar o original e sinalizar lacunas 
   assert.throws(() => generateLocalReport({ sources: [] }), /legível/);
   assert.throws(() => generateLocalReport({ sources: [{ name: 'a', text: 'a'.repeat(60001) }] }), /60 mil/);
 });
+test('datas, status e linha do tempo são opcionais na exportação', async () => {
+  const report = generateLocalReport({ sources: [{ name: 'Texto colado', text: 'Informações recebidas para acompanhamento.' }] });
+  assert.equal(report.statusAtual, '');
+  assert.ok(report.linhaTempo.every(item => !item.data));
+  assert.ok(!report.alertas.some(item => /movimentações sem data|movimentações com data|status atual não foi identificado/.test(item)));
+  const blocks = reportBlocks(report, '2026-11-26');
+  assert.ok(blocks.some(item => item.text === '2. Informações Processuais'));
+  assert.ok(blocks.some(item => item.text.includes('Informações recebidas para acompanhamento.')));
+  assert.ok(!blocks.some(item => item.text.includes('Linha do Tempo')));
+  const png = await fs.readFile(new URL('../assets/process-reports/papel-timbrado.png', import.meta.url));
+  for (const value of [report, { ...report, linhaTempo: [] }]) {
+    const document = await createReportDocument(value, '2026-11-26', png);
+    assert.ok((await PDFDocument.load(document.pdf)).getPageCount() >= 1);
+    assert.equal(Buffer.from(createWordDocument(document)).readUInt32LE(0), 0x04034b50);
+  }
+});
+
 test('datas inválidas não viram prazos; distribuição não é presumida como autuação', () => {
   const report = generateLocalReport({ sources: [{ name: 'Texto', text: 'Data da distribuição: 25/11/2026\n31/02/2026 — Expedição de intimação' }] });
   assert.equal(report.identificacao.dataAutuacao, ''); assert.equal(report.linhaTempo[0].data, '');

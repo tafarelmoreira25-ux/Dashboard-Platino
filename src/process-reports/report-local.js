@@ -92,13 +92,11 @@ export function generateLocalReport({ sources, client = '', process = '', instru
     report.identificacao.cliente = client.trim();
   }
   if (!report.linhaTempo.length) {
-    report.alertas.push('Não foram reconhecidas movimentações com data. As informações abaixo foram transcritas sem interpretação. Confira o editor e as fontes.');
     for (const source of sources) for (let offset = 0; offset < source.text.length; offset += 5500) report.linhaTempo.push({ data: '', evento: 'Informações fornecidas', resumo: source.text.slice(offset, offset + 5500), fonte: source.name });
   }
   if (!report.statusAtual) {
     const latest = report.linhaTempo.filter(item => item.data).sort((a, b) => a.data.localeCompare(b.data)).at(-1);
     if (latest) report.statusAtual = `O registro mais recente entre as informações fornecidas é de ${latest.data.split('-').reverse().join('/')}: ${latest.evento}${latest.resumo ? ` — ${latest.resumo}` : ''}`;
-    else report.alertas.push('O status atual não foi identificado. Preencha-o no editor se houver informação suficiente.');
   }
   if (instructions.trim()) report.statusAtual += `${report.statusAtual ? '\n\n' : ''}${instructions.trim()}`;
   report.proximasEtapas = [...new Set(report.proximasEtapas)];

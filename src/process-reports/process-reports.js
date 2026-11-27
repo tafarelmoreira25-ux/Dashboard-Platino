@@ -26,7 +26,7 @@ if (root) {
       <div id="pr-empty" class="pr-empty"><i class="ph ph-file-text"></i><h3>Seu relatório aparece aqui</h3><p>Insira as informações de um único atendimento e gere o documento. Confira os dados antes de enviar ao cliente.</p></div><div id="pr-preview-controls" class="pr-preview-controls pr-hidden"><button type="button" id="pr-page-prev" aria-label="Página anterior">‹</button><span id="pr-page-count"></span><button type="button" id="pr-page-next" aria-label="Próxima página">›</button><button type="button" id="pr-zoom-out" aria-label="Diminuir zoom">−</button><span id="pr-zoom-label">100%</span><button type="button" id="pr-zoom-in" aria-label="Aumentar zoom">+</button></div><div id="pr-pages" class="pr-page-scroll pr-hidden" aria-label="Prévia A4 do relatório"></div></div>
       <div id="pr-status" class="pr-status" role="status" aria-live="polite">Pronto para um novo atendimento.</div><div id="pr-alerts" class="pr-alerts pr-hidden"></div>
       <div class="pr-actions"><button type="button" data-export="pdf" disabled><i class="ph ph-file-pdf" style="color:#e53b43"></i>Baixar PDF</button><button type="button" data-export="docx" disabled><i class="ph ph-file-doc" style="color:#1859ef"></i>Baixar Word</button><button type="button" data-export="both" disabled>Baixar ambos</button><button type="button" id="pr-copy" disabled><i class="ph ph-whatsapp" style="color:#159f50"></i>Copiar mensagem</button><button type="button" data-export="pdf-copy" disabled>Baixar PDF e copiar mensagem</button><button type="button" id="pr-edit" disabled><i class="ph ph-pencil-simple"></i>Editar relatório</button></div>
-      <label class="pr-review"><input id="pr-reviewed" type="checkbox" disabled><span>Conferi os dados, as fontes e os alertas deste relatório antes da exportação.</span></label>
+      <label class="pr-review"><input id="pr-reviewed" type="checkbox" disabled><span>Revisão opcional: conferi os dados e as fontes deste relatório.</span></label>
       <div class="pr-tools" role="group" aria-label="Revisar relatório"><button type="button" data-command="regenerar" disabled>Regenerar</button><button type="button" data-command="resumir" disabled>Resumir</button><button type="button" data-command="detalhar" disabled>Detalhar</button><button type="button" data-command="organizar" disabled>Organizar espaçamentos</button></div>
       <details id="pr-editor" class="pr-editor pr-hidden"><summary>Editar conteúdo do relatório</summary><div id="pr-editor-fields"></div></details>
       <details id="pr-sources" class="pr-editor pr-hidden"><summary>Conferir texto extraído das fontes</summary><textarea id="pr-source-text" readonly aria-label="Texto extraído das fontes" style="min-height:220px"></textarea></details>
@@ -42,7 +42,7 @@ if (root) {
   setDetail(detail);
   function markDirty(source = false) { state.dirty = true; state.revision++; $('reviewed').checked = false; if (source && state.report) { state.stale = true; status('As fontes foram alteradas. Gere novamente antes de exportar.'); } updateButtons(); }
   function updateButtons() {
-    const ready = Boolean(state.document && !state.busy && !state.stale && $('reviewed').checked);
+    const ready = Boolean(state.document && !state.busy && !state.stale);
     root.querySelectorAll('[data-export]').forEach(button => { button.disabled = !ready; });
     root.querySelectorAll('[data-command]').forEach(button => { button.disabled = !state.report || state.busy; });
     $('generate').disabled = state.busy;
@@ -96,13 +96,13 @@ if (root) {
   function renderAlerts() {
     const alerts = state.report?.alertas || [];
     $('alerts').classList.toggle('pr-hidden', !alerts.length);
-    $('alerts').innerHTML = `<strong>Conferência necessária</strong><ul>${alerts.map(text => `<li>${esc(text)}</li>`).join('')}</ul>`;
+    $('alerts').innerHTML = `<strong>Observações (não impedem o download)</strong><ul>${alerts.map(text => `<li>${esc(text)}</li>`).join('')}</ul>`;
   }
   function renderEditor() {
     const report = state.report;
     $('editor').classList.remove('pr-hidden'); $('message').classList.remove('pr-hidden');
     const field = (id, label, value, textarea = false) => `<label for="pr-${id}">${label}</label>${textarea ? `<textarea id="pr-${id}" data-field="${id}" maxlength="6000">${esc(value)}</textarea>` : `<input id="pr-${id}" data-field="${id}" value="${esc(value)}" maxlength="1500">`}`;
-    $('editor-fields').innerHTML = `<div class="pr-editor-grid">${Object.entries(IDENTIFICATION).map(([key, label]) => `<div>${field(`id-${key}`, label, report.identificacao[key])}</div>`).join('')}</div><h3 style="margin-top:20px;font-weight:700">Linha do tempo</h3>${report.linhaTempo.map((item, index) => `<div class="pr-event">${field(`event-${index}-data`, 'Data (AAAA-MM-DD ou vazio)', item.data)}${field(`event-${index}-evento`, 'Evento', item.evento)}${field(`event-${index}-resumo`, 'Síntese', item.resumo, true)}${field(`event-${index}-fonte`, 'Fonte', item.fonte)}<button type="button" data-event-remove="${index}">Remover movimentação</button></div>`).join('')}<button type="button" id="pr-event-add" style="margin-top:10px">+ Adicionar movimentação</button>${field('statusAtual', 'Status atual', report.statusAtual, true)}${field('proximasEtapas', 'Próximas etapas (uma por linha; deixe vazio para omitir)', report.proximasEtapas.join('\n'), true)}`;
+    $('editor-fields').innerHTML = `<div class="pr-editor-grid">${Object.entries(IDENTIFICATION).map(([key, label]) => `<div>${field(`id-${key}`, label, report.identificacao[key])}</div>`).join('')}</div><h3 style="margin-top:20px;font-weight:700">Linha do tempo (opcional)</h3>${report.linhaTempo.map((item, index) => `<div class="pr-event">${field(`event-${index}-data`, 'Data (AAAA-MM-DD ou vazio)', item.data)}${field(`event-${index}-evento`, 'Evento', item.evento)}${field(`event-${index}-resumo`, 'Síntese', item.resumo, true)}${field(`event-${index}-fonte`, 'Fonte', item.fonte)}<button type="button" data-event-remove="${index}">Remover movimentação</button></div>`).join('')}<button type="button" id="pr-event-add" style="margin-top:10px">+ Adicionar movimentação</button>${field('statusAtual', 'Status atual (opcional)', report.statusAtual, true)}${field('proximasEtapas', 'Próximas etapas (uma por linha; deixe vazio para omitir)', report.proximasEtapas.join('\n'), true)}`;
   }
   let previewTimer;
   function schedulePreview() { clearTimeout(previewTimer); state.previewVersion++; state.document = null; updateButtons(); previewTimer = setTimeout(preview, 300); }
@@ -139,7 +139,7 @@ if (root) {
       $('date').textContent = 'Emissão: ' + shortDate(state.emissionDate) + ' · America/Sao_Paulo';
       $('source-text').value = sources.map(source => source.name + '\n' + source.text).join('\n\n'); $('sources').classList.remove('pr-hidden');
       renderEditor(); renderAlerts(); await preview();
-      if (session.current(request.version)) status(state.document ? 'Relatório gerado localmente. Confira os campos e o texto reconhecido antes de exportar.' : 'O relatório foi organizado; confira o erro de pré-visualização.', !state.document);
+      if (session.current(request.version)) status(state.document ? 'Relatório gerado localmente. Você já pode baixar em PDF ou Word. A revisão é opcional.' : 'O relatório foi organizado; confira o erro de pré-visualização.', !state.document);
     } catch (error) { if (session.current(request.version) && error.name !== 'AbortError') status(error.message, true); }
     finally { if (session.current(request.version)) { state.busy = false; updateButtons(); } }
   }
@@ -157,7 +157,7 @@ if (root) {
   async function copyMessage() { const epoch = state.epoch; await navigator.clipboard.writeText($('whatsapp').value); if (epoch === state.epoch) { state.messageDirty = false; status('Mensagem copiada.'); } }
   function download(bytes, filename, type) { const url = URL.createObjectURL(new Blob([bytes], { type })); const link = document.createElement('a'); link.href = url; link.download = filename; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000); }
   async function exportReport(mode) {
-    if (!state.document || state.busy || state.stale || !$('reviewed').checked) return;
+    if (!state.document || state.busy || state.stale) return;
     const epoch = state.epoch, revision = state.revision;
     try {
       if (mode === 'pdf-copy') await copyMessage();

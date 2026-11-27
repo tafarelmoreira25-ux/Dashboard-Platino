@@ -46,7 +46,6 @@ export function normalizeReport(value) {
     .sort((a, b) => (a.data || '9999').localeCompare(b.data || '9999'));
   if (!report.identificacao.cliente.trim()) report.alertas.unshift('Cliente não identificado: confira a titularidade das fontes antes de enviar.');
   if (!report.identificacao.numeroProcesso.trim()) report.alertas.unshift('Número do processo não identificado.');
-  if (report.linhaTempo.some(item => !item.data)) report.alertas.unshift('Há movimentações sem data; elas aparecem ao final da linha do tempo.');
   report.alertas = [...new Set(report.alertas.filter(Boolean))].slice(0, 30);
   return report;
 }
@@ -77,7 +76,7 @@ export function reportBlocks(report, date, { detail = 'completo' } = {}) {
   const fields = Object.entries(IDENTIFICATION).filter(([key]) => report.identificacao[key].trim());
   if (fields.length) { add('1. Identificação do Processo e Partes', 'heading'); fields.forEach(([key, label]) => add(`${label}: ${report.identificacao[key]}`)); }
   if (report.linhaTempo.length) {
-    add('2. Linha do Tempo do Andamento', 'heading');
+    add(report.linhaTempo.some(item => item.data) ? '2. Linha do Tempo do Andamento' : '2. Informações Processuais', 'heading');
     const events = detail === 'resumido' ? [...report.linhaTempo.filter(item => item.data).slice(-5), ...report.linhaTempo.filter(item => !item.data)] : report.linhaTempo;
     if (detail === 'resumido' && events.length < report.linhaTempo.length) add('Síntese com as cinco movimentações datadas mais recentes entre as informações fornecidas.');
     events.forEach(item => { add(`${item.data ? `${shortDate(item.data)} — ` : ''}${item.evento}${item.resumo ? `: ${item.resumo}` : ''}`); if (detail === 'detalhado' && item.fonte) add(`Fonte: ${item.fonte}`); });

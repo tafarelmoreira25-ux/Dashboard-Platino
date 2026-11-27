@@ -39,7 +39,7 @@ try {
   await page.locator('#pr-generate').click(); assert.match(await page.locator('#pr-status').innerText(), /Cole/);
   await page.locator('#pr-text').fill(sourceText); await page.locator('#pr-generate').click();
   await page.locator('#pr-status').filter({ hasText: 'Relatório gerado localmente.' }).waitFor();
-  assert.equal(await page.locator('#pr-id-cliente').inputValue(), 'Cliente Exemplo'); assert.equal(await page.locator('[data-export="pdf"]').isDisabled(), true);
+  assert.equal(await page.locator('#pr-id-cliente').inputValue(), 'Cliente Exemplo'); assert.equal(await page.locator('[data-export="pdf"]').isDisabled(), false);
   await page.locator('#pr-reviewed').check();
   let pending = page.waitForEvent('download'); await page.locator('[data-export="pdf"]').click(); let download = await pending;
   assert.match(download.suggestedFilename(), /^Relatorio_Processual_Cliente_Exemplo_\d{2}-\d{2}-\d{4}\.pdf$/); await download.saveAs(path.join(qa, 'browser.pdf'));
@@ -54,6 +54,26 @@ try {
   page.on('dialog', dialog => dialog.accept()); await page.locator('#pr-next').click();
   assert.equal(await page.locator('#pr-source-text').inputValue(), ''); assert.equal(await page.locator('#pr-pages svg').count(), 0);
   assert.equal(await page.evaluate(() => document.activeElement.id), 'pr-text');
+
+  // Exportar dados incompletos sem marcar a revisão; editar não exige nova conferência.
+  await page.locator('#pr-text').fill('Informações recebidas para acompanhamento.');
+  await page.locator('#pr-generate').click();
+  await page.waitForFunction(() => !document.querySelector('[data-export="pdf"]').disabled);
+  assert.equal(await page.locator('#pr-reviewed').isChecked(), false);
+  assert.equal(await page.locator('#pr-statusAtual').inputValue(), '');
+  assert.doesNotMatch(await page.locator('#pr-alerts').innerText(), /movimentações sem data|movimentações com data|status atual não foi identificado|Conferência necessária/);
+  assert.match(await page.locator('#pr-pages').innerText(), /Informações Processuais/);
+  pending = page.waitForEvent('download'); await page.locator('[data-export="pdf"]').click(); download = await pending;
+  await download.saveAs(path.join(qa, 'sem-datas.pdf'));
+  pending = page.waitForEvent('download'); await page.locator('[data-export="docx"]').click(); download = await pending;
+  await download.saveAs(path.join(qa, 'sem-datas.docx'));
+  await page.locator('#pr-edit').click();
+  await page.locator('[data-event-remove="0"]').click();
+  await page.waitForFunction(() => !document.querySelector('[data-export="pdf"]').disabled);
+  assert.equal(await page.locator('.pr-event').count(), 0);
+  assert.equal(await page.locator('#pr-reviewed').isChecked(), false);
+  pending = page.waitForEvent('download'); await page.locator('[data-export="pdf"]').click(); await pending;
+  await page.locator('#pr-next').click();
 
   const images = await page.evaluate(() => {
     const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = 700;
