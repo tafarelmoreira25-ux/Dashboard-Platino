@@ -897,6 +897,14 @@
             backdrop-filter: blur(18px);
         }
 
+        @media (min-width: 1024px) {
+            #login-screen .login-form-shell {
+                margin-left: clamp(2rem, 6vw, 8rem);
+                margin-right: auto;
+                max-width: min(28rem, 36vw);
+            }
+        }
+
         .login-input {
             background: rgba(15, 23, 42, 0.74);
             border: 1px solid rgba(148, 163, 184, 0.26);
@@ -3181,7 +3189,7 @@
 
     <section id="login-screen" class="login-hero-bg min-h-screen flex items-center text-white px-4 py-8 relative overflow-hidden">
       <div class="login-glow-overlay absolute inset-0 pointer-events-none"></div>
-      <div class="relative z-10 w-full max-w-md mx-auto">
+      <div class="login-form-shell relative z-10 w-full max-w-md mx-auto">
         <div class="login-panel w-full rounded-[1.75rem] p-7 md:p-8">
           <form id="login-form" class="space-y-4" autocomplete="on">
             <div>
