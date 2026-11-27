@@ -7855,6 +7855,10 @@
         let avisosData = normalizeAvisosData(defaultAvisosData);
 
  function normalizeAvisosData(value = {}) {
+            // Dados salvos de aniversários também podem recriar cards no mural.
+            const isVisibleTeamMember = name => !isInactiveTeamMember(name)
+                && !isSamePersonName(name, 'Thamires Millena')
+                && !isSamePersonName(name, 'Thamires Milena');
             const isCurrentMonthData = value.monthKey === defaultAvisosData.monthKey || value.source === 'googleSheets';
             const monthlyValue = isCurrentMonthData ? value : defaultAvisosData;
             const birthdaySource = Array.isArray(value.birthdays) && value.birthdays.length ? value.birthdays : defaultAvisosData.birthdays;
@@ -7864,7 +7868,7 @@
                     date: formatBirthdayDate(person?.date),
                     photo: String(person?.photo || '').trim()
                 }))
-                .filter(person => person.name && !isInactiveTeamMember(person.name));
+                .filter(person => person.name && isVisibleTeamMember(person.name));
 
             defaultAvisosData.birthdays.forEach(defaultPerson => {
                 const exists = mergedBirthdays.some(person => isSamePersonName(person.name, defaultPerson.name));
@@ -7906,7 +7910,7 @@
                 photoPosition: String(item?.photoPosition || '').trim(),
                 birthday: formatBirthdayDate(item?.birthday || ''),
                 aliases: Array.isArray(item?.aliases) ? item.aliases : []
-            })).filter(item => (item.name || item.role || item.details || item.photo || item.birthday) && !isInactiveTeamMember(item.name));
+            })).filter(item => (item.name || item.role || item.details || item.photo || item.birthday) && isVisibleTeamMember(item.name));
 
             const matchesTeamProfile = (person, profile) => {
                 const names = [profile.name, ...(profile.aliases || [])];
