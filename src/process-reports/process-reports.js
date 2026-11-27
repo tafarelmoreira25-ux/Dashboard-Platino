@@ -13,7 +13,7 @@ const status = (text, error = false) => { $('status').textContent = text; $('sta
 
 if (root) {
   root.innerHTML = `<header class="pr-header"><div><h1>PLATINO | Documentos</h1><p>Central de atualizações processuais</p></div><span class="pr-lock"><i class="ph ph-lock-key"></i> Uso interno</span></header>
-    <div class="pr-layout"><form id="pr-form" class="pr-entry"><h2>Gerar relatório processual</h2><p>Gere seu relatório neste navegador. Sem chave de IA e sem cobrança por geração.</p>
+    <div class="pr-layout"><form id="pr-form" class="pr-entry"><h2>Gerar relatório processual</h2>
       <label for="pr-client">Nome do cliente <small>(opcional)</small></label><input id="pr-client" maxlength="300" placeholder="Extraído do texto e dos anexos" autocomplete="off">
       <label for="pr-process">Número do processo <small>(opcional)</small></label><input id="pr-process" maxlength="80" placeholder="Extraído do texto e dos anexos" autocomplete="off">
       <label for="pr-files">Anexos do processo</label><button id="pr-drop" type="button" class="pr-drop"><i class="ph ph-cloud-arrow-up"></i><strong>Arraste ou cole os prints do processo</strong><span>Ctrl + V · PNG · JPG · PDF · Clique para selecionar</span></button>
